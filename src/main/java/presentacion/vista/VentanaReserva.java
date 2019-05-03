@@ -28,7 +28,6 @@ public class VentanaReserva extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtMonto;
-	private JTextField txtCantidadPasajeros;
 	private JButton btnReservar;
 	private JButton btnCancelar;
 
@@ -54,6 +53,7 @@ public class VentanaReserva extends JFrame {
 	public VentanaReserva() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(300, 200, 616, 491);
+		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.controlHighlight);
 
@@ -64,7 +64,7 @@ public class VentanaReserva extends JFrame {
 		
 		JPanel panelReserva = new JPanel();
 		panelReserva.setBackground(new Color(230, 126, 34));
-		panelReserva.setBounds(0, 0, 600, 53);
+		panelReserva.setBounds(0, 0, 610, 53);
 		contentPane.add(panelReserva);
 		panelReserva.setLayout(null);
 		
@@ -98,10 +98,6 @@ public class VentanaReserva extends JFrame {
 		lblRangoHorario.setBounds(37, 253, 113, 14);
 		contentPane.add(lblRangoHorario);
 		
-		JLabel lblCantidadPasajeros = new JLabel("Cantidad de pasajeros:");
-		lblCantidadPasajeros.setBounds(334, 253, 135, 14);
-		contentPane.add(lblCantidadPasajeros);
-		
 		JLabel lblMonto = new JLabel("Monto:");
 		lblMonto.setBounds(37, 316, 46, 14);
 		contentPane.add(lblMonto);
@@ -130,11 +126,6 @@ public class VentanaReserva extends JFrame {
 		comboBoxRangoHorario.setBounds(152, 250, 125, 20);
 		contentPane.add(comboBoxRangoHorario);
 		
-		txtCantidadPasajeros = new JTextField();
-		txtCantidadPasajeros.setBounds(478, 250, 33, 20);
-		contentPane.add(txtCantidadPasajeros);
-		txtCantidadPasajeros.setColumns(10);
-		
 		txtMonto = new JTextField();
 		txtMonto.setBounds(141, 313, 117, 20);
 		contentPane.add(txtMonto);
@@ -157,5 +148,9 @@ public class VentanaReserva extends JFrame {
 		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnCancelar.setBounds(323, 375, 131, 42);
 		contentPane.add(btnCancelar);
+		
+		JButton btnCargaPasajeros = new JButton("Carga de pasajeros");
+		btnCargaPasajeros.setBounds(356, 181, 176, 44);
+		contentPane.add(btnCargaPasajeros);
 	}
 }

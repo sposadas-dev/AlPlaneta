@@ -17,8 +17,8 @@ public class Main {
 //		cliente.setVisible(true);
 //		VentanaPasajero pasajero = new VentanaPasajero();
 //		pasajero.setVisible(true);
-//		VentanaReserva reserva = new VentanaReserva();
-//		reserva.setVisible(true);		
+		VentanaReserva reserva = new VentanaReserva();
+		reserva.setVisible(true);		
 //		
 		
 //		Vista vista = new Vista();
