@@ -9,6 +9,9 @@ import java.awt.Font;
 import javax.swing.JButton;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.JSeparator;
 
 public class VentanaCliente extends JFrame {
 
@@ -40,14 +43,22 @@ public class VentanaCliente extends JFrame {
 		setBounds(300, 200, 560, 435);
 		
 		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.controlHighlight);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JPanel panelCliente = new JPanel();
+		panelCliente.setBackground(new Color(39, 174, 96));
+		panelCliente.setBounds(0, 0, 554, 53);
+		contentPane.add(panelCliente);
+		panelCliente.setLayout(null);
+		
 		JLabel lblRegistrarCliente = new JLabel("Registrar cliente");
-		lblRegistrarCliente.setFont(new Font("Tahoma", Font.PLAIN, 23));
-		lblRegistrarCliente.setBounds(36, 11, 222, 31);
-		contentPane.add(lblRegistrarCliente);
+		lblRegistrarCliente.setForeground(Color.WHITE);
+		lblRegistrarCliente.setBounds(27, 0, 214, 53);
+		panelCliente.add(lblRegistrarCliente);
+		lblRegistrarCliente.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
 		JLabel lblNombre = new JLabel("Nombre:");
 		lblNombre.setBounds(37, 92, 72, 14);
@@ -66,11 +77,11 @@ public class VentanaCliente extends JFrame {
 		contentPane.add(lblFechaNacimiento);
 		
 		JLabel lblTelefonoFijo = new JLabel("Teléfono fijo:");
-		lblTelefonoFijo.setBounds(15, 204, 72, 31);
+		lblTelefonoFijo.setBounds(35, 204, 72, 31);
 		contentPane.add(lblTelefonoFijo);
 		
 		JLabel lblTelefonoCelular = new JLabel("Teléfono celular:");
-		lblTelefonoCelular.setBounds(288, 212, 100, 14);
+		lblTelefonoCelular.setBounds(286, 212, 100, 14);
 		contentPane.add(lblTelefonoCelular);
 		
 		JLabel lblEmail = new JLabel("Email:");
@@ -99,26 +110,36 @@ public class VentanaCliente extends JFrame {
 		contentPane.add(dateFechaNacimiento);
 		
 		txtTelefonoCelular = new JTextField();
-		txtTelefonoCelular.setBounds(413, 209, 131, 20);
+		txtTelefonoCelular.setBounds(398, 209, 131, 20);
 		contentPane.add(txtTelefonoCelular);
 		txtTelefonoCelular.setColumns(10);
 		
 		txtTelefonoFijo = new JTextField();
-		txtTelefonoFijo.setBounds(97, 209, 131, 20);
+		txtTelefonoFijo.setBounds(119, 209, 131, 20);
 		contentPane.add(txtTelefonoFijo);
 		txtTelefonoFijo.setColumns(10);
 		
 		txtEmail = new JTextField();
-		txtEmail.setBounds(97, 271, 131, 20);
+		txtEmail.setBounds(97, 271, 184, 20);
 		contentPane.add(txtEmail);
 		txtEmail.setColumns(10);
 		
+		JSeparator separadorCliente = new JSeparator();
+		separadorCliente.setBounds(37, 316, 490, 2);
+		contentPane.add(separadorCliente);
+		
 		btnRegistrar = new JButton("Registrar");
-		btnRegistrar.setBounds(130, 331, 128, 33);
+		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnRegistrar.setBackground(new Color(52, 152, 219));
+		btnRegistrar.setForeground(Color.WHITE);
+		btnRegistrar.setBounds(127, 342, 131, 42);
 		contentPane.add(btnRegistrar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(288, 331, 128, 32);
+		btnCancelar.setForeground(Color.WHITE);
+		btnCancelar.setBackground(new Color(192, 57, 43));
+		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnCancelar.setBounds(290, 342, 131, 42);
 		contentPane.add(btnCancelar);			
 	}
 	

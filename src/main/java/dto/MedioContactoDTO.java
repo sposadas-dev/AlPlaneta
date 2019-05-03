@@ -1,6 +1,8 @@
 package dto;
 
 public class MedioContactoDTO {
+	
+	private int idMedioContacto;
 	private String telefonoFijo;
 	private String telefonoCelular;
 	private String email;
