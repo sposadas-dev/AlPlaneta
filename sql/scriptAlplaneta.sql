@@ -1,8 +1,7 @@
 CREATE DATABASE if not exists `alplaneta`;
-
 ﻿USE alplaneta;
 
-CREATE TABLE `mediosContacto`(
+CREATE TABLE `medioContacto`(
   `idMedioContacto` int(11) NOT NULL AUTO_INCREMENT,
   `numeroFijo` varchar(45) NOT NULL,
   `numeroCelular` varchar(45) NOT NULL,
@@ -11,7 +10,7 @@ CREATE TABLE `mediosContacto`(
   PRIMARY KEY (`idMedioContacto`)
 );
 
-CREATE TABLE `clientes`(
+CREATE TABLE `cliente`(
   `idCliente` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   `apellido` varchar(45) NOT NULL,
@@ -24,21 +23,21 @@ CREATE TABLE `clientes`(
   FOREIGN KEY (`idMedioContacto`) references mediosContacto(`idMedioContacto`)
 );
 
-CREATE TABLE `administradores`(
+CREATE TABLE `administrativo`(
   `idAdministrativo` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,  
   
   PRIMARY KEY (`idAdministrativo`)
 );
 
-CREATE TABLE `ciudades`(
+CREATE TABLE `ciudad`(
   `idCiudad` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   
   PRIMARY KEY (`idCiudad`)
 );
 
-CREATE TABLE `viajes`(
+CREATE TABLE `viaje`(
   `idViaje` int(11) NOT NULL AUTO_INCREMENT,
   `fechaSalida` Date(20) NOT NULL,
   `fechaLlegada` Date(20) NOT NULL,
@@ -52,7 +51,7 @@ CREATE TABLE `viajes`(
   FOREIGN KEY (`idCiudadDestino`) references ciudades(`idCiudad`)
 );
 
-CREATE TABLE `transportes`(
+CREATE TABLE `transporte`(
   `idTransporte` int(11) NOT NULL AUTO_INCREMENT,
   `capacidad` int(11) NOT NULL,
   `nombreTransporte` varchar(45) NOT NULL,
@@ -61,7 +60,7 @@ CREATE TABLE `transportes`(
   PRIMARY KEY (`idTransporte`)
 );
 
-CREATE TABLE `pagos`(
+CREATE TABLE `pago`(
   `idPago` int(11) NOT NULL AUTO_INCREMENT,
   `monto` decimal(11) NOT NULL,
   `fechaPago` Date(20) NOT NULL,
@@ -77,7 +76,7 @@ CREATE TABLE `estadosPasaje`( /*ESTADO=PagoPendiente, PagoParcial, PagoTotal*/
   PRIMARY KEY (`idEstadoPasaje`)
 );
 
-CREATE TABLE `pasajes`(
+CREATE TABLE `pasaje`(
   `idPasaje` int(11) NOT NULL AUTO_INCREMENT,
   `cantidadPasajeros` int(11) NOT NULL,
   `fechaVencimiento` Date(20),
@@ -99,7 +98,7 @@ CREATE TABLE `pasajes`(
   FOREIGN KEY (`idEstadoPasaje`) references estadosPasaje(`idEstadoPasaje`),  
 );
 
-CREATE TABLE `pasajeros`(
+CREATE TABLE `pasajero`(
   `idPasajero` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   `apellido` varchar(45) NOT NULL,
@@ -121,7 +120,7 @@ CREATE TABLE `pasajes_pasajeros`(
   FOREIGN KEY (`idPasajero`) references pasajeros(`idPasajero`)
 );
 
-CREATE TABLE `horarioReservas`(
+CREATE TABLE `horarioReserva`(
   `idHorario` int(11) NOT NULL AUTO_INCREMENT,
   `horarioInicio` Date(20) NOT NULL,
   `horarioFin` Date(20) NOT NULL,
