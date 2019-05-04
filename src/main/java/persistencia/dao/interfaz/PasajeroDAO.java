@@ -4,16 +4,16 @@ import java.util.List;
 
 import dto.PasajeroDTO;
 
-
 public interface PasajeroDAO {
-	
-	public boolean insert(PasajeroDTO pasajero);
 
-	public boolean delete(PasajeroDTO pasajero_a_eliminar);
-	
-	public List<PasajeroDTO> readAll();
+	public boolean insert(PasajeroDTO pasajeroInsert) throws Exception;
 
-	public boolean update(PasajeroDTO pasajero);
+	public boolean delete(PasajeroDTO pasajeroDelete) throws Exception;
 
+	public List<PasajeroDTO> readAll() throws Exception;
+
+	public boolean update(PasajeroDTO pasajeroUpdate) throws Exception;
+
+	public PasajeroDTO browse(int idPasajero) throws Exception;
 
 }
