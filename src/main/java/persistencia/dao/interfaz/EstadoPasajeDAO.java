@@ -15,5 +15,7 @@ public interface EstadoPasajeDAO {
 
 	public boolean update(EstadoPasajeDTO estado);
 
-
+	public EstadoPasajeDTO getEstadoPasajeById(int id);
+	
+	public EstadoPasajeDTO getEstadoPasajeByNombre(String nombre);
 }
