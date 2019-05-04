@@ -1,7 +1,6 @@
 package dto;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 
 public class ClienteDTO {
 
@@ -69,8 +68,8 @@ public class ClienteDTO {
 		this.medioContacto = medioContacto;
 	}
 	
-	public String getFechaOrdenada() {
-		SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");
-		return date.format(fechaNacimiento);
-	}
+//	public String getFechaOrdenada() {
+//		SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");
+//		return date.format(fechaNacimiento);
+//	}
 }

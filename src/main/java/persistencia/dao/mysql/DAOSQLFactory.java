@@ -53,8 +53,7 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 
 	@Override
 	public MedioContactoDAO createMedioContactoDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MedioContactoDAOSQL();
 	}
 
 	@Override

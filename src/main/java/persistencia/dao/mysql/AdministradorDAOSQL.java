@@ -6,7 +6,12 @@ import dto.AdministradorDTO;
 import persistencia.dao.interfaz.AdministradorDAO;
 
 public class AdministradorDAOSQL implements AdministradorDAO {
-
+//	public AdministrativoDTO(int idAdministrativo, String nombre) {
+	
+	
+	private static final String insert = "INSERT INTO administrativo(idAdministrativo, nombre)"
+			+ " VALUES (?, ?)";
+	
 	
 	public boolean insert(AdministradorDAO adm) {
 		// TODO Auto-generated method stub

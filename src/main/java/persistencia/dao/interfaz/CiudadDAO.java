@@ -16,5 +16,9 @@ public interface CiudadDAO {
 
 	CiudadDTO browse(int idCiudad) throws Exception;
 
+	public CiudadDTO getCiudadByNombre(String nombre);
+	
+	public CiudadDTO getCiudadById(int id);
+
 
 }
