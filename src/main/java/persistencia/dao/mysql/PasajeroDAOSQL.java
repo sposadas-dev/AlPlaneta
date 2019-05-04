@@ -15,7 +15,7 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 	private static final String insert = "INSERT INTO pasajero(idPasajero, nombre, apellido, dni) VALUES(?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM pasajero WHERE idPasajero = ?";
 	private static final String readall = "SELECT * FROM pasajero";
-	private static final String update = "UPDATE pasajero SET nombre=?, apellido=?, dni=?";
+	private static final String update = "UPDATE pasajero SET nombre=?, apellido=?, dni=? WHERE idPasajero=?;";
 	private static final String browse = "SELECT * FROM pasajero WHERE idPasajero=?";
 
 	@Override
@@ -28,6 +28,9 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 			statement.setString(2, pasajeroInsert.getNombre());
 			statement.setString(3, pasajeroInsert.getApellido());
 			statement.setString(4, pasajeroInsert.getDni());
+			if (statement.executeUpdate() > 0) {
+				return true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -83,6 +86,7 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 			statement.setString(1, pasajeroUpdate.getNombre());
 			statement.setString(2, pasajeroUpdate.getApellido());
 			statement.setString(3, pasajeroUpdate.getDni());
+			statement.setInt(4, pasajeroUpdate.getIdPasajero());
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0)
 				return true;

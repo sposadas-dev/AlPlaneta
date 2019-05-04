@@ -58,7 +58,7 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 
 	@Override
 	public PagoDAO createPagoDAO() {
-		return new PagoDAODAOSQL();
+		return new PagoDAOSQL();
 	}
 
 	@Override

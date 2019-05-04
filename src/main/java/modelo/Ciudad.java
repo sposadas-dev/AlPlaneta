@@ -14,11 +14,19 @@ public class Ciudad {
 		this.ciudad = metodo_persistencia.createCiudadDAO();
 	}
 	
-	public void agregarCiudad(CiudadDTO nuevaCiudad){
+	public void agregarCiudad(CiudadDTO nuevaCiudad) throws Exception{
 		this.ciudad.insert(nuevaCiudad);
 	}
 	
-	public List<CiudadDTO> obtenerCiudades(){
+	public List<CiudadDTO> obtenerCiudades() throws Exception{
 		return this.ciudad.readAll();		
+	}
+
+	public void borrarCiudad(CiudadDTO ciudadDelete) throws Exception {
+		this.ciudad.delete(ciudadDelete);
+	}
+
+	public void editarCiudad(CiudadDTO ciudadUpdate) throws Exception {
+		this.ciudad.update(ciudadUpdate);
 	}
 }
