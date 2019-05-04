@@ -43,8 +43,7 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 
 	@Override
 	public CiudadDAO createCiudadDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new CiudadDAOSQL();
 	}
 
 	@Override
