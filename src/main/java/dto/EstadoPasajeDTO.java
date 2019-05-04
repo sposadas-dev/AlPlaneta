@@ -1,12 +1,12 @@
 package dto;
 
-public class EstadosPasajeDTO {
+public class EstadoPasajeDTO {
 	private int idEstadoPasaje;
 
 	private String nombre;
 	private String descripcion;
 
-	public EstadosPasajeDTO(int idEstadoPasaje, String nombre, String descripcion) {
+	public EstadoPasajeDTO(int idEstadoPasaje, String nombre, String descripcion) {
 		super();
 		this.idEstadoPasaje = idEstadoPasaje;
 		this.nombre = nombre;

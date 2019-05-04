@@ -1,0 +1,24 @@
+package modelo;
+
+import java.util.List;
+
+import dto.TransporteDTO;
+import persistencia.dao.interfaz.DAOAbstractFactory;
+import persistencia.dao.interfaz.TransporteDAO;
+
+public class Transporte {
+
+	private TransporteDAO transporte;
+	
+	public Transporte(DAOAbstractFactory metodo_persistencia){
+		this.transporte = metodo_persistencia.createTransporteDAO();
+	}
+	
+	public void agregarTransporte(TransporteDTO nuevoTransporte){
+		this.transporte.insert(nuevoTransporte);
+	}
+	
+	public List<TransporteDTO> obtenerTransportes(){
+		return this.transporte.readAll();		
+	}
+}

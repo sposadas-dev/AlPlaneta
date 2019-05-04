@@ -10,6 +10,7 @@ import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.MedioContactoDTO;
 import dto.PasajeDTO;
+import dto.ViajeDTO;
 import presentacion.vista.VentanaCargaPasajero;
 import presentacion.vista.VentanaCliente;
 import presentacion.vista.VentanaFormaPago;
@@ -62,7 +63,6 @@ public class Controlador implements ActionListener {
 
 	private void generarPasajeTarjeta(ActionEvent rP) {
 		String importeIngresado = ventanaPagoTarjeta.getTextImporteIngresado().toString();
-		
 	}
 
 	private void generarPasajeEfectivo(ActionEvent rP) {
@@ -90,7 +90,14 @@ public class Controlador implements ActionListener {
 			ventanaFormaDePagos.mostrarVentana(false);
 		}
 	}
-
+/*dsfdsfsdfdsfsdddddddddddddddddddddddddddddddddddddddddddddddddddd*/
+	
+	private void modificarViajeDePasaje(PasajeDTO pasaje, Date nuevaHorarioSalida){
+		ViajeDTO nuevoViaje = pasaje.getViaje();
+		nuevoViaje.setFechaSalida((java.sql.Date) nuevaHorarioSalida);
+		pasaje.setViaje(nuevoViaje);
+	}
+	
 	public Controlador(Vista vista, Cliente cliente){
 		this.vista = vista;
 		this.vista.getBtnClientes().addActionListener(this);
