@@ -49,8 +49,7 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 
 	@Override
 	public PasajeroDAO createPasajeroDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PasajeroDAOSQL();
 	}
 
 	@Override
