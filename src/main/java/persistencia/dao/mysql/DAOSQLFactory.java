@@ -59,8 +59,7 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 
 	@Override
 	public PagoDAO createPagoDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PagoDAOSQL();
 	}
 
 	@Override

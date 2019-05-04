@@ -15,8 +15,8 @@ public class CiudadDAOSQL implements CiudadDAO {
 	private static final String insert = "INSERT INTO ciudad(idCiudad, nombre) VALUES(?, ?)";
 	private static final String delete = "DELETE FROM ciudad WHERE idCiudad = ?";
 	private static final String readall = "SELECT * FROM ciudad";
-	private static final String update = "UPDATE pasajero SET nombre=?";
-	private static final String browse = "SELECT * FROM ciudad WHERE idCiudad=?";
+	private static final String update = "UPDATE pasajero SET nombre=? WHERE idCiudad=?";
+	private static final String browse = "SELECT * FROM ciudad WHERE idCiudad=?;";
 
 	@Override
 	public boolean insert(CiudadDTO ciudadInsert) {
@@ -26,6 +26,9 @@ public class CiudadDAOSQL implements CiudadDAO {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
 			statement.setInt(1, ciudadInsert.getIdCiudad());
 			statement.setString(2, ciudadInsert.getNombre());
+			if (statement.executeUpdate() > 0) {
+				return true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -79,6 +82,7 @@ public class CiudadDAOSQL implements CiudadDAO {
 			statement = conexion.getSQLConexion().prepareStatement(update);
 
 			statement.setString(1, ciudadUpdate.getNombre());
+			statement.setInt(2, ciudadUpdate.getIdCiudad());
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0)
 				return true;

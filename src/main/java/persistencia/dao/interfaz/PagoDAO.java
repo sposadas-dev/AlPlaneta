@@ -5,12 +5,15 @@ import java.util.List;
 import dto.PagoDTO;
 
 public interface PagoDAO {
-	public boolean insert(PagoDTO pago);
+	
+	public boolean insert(PagoDTO pagoInsert);
 
-	public boolean delete(PagoDTO pago_a_eliminar);
+	public boolean delete(PagoDTO pagoDelete);
 
 	public List<PagoDTO> readAll();
 
-	public boolean update(PagoDTO pago);
+	public boolean update(PagoDTO pagoUpdate);
+
+	public PagoDTO browse(int idPago);
 
 }
