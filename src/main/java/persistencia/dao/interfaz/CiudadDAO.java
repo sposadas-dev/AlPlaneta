@@ -14,5 +14,9 @@ public interface CiudadDAO {
 
 	public boolean update(CiudadDTO ciudad);
 
+	public CiudadDTO getCiudadByNombre(String nombre);
+	
+	public CiudadDTO getCiudadById(int id);
+
 
 }

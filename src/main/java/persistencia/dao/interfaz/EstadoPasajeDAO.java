@@ -14,6 +14,10 @@ public interface EstadoPasajeDAO {
 	public List<EstadoPasajeDTO> readAll();
 
 	public boolean update(EstadoPasajeDTO estado);
+	
+	public EstadoPasajeDTO getEstadoPasajeByNombre(String nombre);
+	
+	public EstadoPasajeDTO getEstadoPasajeById(int id);
 
 
 }
