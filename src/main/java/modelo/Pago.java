@@ -14,11 +14,19 @@ public class Pago {
 		this.pago = metodo_persistencia.createPagoDAO();
 	}
 	
-	public void agregarPago(PagoDTO nuevoPago){
-		this.pago.insert(nuevoPago);
+	public void agregarPago(PagoDTO pagoInsert){
+		this.pago.insert(pagoInsert);
 	}
 	
 	public List<PagoDTO> obtenerPagos(){
 		return this.pago.readAll();		
+	}
+	
+	public void borrarPago(PagoDTO pagoDelete) {
+		this.pago.delete(pagoDelete);
+	}
+	
+	public void editarPago(PagoDTO pagoUpdate) {
+		this.pago.update(pagoUpdate);
 	}
 }

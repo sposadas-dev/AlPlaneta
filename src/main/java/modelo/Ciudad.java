@@ -26,7 +26,15 @@ public class Ciudad {
 		this.ciudad.update(ciudad);
 	}
 	
-	public List<CiudadDTO> obtenerCiudades(){
+	public List<CiudadDTO> obtenerCiudades() throws Exception{
 		return this.ciudad.readAll();		
+	}
+
+	public void borrarCiudad(CiudadDTO ciudadDelete) throws Exception {
+		this.ciudad.delete(ciudadDelete);
+	}
+
+	public void editarCiudad(CiudadDTO ciudadUpdate) throws Exception {
+		this.ciudad.update(ciudadUpdate);
 	}
 }

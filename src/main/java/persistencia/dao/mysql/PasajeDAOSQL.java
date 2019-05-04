@@ -1,45 +1,48 @@
 package persistencia.dao.mysql;
 
-import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dto.AdministrativoDTO;
-import dto.ClienteDTO;
-import dto.EstadoPasajeDTO;
-import dto.PagoDTO;
 import dto.PasajeDTO;
-import dto.PasajeroDTO;
-import dto.TransporteDTO;
-import dto.ViajeDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PasajeDAO;
 
 public class PasajeDAOSQL implements PasajeDAO {
 	
-	private static final String insert = "INSERT INTO pasajes (idPasaje, viaje, administrativo,"
+	private static final String insert = "INSERT INTO pasaje(idPasaje, viaje, administrativo,"
 			+ "cantidadPasajeros, cliente, transporte, fechaVencimiento, valorViaje,"
 			+ "estadoDelPasaje, pago, pasajeros)"
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	private static final String delete = "DELETE FROM pasajes  WHERE idPasaje = ?";
-	private static final String readall = "SELECT * FROM Pasaje";
 	
-	private static final String update = "UPDATE pasajes SET viaje.fechaSalida= ? WHERE idPasaje = ?;";
+	private static final String delete = "DELETE FROM pasaje  WHERE idPasaje = ?";
+	
+	private static final String readall = "SELECT * FROM pasaje";
+	
+	private static final String update = "UPDATE pasaje SET viaje.fechaSalida= ? WHERE idPasaje = ?;";
+	
 
 	@Override
-	public boolean insert(PasajeDTO reserva) {
+	public boolean insert(PasajeDTO pasaje) {
 
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
-//			statement.setInt(1, reserva.getIdReserva());
-//			statement.setString(2, reserva.getCodigo());
-
+			statement.setInt(1, pasaje.getIdPasaje());
+			statement.setInt(2, pasaje.getViaje().getId());
+			statement.setInt(3, pasaje.getAdministrativo().getIdAdministrativo());
+			statement.setInt(4, pasaje.getCantidadPasajeros());
+			statement.setInt(5, pasaje.getCliente().getIdCliente());
+			statement.setInt(6, pasaje.getTransporte().getIdTransporte());
+			statement.setDate(7, pasaje.getFechaVencimiento());
+			statement.setBigDecimal(8, pasaje.getValorViaje());
+			statement.setInt(9, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());
+			statement.setInt(10, pasaje.getPago().getIdPago());
+			statement.setInt(11, pasaje.getCantidadPasajeros());
+			
 			if (statement.executeUpdate() > 0)
 				return true;
 		} catch (SQLException e) {
@@ -49,14 +52,14 @@ public class PasajeDAOSQL implements PasajeDAO {
 		return false;
 	}
 	@Override
-	public boolean delete(PasajeDTO reserva_a_eliminar) {
+	public boolean delete(PasajeDTO pasaje_a_eliminar) {
 
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(delete);
-//			statement.setString(1, Integer.toString(reserva_a_eliminar.getIdReserva()));
+			statement.setString(1, Integer.toString(pasaje_a_eliminar.getIdPasaje()));
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
 				return true;
@@ -65,6 +68,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 		}
 		return false;
 	}
+	
 	@Override
 	public List<PasajeDTO> readAll() {
 
@@ -77,7 +81,13 @@ public class PasajeDAOSQL implements PasajeDAO {
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-//				reservas.add(new ReservaDTO(resultSet.getInt("idReserva"),resultSet.getInt("idCliente"), resultSet.getInt("idPersonalAdm"), resultSet.(fechitaReserva), resultSet.getDate(columnIndex)));
+//				reservas.add(
+//						new PasajeDTO(
+//						resultSet.getInt("idPasaje"),
+//						resultSet.getInt("idCliente"), 
+//						resultSet.getInt("idPersonalAdm"), 
+//						resultSet.(fechitaReserva), 
+//						resultSet.getDate(columnIndex)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -43,26 +43,22 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 
 	@Override
 	public CiudadDAO createCiudadDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new CiudadDAOSQL();
 	}
 
 	@Override
 	public PasajeroDAO createPasajeroDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PasajeroDAOSQL();
 	}
 
 	@Override
 	public MedioContactoDAO createMedioContactoDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MedioContactoDAOSQL();
 	}
 
 	@Override
 	public PagoDAO createPagoDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PagoDAOSQL();
 	}
 
 	@Override
