@@ -13,6 +13,10 @@ public class CiudadDTO {
 	public CiudadDTO() {
 	}
 
+//	public CiudadDTO(int id) {
+//		this.idCiudad = id;
+//	}
+
 	public int getIdCiudad() {
 		return idCiudad;
 	}
