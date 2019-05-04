@@ -78,7 +78,7 @@ CREATE TABLE `pago`(
  
 CREATE TABLE `estadoPasaje`( /*ESTADO=PagoPendiente, PagoParcial, PagoTotal*/
   `idEstadoPasaje` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL,
   `descripcion` varchar(45) NOT NULL,
   
   PRIMARY KEY (`idEstadoPasaje`)
