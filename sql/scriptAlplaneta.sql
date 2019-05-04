@@ -1,5 +1,6 @@
 CREATE DATABASE if not exists `alplaneta`;
-﻿USE alplaneta;
+
+USE alplaneta;
 
 CREATE TABLE `medioContacto`(
   `idMedioContacto` int(11) NOT NULL AUTO_INCREMENT,
@@ -15,7 +16,7 @@ CREATE TABLE `cliente`(
   `nombre` varchar(45) NOT NULL,
   `apellido` varchar(45) NOT NULL,
   `dni` varchar(8) NOT NULL,
-  `fechaNacimiento` Date(20) NOT NULL,
+  `fechaNacimiento` Date NOT NULL,
 
   `idMedioContacto` int(11) NOT NULL,
   
@@ -28,6 +29,13 @@ CREATE TABLE `administrativo`(
   `nombre` varchar(45) NOT NULL,  
   
   PRIMARY KEY (`idAdministrativo`)
+);
+
+CREATE TABLE `administrador`(
+  `idAdministrador` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) NOT NULL,  
+  
+  PRIMARY KEY (`idAdministrador`)
 );
 
 CREATE TABLE `ciudad`(
@@ -68,7 +76,7 @@ CREATE TABLE `pago`(
   PRIMARY KEY (`idPago`)
 );
  
-CREATE TABLE `estadosPasaje`( /*ESTADO=PagoPendiente, PagoParcial, PagoTotal*/
+CREATE TABLE `estadoPasaje`( /*ESTADO=PagoPendiente, PagoParcial, PagoTotal*/
   `idEstadoPasaje` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` int(11) NOT NULL,
   `descripcion` varchar(45) NOT NULL,
@@ -91,11 +99,11 @@ CREATE TABLE `pasaje`(
   
   PRIMARY KEY (`idPasaje`),
   FOREIGN KEY (`idCliente`) references cliente(`idCliente`),
-  FOREIGN KEY (`idViaje`) references cliente(`idViaje`),
+  FOREIGN KEY (`idViaje`) references viaje(`idViaje`),
   FOREIGN KEY (`idTransporte`) references transporte(`idTransporte`),
   FOREIGN KEY (`idAdministrativo`) references administrativo(`idAdministrativo`),
   FOREIGN KEY (`idPago`) references pago(`idPago`),
-  FOREIGN KEY (`idEstadoPasaje`) references estadosPasaje(`idEstadoPasaje`),  
+  FOREIGN KEY (`idEstadoPasaje`) references estadoPasaje(`idEstadoPasaje`)  
 );
 
 CREATE TABLE `pasajero`(
@@ -107,10 +115,10 @@ CREATE TABLE `pasajero`(
   `idPasaje` int(3) NOT NULL,
   
   PRIMARY KEY (`idPasajero`),
-  FOREIGN KEY (`idPasaje`) references pasaje(`idPasaje`)
+  FOREIGN KEY (`idPasaje`) references pasaje (`idPasaje`)
 );
 
-CREATE TABLE `pasajes_pasajeros`(
+CREATE TABLE `pasaje_pasajero`(
   `idPasajePasajero` int(11) NOT NULL AUTO_INCREMENT,
   `idPasaje` int(11) NOT NULL,
   `idPasajero` int(11) NOT NULL,
