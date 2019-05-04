@@ -20,5 +20,8 @@ public interface CiudadDAO {
 	
 	public CiudadDTO getCiudadById(int id);
 
+	public CiudadDTO getCiudadById(int id);
+	
+	public CiudadDTO getCiudadByNombre(String nombre);
 
 }
