@@ -10,6 +10,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaPasajero extends JFrame {
 
@@ -17,21 +19,18 @@ public class VentanaPasajero extends JFrame {
 	private JTextField txtNombre;
 	private JTextField txtDni;
 	private JTextField txtApellido;
+	private static VentanaPasajero INSTANCE;
+	private JButton btnCargarDatos;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPasajero frame = new VentanaPasajero();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public static VentanaPasajero getInstance(){
+		if(INSTANCE == null)
+			return new VentanaPasajero();
+		else
+			return INSTANCE;
 	}
+	
 
-	public VentanaPasajero() {
+	private VentanaPasajero() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(500, 200, 366, 389);
 		contentPane = new JPanel();
@@ -79,11 +78,28 @@ public class VentanaPasajero extends JFrame {
 		contentPane.add(txtDni);
 		txtDni.setColumns(10);
 		
-		JButton btnCargarDatos = new JButton("Cargar datos");
+		btnCargarDatos = new JButton("Cargar datos");
+		btnCargarDatos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnCargarDatos.setForeground(Color.WHITE);
 		btnCargarDatos.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnCargarDatos.setBackground(new Color(76, 209, 55));
 		btnCargarDatos.setBounds(110, 273, 131, 42);
 		contentPane.add(btnCargarDatos);
 	}
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaPasajero frame = new VentanaPasajero();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
 }

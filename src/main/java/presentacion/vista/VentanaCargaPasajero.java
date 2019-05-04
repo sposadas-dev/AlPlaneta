@@ -13,26 +13,22 @@ import javax.swing.JButton;
 
 public class VentanaCargaPasajero extends JFrame {
 
+	private static VentanaCargaPasajero INSTANCE;
 	private JPanel contentPane;
 	private JTable tablaPasajeros;
 	private DefaultTableModel modelPasajeros;
+	private JButton btnEliminar; 
+	private JButton btnAgregarPasajero; 
 	private  String[] nombreColumnas = {"Nombre" , "Apellido","DNI"};
 
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaCargaPasajero frame = new VentanaCargaPasajero();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public static VentanaCargaPasajero getInstance(){
+		if(INSTANCE == null)
+			return new VentanaCargaPasajero();
+		else
+			return INSTANCE;
 	}
-
-	public VentanaCargaPasajero() {
+	
+	private VentanaCargaPasajero() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Carga de pasajeros");
 		setBounds(100, 100, 545, 350);
@@ -41,9 +37,9 @@ public class VentanaCargaPasajero extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton agregarPasajero = new JButton("Agregar");
-		agregarPasajero.setBounds(410, 85, 109, 37);
-		contentPane.add(agregarPasajero);
+		btnAgregarPasajero = new JButton("Agregar");
+		btnAgregarPasajero.setBounds(410, 85, 109, 37);
+		contentPane.add(btnAgregarPasajero);
 		
 		JScrollPane spPasajeros = new JScrollPane();
 		spPasajeros.setBounds(10, 42, 390, 258);
@@ -58,8 +54,44 @@ public class VentanaCargaPasajero extends JFrame {
 		tablaPasajeros = new JTable(modelPasajeros);
 		spPasajeros.setViewportView(tablaPasajeros);
 		
-		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar = new JButton("Eliminar");
 		btnEliminar.setBounds(410, 159, 109, 37);
 		contentPane.add(btnEliminar);
+		
+		this.setVisible(false);
 	}
+	
+	public JButton getBtnEliminar() {
+		return btnEliminar;
+	}
+
+	public void setBtnEliminar(JButton btnEliminar) {
+		this.btnEliminar = btnEliminar;
+	}
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaCargaPasajero frame = new VentanaCargaPasajero();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void mostrarVentana(boolean b) {
+		this.setVisible(b);
+	}
+
+	public JButton getBtnAgregarPasajero() {
+		return btnAgregarPasajero;
+	}
+
+	public void setBtnAgregarPasajero(JButton btnAgregarPasajero) {
+		this.btnAgregarPasajero = btnAgregarPasajero;
+	}
+
 }

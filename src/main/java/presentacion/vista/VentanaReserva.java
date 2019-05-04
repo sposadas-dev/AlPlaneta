@@ -1,6 +1,5 @@
 package presentacion.vista;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
 
@@ -9,7 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 
-import java.awt.Panel;
 
 import javax.swing.JComboBox;
 
@@ -19,38 +17,35 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
 
 public class VentanaReserva extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtMonto;
 	private JButton btnReservar;
 	private JButton btnCancelar;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaReserva frame = new VentanaReserva();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	private JComboBox<?> comboBoxOrigen;
+	private JComboBox<?> comboBoxDestino;
+	private JComboBox<?> comboBoxTransporte;
+	private JComboBox<?> comboBoxRangoHorario;
+	private JButton btnCargaPasajeros;
+	private JDateChooser dateChooserFechaSalida;
+	private JDateChooser dateChooserFechaLlegada;
+	private static VentanaReserva INSTANCE;
+	
+	
+	public static VentanaReserva getInstance(){
+		if(INSTANCE == null)
+			return new VentanaReserva();
+		else
+			return INSTANCE;
 	}
-
-	/**
-	 * Create the frame.
-	 */
-	public VentanaReserva() {
+	
+	private VentanaReserva() {
+		super();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(300, 200, 616, 491);
 		setResizable(false);
@@ -102,27 +97,27 @@ public class VentanaReserva extends JFrame {
 		lblMonto.setBounds(37, 316, 46, 14);
 		contentPane.add(lblMonto);
 		
-		JDateChooser dateChooserFechaSalida = new JDateChooser();
+		dateChooserFechaSalida = new JDateChooser();
 		dateChooserFechaSalida.setBounds(141, 82, 125, 20);
 		contentPane.add(dateChooserFechaSalida);
 		
-		JDateChooser dateChooserFechaLlegada = new JDateChooser();
+		dateChooserFechaLlegada = new JDateChooser();
 		dateChooserFechaLlegada.setBounds(448, 82, 125, 20);
 		contentPane.add(dateChooserFechaLlegada);
 		
-		JComboBox comboBoxOrigen = new JComboBox();
+		comboBoxOrigen = new JComboBox();
 		comboBoxOrigen.setBounds(141, 133, 125, 20);
 		contentPane.add(comboBoxOrigen);
 		
-		JComboBox comboBoxDestino = new JComboBox();
+		comboBoxDestino = new JComboBox();
 		comboBoxDestino.setBounds(411, 133, 121, 20);
 		contentPane.add(comboBoxDestino);
 		
-		JComboBox comboBoxTransporte = new JComboBox();
+		comboBoxTransporte = new JComboBox();
 		comboBoxTransporte.setBounds(168, 193, 125, 20);
 		contentPane.add(comboBoxTransporte);
 		
-		JComboBox comboBoxRangoHorario = new JComboBox();
+		comboBoxRangoHorario = new JComboBox();
 		comboBoxRangoHorario.setBounds(152, 250, 125, 20);
 		contentPane.add(comboBoxRangoHorario);
 		
@@ -149,8 +144,109 @@ public class VentanaReserva extends JFrame {
 		btnCancelar.setBounds(323, 375, 131, 42);
 		contentPane.add(btnCancelar);
 		
-		JButton btnCargaPasajeros = new JButton("Carga de pasajeros");
+		btnCargaPasajeros = new JButton("Carga de pasajeros");
 		btnCargaPasajeros.setBounds(356, 181, 176, 44);
 		contentPane.add(btnCargaPasajeros);
 	}
+
+	public void mostrarVentana(boolean visibilidad){
+		this.setVisible(visibilidad);
+	}
+	
+	public JTextField getTxtMonto() {
+		return txtMonto;
+	}
+
+	public void setTxtMonto(JTextField txtMonto) {
+		this.txtMonto = txtMonto;
+	}
+
+	public JButton getBtnReservar() {
+		return btnReservar;
+	}
+
+	public void setBtnReservar(JButton btnReservar) {
+		this.btnReservar = btnReservar;
+	}
+
+	public JButton getBtnCancelar() {
+		return btnCancelar;
+	}
+
+	public void setBtnCancelar(JButton btnCancelar) {
+		this.btnCancelar = btnCancelar;
+	}
+
+	public JComboBox<?> getComboBoxOrigen() {
+		return comboBoxOrigen;
+	}
+
+	public void setComboBoxOrigen(JComboBox<?> comboBoxOrigen) {
+		this.comboBoxOrigen = comboBoxOrigen;
+	}
+
+	public JComboBox<?> getComboBoxDestino() {
+		return comboBoxDestino;
+	}
+
+	public void setComboBoxDestino(JComboBox<?> comboBoxDestino) {
+		this.comboBoxDestino = comboBoxDestino;
+	}
+
+	public JComboBox<?> getComboBoxTransporte() {
+		return comboBoxTransporte;
+	}
+
+	public void setComboBoxTransporte(JComboBox<?> comboBoxTransporte) {
+		this.comboBoxTransporte = comboBoxTransporte;
+	}
+
+	public JComboBox<?> getComboBoxRangoHorario() {
+		return comboBoxRangoHorario;
+	}
+
+	public void setComboBoxRangoHorario(JComboBox<?> comboBoxRangoHorario) {
+		this.comboBoxRangoHorario = comboBoxRangoHorario;
+	}
+
+	public JButton getBtnCargaPasajeros() {
+		return btnCargaPasajeros;
+	}
+
+	public void setBtnCargaPasajeros(JButton btnCargaPasajeros) {
+		this.btnCargaPasajeros = btnCargaPasajeros;
+	}
+
+	public JDateChooser getDateChooserFechaSalida() {
+		return dateChooserFechaSalida;
+	}
+
+	public void setDateChooserFechaSalida(JDateChooser dateChooserFechaSalida) {
+		this.dateChooserFechaSalida = dateChooserFechaSalida;
+	}
+
+	public JDateChooser getDateChooserFechaLlegada() {
+		return dateChooserFechaLlegada;
+	}
+
+	public void setDateChooserFechaLlegada(JDateChooser dateChooserFechaLlegada) {
+		this.dateChooserFechaLlegada = dateChooserFechaLlegada;
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaReserva frame = new VentanaReserva();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 }
+
