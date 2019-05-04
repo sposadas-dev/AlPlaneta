@@ -7,13 +7,13 @@ import dto.MedioContactoDTO;
 
 public interface MedioContactoDAO {
 	
-	public boolean insert(MedioContactoDTO medio);
+	public boolean insert(MedioContactoDTO medioContacto);
 
-	public boolean delete(MedioContactoDTO medio_a_eliminar);
+	public boolean delete(MedioContactoDTO medioContacto_a_eliminar);
 
 	public List<MedioContactoDTO> readAll();
 
-	public boolean update(MedioContactoDTO medio);
+	public boolean update(MedioContactoDTO medioContacto);
 
 
 }

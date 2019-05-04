@@ -7,10 +7,19 @@ public class MedioContactoDTO {
 	private String telefonoCelular;
 	private String email;
 
-	public MedioContactoDTO(String telefonoFijo, String telefonoCelular, String email) {
+	public MedioContactoDTO(int idMedioContacto,String telefonoFijo, String telefonoCelular, String email) {
+		this.idMedioContacto = idMedioContacto;
 		this.telefonoFijo = telefonoFijo;
 		this.telefonoCelular = telefonoCelular;
 		this.email = email;
+	}
+
+	public int getIdMedioContacto() {
+		return idMedioContacto;
+	}
+
+	public void setIdMedioContacto(int idMedioContacto) {
+		this.idMedioContacto = idMedioContacto;
 	}
 
 	public String getTelefonoFijo() {
