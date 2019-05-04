@@ -12,7 +12,7 @@ import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.EstadoPasajeDAO;
 
 public class EstadoPasajeDAOSQL implements EstadoPasajeDAO {
-	private static final String insert = "INSERT INTO estadopasaje" + "(idEstadoPasaje, nombre, decripcion)" + "VALUE(?,?,?)";
+	private static final String insert = "INSERT INTO estadopasaje" + "(idEstadoPasaje, nombre, descripcion)" + "VALUE(?,?,?)";
 	private static final String readall = "SELECT * FROM estadopasaje";
 	private static final String delete = "DELETE FROM estadopasaje WHERE idEstadoPasaje = ?";
 	private static final String update = "UPDATE estadoPasaje SET nombre = ? WHERE idEstadoPasaje = ?";

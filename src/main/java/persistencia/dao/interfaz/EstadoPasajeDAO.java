@@ -19,7 +19,4 @@ public interface EstadoPasajeDAO {
 	
 	public EstadoPasajeDTO getEstadoPasajeById(int id);
 
-	public EstadoPasajeDTO getEstadoPasajeById(int id);
-	
-	public EstadoPasajeDTO getEstadoPasajeByNombre(String nombre);
 }

@@ -67,7 +67,7 @@ public class ViajeDAOSQL implements ViajeDAO {
 	ArrayList<ViajeDTO> viajes = new ArrayList<ViajeDTO>();
 	Conexion conexion = Conexion.getConexion();
 	
-	CiudadDAOSQL ciudadDAOSQL = new CiudadDAOSQl();
+	CiudadDAOSQL ciudadDAOSQL = new CiudadDAOSQL();
 		
 	try 
 	{

@@ -14,14 +14,8 @@ public interface CiudadDAO {
 
 	public boolean update(CiudadDTO ciudad) throws Exception;
 
-	CiudadDTO browse(int idCiudad) throws Exception;
-
 	public CiudadDTO getCiudadByNombre(String nombre);
 	
 	public CiudadDTO getCiudadById(int id);
-
-	public CiudadDTO getCiudadById(int id);
-	
-	public CiudadDTO getCiudadByNombre(String nombre);
 
 }
