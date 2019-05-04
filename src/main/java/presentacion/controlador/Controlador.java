@@ -117,22 +117,22 @@ public class Controlador implements ActionListener {
 	}
 	
 	
-	private void insertarCliente(VentanaCliente ventanaCliente) {	
-		MedioContactoDTO medioContacto = new MedioContactoDTO(ventanaCliente.getTxtTelefonoFijo().getText(),
-			ventanaCliente.getTxtTelefonoCelular().getText(),
-			ventanaCliente.getTxtEmail().getText()
-		);
-			
-		ClienteDTO nuevoCliente = new ClienteDTO(0,
-			ventanaCliente.getTxtNombre().getText(),
-			ventanaCliente.getTxtApellido().getText(),
-			ventanaCliente.getTxtDni().getText(),
-			ventanaCliente.getDateFechaNacimiento().getDate(),
-			medioContacto
-		);
-		
-		this.cliente.agregarCliente(nuevoCliente);
-	}
+//	private void insertarCliente(VentanaCliente ventanaCliente) {	
+//		MedioContactoDTO medioContacto = new MedioContactoDTO(ventanaCliente.getTxtTelefonoFijo().getText(),
+//			ventanaCliente.getTxtTelefonoCelular().getText(),
+//			ventanaCliente.getTxtEmail().getText()
+//		);
+//			
+//		ClienteDTO nuevoCliente = new ClienteDTO(0,
+//			ventanaCliente.getTxtNombre().getText(),
+//			ventanaCliente.getTxtApellido().getText(),
+//			ventanaCliente.getTxtDni().getText(),
+//			ventanaCliente.getDateFechaNacimiento().getDate(),
+//			medioContacto
+//		);
+//		
+//		this.cliente.agregarCliente(nuevoCliente);
+//	}
 	
 	//Validamos que los campos esten completos
 		private boolean validarCampos(){
@@ -157,7 +157,7 @@ public class Controlador implements ActionListener {
 		}
 		else if(evento.getSource() == ventanaCliente.getBtnRegistrar()){
 			if (validarCampos()){
-				insertarCliente(ventanaCliente);
+//				insertarCliente(ventanaCliente);
 				ventanaCliente.dispose();
 			}
 		}
