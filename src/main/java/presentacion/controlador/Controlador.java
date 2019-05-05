@@ -24,6 +24,7 @@ import modelo.ModeloViaje;
 import persistencia.dao.mysql.CiudadDAOSQL;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.HorarioReservaDAOSQL;
+import persistencia.dao.mysql.PagoDAOSQL;
 import persistencia.dao.mysql.PasajeroDAOSQL;
 import persistencia.dao.mysql.TransporteDAOSQL;
 import persistencia.dao.mysql.ViajeDAOSQL;
@@ -55,6 +56,7 @@ public class Controlador implements ActionListener {
 	private ArrayList<PasajeroDTO> pasajerosEnEstaReserva;
 	private ViajeDTO viajeSeleccionado;
 	private TransporteDTO transporteSeleccionado;
+	private BigDecimal totalaPagar;
 	
 	public Controlador() {
 		
@@ -78,7 +80,7 @@ public class Controlador implements ActionListener {
 		this.ventanaReserva.getBtnIrViajes().addActionListener(iV->mostrarViajesDisponibles(iV));
 		this.ventanaReserva.getBtnRealizarPago().addActionListener(rP->realizarPago(rP));
 		
-		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->seleccionEstadoDelPago(pago));
+		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
 //		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
 		
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->mostrarVentanaAltaDePasajeros(aP));
@@ -258,7 +260,6 @@ public class Controlador implements ActionListener {
 	}
 	
 	private void generarPasaje(ActionEvent pagar) {
-		
 		this.ventanaReserva.mostrarVentana(false);
 		this.ventanaFormaDePagos.mostrarVentana(true);
 		
@@ -268,9 +269,10 @@ public class Controlador implements ActionListener {
 		pasajeDTO.setViaje(this.viajeSeleccionado);
 		
 /*OBTENER EL TRASNPORTE*/
-		transporteSeleccionado = obtenerTransporteElegidoPorCliente(
-								(String) this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
-		pasajeDTO.setTransporte(transporteSeleccionado);
+//		System.out.println("------"+this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
+//		transporteSeleccionado = obtenerTransporteElegidoPorCliente(
+//								(String) this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
+//		pasajeDTO.setTransporte(transporteSeleccionado);
 				
 		
 /*OBTENER EL RANGO ELEGIDO POR EL CLIENTE*/
@@ -366,47 +368,38 @@ public class Controlador implements ActionListener {
 	
 /* - - - - - - - - - - - - - -  -- METODOS DE PAGOS - - - - - - -  - - - - - - - - - - - */	
 	
-	private void seleccionEstadoDelPago(ActionEvent pago) {
+	private void darAltaDelPago(ActionEvent pago) {
 		PagoDTO pagoDTO = new PagoDTO();
 		Calendar currenttime = Calendar.getInstance();
 		 
 		pagoDTO.setMonto(new BigDecimal(this.ventanaFormaDePagos.getTextImporteTotal().getText()));
 		pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
 		
-//		String itemSeleccionado = this.ventanaFormaDePagos.getComboBoxEstadoPago().getSelectedItem().toString();
-//		redirigirSegunItemSeleccionado(itemSeleccionado);
+		PagoDAOSQL pagoDAO = new PagoDAOSQL();
+		pagoDAO.insert(pagoDTO);
+		
 	}
-
 
 	private void realizarPago(ActionEvent rP) {
 		this.ventanaReserva.setVisible(false);
 		this.ventanaFormaDePagos.setVisible(true);
 		
-//		this.viajeSeleccionado.getPrecio().add(this.transporteSeleccionado.getPrecioBase());
-		
-		this.ventanaFormaDePagos.getLblMontoaPagar().setText(calcularMontoDePasaje());
+		this.transporteSeleccionado = obtenerTransporteElegidoPorCliente(this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
+		this.ventanaFormaDePagos.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
 		
 	}
-private String calcularMontoDePasaje() {
-	System.out.println("viaje"+this.viajeSeleccionado.getPrecio());
-	System.out.println("transp"+this.transporteSeleccionado.getPrecioBase());
 	
-//	BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
-//	BigDecimal Valor2 = this.transporteSeleccionado.getPrecioBase();
-	
-	BigDecimal Valor1 = new BigDecimal(1);
-	BigDecimal Valor2 = new BigDecimal(1);
-	
-	Valor2 = Valor2.add(Valor1);
-	return Valor2.toString();
-}
+	private BigDecimal calcularMontoDePasaje() {
+		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
+		BigDecimal Valor2 = this.transporteSeleccionado.getPrecioBase();
+		Valor2 = Valor2.add(Valor1);
+		totalaPagar = Valor2;
+		
+		return totalaPagar;
+	}
 
 
 	/* - - - -  - - - - - - - - - -  - - OTROS METODOS - - - - - - - - - - - - - - - -  -*/	
-	private void mostrarVentanaPago() {
-		this.ventanaFormaDePagos.setVisible(true);
-	}
-	
 	
 	private TransporteDTO obtenerTransporteElegidoPorCliente(String transporteComboBox) {
 		TransporteDAOSQL tDAO = new TransporteDAOSQL();
