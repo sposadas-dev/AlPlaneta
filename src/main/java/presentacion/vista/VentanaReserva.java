@@ -42,6 +42,7 @@ public class VentanaReserva extends JFrame {
 	private JList<String> listViajesDisponibles;
 	private DefaultListModel<String> listModelViajesDisponibles;
 	private JButton btnIrViajes;
+	private JButton btnRealizarPago;
 	
 	
 	public static VentanaReserva getInstance(){
@@ -113,14 +114,14 @@ public class VentanaReserva extends JFrame {
 		btnReservar.setForeground(Color.WHITE);
 		btnReservar.setBackground(new Color(52, 152, 219));
 		btnReservar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnReservar.setBounds(148, 324, 131, 42);
+		btnReservar.setBounds(226, 312, 131, 42);
 		contentPane.add(btnReservar);
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setBackground(new Color(192, 57, 43));
 		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnCancelar.setBounds(330, 324, 131, 42);
+		btnCancelar.setBounds(458, 312, 131, 42);
 		contentPane.add(btnCancelar);
 		
 		btnCargaPasajeros = new JButton("Carga de pasajeros");
@@ -142,6 +143,14 @@ public class VentanaReserva extends JFrame {
 		lblViajeSeleccionado = new JLabel("");
 		lblViajeSeleccionado.setBounds(226, 74, 363, 14);
 		contentPane.add(lblViajeSeleccionado);
+		
+		btnRealizarPago = new JButton("Pagar");
+		btnRealizarPago.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnRealizarPago.setBounds(27, 309, 131, 45);
+		contentPane.add(btnRealizarPago);
 		
 		listModelViajesDisponibles = new DefaultListModel<String>();
 		listViajesDisponibles = new JList<String>((listModelViajesDisponibles));
@@ -233,6 +242,15 @@ public class VentanaReserva extends JFrame {
 
 	public void setLblViajeSeleccionado(JLabel lblViajeSeleccionado) {
 		this.lblViajeSeleccionado = lblViajeSeleccionado;
+	}
+	
+
+	public JButton getBtnRealizarPago() {
+		return btnRealizarPago;
+	}
+
+	public void setBtnRealizarPago(JButton btnRealizarPago) {
+		this.btnRealizarPago = btnRealizarPago;
 	}
 
 	public static void main(String[] args) {

@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -12,6 +13,7 @@ import javax.swing.JOptionPane;
 
 import dto.CiudadDTO;
 import dto.HorarioReservaDTO;
+import dto.PagoDTO;
 import dto.PasajeDTO;
 import dto.PasajeroDTO;
 import dto.TransporteDTO;
@@ -52,6 +54,7 @@ public class Controlador implements ActionListener {
 	private VentanaTablaViajes ventanaTablaViajes;
 	private ArrayList<PasajeroDTO> pasajerosEnEstaReserva;
 	private ViajeDTO viajeSeleccionado;
+	private TransporteDTO transporteSeleccionado;
 	
 	public Controlador() {
 		
@@ -67,15 +70,16 @@ public class Controlador implements ActionListener {
 		this.viajes_en_tabla = new ArrayList<ViajeDTO>();
 		this.pasajerosEnEstaReserva = new ArrayList<PasajeroDTO>();
 		viajeSeleccionado = new ViajeDTO();
+		transporteSeleccionado = new TransporteDTO();
 
 		
-		this.ventanaReserva.getBtnReservar().addActionListener(reserv->SeleccionFormaDePago(reserv));
+		this.ventanaReserva.getBtnReservar().addActionListener(reserv->generarPasaje(reserv));
 		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->mostrarVentanaCargaDePasajeros(cP));
 		this.ventanaReserva.getBtnIrViajes().addActionListener(iV->mostrarViajesDisponibles(iV));
+		this.ventanaReserva.getBtnRealizarPago().addActionListener(rP->realizarPago(rP));
 		
 		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->seleccionEstadoDelPago(pago));
-		this.ventanaPagoEfectivo.getBtnRegistrarPago().addActionListener(rP->generarPasajeEfectivo(rP));
-		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
+//		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
 		
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->mostrarVentanaAltaDePasajeros(aP));
 		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(aP->altaPasajerosDeUnViaje(aP));
@@ -96,11 +100,13 @@ public class Controlador implements ActionListener {
 	
 		llenarViajesEnTabla();
 		
+//		mostrarVentanaPago();
+		
 //		llenarValoresEnCargaDeViaje();
 	}
 	
 	
-/*- - - - - - - -  - - - - - - - METODOS DE VIAJE - - - - - - - - - - - - - - - - --  */
+	/*- - - - - - - -  - - - - - - - METODOS DE VIAJE - - - - - - - - - - - - - - - - --  */
 	private void darAltaUnViajes(ActionEvent aV) {
 		ModeloCiudad modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
 		ModeloViaje modeloViaje = new ModeloViaje(new DAOSQLFactory());
@@ -251,8 +257,36 @@ public class Controlador implements ActionListener {
 		this.ventanaCargaPasajero.mostrarVentana(true);
 	}
 	
-/*- - - - - - - -  - - - - - - - METODOS DE RESERVA - - - - - - - - - - - - - - - - --  */		
+	private void generarPasaje(ActionEvent pagar) {
+		
+		this.ventanaReserva.mostrarVentana(false);
+		this.ventanaFormaDePagos.mostrarVentana(true);
+		
+		PasajeDTO pasajeDTO = new PasajeDTO();
+		
+/*OBTENER EL VIAJE SELECCIONADO*/
+		pasajeDTO.setViaje(this.viajeSeleccionado);
+		
+/*OBTENER EL TRASNPORTE*/
+		transporteSeleccionado = obtenerTransporteElegidoPorCliente(
+								(String) this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
+		pasajeDTO.setTransporte(transporteSeleccionado);
+				
+		
+/*OBTENER EL RANGO ELEGIDO POR EL CLIENTE*/
+		String rangoElegido = this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString();
+		
+/*OBTENER LOS PASAJEROS RELACIONADO A ESE PASAJE*/
+		pasajeDTO.setPasajeros(this.pasajerosEnEstaReserva);
+		
+/*OBTENER EL PAGO DEL PASAJE*/
+
+/*GENERAR EL PASAJE Y DARLO DE ALTA EN LA BASE DE DATOS*/
+		
+	}
+
 	
+	/*- - - - - - - -  - - - - - - - METODOS DE RESERVA - - - - - - - - - - - - - - - - --  */		
 	
 	private void llenarValoresEnReserva(){
 		llenarComboRangoDeHorarioEnReserva();
@@ -330,52 +364,50 @@ public class Controlador implements ActionListener {
 	}
 
 	
-/* - - - - - - - - - - - - - -  -- OTROS METODOS  - - - - - - -  - - - - - - - - - - - */	
+/* - - - - - - - - - - - - - -  -- METODOS DE PAGOS - - - - - - -  - - - - - - - - - - - */	
 	
-	
-
-	
-
-	
-	/**/
-	
-	
-	private void generarPasajeTarjeta(ActionEvent rP) {
-		String importeIngresado = ventanaPagoTarjeta.getTextImporteIngresado().toString();
+	private void seleccionEstadoDelPago(ActionEvent pago) {
+		PagoDTO pagoDTO = new PagoDTO();
+		Calendar currenttime = Calendar.getInstance();
+		 
+		pagoDTO.setMonto(new BigDecimal(this.ventanaFormaDePagos.getTextImporteTotal().getText()));
+		pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
+		
+//		String itemSeleccionado = this.ventanaFormaDePagos.getComboBoxEstadoPago().getSelectedItem().toString();
+//		redirigirSegunItemSeleccionado(itemSeleccionado);
 	}
 
-	private void generarPasajeEfectivo(ActionEvent rP) {
+
+	private void realizarPago(ActionEvent rP) {
+		this.ventanaReserva.setVisible(false);
+		this.ventanaFormaDePagos.setVisible(true);
+		
+//		this.viajeSeleccionado.getPrecio().add(this.transporteSeleccionado.getPrecioBase());
+		
+		this.ventanaFormaDePagos.getLblMontoaPagar().setText(calcularMontoDePasaje());
 		
 	}
-
-	private void SeleccionFormaDePago(ActionEvent pagar) {
+private String calcularMontoDePasaje() {
+	System.out.println("viaje"+this.viajeSeleccionado.getPrecio());
+	System.out.println("transp"+this.transporteSeleccionado.getPrecioBase());
 	
-		this.ventanaReserva.mostrarVentana(false);
-		this.ventanaFormaDePagos.mostrarVentana(true);
-		
-		PasajeDTO pasajeDTO = new PasajeDTO();
-		
-/*OBTENER EL VIAJE SELECCIONADO*/
-		pasajeDTO.setViaje(this.viajeSeleccionado);
-		
-/*OBTENER EL TRASNPORTE*/
-		TransporteDTO transporteSeleccionado = obtenerTransporteElegidoPorCliente(
-								this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
-		pasajeDTO.setTransporte(transporteSeleccionado);
-				
-		
-/*OBTENER EL RANGO ELEGIDO POR EL CLIENTE*/
-		String rangoElegido = this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString();
-		
-/*OBTENER LOS PASAJEROS RELACIONADO A ESE PASAJE*/
-		pasajeDTO.setPasajeros(this.pasajerosEnEstaReserva);
-		
-/*OBTENER EL PAGO DEL PASAJE*/
+//	BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
+//	BigDecimal Valor2 = this.transporteSeleccionado.getPrecioBase();
+	
+	BigDecimal Valor1 = new BigDecimal(1);
+	BigDecimal Valor2 = new BigDecimal(1);
+	
+	Valor2 = Valor2.add(Valor1);
+	return Valor2.toString();
+}
 
-/*GENERAR EL PASAJE Y DARLO DE ALTA EN LA BASE DE DATOS*/
-		
+
+	/* - - - -  - - - - - - - - - -  - - OTROS METODOS - - - - - - - - - - - - - - - -  -*/	
+	private void mostrarVentanaPago() {
+		this.ventanaFormaDePagos.setVisible(true);
 	}
-
+	
+	
 	private TransporteDTO obtenerTransporteElegidoPorCliente(String transporteComboBox) {
 		TransporteDAOSQL tDAO = new TransporteDAOSQL();
 		TransporteDTO ret = null;
@@ -385,12 +417,11 @@ public class Controlador implements ActionListener {
 				ret = t;
 		return ret;
 	}
-
-
-	private void seleccionEstadoDelPago(ActionEvent pago) {
-		String itemSeleccionado = this.ventanaFormaDePagos.getComboBoxEstadoPago().getSelectedItem().toString();
-		redirigirSegunItemSeleccionado(itemSeleccionado);
-	}
+	
+//	private void generarPasajeTarjeta(ActionEvent rP) {
+//		String importeIngresado = ventanaPagoTarjeta.getTextImporteIngresado().toString();
+//	}
+//	
 
 	private void redirigirSegunItemSeleccionado(String itemSeleccionado) {
 		if(itemSeleccionado.equals("TARJETA")){
@@ -442,8 +473,9 @@ public class Controlador implements ActionListener {
 //		this.cliente.agregarCliente(nuevoCliente);
 //	}
 	
-	//Validamos que los campos esten completos
-		private boolean validarCampos(){
+//	Validamos que los campos esten completos
+		
+	private boolean validarCampos(){
 			if (ventanaCliente.getTxtNombre().getText().isEmpty() ||
 				ventanaCliente.getTxtApellido().getText().isEmpty() ||
 				ventanaCliente.getTxtDni().getText().isEmpty() ||
