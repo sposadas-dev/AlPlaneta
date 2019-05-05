@@ -5,6 +5,7 @@ import java.awt.SystemColor;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 
@@ -15,10 +16,15 @@ import com.toedter.calendar.JDateChooser;
 
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.JList;
+import javax.swing.ListModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaReserva extends JFrame {
 
@@ -27,14 +33,15 @@ public class VentanaReserva extends JFrame {
 	private JTextField txtMonto;
 	private JButton btnReservar;
 	private JButton btnCancelar;
-	private JComboBox<?> comboBoxOrigen;
-	private JComboBox<?> comboBoxDestino;
 	private JComboBox<?> comboBoxTransporte;
 	private JComboBox<?> comboBoxRangoHorario;
 	private JButton btnCargaPasajeros;
-	private JDateChooser dateChooserFechaSalida;
-	private JDateChooser dateChooserFechaLlegada;
+	private JLabel lblViajeSeleccionado;
 	private static VentanaReserva INSTANCE;
+	
+	private JList<String> listViajesDisponibles;
+	private DefaultListModel<String> listModelViajesDisponibles;
+	private JButton btnIrViajes;
 	
 	
 	public static VentanaReserva getInstance(){
@@ -47,7 +54,7 @@ public class VentanaReserva extends JFrame {
 	private VentanaReserva() {
 		super();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(300, 200, 616, 491);
+		setBounds(300, 200, 617, 436);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.controlHighlight);
@@ -69,84 +76,77 @@ public class VentanaReserva extends JFrame {
 		lblAgregarReserva.setFont(new Font("Tahoma", Font.BOLD, 24));
 		panelReserva.add(lblAgregarReserva);
 		
-		JLabel lblFechaSalida = new JLabel("Fecha de salida:");
-		lblFechaSalida.setBounds(37, 82, 94, 14);
-		contentPane.add(lblFechaSalida);
-		
-		JLabel lblFechaLlegada = new JLabel("Fecha de llegada:");
-		lblFechaLlegada.setBounds(334, 82, 107, 14);
-		contentPane.add(lblFechaLlegada);
-		
-		JLabel lblOrigen = new JLabel("Origen:");
-		lblOrigen.setBounds(37, 136, 46, 14);
-		contentPane.add(lblOrigen);
-		
-		JLabel lblDestino = new JLabel("Destino:");
-		lblDestino.setBounds(334, 136, 46, 14);
-		contentPane.add(lblDestino);
-		
 		JLabel lblTransporte = new JLabel("Medio de transporte:");
-		lblTransporte.setBounds(37, 196, 125, 14);
+		lblTransporte.setBounds(24, 145, 125, 14);
 		contentPane.add(lblTransporte);
 		
 		JLabel lblRangoHorario = new JLabel("Rango de horario:");
-		lblRangoHorario.setBounds(37, 253, 113, 14);
+		lblRangoHorario.setBounds(323, 145, 113, 14);
 		contentPane.add(lblRangoHorario);
 		
 		JLabel lblMonto = new JLabel("Monto:");
-		lblMonto.setBounds(37, 316, 46, 14);
+		lblMonto.setBounds(24, 207, 46, 14);
 		contentPane.add(lblMonto);
 		
-		dateChooserFechaSalida = new JDateChooser();
-		dateChooserFechaSalida.setBounds(141, 82, 125, 20);
-		contentPane.add(dateChooserFechaSalida);
-		
-		dateChooserFechaLlegada = new JDateChooser();
-		dateChooserFechaLlegada.setBounds(448, 82, 125, 20);
-		contentPane.add(dateChooserFechaLlegada);
-		
-		comboBoxOrigen = new JComboBox();
-		comboBoxOrigen.setBounds(141, 133, 125, 20);
-		contentPane.add(comboBoxOrigen);
-		
-		comboBoxDestino = new JComboBox();
-		comboBoxDestino.setBounds(411, 133, 121, 20);
-		contentPane.add(comboBoxDestino);
-		
 		comboBoxTransporte = new JComboBox();
-		comboBoxTransporte.setBounds(168, 193, 125, 20);
+		comboBoxTransporte.setBounds(159, 142, 143, 20);
 		contentPane.add(comboBoxTransporte);
 		
 		comboBoxRangoHorario = new JComboBox();
-		comboBoxRangoHorario.setBounds(152, 250, 125, 20);
+		comboBoxRangoHorario.setBounds(446, 142, 143, 20);
 		contentPane.add(comboBoxRangoHorario);
 		
 		txtMonto = new JTextField();
-		txtMonto.setBounds(141, 313, 117, 20);
+		txtMonto.setBounds(159, 204, 143, 20);
 		contentPane.add(txtMonto);
 		txtMonto.setColumns(10);
 		
 		JSeparator separadorReserva = new JSeparator();
-		separadorReserva.setBounds(24, 356, 549, 20);
+		separadorReserva.setBounds(40, 281, 549, 20);
 		contentPane.add(separadorReserva);
 		
 		btnReservar = new JButton("Reservar");
+		btnReservar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnReservar.setForeground(Color.WHITE);
 		btnReservar.setBackground(new Color(52, 152, 219));
 		btnReservar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnReservar.setBounds(152, 375, 131, 42);
+		btnReservar.setBounds(148, 324, 131, 42);
 		contentPane.add(btnReservar);
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setBackground(new Color(192, 57, 43));
 		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnCancelar.setBounds(323, 375, 131, 42);
+		btnCancelar.setBounds(330, 324, 131, 42);
 		contentPane.add(btnCancelar);
 		
 		btnCargaPasajeros = new JButton("Carga de pasajeros");
-		btnCargaPasajeros.setBounds(356, 181, 176, 44);
+		btnCargaPasajeros.setBounds(336, 203, 253, 23);
 		contentPane.add(btnCargaPasajeros);
+		
+		btnIrViajes = new JButton("Seleccionar Viaje");
+		btnIrViajes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnIrViajes.setBounds(24, 74, 182, 23);
+		contentPane.add(btnIrViajes);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setBounds(336, 82, 21, -10);
+		contentPane.add(lblNewLabel);
+		
+		lblViajeSeleccionado = new JLabel("");
+		lblViajeSeleccionado.setBounds(226, 74, 363, 14);
+		contentPane.add(lblViajeSeleccionado);
+		
+		listModelViajesDisponibles = new DefaultListModel<String>();
+		listViajesDisponibles = new JList<String>((listModelViajesDisponibles));
+		listViajesDisponibles.setModel(listModelViajesDisponibles);
+		
 	}
 
 	public void mostrarVentana(boolean visibilidad){
@@ -177,22 +177,6 @@ public class VentanaReserva extends JFrame {
 		this.btnCancelar = btnCancelar;
 	}
 
-	public JComboBox<?> getComboBoxOrigen() {
-		return comboBoxOrigen;
-	}
-
-	public void setComboBoxOrigen(JComboBox<?> comboBoxOrigen) {
-		this.comboBoxOrigen = comboBoxOrigen;
-	}
-
-	public JComboBox<?> getComboBoxDestino() {
-		return comboBoxDestino;
-	}
-
-	public void setComboBoxDestino(JComboBox<?> comboBoxDestino) {
-		this.comboBoxDestino = comboBoxDestino;
-	}
-
 	public JComboBox<?> getComboBoxTransporte() {
 		return comboBoxTransporte;
 	}
@@ -217,24 +201,40 @@ public class VentanaReserva extends JFrame {
 		this.btnCargaPasajeros = btnCargaPasajeros;
 	}
 
-	public JDateChooser getDateChooserFechaSalida() {
-		return dateChooserFechaSalida;
+	public JList<String> getListViajesDisponibles() {
+		return listViajesDisponibles;
 	}
 
-	public void setDateChooserFechaSalida(JDateChooser dateChooserFechaSalida) {
-		this.dateChooserFechaSalida = dateChooserFechaSalida;
+	public void setListViajesDisponibles(JList<String> listViajesDisponibles) {
+		this.listViajesDisponibles = listViajesDisponibles;
 	}
 
-	public JDateChooser getDateChooserFechaLlegada() {
-		return dateChooserFechaLlegada;
+	public DefaultListModel<String> getListModelViajesDisponibles() {
+		return listModelViajesDisponibles;
 	}
 
-	public void setDateChooserFechaLlegada(JDateChooser dateChooserFechaLlegada) {
-		this.dateChooserFechaLlegada = dateChooserFechaLlegada;
+	public void setListModelViajesDisponibles(DefaultListModel<String> listModelViajesDisponibles) {
+		this.listModelViajesDisponibles = listModelViajesDisponibles;
 	}
 	
+
+	public JButton getBtnIrViajes() {
+		return btnIrViajes;
+	}
+
+	public void setBtnIrViajes(JButton btnIrViajes) {
+		this.btnIrViajes = btnIrViajes;
+	}
+
 	
-	
+	public JLabel getLblViajeSeleccionado() {
+		return lblViajeSeleccionado;
+	}
+
+	public void setLblViajeSeleccionado(JLabel lblViajeSeleccionado) {
+		this.lblViajeSeleccionado = lblViajeSeleccionado;
+	}
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -247,6 +247,5 @@ public class VentanaReserva extends JFrame {
 			}
 		});
 	}
-
 }
 

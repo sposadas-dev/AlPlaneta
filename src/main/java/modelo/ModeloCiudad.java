@@ -6,11 +6,11 @@ import dto.CiudadDTO;
 import persistencia.dao.interfaz.CiudadDAO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 
-public class Ciudad {
+public class ModeloCiudad {
 
 	private CiudadDAO ciudad;
 	
-	public Ciudad(DAOAbstractFactory metodo_persistencia){
+	public ModeloCiudad(DAOAbstractFactory metodo_persistencia){
 		this.ciudad = metodo_persistencia.createCiudadDAO();
 	}
 	
@@ -28,5 +28,9 @@ public class Ciudad {
 
 	public void editarCiudad(CiudadDTO ciudadUpdate) throws Exception {
 		this.ciudad.update(ciudadUpdate);
+	}
+	
+	public CiudadDTO getCiudadByName(String nombreCiudad){
+		return this.ciudad.getCiudadByNombre(nombreCiudad);
 	}
 }

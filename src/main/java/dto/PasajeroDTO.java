@@ -14,6 +14,11 @@ public class PasajeroDTO {
 		this.dni = dni;
 	}
 
+	
+	public PasajeroDTO() {
+	}
+
+
 	public int getIdPasajero() {
 		return idPasajero;
 	}

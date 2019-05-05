@@ -6,11 +6,11 @@ import dto.ViajeDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.ViajeDAO;
 
-public class Viaje {
+public class ModeloViaje {
 
 	private ViajeDAO viaje;
 	
-	public Viaje(DAOAbstractFactory metodo_persistencia){
+	public ModeloViaje(DAOAbstractFactory metodo_persistencia){
 		this.viaje = metodo_persistencia.createViajeDAO();
 	}
 	
