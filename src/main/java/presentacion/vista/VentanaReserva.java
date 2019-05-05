@@ -106,6 +106,10 @@ public class VentanaReserva extends JFrame {
 		contentPane.add(separadorReserva);
 		
 		btnReservar = new JButton("Reservar");
+		btnReservar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnReservar.setForeground(Color.WHITE);
 		btnReservar.setBackground(new Color(52, 152, 219));
 		btnReservar.setFont(new Font("Tahoma", Font.BOLD, 14));

@@ -50,6 +50,8 @@ public class Controlador implements ActionListener {
 	private VentanaPasajero ventanaPasajero;
 	private VentanaCargarViaje ventanaCargarViaje;
 	private VentanaTablaViajes ventanaTablaViajes;
+	private ArrayList<PasajeroDTO> pasajerosEnEstaReserva;
+	private ViajeDTO viajeSeleccionado;
 	
 	public Controlador() {
 		
@@ -63,6 +65,8 @@ public class Controlador implements ActionListener {
 		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();
 		
 		this.viajes_en_tabla = new ArrayList<ViajeDTO>();
+		this.pasajerosEnEstaReserva = new ArrayList<PasajeroDTO>();
+		viajeSeleccionado = new ViajeDTO();
 
 		
 		this.ventanaReserva.getBtnReservar().addActionListener(reserv->SeleccionFormaDePago(reserv));
@@ -82,9 +86,6 @@ public class Controlador implements ActionListener {
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(sV->seleccionarViaje(sV));
 		
 	}
-
-
-
 
 
 	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
@@ -168,11 +169,12 @@ public class Controlador implements ActionListener {
 	}
 	
 	private void seleccionarViaje(ActionEvent sV) {
+		
 		this.ventanaTablaViajes.setVisible(false);
 		this.ventanaReserva.setVisible(true);
 		
 		int filaSeleccionada = this.ventanaTablaViajes.getTablaViajes().getSelectedRow();
-		ViajeDTO viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
+		viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
 		
 		String viajeString = String.valueOf(viajeSeleccionado.getId()) +
 				" -   DE : "+  viajeSeleccionado.getOrigenViaje().getNombre() +
@@ -194,28 +196,49 @@ public class Controlador implements ActionListener {
 		PasajeroDAOSQL DAO = new PasajeroDAOSQL();
 		DAO.insert(pasajeroDTO);
 		
+		pasajerosEnEstaReserva.add(pasajeroDTO);
+		
 		/*LLENAMOS LA VENTANA CON LOS PASAJEROS DEL VIAJE*/
 		llenarTablaDePasajerosEnVentanaCargaPasajeros();
+		
+/*VACIAR LOS TXTFIELD*/		
+		this.ventanaPasajero.getTxtNombre().setText("");
+		this.ventanaPasajero.getTxtApellido().setText("");;
+		this.ventanaPasajero.getTxtDni().setText("");
+		
+		this.ventanaPasajero.setVisible(false);
 		
 	}
 	
 	private void altaPasajerosDeUnViaje(ActionEvent aP) {
-//		this.ventanaCargaPasajero.getTablaPasajeros().get
+		this.ventanaCargaPasajero.setVisible(false);
+		this.ventanaReserva.setVisible(true);
 	}
 	
 	private void llenarTablaDePasajerosEnVentanaCargaPasajeros(){
+		
 		this.ventanaCargaPasajero.getModelPasajeros().setRowCount(0);
 		this.ventanaCargaPasajero.getModelPasajeros().setColumnCount(0);
 		this.ventanaCargaPasajero.getModelPasajeros().setColumnIdentifiers(this.ventanaCargaPasajero.getNombreColumnas());
-		ArrayList<PasajeroDTO> pasajeros_en_tabla = (ArrayList<PasajeroDTO>) new PasajeroDAOSQL().readAll();
-		for(int i=0; i< pasajeros_en_tabla.size();i++){
+		for(int i=0; i<pasajerosEnEstaReserva.size();i++){
 			Object[] fila = { 
-					pasajeros_en_tabla.get(i).getNombre(),
-					pasajeros_en_tabla.get(i).getApellido(),
-					pasajeros_en_tabla.get(i).getDni()
+					pasajerosEnEstaReserva.get(i).getNombre(),
+					pasajerosEnEstaReserva.get(i).getApellido(),
+					pasajerosEnEstaReserva.get(i).getDni()
 					};
 			this.ventanaCargaPasajero.getModelPasajeros().addRow(fila);
 		}
+		
+		
+//		ArrayList<PasajeroDTO> pasajeros_en_tabla = (ArrayList<PasajeroDTO>) new PasajeroDAOSQL().readAll();
+//		for(int i=0; i< pasajeros_en_tabla.size();i++){
+//			Object[] fila = { 
+//					pasajeros_en_tabla.get(i).getNombre(),
+//					pasajeros_en_tabla.get(i).getApellido(),
+//					pasajeros_en_tabla.get(i).getDni()
+//					};
+		
+//		}
 	}
 
 	private void mostrarVentanaAltaDePasajeros(ActionEvent aP) {
@@ -243,6 +266,7 @@ public class Controlador implements ActionListener {
 	}
 
 	private void llenarListModelViajesEnReserva() {
+		
 		this.ventanaReserva.getListModelViajesDisponibles().removeAllElements();
 		
 		List<ViajeDTO> viajesDisponibles = new ViajeDAOSQL().readAll();
@@ -325,9 +349,43 @@ public class Controlador implements ActionListener {
 	}
 
 	private void SeleccionFormaDePago(ActionEvent pagar) {
+	
 		this.ventanaReserva.mostrarVentana(false);
 		this.ventanaFormaDePagos.mostrarVentana(true);
+		
+		PasajeDTO pasajeDTO = new PasajeDTO();
+		
+/*OBTENER EL VIAJE SELECCIONADO*/
+		pasajeDTO.setViaje(this.viajeSeleccionado);
+		
+/*OBTENER EL TRASNPORTE*/
+		TransporteDTO transporteSeleccionado = obtenerTransporteElegidoPorCliente(
+								this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
+		pasajeDTO.setTransporte(transporteSeleccionado);
+				
+		
+/*OBTENER EL RANGO ELEGIDO POR EL CLIENTE*/
+		String rangoElegido = this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString();
+		
+/*OBTENER LOS PASAJEROS RELACIONADO A ESE PASAJE*/
+		pasajeDTO.setPasajeros(this.pasajerosEnEstaReserva);
+		
+/*OBTENER EL PAGO DEL PASAJE*/
+
+/*GENERAR EL PASAJE Y DARLO DE ALTA EN LA BASE DE DATOS*/
+		
 	}
+
+	private TransporteDTO obtenerTransporteElegidoPorCliente(String transporteComboBox) {
+		TransporteDAOSQL tDAO = new TransporteDAOSQL();
+		TransporteDTO ret = null;
+		ArrayList<TransporteDTO> transportes = (ArrayList<TransporteDTO>) tDAO.readAll();
+		for(TransporteDTO t: transportes)
+			if(t.getNombreTransporte().equals(transporteComboBox))
+				ret = t;
+		return ret;
+	}
+
 
 	private void seleccionEstadoDelPago(ActionEvent pago) {
 		String itemSeleccionado = this.ventanaFormaDePagos.getComboBoxEstadoPago().getSelectedItem().toString();
