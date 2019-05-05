@@ -10,6 +10,8 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaCargaPasajero extends JFrame {
 
@@ -60,6 +62,10 @@ public class VentanaCargaPasajero extends JFrame {
 		contentPane.add(btnEliminar);
 		
 		btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnConfirmar.setBounds(410, 222, 109, 37);
 		contentPane.add(btnConfirmar);
 		

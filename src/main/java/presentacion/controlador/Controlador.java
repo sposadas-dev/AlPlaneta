@@ -33,10 +33,11 @@ import presentacion.vista.VentanaPagoEfectivo;
 import presentacion.vista.VentanaPagoTarjeta;
 import presentacion.vista.VentanaPasajero;
 import presentacion.vista.VentanaReserva;
+import presentacion.vista.VentanaTablaViajes;
 import presentacion.vista.Vista;
 
 public class Controlador implements ActionListener {
-	
+	private List<ViajeDTO> viajes_en_tabla;
 	ModeloCiudad modeloCiudad;
 	private Vista vista;
 	private VentanaCliente ventanaCliente;
@@ -48,6 +49,7 @@ public class Controlador implements ActionListener {
 	private VentanaCargaPasajero ventanaCargaPasajero;
 	private VentanaPasajero ventanaPasajero;
 	private VentanaCargarViaje ventanaCargarViaje;
+	private VentanaTablaViajes ventanaTablaViajes;
 	
 	public Controlador() {
 		
@@ -58,25 +60,39 @@ public class Controlador implements ActionListener {
 		this.ventanaPasajero = VentanaPasajero.getInstance();
 		this.ventanaCargarViaje = VentanaCargarViaje.getInstance();
 		this.ventanaCargaPasajero = VentanaCargaPasajero.getInstance();
+		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();
+		
+		this.viajes_en_tabla = new ArrayList<ViajeDTO>();
 
 		
 		this.ventanaReserva.getBtnReservar().addActionListener(reserv->SeleccionFormaDePago(reserv));
 		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->mostrarVentanaCargaDePasajeros(cP));
+		this.ventanaReserva.getBtnIrViajes().addActionListener(iV->mostrarViajesDisponibles(iV));
 		
 		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->seleccionEstadoDelPago(pago));
 		this.ventanaPagoEfectivo.getBtnRegistrarPago().addActionListener(rP->generarPasajeEfectivo(rP));
 		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
 		
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->mostrarVentanaAltaDePasajeros(aP));
+		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(aP->altaPasajerosDeUnViaje(aP));
+		
 		this.ventanaPasajero.getBtnCargarDatos().addActionListener(aP->darDeAltaUnPasajero(aP));
 		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaUnViajes(aV));
 		
+		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(sV->seleccionarViaje(sV));
+		
 	}
 
-/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
+
+
+
+
+	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
 	public void inicializar() throws Exception{	
 //		this.vista.show();
+		
 		mostrarVentanaReserva();
+		llenarViajesEnTabla();
 		llenarValoresEnCargaDeViaje();
 	}
 	
@@ -107,6 +123,8 @@ public class Controlador implements ActionListener {
 
 		ViajeDAOSQL sql = new ViajeDAOSQL();		
 		sql.insert(nuevoViaje);
+		
+		llenarViajesEnTabla();
 		
 	}
 	
@@ -142,8 +160,27 @@ public class Controlador implements ActionListener {
 		
 	}
 	
+	private void llenarViajesEnTabla(){
+		ViajeDAOSQL viajes = new ViajeDAOSQL();
+		viajes_en_tabla = viajes.readAll();
+	}
 	
-/*- - - - - - - -  - - - - - - - METODOS DE PASAJERO - - - - - - - - - - - - - - - - --  */	
+	private void seleccionarViaje(ActionEvent sV) {
+		this.ventanaTablaViajes.setVisible(false);
+		this.ventanaReserva.setVisible(true);
+		
+		int filaSeleccionada = this.ventanaTablaViajes.getTablaViajes().getSelectedRow();
+		ViajeDTO viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
+		
+		String viajeString = String.valueOf(viajeSeleccionado.getId()) +
+				" : "+  viajeSeleccionado.getOrigenViaje().getNombre() +
+				" - "+ viajeSeleccionado.getDestinoViaje().getNombre();
+		
+		this.ventanaReserva.getLblViajeSeleccionado().setText(viajeString);
+	}
+
+	
+	/*- - - - - - - -  - - - - - - - METODOS DE PASAJERO - - - - - - - - - - - - - - - - --  */	
 	
 	private void darDeAltaUnPasajero(ActionEvent aP) {
 		
@@ -158,6 +195,10 @@ public class Controlador implements ActionListener {
 		/*LLENAMOS LA VENTANA CON LOS PASAJEROS DEL VIAJE*/
 		llenarTablaDePasajerosEnVentanaCargaPasajeros();
 		
+	}
+	
+	private void altaPasajerosDeUnViaje(ActionEvent aP) {
+//		this.ventanaCargaPasajero.getTablaPasajeros().get
 	}
 	
 	private void llenarTablaDePasajerosEnVentanaCargaPasajeros(){
@@ -240,6 +281,29 @@ public class Controlador implements ActionListener {
 		this.ventanaReserva.setVisible(true);
 	}
 
+	private void mostrarViajesDisponibles(ActionEvent iV) {
+		
+		this.ventanaTablaViajes.getModelViajes().setRowCount(0);
+		this.ventanaTablaViajes.getModelViajes().setColumnCount(0);
+		this.ventanaTablaViajes.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
+		ArrayList<ViajeDTO> viajes_en_tabla = (ArrayList<ViajeDTO>) new ViajeDAOSQL().readAll();
+		for(int i=0; i< viajes_en_tabla.size();i++){
+			Object[] fila = { 
+//				{"ID" ,"ORIGEN","DESTINO","FECHA_SALIDA","FECHA_LLEGADA","PRECIO","HORA_SALIDA"};
+					viajes_en_tabla.get(i).getId(),
+					viajes_en_tabla.get(i).getOrigenViaje().getNombre(),
+					viajes_en_tabla.get(i).getDestinoViaje().getNombre(),
+					viajes_en_tabla.get(i).getFechaSalida(),
+					viajes_en_tabla.get(i).getFechaLlegada(),
+					viajes_en_tabla.get(i).getPrecio(),
+					viajes_en_tabla.get(i).getHoraSalida()
+			};
+			this.ventanaTablaViajes.getModelViajes().addRow(fila);
+		}
+		this.ventanaTablaViajes.setVisible(true);
+	}
+
+	
 /* - - - - - - - - - - - - - -  -- OTROS METODOS  - - - - - - -  - - - - - - - - - - - */	
 	
 	
