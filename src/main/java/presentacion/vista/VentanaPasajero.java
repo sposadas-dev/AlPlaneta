@@ -89,6 +89,48 @@ public class VentanaPasajero extends JFrame {
 		btnCargarDatos.setBounds(110, 273, 131, 42);
 		contentPane.add(btnCargarDatos);
 	}
+	
+	
+	public JTextField getTxtNombre() {
+		return txtNombre;
+	}
+
+
+	public void setTxtNombre(JTextField txtNombre) {
+		this.txtNombre = txtNombre;
+	}
+
+
+	public JTextField getTxtDni() {
+		return txtDni;
+	}
+
+
+	public void setTxtDni(JTextField txtDni) {
+		this.txtDni = txtDni;
+	}
+
+
+	public JTextField getTxtApellido() {
+		return txtApellido;
+	}
+
+
+	public void setTxtApellido(JTextField txtApellido) {
+		this.txtApellido = txtApellido;
+	}
+
+
+	public JButton getBtnCargarDatos() {
+		return btnCargarDatos;
+	}
+
+
+	public void setBtnCargarDatos(JButton btnCargarDatos) {
+		this.btnCargarDatos = btnCargarDatos;
+	}
+
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

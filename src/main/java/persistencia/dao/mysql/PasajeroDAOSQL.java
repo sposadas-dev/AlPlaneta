@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dto.AdministrativoDTO;
 import dto.PasajeroDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PasajeroDAO;
@@ -121,5 +122,25 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 		}
 		return null;
 	}
+	
+	public static void main(String[] args) {
+		
+		PasajeroDAOSQL daoSQL = new PasajeroDAOSQL();
+
+	/*Probamos El Insert en la tabla, luego verificar de forma manual que este registrado en la tabla*/	
+		PasajeroDTO DTO = new PasajeroDTO(0,"LizzAdministrativa","Moreno","36584266");
+		PasajeroDTO DTO2 = new PasajeroDTO(0,"MicaAdministrativa","Perez","32125322");
+		PasajeroDTO DTO3 = new PasajeroDTO(0,"SolAdministrativa","Hoyos","25652544");
+		
+		daoSQL.insert(DTO);
+		daoSQL.insert(DTO2);
+		daoSQL.insert(DTO3);
+		
+	/*Probamos el ReadALL*/	
+		ArrayList<PasajeroDTO> array = (ArrayList<PasajeroDTO>) daoSQL.readAll();
+		
+		for(PasajeroDTO ad: array)
+			System.out.println(ad.getNombre());
+		}
 
 }

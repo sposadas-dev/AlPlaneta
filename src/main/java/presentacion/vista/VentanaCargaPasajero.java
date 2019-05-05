@@ -19,6 +19,7 @@ public class VentanaCargaPasajero extends JFrame {
 	private DefaultTableModel modelPasajeros;
 	private JButton btnEliminar; 
 	private JButton btnAgregarPasajero; 
+	private JButton btnConfirmar;
 	private  String[] nombreColumnas = {"Nombre" , "Apellido","DNI"};
 
 	public static VentanaCargaPasajero getInstance(){
@@ -58,6 +59,10 @@ public class VentanaCargaPasajero extends JFrame {
 		btnEliminar.setBounds(410, 159, 109, 37);
 		contentPane.add(btnEliminar);
 		
+		btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.setBounds(410, 222, 109, 37);
+		contentPane.add(btnConfirmar);
+		
 		this.setVisible(false);
 	}
 	
@@ -94,4 +99,37 @@ public class VentanaCargaPasajero extends JFrame {
 		this.btnAgregarPasajero = btnAgregarPasajero;
 	}
 
+	public JTable getTablaPasajeros() {
+		return tablaPasajeros;
+	}
+
+	public void setTablaPasajeros(JTable tablaPasajeros) {
+		this.tablaPasajeros = tablaPasajeros;
+	}
+
+	public DefaultTableModel getModelPasajeros() {
+		return modelPasajeros;
+	}
+
+	public void setModelPasajeros(DefaultTableModel modelPasajeros) {
+		this.modelPasajeros = modelPasajeros;
+	}
+
+	public String[] getNombreColumnas() {
+		return nombreColumnas;
+	}
+
+	public void setNombreColumnas(String[] nombreColumnas) {
+		this.nombreColumnas = nombreColumnas;
+	}
+
+	public JButton getBtnConfirmar() {
+		return btnConfirmar;
+	}
+
+	public void setBtnConfirmar(JButton btnConfirmar) {
+		this.btnConfirmar = btnConfirmar;
+	}
+	
+	
 }
