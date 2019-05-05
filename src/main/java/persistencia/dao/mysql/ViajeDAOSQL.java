@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dto.AdministrativoDTO;
 import dto.CiudadDTO;
 import dto.ViajeDTO;
 import persistencia.conexion.Conexion;
@@ -13,7 +14,7 @@ import persistencia.dao.interfaz.ViajeDAO;
 
 public class ViajeDAOSQL implements ViajeDAO {
 
-	private static final String insert = "INSERT INTO viaje (idViaje, fechaSalida, fechaLlegada, precio, idCiudadOrigen, idCiudadDestino) VALUES (?,?,?,?,?,?)";
+	private static final String insert = "INSERT INTO viaje (idViaje, fechaSalida, fechaLlegada, precio, idCiudadOrigen, idCiudadDestino, horaSalida) VALUES (?,?,?,?,?,?,?)";
 	private static final String delete = "DELETE FROM viaje WHERE idViaje = ?";
 	private static final String readall = "SELECT * FROM viaje";
 	private static final String update = "UPDATE viaje SET precio =? WHERE idViaje= ?;";
@@ -31,6 +32,7 @@ public class ViajeDAOSQL implements ViajeDAO {
 			statement.setBigDecimal(4, viaje.getPrecio());
 			statement.setInt(5, viaje.getOrigenViaje().getIdCiudad());
 			statement.setInt(6, viaje.getDestinoViaje().getIdCiudad());
+			statement.setString(7, viaje.getHoraSalida());
 
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -58,8 +60,6 @@ public class ViajeDAOSQL implements ViajeDAO {
 
 	}
 	
-	
-
 	@Override
 	public List<ViajeDTO> readAll() {
 	PreparedStatement statement;
@@ -81,7 +81,8 @@ public class ViajeDAOSQL implements ViajeDAO {
 			ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadDestino")),
 								   resultSet.getDate("fechaSalida"),
 								   resultSet.getDate("fechaLlegada"),
-								   resultSet.getBigDecimal("precio"))
+								   resultSet.getBigDecimal("precio"),
+								   resultSet.getString("horaSalida"))
 									);
 		}
 	} 
@@ -92,6 +93,7 @@ public class ViajeDAOSQL implements ViajeDAO {
 	return viajes;
 
 	}
+
 	@Override
 	public boolean update(ViajeDTO viaje_editar) {
 		PreparedStatement statement;
@@ -114,4 +116,7 @@ public class ViajeDAOSQL implements ViajeDAO {
 		}
 		return false;
 	}
+	
+	
+	
 }

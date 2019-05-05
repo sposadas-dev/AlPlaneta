@@ -12,9 +12,10 @@ public class ViajeDTO {
 	private Date fechaLlegada;
 
 	private BigDecimal precio;
+	String horaSalida;
 
 	public ViajeDTO(int id, CiudadDTO origenViaje, CiudadDTO destinoViaje, Date fechaSalida, Date fechaLlegada,
-			BigDecimal precio) {
+			BigDecimal precio, String horaSalida) {
 		super();
 		this.idViaje = id;
 		this.origenViaje = origenViaje;
@@ -22,6 +23,7 @@ public class ViajeDTO {
 		this.fechaSalida = fechaSalida;
 		this.fechaLlegada = fechaLlegada;
 		this.precio = precio;
+		this.horaSalida = horaSalida;
 	}
 
 	public int getId() {
@@ -72,4 +74,25 @@ public class ViajeDTO {
 		this.precio = importe;
 	}
 
+	public String getHoraSalida() {
+		return horaSalida;
+	}
+
+	public void setHoraSalida(String horaSalida) {
+		this.horaSalida = horaSalida;
+	}
+
+	public int getIdViaje() {
+		return idViaje;
+	}
+
+	public void setIdViaje(int idViaje) {
+		this.idViaje = idViaje;
+	}
+
+	public void setPrecio(BigDecimal precio) {
+		this.precio = precio;
+	}
+
+	
 }
