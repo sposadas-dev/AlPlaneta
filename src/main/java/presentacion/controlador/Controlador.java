@@ -92,8 +92,10 @@ public class Controlador implements ActionListener {
 //		this.vista.show();
 		
 		mostrarVentanaReserva();
+	
 		llenarViajesEnTabla();
-		llenarValoresEnCargaDeViaje();
+		
+//		llenarValoresEnCargaDeViaje();
 	}
 	
 	
@@ -173,8 +175,8 @@ public class Controlador implements ActionListener {
 		ViajeDTO viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
 		
 		String viajeString = String.valueOf(viajeSeleccionado.getId()) +
-				" : "+  viajeSeleccionado.getOrigenViaje().getNombre() +
-				" - "+ viajeSeleccionado.getDestinoViaje().getNombre();
+				" -   DE : "+  viajeSeleccionado.getOrigenViaje().getNombre() +
+				"  -  HACIA : "+ viajeSeleccionado.getDestinoViaje().getNombre();
 		
 		this.ventanaReserva.getLblViajeSeleccionado().setText(viajeString);
 	}
