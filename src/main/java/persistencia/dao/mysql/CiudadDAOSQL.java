@@ -139,6 +139,14 @@ public class CiudadDAOSQL implements CiudadDAO {
 		}
 		return ret;
 	}
+		
+	public static void main(String[] args) {
+		CiudadDAOSQL adm = new CiudadDAOSQL();
+		List<CiudadDTO> administratives = adm.readAll();
+		
+		for(CiudadDTO ad: administratives)
+			System.out.println(ad.getNombre());
+		}
 	
 
 	

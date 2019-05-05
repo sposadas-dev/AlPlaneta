@@ -87,11 +87,20 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 	}
 	
 	public static void main(String[] args) {
-	AdministrativoDAOSQL adm = new AdministrativoDAOSQL();
-	AdministrativoDTO admin = new AdministrativoDTO(0,"MicaAdministrativa");
 	
-	adm.insert(admin);
-	ArrayList<AdministrativoDTO> administratives = (ArrayList<AdministrativoDTO>) adm.readAll();
+	AdministrativoDAOSQL daoSQL = new AdministrativoDAOSQL();
+
+/*Probamos El Insert en la tabla, luego verificar de forma manual que este registrado en la tabla*/	
+	AdministrativoDTO DTO = new AdministrativoDTO(0,"LizzAdministrativa");
+	AdministrativoDTO DTO2 = new AdministrativoDTO(0,"MicaAdministrativa");
+	AdministrativoDTO DTO3 = new AdministrativoDTO(0,"SolAdministrativa");
+	
+	daoSQL.insert(DTO);
+	daoSQL.insert(DTO2);
+	daoSQL.insert(DTO3);
+	
+/*Probamos el ReadALL*/	
+	ArrayList<AdministrativoDTO> administratives = (ArrayList<AdministrativoDTO>) daoSQL.readAll();
 	
 	for(AdministrativoDTO ad: administratives)
 		System.out.println(ad.getNombre());
