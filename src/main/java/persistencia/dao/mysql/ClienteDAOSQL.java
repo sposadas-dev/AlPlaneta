@@ -16,7 +16,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 	private static final String readall = "SELECT * FROM cliente";
 	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ? WHERE idCliente=? ;";
 
-	@Override
+
 	public boolean insert(ClienteDTO cliente) {
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
@@ -31,6 +31,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 
 			if (statement.executeUpdate() > 0) // Si se ejecuto devuelvo true
 				return true;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

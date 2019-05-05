@@ -87,31 +87,31 @@ public class MedioContactoDAOSQL implements MedioContactoDAO {
 			return mediosContacto;
 	}	
 	
-//	@Override
-//	public MedioContactoDTO getMedioContactoById(int id) {
-//		PreparedStatement statement;
-//		ResultSet resultSet; 
-//		ArrayList<MedioContactoDTO> mediosContacto= new ArrayList<MedioContactoDTO>();
-//		Conexion conexion = Conexion.getConexion();
-//		try {
-//			statement = conexion.getSQLConexion().prepareStatement(readall);
-//			resultSet = statement.executeQuery();
-//			while(resultSet.next()){
-//				mediosContacto.add(new MedioContactoDTO(resultSet.getInt("idMedioContacto"),resultSet.getString("numeroFijo"),
-//						resultSet.getString("numeroCelular"),resultSet.getString("email")));
-//			}
-//		} 
-//		catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		MedioContactoDTO ret = null;
-//		
-//		for(MedioContactoDTO medioContacto: mediosContacto){
-//			if(medioContacto.getIdMedioContacto()==id)
-//				ret = medioContacto;
-//		}
-//		return ret;
-//	}
+	@Override
+	public MedioContactoDTO getMedioContactoById(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet; 
+		ArrayList<MedioContactoDTO> mediosContacto= new ArrayList<MedioContactoDTO>();
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(readall);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()){
+				mediosContacto.add(new MedioContactoDTO(resultSet.getInt("idMedioContacto"),resultSet.getString("numeroFijo"),
+						resultSet.getString("numeroCelular"),resultSet.getString("email")));
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		MedioContactoDTO ret = null;
+		
+		for(MedioContactoDTO medioContacto: mediosContacto){
+			if(medioContacto.getIdMedioContacto()==id)				
+				ret = medioContacto;
+		}
+		return ret;
+	}
 	
 	@Override
 	public boolean update(MedioContactoDTO medioContacto) {

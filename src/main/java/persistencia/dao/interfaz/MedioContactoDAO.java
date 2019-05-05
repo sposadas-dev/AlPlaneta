@@ -15,7 +15,7 @@ public interface MedioContactoDAO {
 
 	public boolean update(MedioContactoDTO medioContacto);
 
-//	public MedioContactoDTO getMedioContactoById(int id);
+	public MedioContactoDTO getMedioContactoById(int id);
 
 
 }

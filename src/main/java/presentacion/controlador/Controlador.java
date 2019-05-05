@@ -3,19 +3,14 @@ package presentacion.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
-
 import javax.swing.JOptionPane;
-
 import modelo.Cliente;
 import modelo.MedioContacto;
-import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.MedioContactoDTO;
 import dto.PasajeDTO;
 import dto.ViajeDTO;
-import persistencia.dao.mysql.ClienteDAOSQL;
 import persistencia.dao.mysql.DAOSQLFactory;
-import persistencia.dao.mysql.MedioContactoDAOSQL;
 import presentacion.vista.VentanaCargaPasajero;
 import presentacion.vista.VentanaCliente;
 import presentacion.vista.VentanaFormaPago;
@@ -29,8 +24,6 @@ public class Controlador implements ActionListener {
 
 	private Vista vista;
 	private VentanaCliente ventanaCliente;
-	private Cliente cliente;
-	private MedioContacto medioContacto;
 	private VentanaReserva ventanaReserva;
 	private VentanaFormaPago ventanaFormaDePagos;
 	private VentanaPagoTarjeta ventanaPagoTarjeta;
@@ -38,51 +31,69 @@ public class Controlador implements ActionListener {
 	private VentanaCargaPasajero ventanaCargaPasajero;
 	private VentanaPasajero ventanaPasajero;
 	
-	public Controlador() {
+	public Controlador(Vista vista) {
+		this.vista = vista;
+		this.vista.getBtnClientes().addActionListener(panelClientes->agregarTabla(panelClientes));
+		this.vista.getBtnPasajes().addActionListener(panelReservas->agregarTablaPasaje(panelReservas));
+		this.vista.getBtnAgregarCliente().addActionListener(ag->agregarCliente(ag));
+		
 		this.ventanaReserva = VentanaReserva.getInstance();
 		this.ventanaFormaDePagos = VentanaFormaPago.getInstance();
 		this.ventanaPagoTarjeta = VentanaPagoTarjeta.getInstance();
 		this.ventanaPagoEfectivo = VentanaPagoEfectivo.getInstance();
 		this.ventanaPasajero = VentanaPasajero.getInstance();
+		
 		this.ventanaCliente = VentanaCliente.getInstance();
+		this.ventanaCliente.getBtnRegistrar().addActionListener(client->cargarCliente(client));
 
 		this.ventanaCargaPasajero = VentanaCargaPasajero.getInstance();
-		this.ventanaCliente.getBtnRegistrar().addActionListener(cliente->cargarCliente(cliente));
 		this.ventanaReserva.getBtnReservar().addActionListener(reserv->SeleccionFormaDePago(reserv));
 		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->cargarPasajeros(cP));
-//		this.ventanaFormaDePagos.get).addActionListener(pago->seleccionEstadoDelPago(pago));
+//		this.ventanaFormaDePagos.get.addActionListener(pago->seleccionEstadoDelPago(pago));
 		this.ventanaPagoEfectivo.getBtnRegistrarPago().addActionListener(rP->generarPasajeEfectivo(rP));
 		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
-		
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->agregarPasajero(aP));
 	}
 	
-	private void cargarCliente(ActionEvent cliente) {
+	private void agregarCliente(ActionEvent l) {
+		ventanaCliente.setVisible(true);
+	}
+	
+	private void agregarTablaPasaje(ActionEvent panelReservas) {
+		this.vista.getPanelReservas().setVisible(true);
+		this.vista.getPanelClientes().setVisible(false);
+	}
+
+	private void agregarTabla(ActionEvent panelClientes) {
+		this.vista.getPanelClientes().setVisible(true);
+		this.vista.getPanelReservas().setVisible(false);
+	}
+		
+	private void cargarCliente(ActionEvent client) {
+		MedioContacto medioContacto = new MedioContacto(new DAOSQLFactory());
+		Cliente cliente = new Cliente(new DAOSQLFactory());
+
 	/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
 		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
 		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
 		
 		/*Obtenemos el medio de contacto del cliente*/
-		MedioContactoDTO medioContacto = new MedioContactoDTO(0,ventanaCliente.getTxtTelefonoFijo().getText(),
-				ventanaCliente.getTxtTelefonoCelular().getText(),
-				ventanaCliente.getTxtEmail().getText()
+		MedioContactoDTO mContacto = new MedioContactoDTO(0,this.ventanaCliente.getTxtTelefonoFijo().getText(),
+				this.ventanaCliente.getTxtTelefonoCelular().getText(),
+				this.ventanaCliente.getTxtEmail().getText()
 		);
-		
-//		/*Agregamos un nuevo cliente */
+	
 		ClienteDTO nuevoCliente = new ClienteDTO(0,
-				ventanaCliente.getTxtNombre().getText(),
-				ventanaCliente.getTxtApellido().getText(),
-				ventanaCliente.getTxtDni().getText(),
+				this.ventanaCliente.getTxtNombre().getText(),
+				this.ventanaCliente.getTxtApellido().getText(),
+				this.ventanaCliente.getTxtDni().getText(),
 				fechaNacimiento,
-				medioContacto);
+				mContacto);		
 		
-		MedioContactoDAOSQL md = new MedioContactoDAOSQL(); //Inserta en la bd 		
-		md.insert(medioContacto);
-		
-		ClienteDAOSQL sqlCliente = new ClienteDAOSQL();		//deberia insertar en la bd 
-		sqlCliente.insert(nuevoCliente);	
+		medioContacto.agregarMedioContacto(mContacto);
+		cliente.agregarCliente(nuevoCliente);
 	}
-
+	
 	private void agregarPasajero(ActionEvent aP) {
 		this.ventanaReserva.mostrarVentana(false);
 		this.ventanaCargaPasajero.setVisible(true);
@@ -106,10 +117,10 @@ public class Controlador implements ActionListener {
 		this.ventanaFormaDePagos.mostrarVentana(true);
 	}
 
-	private void seleccionEstadoDelPago(ActionEvent pago) {
-		String itemSeleccionado = this.ventanaFormaDePagos.getComboBoxEstadoPago().getSelectedItem().toString();
-		redirigirSegunItemSeleccionado(itemSeleccionado);
-	}
+//	private void seleccionEstadoDelPago(ActionEvent pago) {
+//		String itemSeleccionado = this.ventanaFormaDePagos.getComboBoxEstadoPago().getSelectedItem().toString();
+//		redirigirSegunItemSeleccionado(itemSeleccionado);
+//	}
 
 	private void redirigirSegunItemSeleccionado(String itemSeleccionado) {
 		if(itemSeleccionado.equals("TARJETA")){
@@ -139,9 +150,9 @@ public class Controlador implements ActionListener {
 //	}
 	
 	public void inicializar(){	
-//		this.vista.show();
-//		mostrarVentanaReserva();
-		this.ventanaCliente.setVisible(true);
+		this.vista.show();
+////		mostrarVentanaReserva();
+//		this.ventanaCliente.setVisible(true);
 	}
 	
 	private void mostrarVentanaReserva(){
@@ -181,23 +192,6 @@ public class Controlador implements ActionListener {
 			}
 			return true;
 		}
-		
-//	@Override
-//	public void actionPerformed(ActionEvent evento){
-//		if(evento.getSource() == vista.getBtnClientes()){
-//			ventanaCliente.mostrarVentana();
-//		}
-//		else if(evento.getSource() == ventanaCliente.getBtnRegistrar()){
-//			if (validarCampos()){
-////				insertarCliente(ventanaCliente);
-//				ventanaCliente.dispose();
-//			}
-//		}
-//	}
-	public static void main(String[] args) {
-		Controlador c = new Controlador();
-		c.inicializar();
-	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

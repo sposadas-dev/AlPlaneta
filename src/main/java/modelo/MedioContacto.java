@@ -22,8 +22,8 @@ public class MedioContacto {
 		return this.medio.readAll();		
 	}
 	
-//	public MedioContactoDTO getMedioContactoById(int nombreCiudad){
-//		return this.medio.getMedioContactoById(nombreCiudad);
-//	}
+	public MedioContactoDTO getMedioContactoById(int nombreCiudad){
+		return this.medio.getMedioContactoById(nombreCiudad);
+	}
 
 }
