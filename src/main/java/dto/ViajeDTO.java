@@ -26,6 +26,9 @@ public class ViajeDTO {
 		this.horaSalida = horaSalida;
 	}
 
+	public ViajeDTO() {
+	}
+
 	public int getId() {
 		return idViaje;
 	}

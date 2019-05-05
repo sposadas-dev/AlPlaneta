@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -12,6 +13,7 @@ import javax.swing.JOptionPane;
 import dto.CiudadDTO;
 import dto.HorarioReservaDTO;
 import dto.PasajeDTO;
+import dto.PasajeroDTO;
 import dto.TransporteDTO;
 import dto.ViajeDTO;
 import modelo.Cliente;
@@ -20,6 +22,7 @@ import modelo.ModeloViaje;
 import persistencia.dao.mysql.CiudadDAOSQL;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.HorarioReservaDAOSQL;
+import persistencia.dao.mysql.PasajeroDAOSQL;
 import persistencia.dao.mysql.TransporteDAOSQL;
 import persistencia.dao.mysql.ViajeDAOSQL;
 import presentacion.vista.VentanaCargaPasajero;
@@ -30,9 +33,11 @@ import presentacion.vista.VentanaPagoEfectivo;
 import presentacion.vista.VentanaPagoTarjeta;
 import presentacion.vista.VentanaPasajero;
 import presentacion.vista.VentanaReserva;
+import presentacion.vista.VentanaTablaViajes;
 import presentacion.vista.Vista;
 
 public class Controlador implements ActionListener {
+	private List<ViajeDTO> viajes_en_tabla;
 	ModeloCiudad modeloCiudad;
 	private Vista vista;
 	private VentanaCliente ventanaCliente;
@@ -44,6 +49,9 @@ public class Controlador implements ActionListener {
 	private VentanaCargaPasajero ventanaCargaPasajero;
 	private VentanaPasajero ventanaPasajero;
 	private VentanaCargarViaje ventanaCargarViaje;
+	private VentanaTablaViajes ventanaTablaViajes;
+	private ArrayList<PasajeroDTO> pasajerosEnEstaReserva;
+	private ViajeDTO viajeSeleccionado;
 	
 	public Controlador() {
 		
@@ -54,20 +62,46 @@ public class Controlador implements ActionListener {
 		this.ventanaPasajero = VentanaPasajero.getInstance();
 		this.ventanaCargarViaje = VentanaCargarViaje.getInstance();
 		this.ventanaCargaPasajero = VentanaCargaPasajero.getInstance();
+		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();
+		
+		this.viajes_en_tabla = new ArrayList<ViajeDTO>();
+		this.pasajerosEnEstaReserva = new ArrayList<PasajeroDTO>();
+		viajeSeleccionado = new ViajeDTO();
 
 		
 		this.ventanaReserva.getBtnReservar().addActionListener(reserv->SeleccionFormaDePago(reserv));
-		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->cargarPasajeros(cP));
+		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->mostrarVentanaCargaDePasajeros(cP));
+		this.ventanaReserva.getBtnIrViajes().addActionListener(iV->mostrarViajesDisponibles(iV));
 		
 		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->seleccionEstadoDelPago(pago));
 		this.ventanaPagoEfectivo.getBtnRegistrarPago().addActionListener(rP->generarPasajeEfectivo(rP));
 		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
 		
-		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->agregarPasajero(aP));
-		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->cargarViajes(aV));
+		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->mostrarVentanaAltaDePasajeros(aP));
+		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(aP->altaPasajerosDeUnViaje(aP));
+		
+		this.ventanaPasajero.getBtnCargarDatos().addActionListener(aP->darDeAltaUnPasajero(aP));
+		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaUnViajes(aV));
+		
+		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(sV->seleccionarViaje(sV));
+		
+	}
+
+
+	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
+	public void inicializar() throws Exception{	
+//		this.vista.show();
+		
+		mostrarVentanaReserva();
+	
+		llenarViajesEnTabla();
+		
+//		llenarValoresEnCargaDeViaje();
 	}
 	
-	private void cargarViajes(ActionEvent aV) {
+	
+/*- - - - - - - -  - - - - - - - METODOS DE VIAJE - - - - - - - - - - - - - - - - --  */
+	private void darAltaUnViajes(ActionEvent aV) {
 		ModeloCiudad modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
 		ModeloViaje modeloViaje = new ModeloViaje(new DAOSQLFactory());
 		
@@ -93,7 +127,132 @@ public class Controlador implements ActionListener {
 		ViajeDAOSQL sql = new ViajeDAOSQL();		
 		sql.insert(nuevoViaje);
 		
+		llenarViajesEnTabla();
+		
 	}
+	
+	private void llenarValoresEnCargaDeViaje() throws Exception{
+		
+		llenarComboRangoHorariosEnCargarViaje();//modificar para q levante de la base
+
+		llenarComboCiudadesEnCargarViaje();
+
+		mostrarVentanaCargarViaje();
+		
+	}
+	
+	private void llenarComboRangoHorariosEnCargarViaje() {
+		String [] horarios = {"1:00", "2:00", "3:00", "4:00", "5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00"};
+		this.ventanaCargarViaje.getComboBoxHorarioSalida().setModel(new DefaultComboBoxModel(horarios));
+	}
+
+	private void llenarComboCiudadesEnCargarViaje() {
+		/*CARGAMOS LOS VALORES DE LAS CIUDADES EN LA VENTANA DE DAR ALTA VIAJE*/
+				List<CiudadDTO> ciudades = new CiudadDAOSQL().readAll();
+				String[] nombresCiudades = new String[ciudades.size()];
+				for(int i=0; i<ciudades.size();i++){
+					nombresCiudades [i] = ciudades.get(i).getNombre();
+				}	
+		/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+				this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresCiudades));
+				this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresCiudades));
+	}
+
+	private void mostrarVentanaCargarViaje() {
+		this.ventanaCargarViaje.setVisible(true);
+		
+	}
+	
+	private void llenarViajesEnTabla(){
+		ViajeDAOSQL viajes = new ViajeDAOSQL();
+		viajes_en_tabla = viajes.readAll();
+	}
+	
+	private void seleccionarViaje(ActionEvent sV) {
+		
+		this.ventanaTablaViajes.setVisible(false);
+		this.ventanaReserva.setVisible(true);
+		
+		int filaSeleccionada = this.ventanaTablaViajes.getTablaViajes().getSelectedRow();
+		viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
+		
+		String viajeString = String.valueOf(viajeSeleccionado.getId()) +
+				" -   DE : "+  viajeSeleccionado.getOrigenViaje().getNombre() +
+				"  -  HACIA : "+ viajeSeleccionado.getDestinoViaje().getNombre();
+		
+		this.ventanaReserva.getLblViajeSeleccionado().setText(viajeString);
+	}
+
+	
+	/*- - - - - - - -  - - - - - - - METODOS DE PASAJERO - - - - - - - - - - - - - - - - --  */	
+	
+	private void darDeAltaUnPasajero(ActionEvent aP) {
+		
+		PasajeroDTO pasajeroDTO = new PasajeroDTO();
+		pasajeroDTO.setNombre(this.ventanaPasajero.getTxtNombre().getText());
+		pasajeroDTO.setApellido(this.ventanaPasajero.getTxtApellido().getText());
+		pasajeroDTO.setDni(this.ventanaPasajero.getTxtDni().getText());
+		
+		PasajeroDAOSQL DAO = new PasajeroDAOSQL();
+		DAO.insert(pasajeroDTO);
+		
+		pasajerosEnEstaReserva.add(pasajeroDTO);
+		
+		/*LLENAMOS LA VENTANA CON LOS PASAJEROS DEL VIAJE*/
+		llenarTablaDePasajerosEnVentanaCargaPasajeros();
+		
+/*VACIAR LOS TXTFIELD*/		
+		this.ventanaPasajero.getTxtNombre().setText("");
+		this.ventanaPasajero.getTxtApellido().setText("");;
+		this.ventanaPasajero.getTxtDni().setText("");
+		
+		this.ventanaPasajero.setVisible(false);
+		
+	}
+	
+	private void altaPasajerosDeUnViaje(ActionEvent aP) {
+		this.ventanaCargaPasajero.setVisible(false);
+		this.ventanaReserva.setVisible(true);
+	}
+	
+	private void llenarTablaDePasajerosEnVentanaCargaPasajeros(){
+		
+		this.ventanaCargaPasajero.getModelPasajeros().setRowCount(0);
+		this.ventanaCargaPasajero.getModelPasajeros().setColumnCount(0);
+		this.ventanaCargaPasajero.getModelPasajeros().setColumnIdentifiers(this.ventanaCargaPasajero.getNombreColumnas());
+		for(int i=0; i<pasajerosEnEstaReserva.size();i++){
+			Object[] fila = { 
+					pasajerosEnEstaReserva.get(i).getNombre(),
+					pasajerosEnEstaReserva.get(i).getApellido(),
+					pasajerosEnEstaReserva.get(i).getDni()
+					};
+			this.ventanaCargaPasajero.getModelPasajeros().addRow(fila);
+		}
+		
+		
+//		ArrayList<PasajeroDTO> pasajeros_en_tabla = (ArrayList<PasajeroDTO>) new PasajeroDAOSQL().readAll();
+//		for(int i=0; i< pasajeros_en_tabla.size();i++){
+//			Object[] fila = { 
+//					pasajeros_en_tabla.get(i).getNombre(),
+//					pasajeros_en_tabla.get(i).getApellido(),
+//					pasajeros_en_tabla.get(i).getDni()
+//					};
+		
+//		}
+	}
+
+	private void mostrarVentanaAltaDePasajeros(ActionEvent aP) {
+		this.ventanaReserva.mostrarVentana(false);
+		this.ventanaPasajero.setVisible(true);
+	}
+	
+	private void mostrarVentanaCargaDePasajeros(ActionEvent cP) {
+		this.ventanaReserva.mostrarVentana(false);
+		this.ventanaCargaPasajero.mostrarVentana(true);
+	}
+	
+/*- - - - - - - -  - - - - - - - METODOS DE RESERVA - - - - - - - - - - - - - - - - --  */		
+	
 	
 	private void llenarValoresEnReserva(){
 		llenarComboRangoDeHorarioEnReserva();
@@ -107,6 +266,7 @@ public class Controlador implements ActionListener {
 	}
 
 	private void llenarListModelViajesEnReserva() {
+		
 		this.ventanaReserva.getListModelViajesDisponibles().removeAllElements();
 		
 		List<ViajeDTO> viajesDisponibles = new ViajeDAOSQL().readAll();
@@ -142,43 +302,44 @@ public class Controlador implements ActionListener {
 		this.ventanaReserva.getComboBoxRangoHorario().setModel(new DefaultComboBoxModel(rangoHorarios));
 	}
 
-	private void llenarValoresEnCargaDeViaje() throws Exception{
+	private void mostrarVentanaReserva(){
+		llenarValoresEnReserva();
+		this.ventanaReserva.setVisible(true);
+	}
+
+	private void mostrarViajesDisponibles(ActionEvent iV) {
 		
-		llenarComboRangoHorariosEnCargarViaje();//modificar para q levante de la base
-
-		llenarComboCiudadesEnCargarViaje();
-
-		mostrarVentanaCargarViaje();
-		
+		this.ventanaTablaViajes.getModelViajes().setRowCount(0);
+		this.ventanaTablaViajes.getModelViajes().setColumnCount(0);
+		this.ventanaTablaViajes.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
+		ArrayList<ViajeDTO> viajes_en_tabla = (ArrayList<ViajeDTO>) new ViajeDAOSQL().readAll();
+		for(int i=0; i< viajes_en_tabla.size();i++){
+			Object[] fila = { 
+//				{"ID" ,"ORIGEN","DESTINO","FECHA_SALIDA","FECHA_LLEGADA","PRECIO","HORA_SALIDA"};
+					viajes_en_tabla.get(i).getId(),
+					viajes_en_tabla.get(i).getOrigenViaje().getNombre(),
+					viajes_en_tabla.get(i).getDestinoViaje().getNombre(),
+					viajes_en_tabla.get(i).getFechaSalida(),
+					viajes_en_tabla.get(i).getFechaLlegada(),
+					viajes_en_tabla.get(i).getPrecio(),
+					viajes_en_tabla.get(i).getHoraSalida()
+			};
+			this.ventanaTablaViajes.getModelViajes().addRow(fila);
+		}
+		this.ventanaTablaViajes.setVisible(true);
 	}
 
-	private void llenarComboRangoHorariosEnCargarViaje() {
-		String [] horarios = {"1:00", "2:00", "3:00", "4:00", "5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00"};
-		this.ventanaCargarViaje.getComboBoxHorarioSalida().setModel(new DefaultComboBoxModel(horarios));
-	}
-
-	private void llenarComboCiudadesEnCargarViaje() {
-		/*CARGAMOS LOS VALORES DE LAS CIUDADES EN LA VENTANA DE DAR ALTA VIAJE*/
-				List<CiudadDTO> ciudades = new CiudadDAOSQL().readAll();
-				String[] nombresCiudades = new String[ciudades.size()];
-				for(int i=0; i<ciudades.size();i++){
-					nombresCiudades [i] = ciudades.get(i).getNombre();
-				}	
-		/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
-				this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresCiudades));
-				this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresCiudades));
-	}
 	
-	private void agregarPasajero(ActionEvent aP) {
-		this.ventanaReserva.mostrarVentana(false);
-		this.ventanaCargaPasajero.setVisible(true);
-	}
+/* - - - - - - - - - - - - - -  -- OTROS METODOS  - - - - - - -  - - - - - - - - - - - */	
+	
+	
 
-	private void cargarPasajeros(ActionEvent cP) {
-		this.ventanaReserva.mostrarVentana(false);
-		this.ventanaCargaPasajero.mostrarVentana(true);
-	}
+	
 
+	
+	/**/
+	
+	
 	private void generarPasajeTarjeta(ActionEvent rP) {
 		String importeIngresado = ventanaPagoTarjeta.getTextImporteIngresado().toString();
 	}
@@ -188,9 +349,43 @@ public class Controlador implements ActionListener {
 	}
 
 	private void SeleccionFormaDePago(ActionEvent pagar) {
+	
 		this.ventanaReserva.mostrarVentana(false);
 		this.ventanaFormaDePagos.mostrarVentana(true);
+		
+		PasajeDTO pasajeDTO = new PasajeDTO();
+		
+/*OBTENER EL VIAJE SELECCIONADO*/
+		pasajeDTO.setViaje(this.viajeSeleccionado);
+		
+/*OBTENER EL TRASNPORTE*/
+		TransporteDTO transporteSeleccionado = obtenerTransporteElegidoPorCliente(
+								this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
+		pasajeDTO.setTransporte(transporteSeleccionado);
+				
+		
+/*OBTENER EL RANGO ELEGIDO POR EL CLIENTE*/
+		String rangoElegido = this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString();
+		
+/*OBTENER LOS PASAJEROS RELACIONADO A ESE PASAJE*/
+		pasajeDTO.setPasajeros(this.pasajerosEnEstaReserva);
+		
+/*OBTENER EL PAGO DEL PASAJE*/
+
+/*GENERAR EL PASAJE Y DARLO DE ALTA EN LA BASE DE DATOS*/
+		
 	}
+
+	private TransporteDTO obtenerTransporteElegidoPorCliente(String transporteComboBox) {
+		TransporteDAOSQL tDAO = new TransporteDAOSQL();
+		TransporteDTO ret = null;
+		ArrayList<TransporteDTO> transportes = (ArrayList<TransporteDTO>) tDAO.readAll();
+		for(TransporteDTO t: transportes)
+			if(t.getNombreTransporte().equals(transporteComboBox))
+				ret = t;
+		return ret;
+	}
+
 
 	private void seleccionEstadoDelPago(ActionEvent pago) {
 		String itemSeleccionado = this.ventanaFormaDePagos.getComboBoxEstadoPago().getSelectedItem().toString();
@@ -224,22 +419,10 @@ public class Controlador implements ActionListener {
 		this.ventanaReserva = VentanaReserva.getInstance();
 	}
 	
-	public void inicializar() throws Exception{	
-//		this.vista.show();
-		mostrarVentanaReserva();
-//		llenarValoresEnCargaDeViaje();
-		
-	}
 	
-	private void mostrarVentanaCargarViaje() {
-		this.ventanaCargarViaje.setVisible(true);
-		
-	}
+	
 
-	private void mostrarVentanaReserva(){
-		llenarValoresEnReserva();
-		this.ventanaReserva.setVisible(true);
-	}
+	
 	
 	
 //	private void insertarCliente(VentanaCliente ventanaCliente) {	
