@@ -70,5 +70,15 @@ public class HorarioReservaDAOSQL implements HorarioReservaDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public static void main(String[] args) {
+		
+		HorarioReservaDAOSQL daoSQL = new HorarioReservaDAOSQL();
+		
+		ArrayList<HorarioReservaDTO> arry = (ArrayList<HorarioReservaDTO>) daoSQL.readAll();
+		
+		for(HorarioReservaDTO ad: arry)
+			System.out.println(ad.getHoraInicio() +" "+ ad.getHoraFin());
+		}
 
 }

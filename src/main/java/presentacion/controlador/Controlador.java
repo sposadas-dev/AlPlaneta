@@ -57,6 +57,7 @@ public class Controlador implements ActionListener {
 	private ViajeDTO viajeSeleccionado;
 	private TransporteDTO transporteSeleccionado;
 	private BigDecimal totalaPagar;
+	private HorarioReservaDTO horarioElegido;
 	
 	public Controlador() {
 		
@@ -284,12 +285,23 @@ public class Controlador implements ActionListener {
 		pasajeDTO.setPasajeros(this.pasajerosEnEstaReserva);
 		
 /*OBTENER EL PAGO DEL PASAJE*/
+		horarioElegido = obtenerHorarioElegidoPorCliente(this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString());
 
 /*GENERAR EL PASAJE Y DARLO DE ALTA EN LA BASE DE DATOS*/
 		
 	}
 
-	
+	private HorarioReservaDTO obtenerHorarioElegidoPorCliente(String horarioComboBox) {
+		HorarioReservaDAOSQL tDAO = new HorarioReservaDAOSQL();
+		HorarioReservaDTO ret = null;
+		ArrayList<HorarioReservaDTO> rangoshorarios = (ArrayList<HorarioReservaDTO>) tDAO.readAll();
+		for(HorarioReservaDTO h : rangoshorarios) {
+			if(h.getHoraInicio().equals(horarioComboBox.substring(0,5)) && (h.getHoraFin().equals(horarioComboBox.substring(8,13)))){
+				ret = h;
+			}
+		}
+		return ret;
+	}
 	/*- - - - - - - -  - - - - - - - METODOS DE RESERVA - - - - - - - - - - - - - - - - --  */		
 	
 	private void llenarValoresEnReserva(){
@@ -397,7 +409,7 @@ public class Controlador implements ActionListener {
 		Valor2 = Valor2.add(Valor1);
 		totalaPagar = Valor2;
 		
-		return totalaPagar;
+		return totalaPagar.multiply(new BigDecimal(pasajerosEnEstaReserva.size()));
 	}
 
 
