@@ -16,7 +16,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 	private static final String readall = "SELECT * FROM cliente";
 	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ? WHERE idCliente=? ;";
 
-
+	@Override
 	public boolean insert(ClienteDTO cliente) {
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
@@ -31,7 +31,6 @@ public class ClienteDAOSQL implements ClienteDAO {
 
 			if (statement.executeUpdate() > 0) // Si se ejecuto devuelvo true
 				return true;
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -78,9 +77,9 @@ public class ClienteDAOSQL implements ClienteDAO {
 			statement.setString(1, cliente_editar.getNombre());
 			statement.setString(2, cliente_editar.getApellido());
 			statement.setString(3, cliente_editar.getDni());
-			statement.setDate(4, new java.sql.Date (cliente_editar.getFechaNacimiento().getTime()));
+			statement.setDate(4, cliente_editar.getFechaNacimiento());
 			statement.setInt(5, cliente_editar.getMedioContacto().getIdMedioContacto());
-			statement.setInt(6, cliente_editar.getIdCliente());
+			statement.setInt(5, cliente_editar.getIdCliente());
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true

@@ -21,9 +21,4 @@ public class MedioContacto {
 	public List<MedioContactoDTO> obtenerMediosContacto(){
 		return this.medio.readAll();		
 	}
-	
-	public MedioContactoDTO getMedioContactoById(int nombreCiudad){
-		return this.medio.getMedioContactoById(nombreCiudad);
-	}
-
 }
