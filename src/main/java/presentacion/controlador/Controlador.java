@@ -107,6 +107,7 @@ public class Controlador implements ActionListener {
 //		llenarValoresEnCargaDeViaje();
 	}
 	
+	/*LABEL CANTIDAD DE PASAJEROS*/
 	
 	/*- - - - - - - -  - - - - - - - METODOS DE VIAJE - - - - - - - - - - - - - - - - --  */
 	private void darAltaUnViajes(ActionEvent aV) {
@@ -236,6 +237,7 @@ public class Controlador implements ActionListener {
 					};
 			this.ventanaCargaPasajero.getModelPasajeros().addRow(fila);
 		}
+		this.ventanaReserva.getLblCantidadDePasajeros().setText(pasajerosEnEstaReserva.size()+" Pasajeros fueron cargados");
 		
 		
 //		ArrayList<PasajeroDTO> pasajeros_en_tabla = (ArrayList<PasajeroDTO>) new PasajeroDAOSQL().readAll();

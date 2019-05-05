@@ -43,6 +43,7 @@ public class VentanaReserva extends JFrame {
 	private DefaultListModel<String> listModelViajesDisponibles;
 	private JButton btnIrViajes;
 	private JButton btnRealizarPago;
+	private JLabel lblCantidadDePasajeros;
 	
 	
 	public static VentanaReserva getInstance(){
@@ -152,6 +153,10 @@ public class VentanaReserva extends JFrame {
 		btnRealizarPago.setBounds(27, 309, 131, 45);
 		contentPane.add(btnRealizarPago);
 		
+		lblCantidadDePasajeros = new JLabel("");
+		lblCantidadDePasajeros.setBounds(336, 237, 253, 14);
+		contentPane.add(lblCantidadDePasajeros);
+		
 		listModelViajesDisponibles = new DefaultListModel<String>();
 		listViajesDisponibles = new JList<String>((listModelViajesDisponibles));
 		listViajesDisponibles.setModel(listModelViajesDisponibles);
@@ -251,6 +256,16 @@ public class VentanaReserva extends JFrame {
 
 	public void setBtnRealizarPago(JButton btnRealizarPago) {
 		this.btnRealizarPago = btnRealizarPago;
+	}
+
+	
+	
+	public JLabel getLblCantidadDePasajeros() {
+		return lblCantidadDePasajeros;
+	}
+
+	public void setLblCantidadDePasajeros(JLabel lblCantidadDePasajeros) {
+		this.lblCantidadDePasajeros = lblCantidadDePasajeros;
 	}
 
 	public static void main(String[] args) {
