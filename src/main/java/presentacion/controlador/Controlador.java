@@ -41,7 +41,6 @@ public class Controlador implements ActionListener {
 	ModeloCiudad modeloCiudad;
 	private Vista vista;
 	private VentanaCliente ventanaCliente;
-	private Cliente cliente;
 	private VentanaReserva ventanaReserva;
 	private VentanaFormaPago ventanaFormaDePagos;
 	private VentanaPagoTarjeta ventanaPagoTarjeta;
@@ -85,6 +84,21 @@ public class Controlador implements ActionListener {
 		
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(sV->seleccionarViaje(sV));
 		
+		/*Obtenemos el medio de contacto del cliente*/
+		MedioContactoDTO mContacto = new MedioContactoDTO(0,this.ventanaCliente.getTxtTelefonoFijo().getText(),
+				this.ventanaCliente.getTxtTelefonoCelular().getText(),
+				this.ventanaCliente.getTxtEmail().getText()
+		);
+	
+		ClienteDTO nuevoCliente = new ClienteDTO(0,
+				this.ventanaCliente.getTxtNombre().getText(),
+				this.ventanaCliente.getTxtApellido().getText(),
+				this.ventanaCliente.getTxtDni().getText(),
+				fechaNacimiento,
+				mContacto);		
+		
+		medioContacto.agregarMedioContacto(mContacto);
+		cliente.agregarCliente(nuevoCliente);
 	}
 
 
@@ -396,7 +410,7 @@ public class Controlador implements ActionListener {
 		if(itemSeleccionado.equals("TARJETA")){
 			ventanaPagoTarjeta.mostrarVentana(true);
 //			ventanaFormaDePagos.mostrarVentana(false);
-			ventanaFormaDePagos.redimensionar();
+//			ventanaFormaDePagos.redimensionar();
 			}
 		else if(itemSeleccionado.equals("EFECTIVO")){
 			ventanaPagoEfectivo.mostrarVentana(true);
@@ -410,14 +424,14 @@ public class Controlador implements ActionListener {
 		pasaje.setViaje(nuevoViaje);
 	}
 	
-	public Controlador(Vista vista, Cliente cliente){
-		this.vista = vista;
-		this.vista.getBtnClientes().addActionListener(this);
-		this.ventanaCliente = VentanaCliente.getInstance();
-		this.ventanaCliente.getBtnRegistrar().addActionListener(this);
-		this.cliente = cliente;
-		this.ventanaReserva = VentanaReserva.getInstance();
-	}
+//	public Controlador(Vista vista, Cliente cliente){
+//		this.vista = vista;
+//		this.vista.getBtnClientes().addActionListener(this);
+//		this.ventanaCliente = VentanaCliente.getInstance();
+//		this.ventanaCliente.getBtnRegistrar().addActionListener(this);
+//		this.cliente = cliente;
+//		this.ventanaReserva = VentanaReserva.getInstance();
+//	}
 	
 	
 	
@@ -457,7 +471,7 @@ public class Controlador implements ActionListener {
 			}
 			return true;
 		}
-		
+	
 	@Override
 	public void actionPerformed(ActionEvent evento){
 		if(evento.getSource() == vista.getBtnClientes()){

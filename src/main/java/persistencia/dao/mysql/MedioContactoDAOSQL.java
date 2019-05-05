@@ -5,16 +5,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import dto.CiudadDTO;
 import dto.MedioContactoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.MedioContactoDAO;
 
 public class MedioContactoDAOSQL implements MedioContactoDAO {
 
-	private static final String insert = "INSERT INTO medioContacto(idMedioContacto, numeroFijo, numeroCelular, email) VALUES(?, ?, ?, ?)";
-	private static final String delete = "DELETE FROM medioContacto WHERE idMedioContacto = ?";
-	private static final String readall = "SELECT * FROM medioContacto";
-	private static final String update = "UPDATE medioContacto SET numeroFijo=? , numeroCelular=? , email=? WHERE idMedioContacto=? ;";
+	private static final String insert = "INSERT INTO mediocontacto(idMedioContacto, numeroFijo, numeroCelular, email) VALUES(?, ?, ?, ?)";
+	private static final String delete = "DELETE FROM mediocontacto WHERE idMedioContacto = ?";
+	private static final String readall = "SELECT * FROM mediocontacto";
+	private static final String update = "UPDATE mediocontacto SET numeroFijo=? , numeroCelular=? , email=? WHERE idMedioContacto=? ;";
 
 	
 	@Override
@@ -84,6 +86,32 @@ public class MedioContactoDAOSQL implements MedioContactoDAO {
 			}
 			return mediosContacto;
 	}	
+	
+	@Override
+	public MedioContactoDTO getMedioContactoById(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet; 
+		ArrayList<MedioContactoDTO> mediosContacto= new ArrayList<MedioContactoDTO>();
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(readall);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()){
+				mediosContacto.add(new MedioContactoDTO(resultSet.getInt("idMedioContacto"),resultSet.getString("numeroFijo"),
+						resultSet.getString("numeroCelular"),resultSet.getString("email")));
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		MedioContactoDTO ret = null;
+		
+		for(MedioContactoDTO medioContacto: mediosContacto){
+			if(medioContacto.getIdMedioContacto()==id)				
+				ret = medioContacto;
+		}
+		return ret;
+	}
 	
 	@Override
 	public boolean update(MedioContactoDTO medioContacto) {
