@@ -2,15 +2,20 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.sql.Date;
 
 import javax.swing.JOptionPane;
+
 import modelo.Cliente;
+import modelo.MedioContacto;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.MedioContactoDTO;
 import dto.PasajeDTO;
 import dto.ViajeDTO;
+import persistencia.dao.mysql.ClienteDAOSQL;
+import persistencia.dao.mysql.DAOSQLFactory;
+import persistencia.dao.mysql.MedioContactoDAOSQL;
 import presentacion.vista.VentanaCargaPasajero;
 import presentacion.vista.VentanaCliente;
 import presentacion.vista.VentanaFormaPago;
@@ -25,6 +30,7 @@ public class Controlador implements ActionListener {
 	private Vista vista;
 	private VentanaCliente ventanaCliente;
 	private Cliente cliente;
+	private MedioContacto medioContacto;
 	private VentanaReserva ventanaReserva;
 	private VentanaFormaPago ventanaFormaDePagos;
 	private VentanaPagoTarjeta ventanaPagoTarjeta;
@@ -38,19 +44,45 @@ public class Controlador implements ActionListener {
 		this.ventanaPagoTarjeta = VentanaPagoTarjeta.getInstance();
 		this.ventanaPagoEfectivo = VentanaPagoEfectivo.getInstance();
 		this.ventanaPasajero = VentanaPasajero.getInstance();
-		
+		this.ventanaCliente = VentanaCliente.getInstance();
+
 		this.ventanaCargaPasajero = VentanaCargaPasajero.getInstance();
-		
+		this.ventanaCliente.getBtnRegistrar().addActionListener(cliente->cargarCliente(cliente));
 		this.ventanaReserva.getBtnReservar().addActionListener(reserv->SeleccionFormaDePago(reserv));
 		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->cargarPasajeros(cP));
-		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->seleccionEstadoDelPago(pago));
+//		this.ventanaFormaDePagos.get).addActionListener(pago->seleccionEstadoDelPago(pago));
 		this.ventanaPagoEfectivo.getBtnRegistrarPago().addActionListener(rP->generarPasajeEfectivo(rP));
 		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
 		
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->agregarPasajero(aP));
-		
 	}
 	
+	private void cargarCliente(ActionEvent cliente) {
+	/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
+		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
+		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
+		
+		/*Obtenemos el medio de contacto del cliente*/
+		MedioContactoDTO medioContacto = new MedioContactoDTO(0,ventanaCliente.getTxtTelefonoFijo().getText(),
+				ventanaCliente.getTxtTelefonoCelular().getText(),
+				ventanaCliente.getTxtEmail().getText()
+		);
+		
+//		/*Agregamos un nuevo cliente */
+		ClienteDTO nuevoCliente = new ClienteDTO(0,
+				ventanaCliente.getTxtNombre().getText(),
+				ventanaCliente.getTxtApellido().getText(),
+				ventanaCliente.getTxtDni().getText(),
+				fechaNacimiento,
+				medioContacto);
+		
+		MedioContactoDAOSQL md = new MedioContactoDAOSQL(); //Inserta en la bd 		
+		md.insert(medioContacto);
+		
+		ClienteDAOSQL sqlCliente = new ClienteDAOSQL();		//deberia insertar en la bd 
+		sqlCliente.insert(nuevoCliente);	
+	}
+
 	private void agregarPasajero(ActionEvent aP) {
 		this.ventanaReserva.mostrarVentana(false);
 		this.ventanaCargaPasajero.setVisible(true);
@@ -83,14 +115,13 @@ public class Controlador implements ActionListener {
 		if(itemSeleccionado.equals("TARJETA")){
 			ventanaPagoTarjeta.mostrarVentana(true);
 //			ventanaFormaDePagos.mostrarVentana(false);
-			ventanaFormaDePagos.redimensionar();
+//			ventanaFormaDePagos.redimensionar();
 			}
 		else if(itemSeleccionado.equals("EFECTIVO")){
 			ventanaPagoEfectivo.mostrarVentana(true);
 			ventanaFormaDePagos.mostrarVentana(false);
 		}
 	}
-/*dsfdsfsdfdsfsdddddddddddddddddddddddddddddddddddddddddddddddddddd*/
 	
 	private void modificarViajeDePasaje(PasajeDTO pasaje, Date nuevaHorarioSalida){
 		ViajeDTO nuevoViaje = pasaje.getViaje();
@@ -98,18 +129,19 @@ public class Controlador implements ActionListener {
 		pasaje.setViaje(nuevoViaje);
 	}
 	
-	public Controlador(Vista vista, Cliente cliente){
-		this.vista = vista;
-		this.vista.getBtnClientes().addActionListener(this);
-		this.ventanaCliente = VentanaCliente.getInstance();
-		this.ventanaCliente.getBtnRegistrar().addActionListener(this);
-		this.cliente = cliente;
-		this.ventanaReserva = VentanaReserva.getInstance();
-	}
+//	public Controlador(Vista vista, Cliente cliente){
+//		this.vista = vista;
+//		this.vista.getBtnClientes().addActionListener(this);
+//		this.ventanaCliente = VentanaCliente.getInstance();
+//		this.ventanaCliente.getBtnRegistrar().addActionListener(this);
+//		this.cliente = cliente;
+//		this.ventanaReserva = VentanaReserva.getInstance();
+//	}
 	
 	public void inicializar(){	
 //		this.vista.show();
-		mostrarVentanaReserva();
+//		mostrarVentanaReserva();
+		this.ventanaCliente.setVisible(true);
 	}
 	
 	private void mostrarVentanaReserva(){
@@ -150,20 +182,26 @@ public class Controlador implements ActionListener {
 			return true;
 		}
 		
-	@Override
-	public void actionPerformed(ActionEvent evento){
-		if(evento.getSource() == vista.getBtnClientes()){
-			ventanaCliente.mostrarVentana();
-		}
-		else if(evento.getSource() == ventanaCliente.getBtnRegistrar()){
-			if (validarCampos()){
-//				insertarCliente(ventanaCliente);
-				ventanaCliente.dispose();
-			}
-		}
-	}
+//	@Override
+//	public void actionPerformed(ActionEvent evento){
+//		if(evento.getSource() == vista.getBtnClientes()){
+//			ventanaCliente.mostrarVentana();
+//		}
+//		else if(evento.getSource() == ventanaCliente.getBtnRegistrar()){
+//			if (validarCampos()){
+////				insertarCliente(ventanaCliente);
+//				ventanaCliente.dispose();
+//			}
+//		}
+//	}
 	public static void main(String[] args) {
 		Controlador c = new Controlador();
 		c.inicializar();
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }
