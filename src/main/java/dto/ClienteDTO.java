@@ -12,7 +12,6 @@ public class ClienteDTO {
 	private MedioContactoDTO medioContacto;
 
 	public ClienteDTO(int idCliente, String nombre, String apellido, String dni, Date fechaNacimiento, MedioContactoDTO medioContacto){
-		super();
 		this.idCliente = idCliente;
 		this.nombre = nombre;
 		this.apellido = apellido;

@@ -8,7 +8,6 @@ public class MedioContactoDTO {
 	private String email;
 
 	public MedioContactoDTO(int idMedioContacto,String telefonoFijo, String telefonoCelular, String email) {
-		super();
 		this.idMedioContacto = idMedioContacto;
 		this.telefonoFijo = telefonoFijo;
 		this.telefonoCelular = telefonoCelular;
