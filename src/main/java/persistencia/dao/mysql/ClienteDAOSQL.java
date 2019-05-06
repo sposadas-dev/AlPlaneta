@@ -28,7 +28,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 			statement.setString(4, cliente.getDni());
 			statement.setDate(5, cliente.getFechaNacimiento());
 			statement.setInt(6, cliente.getMedioContacto().getIdMedioContacto());
-
+			
 			if (statement.executeUpdate() > 0) // Si se ejecuto devuelvo true
 				return true;
 		} catch (SQLException e) {

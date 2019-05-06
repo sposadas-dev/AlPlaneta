@@ -11,12 +11,15 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 import dto.CiudadDTO;
+import dto.ClienteDTO;
 import dto.HorarioReservaDTO;
+import dto.MedioContactoDTO;
 import dto.PasajeDTO;
 import dto.PasajeroDTO;
 import dto.TransporteDTO;
 import dto.ViajeDTO;
 import modelo.Cliente;
+import modelo.MedioContacto;
 import modelo.ModeloCiudad;
 import modelo.ModeloViaje;
 import persistencia.dao.mysql.CiudadDAOSQL;
@@ -77,6 +80,9 @@ public class Controlador implements ActionListener {
 		this.ventanaPagoEfectivo.getBtnRegistrarPago().addActionListener(rP->generarPasajeEfectivo(rP));
 		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
 		
+		this.ventanaCliente = VentanaCliente.getInstance();
+		this.ventanaCliente.getBtnRegistrar().addActionListener(ac->altaCliente(ac));
+		
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->mostrarVentanaAltaDePasajeros(aP));
 		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(aP->altaPasajerosDeUnViaje(aP));
 		
@@ -95,6 +101,8 @@ public class Controlador implements ActionListener {
 		mostrarVentanaReserva();
 	
 		llenarViajesEnTabla();
+		
+		ventanaCliente.setVisible(true);
 		
 //		llenarValoresEnCargaDeViaje();
 	}
@@ -182,7 +190,36 @@ public class Controlador implements ActionListener {
 		
 		this.ventanaReserva.getLblViajeSeleccionado().setText(viajeString);
 	}
+	
+	
 
+	/*- - - - - - - -  - - - - - - - METODO DE CLIENTE - - - - - - - - - - - - - - - - --  */	
+
+	private void altaCliente(ActionEvent client) {
+		MedioContacto medioContacto = new MedioContacto(new DAOSQLFactory());
+		Cliente cliente = new Cliente(new DAOSQLFactory());
+
+	/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
+		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
+		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
+		
+		/*Obtenemos el medio de contacto del cliente*/
+		MedioContactoDTO mContacto = new MedioContactoDTO();
+		mContacto.setTelefonoFijo(this.ventanaCliente.getTxtTelefonoFijo().getText());
+		mContacto.setTelefonoCelular(this.ventanaCliente.getTxtTelefonoCelular().getText());
+		mContacto.setEmail(this.ventanaCliente.getTxtEmail().getText());
+	
+	
+		ClienteDTO nuevoCliente = new ClienteDTO(0,
+				this.ventanaCliente.getTxtNombre().getText(),
+				this.ventanaCliente.getTxtApellido().getText(),
+				this.ventanaCliente.getTxtDni().getText(),
+				fechaNacimiento,
+				mContacto);		
+		
+		cliente.agregarCliente(nuevoCliente);
+		medioContacto.agregarMedioContacto(mContacto);
+	}
 	
 	/*- - - - - - - -  - - - - - - - METODOS DE PASAJERO - - - - - - - - - - - - - - - - --  */	
 	
