@@ -490,6 +490,10 @@ private void darDeAltaUnPasaje(ActionEvent aP) {
 
 	}
 
+	private void darDeAltaUnPasajePasajero(ActionEvent aP) {
+	
+	}
+
 	private EstadoPasajeDTO calcularEstadoPasaje() {
 		EstadoPasajeDTO ret;
 		if(totalaPagar.compareTo(pagoDTO.getMonto()) == 0){ //si son iguales
