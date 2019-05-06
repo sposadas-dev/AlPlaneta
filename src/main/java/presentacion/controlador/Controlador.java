@@ -19,17 +19,20 @@ import dto.HorarioReservaDTO;
 import dto.MedioContactoDTO;
 import dto.PagoDTO;
 import dto.PasajeDTO;
+import dto.Pasaje_PasajerosDTO;
 import dto.PasajeroDTO;
 import dto.TransporteDTO;
 import dto.ViajeDTO;
 import modelo.Cliente;
 import modelo.ModeloCiudad;
 import modelo.ModeloViaje;
+import persistencia.dao.interfaz.PasajeroDAO;
 import persistencia.dao.mysql.CiudadDAOSQL;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.HorarioReservaDAOSQL;
 import persistencia.dao.mysql.PagoDAOSQL;
 import persistencia.dao.mysql.PasajeDAOSQL;
+import persistencia.dao.mysql.Pasaje_PasajerosDAOSQL;
 import persistencia.dao.mysql.PasajeroDAOSQL;
 import persistencia.dao.mysql.TransporteDAOSQL;
 import persistencia.dao.mysql.ViajeDAOSQL;
@@ -487,12 +490,16 @@ private void darDeAltaUnPasaje(ActionEvent aP) {
 		
 		DAO.insert(pasajeDTO);
 		this.ventanaReserva.setVisible(false);
+		
+		for(PasajeroDTO p : pasajerosEnEstaReserva) {
+			Pasaje_PasajerosDTO pasaje_pasajero = new Pasaje_PasajerosDTO (0, pasajeDTO.getIdPasaje(), p.getIdPasajero());
+			/*FALTA CHEQUEAR LOS ID = 0*/
+			Pasaje_PasajerosDAOSQL DAOPP = new Pasaje_PasajerosDAOSQL();
+			DAOPP.insert(pasaje_pasajero);
+		}
 
 	}
 
-	private void darDeAltaUnPasajePasajero(ActionEvent aP) {
-	
-	}
 
 	private EstadoPasajeDTO calcularEstadoPasaje() {
 		EstadoPasajeDTO ret;
