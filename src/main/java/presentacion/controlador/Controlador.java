@@ -486,6 +486,7 @@ private void darDeAltaUnPasaje(ActionEvent aP) {
 		PasajeDAOSQL DAO = new PasajeDAOSQL();
 		
 		DAO.insert(pasajeDTO);
+		this.ventanaReserva.setVisible(false);
 
 	}
 
