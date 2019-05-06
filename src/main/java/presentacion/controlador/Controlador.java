@@ -5,16 +5,21 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
+import dto.AdministrativoDTO;
 import dto.CiudadDTO;
 import dto.ClienteDTO;
+import dto.EstadoPasajeDTO;
 import dto.HorarioReservaDTO;
 import dto.MedioContactoDTO;
+import dto.PagoDTO;
 import dto.PasajeDTO;
+import dto.Pasaje_PasajerosDTO;
 import dto.PasajeroDTO;
 import dto.TransporteDTO;
 import dto.ViajeDTO;
@@ -22,9 +27,13 @@ import modelo.Cliente;
 import modelo.MedioContacto;
 import modelo.ModeloCiudad;
 import modelo.ModeloViaje;
+import persistencia.dao.interfaz.PasajeroDAO;
 import persistencia.dao.mysql.CiudadDAOSQL;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.HorarioReservaDAOSQL;
+import persistencia.dao.mysql.PagoDAOSQL;
+import persistencia.dao.mysql.PasajeDAOSQL;
+import persistencia.dao.mysql.Pasaje_PasajerosDAOSQL;
 import persistencia.dao.mysql.PasajeroDAOSQL;
 import persistencia.dao.mysql.TransporteDAOSQL;
 import persistencia.dao.mysql.ViajeDAOSQL;
@@ -55,6 +64,10 @@ public class Controlador implements ActionListener {
 	private VentanaTablaViajes ventanaTablaViajes;
 	private ArrayList<PasajeroDTO> pasajerosEnEstaReserva;
 	private ViajeDTO viajeSeleccionado;
+	private TransporteDTO transporteSeleccionado;
+	private BigDecimal totalaPagar;
+	private HorarioReservaDTO horarioElegido;
+	private PagoDTO pagoDTO;
 	
 	public Controlador() {
 		
@@ -70,15 +83,17 @@ public class Controlador implements ActionListener {
 		this.viajes_en_tabla = new ArrayList<ViajeDTO>();
 		this.pasajerosEnEstaReserva = new ArrayList<PasajeroDTO>();
 		viajeSeleccionado = new ViajeDTO();
+		transporteSeleccionado = new TransporteDTO();
 
 		
-		this.ventanaReserva.getBtnReservar().addActionListener(reserv->SeleccionFormaDePago(reserv));
+		this.ventanaReserva.getBtnReservar().addActionListener(reserv->darDeAltaUnPasaje(reserv));
 		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->mostrarVentanaCargaDePasajeros(cP));
 		this.ventanaReserva.getBtnIrViajes().addActionListener(iV->mostrarViajesDisponibles(iV));
+		this.ventanaReserva.getBtnRealizarPago().addActionListener(rP->realizarPago(rP));
+//		this.ventanaReserva.getBtnReservar().addActionListener(gP->generarPasaje(gP));
 		
-		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->seleccionEstadoDelPago(pago));
-		this.ventanaPagoEfectivo.getBtnRegistrarPago().addActionListener(rP->generarPasajeEfectivo(rP));
-		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
+		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
+//		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
 		
 		this.ventanaCliente = VentanaCliente.getInstance();
 		this.ventanaCliente.getBtnRegistrar().addActionListener(ac->altaCliente(ac));
@@ -102,13 +117,14 @@ public class Controlador implements ActionListener {
 	
 		llenarViajesEnTabla();
 		
-		ventanaCliente.setVisible(true);
+//		mostrarVentanaPago();
 		
 //		llenarValoresEnCargaDeViaje();
 	}
 	
+	/*LABEL CANTIDAD DE PASAJEROS*/
 	
-/*- - - - - - - -  - - - - - - - METODOS DE VIAJE - - - - - - - - - - - - - - - - --  */
+	/*- - - - - - - -  - - - - - - - METODOS DE VIAJE - - - - - - - - - - - - - - - - --  */
 	private void darAltaUnViajes(ActionEvent aV) {
 		ModeloCiudad modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
 		ModeloViaje modeloViaje = new ModeloViaje(new DAOSQLFactory());
@@ -265,6 +281,7 @@ public class Controlador implements ActionListener {
 					};
 			this.ventanaCargaPasajero.getModelPasajeros().addRow(fila);
 		}
+		this.ventanaReserva.getLblCantidadDePasajeros().setText(pasajerosEnEstaReserva.size()+" Pasajeros fueron cargados");
 		
 		
 //		ArrayList<PasajeroDTO> pasajeros_en_tabla = (ArrayList<PasajeroDTO>) new PasajeroDAOSQL().readAll();
@@ -288,8 +305,47 @@ public class Controlador implements ActionListener {
 		this.ventanaCargaPasajero.mostrarVentana(true);
 	}
 	
-/*- - - - - - - -  - - - - - - - METODOS DE RESERVA - - - - - - - - - - - - - - - - --  */		
-	
+	private void generarPasaje(ActionEvent pagar) {
+		this.ventanaReserva.mostrarVentana(false);
+		this.ventanaFormaDePagos.mostrarVentana(true);
+		
+		PasajeDTO pasajeDTO = new PasajeDTO();
+		
+/*OBTENER EL VIAJE SELECCIONADO*/
+		pasajeDTO.setViaje(this.viajeSeleccionado);
+		
+/*OBTENER EL TRASNPORTE*/
+//		System.out.println("------"+this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
+//		transporteSeleccionado = obtenerTransporteElegidoPorCliente(
+//								(String) this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
+//		pasajeDTO.setTransporte(transporteSeleccionado);
+				
+		
+/*OBTENER EL RANGO ELEGIDO POR EL CLIENTE*/
+		String rangoElegido = this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString();
+		
+/*OBTENER LOS PASAJEROS RELACIONADO A ESE PASAJE*/
+		pasajeDTO.setPasajeros(this.pasajerosEnEstaReserva);
+		
+/*OBTENER EL PAGO DEL PASAJE*/
+		horarioElegido = obtenerHorarioElegidoPorCliente(this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString());
+
+/*GENERAR EL PASAJE Y DARLO DE ALTA EN LA BASE DE DATOS*/
+		
+	}
+
+	private HorarioReservaDTO obtenerHorarioElegidoPorCliente(String horarioComboBox) {
+		HorarioReservaDAOSQL tDAO = new HorarioReservaDAOSQL();
+		HorarioReservaDTO ret = null;
+		ArrayList<HorarioReservaDTO> rangoshorarios = (ArrayList<HorarioReservaDTO>) tDAO.readAll();
+		for(HorarioReservaDTO h : rangoshorarios) {
+			if(h.getHoraInicio().equals(horarioComboBox.substring(0,5)) && (h.getHoraFin().equals(horarioComboBox.substring(8,13)))){
+				ret = h;
+			}
+		}
+		return ret;
+	}
+	/*- - - - - - - -  - - - - - - - METODOS DE RESERVA - - - - - - - - - - - - - - - - --  */		
 	
 	private void llenarValoresEnReserva(){
 		llenarComboRangoDeHorarioEnReserva();
@@ -367,52 +423,43 @@ public class Controlador implements ActionListener {
 	}
 
 	
-/* - - - - - - - - - - - - - -  -- OTROS METODOS  - - - - - - -  - - - - - - - - - - - */	
+/* - - - - - - - - - - - - - -  -- METODOS DE PAGOS - - - - - - -  - - - - - - - - - - - */	
 	
-	
-
-	
-
-	
-	/**/
-	
-	
-	private void generarPasajeTarjeta(ActionEvent rP) {
-		String importeIngresado = ventanaPagoTarjeta.getTextImporteIngresado().toString();
+	private void darAltaDelPago(ActionEvent pago) {
+		pagoDTO = new PagoDTO();
+		Calendar currenttime = Calendar.getInstance();
+		 
+		pagoDTO.setMonto(new BigDecimal(this.ventanaFormaDePagos.getTextImporteTotal().getText()));
+		pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
+		
+		PagoDAOSQL pagoDAO = new PagoDAOSQL();
+		pagoDAO.insert(pagoDTO);
+		
+		this.ventanaFormaDePagos.setVisible(false);
+		this.ventanaReserva.setVisible(true);
 	}
 
-	private void generarPasajeEfectivo(ActionEvent rP) {
+	private void realizarPago(ActionEvent rP) {
+		this.ventanaReserva.setVisible(false);
+		this.ventanaFormaDePagos.setVisible(true);
+		
+		this.transporteSeleccionado = obtenerTransporteElegidoPorCliente(this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
+		this.ventanaFormaDePagos.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
 		
 	}
-
-	private void SeleccionFormaDePago(ActionEvent pagar) {
 	
-		this.ventanaReserva.mostrarVentana(false);
-		this.ventanaFormaDePagos.mostrarVentana(true);
+	private BigDecimal calcularMontoDePasaje() {
+		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
+		BigDecimal Valor2 = this.transporteSeleccionado.getPrecioBase();
+		Valor2 = Valor2.add(Valor1);
+		totalaPagar = Valor2;
 		
-		PasajeDTO pasajeDTO = new PasajeDTO();
-		
-/*OBTENER EL VIAJE SELECCIONADO*/
-		pasajeDTO.setViaje(this.viajeSeleccionado);
-		
-/*OBTENER EL TRASNPORTE*/
-		TransporteDTO transporteSeleccionado = obtenerTransporteElegidoPorCliente(
-								this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
-		pasajeDTO.setTransporte(transporteSeleccionado);
-				
-		
-/*OBTENER EL RANGO ELEGIDO POR EL CLIENTE*/
-		String rangoElegido = this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString();
-		
-/*OBTENER LOS PASAJEROS RELACIONADO A ESE PASAJE*/
-		pasajeDTO.setPasajeros(this.pasajerosEnEstaReserva);
-		
-/*OBTENER EL PAGO DEL PASAJE*/
-
-/*GENERAR EL PASAJE Y DARLO DE ALTA EN LA BASE DE DATOS*/
-		
+		return totalaPagar.multiply(new BigDecimal(pasajerosEnEstaReserva.size()));
 	}
 
+
+	/* - - - -  - - - - - - - - - -  - - OTROS METODOS - - - - - - - - - - - - - - - -  -*/	
+	
 	private TransporteDTO obtenerTransporteElegidoPorCliente(String transporteComboBox) {
 		TransporteDAOSQL tDAO = new TransporteDAOSQL();
 		TransporteDTO ret = null;
@@ -422,12 +469,11 @@ public class Controlador implements ActionListener {
 				ret = t;
 		return ret;
 	}
-
-
-	private void seleccionEstadoDelPago(ActionEvent pago) {
-		String itemSeleccionado = this.ventanaFormaDePagos.getComboBoxEstadoPago().getSelectedItem().toString();
-		redirigirSegunItemSeleccionado(itemSeleccionado);
-	}
+	
+//	private void generarPasajeTarjeta(ActionEvent rP) {
+//		String importeIngresado = ventanaPagoTarjeta.getTextImporteIngresado().toString();
+//	}
+//	
 
 	private void redirigirSegunItemSeleccionado(String itemSeleccionado) {
 		if(itemSeleccionado.equals("TARJETA")){
@@ -456,6 +502,54 @@ public class Controlador implements ActionListener {
 		this.ventanaReserva = VentanaReserva.getInstance();
 	}
 	
+private void darDeAltaUnPasaje(ActionEvent aP) {
+		MedioContactoDTO medio = new MedioContactoDTO(1,"44514652","1578966321","contacto@gmail.com");
+		java.util.Date d = new java.util.Date(); 
+		java.sql.Date date2 = new java.sql.Date(d.getTime());
+		ClienteDTO cliente = new ClienteDTO(1,"Pedro","Lopez","17325562",date2, medio);
+		
+		ViajeDTO viaje = viajeSeleccionado;
+		AdministrativoDTO administrativo = new AdministrativoDTO (1,"Andres Gandolfi");
+		int cantPasajeros = pasajerosEnEstaReserva.size();
+		TransporteDTO transporte = obtenerTransporteElegidoPorCliente(this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
+		BigDecimal valorViaje = totalaPagar;
+		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
+		List<PasajeroDTO> pasajeros = pasajerosEnEstaReserva;
+		
+		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativo,cantPasajeros,cliente,transporte,null,
+				valorViaje,estadoPasaje,pagoDTO,pasajeros);
+		
+		PasajeDAOSQL DAO = new PasajeDAOSQL();
+		
+		DAO.insert(pasajeDTO);
+		this.ventanaReserva.setVisible(false);
+		
+		for(PasajeroDTO p : pasajerosEnEstaReserva) {
+			Pasaje_PasajerosDTO pasaje_pasajero = new Pasaje_PasajerosDTO (0, pasajeDTO.getIdPasaje(), p.getIdPasajero());
+			/*FALTA CHEQUEAR LOS ID = 0*/
+			Pasaje_PasajerosDAOSQL DAOPP = new Pasaje_PasajerosDAOSQL();
+			DAOPP.insert(pasaje_pasajero);
+		}
+
+	}
+
+
+	private EstadoPasajeDTO calcularEstadoPasaje() {
+		EstadoPasajeDTO ret;
+		if(totalaPagar.compareTo(pagoDTO.getMonto()) == 0){ //si son iguales
+			ret = new EstadoPasajeDTO(1,"Vendido","El monto abonado es el total a pagar");
+		}
+		else {
+			if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
+				ret = new EstadoPasajeDTO(3,"Pendiente","El monto abonado es 0");
+			}
+			else {
+				ret = new EstadoPasajeDTO(2,"Reservado","El monto abonado es menor al total a pagar");
+			}
+		}
+		return ret;
+	}
+	
 	
 	
 
@@ -479,8 +573,9 @@ public class Controlador implements ActionListener {
 //		this.cliente.agregarCliente(nuevoCliente);
 //	}
 	
-	//Validamos que los campos esten completos
-		private boolean validarCampos(){
+//	Validamos que los campos esten completos
+		
+	private boolean validarCampos(){
 			if (ventanaCliente.getTxtNombre().getText().isEmpty() ||
 				ventanaCliente.getTxtApellido().getText().isEmpty() ||
 				ventanaCliente.getTxtDni().getText().isEmpty() ||
