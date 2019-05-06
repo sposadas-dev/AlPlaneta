@@ -11,8 +11,12 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
+import dto.AdministrativoDTO;
 import dto.CiudadDTO;
+import dto.ClienteDTO;
+import dto.EstadoPasajeDTO;
 import dto.HorarioReservaDTO;
+import dto.MedioContactoDTO;
 import dto.PagoDTO;
 import dto.PasajeDTO;
 import dto.PasajeroDTO;
@@ -25,6 +29,7 @@ import persistencia.dao.mysql.CiudadDAOSQL;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.HorarioReservaDAOSQL;
 import persistencia.dao.mysql.PagoDAOSQL;
+import persistencia.dao.mysql.PasajeDAOSQL;
 import persistencia.dao.mysql.PasajeroDAOSQL;
 import persistencia.dao.mysql.TransporteDAOSQL;
 import persistencia.dao.mysql.ViajeDAOSQL;
@@ -58,6 +63,7 @@ public class Controlador implements ActionListener {
 	private TransporteDTO transporteSeleccionado;
 	private BigDecimal totalaPagar;
 	private HorarioReservaDTO horarioElegido;
+	private PagoDTO pagoDTO;
 	
 	public Controlador() {
 		
@@ -76,10 +82,11 @@ public class Controlador implements ActionListener {
 		transporteSeleccionado = new TransporteDTO();
 
 		
-		this.ventanaReserva.getBtnReservar().addActionListener(reserv->generarPasaje(reserv));
+		this.ventanaReserva.getBtnReservar().addActionListener(reserv->darDeAltaUnPasaje(reserv));
 		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->mostrarVentanaCargaDePasajeros(cP));
 		this.ventanaReserva.getBtnIrViajes().addActionListener(iV->mostrarViajesDisponibles(iV));
 		this.ventanaReserva.getBtnRealizarPago().addActionListener(rP->realizarPago(rP));
+//		this.ventanaReserva.getBtnReservar().addActionListener(gP->generarPasaje(gP));
 		
 		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
 //		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
@@ -383,7 +390,7 @@ public class Controlador implements ActionListener {
 /* - - - - - - - - - - - - - -  -- METODOS DE PAGOS - - - - - - -  - - - - - - - - - - - */	
 	
 	private void darAltaDelPago(ActionEvent pago) {
-		PagoDTO pagoDTO = new PagoDTO();
+		pagoDTO = new PagoDTO();
 		Calendar currenttime = Calendar.getInstance();
 		 
 		pagoDTO.setMonto(new BigDecimal(this.ventanaFormaDePagos.getTextImporteTotal().getText()));
@@ -392,6 +399,8 @@ public class Controlador implements ActionListener {
 		PagoDAOSQL pagoDAO = new PagoDAOSQL();
 		pagoDAO.insert(pagoDTO);
 		
+		this.ventanaFormaDePagos.setVisible(false);
+		this.ventanaReserva.setVisible(true);
 	}
 
 	private void realizarPago(ActionEvent rP) {
@@ -455,6 +464,45 @@ public class Controlador implements ActionListener {
 		this.ventanaCliente.getBtnRegistrar().addActionListener(this);
 		this.cliente = cliente;
 		this.ventanaReserva = VentanaReserva.getInstance();
+	}
+	
+private void darDeAltaUnPasaje(ActionEvent aP) {
+		MedioContactoDTO medio = new MedioContactoDTO(1,"44514652","1578966321","contacto@gmail.com");
+		java.util.Date d = new java.util.Date(); 
+		java.sql.Date date2 = new java.sql.Date(d.getTime());
+		ClienteDTO cliente = new ClienteDTO(1,"Pedro","Lopez","17325562",date2, medio);
+		
+		ViajeDTO viaje = viajeSeleccionado;
+		AdministrativoDTO administrativo = new AdministrativoDTO (1,"Andres Gandolfi");
+		int cantPasajeros = pasajerosEnEstaReserva.size();
+		TransporteDTO transporte = obtenerTransporteElegidoPorCliente(this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
+		BigDecimal valorViaje = totalaPagar;
+		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
+		List<PasajeroDTO> pasajeros = pasajerosEnEstaReserva;
+		
+		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativo,cantPasajeros,cliente,transporte,null,
+				valorViaje,estadoPasaje,pagoDTO,pasajeros);
+		
+		PasajeDAOSQL DAO = new PasajeDAOSQL();
+		
+		DAO.insert(pasajeDTO);
+
+	}
+
+	private EstadoPasajeDTO calcularEstadoPasaje() {
+		EstadoPasajeDTO ret;
+		if(totalaPagar.compareTo(pagoDTO.getMonto()) == 0){ //si son iguales
+			ret = new EstadoPasajeDTO(1,"Vendido","El monto abonado es el total a pagar");
+		}
+		else {
+			if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
+				ret = new EstadoPasajeDTO(3,"Pendiente","El monto abonado es 0");
+			}
+			else {
+				ret = new EstadoPasajeDTO(2,"Reservado","El monto abonado es menor al total a pagar");
+			}
+		}
+		return ret;
 	}
 	
 	

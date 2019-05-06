@@ -19,6 +19,10 @@ public class ClienteDTO {
 		this.fechaNacimiento = fechaNacimiento;
 		this.medioContacto = medioContacto;
 	}
+	
+	public ClienteDTO() {
+		super();
+	}
 
 	public int getIdCliente() {
 		return idCliente;

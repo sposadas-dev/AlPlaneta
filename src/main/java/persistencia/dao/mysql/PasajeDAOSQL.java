@@ -12,10 +12,8 @@ import persistencia.dao.interfaz.PasajeDAO;
 
 public class PasajeDAOSQL implements PasajeDAO {
 	
-	private static final String insert = "INSERT INTO pasaje(idPasaje, viaje, administrativo,"
-			+ "cantidadPasajeros, cliente, transporte, fechaVencimiento, valorViaje,"
-			+ "estadoDelPasaje, pago, pasajeros)"
-			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO pasaje(idPasaje, cantidadPasajeros, fechaVencimiento, valorViaje, idCliente, idViaje, idTransporte, idAdministrativo, idEstadoPasaje, idPago)"
+			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String delete = "DELETE FROM pasaje  WHERE idPasaje = ?";
 	
@@ -32,16 +30,15 @@ public class PasajeDAOSQL implements PasajeDAO {
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
 			statement.setInt(1, pasaje.getIdPasaje());
-			statement.setInt(2, pasaje.getViaje().getId());
-			statement.setInt(3, pasaje.getAdministrativo().getIdAdministrativo());
-			statement.setInt(4, pasaje.getCantidadPasajeros());
+			statement.setInt(2, pasaje.getCantidadPasajeros());
+			statement.setDate(3, pasaje.getFechaVencimiento());
+			statement.setBigDecimal(4, pasaje.getValorViaje());
 			statement.setInt(5, pasaje.getCliente().getIdCliente());
-			statement.setInt(6, pasaje.getTransporte().getIdTransporte());
-			statement.setDate(7, pasaje.getFechaVencimiento());
-			statement.setBigDecimal(8, pasaje.getValorViaje());
+			statement.setInt(6, pasaje.getViaje().getId());
+			statement.setInt(7, pasaje.getTransporte().getIdTransporte());
+			statement.setInt(8, pasaje.getAdministrativo().getIdAdministrativo());
 			statement.setInt(9, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());
 			statement.setInt(10, pasaje.getPago().getIdPago());
-			statement.setInt(11, pasaje.getCantidadPasajeros());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
