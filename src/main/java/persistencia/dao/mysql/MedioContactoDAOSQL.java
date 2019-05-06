@@ -11,10 +11,10 @@ import persistencia.dao.interfaz.MedioContactoDAO;
 
 public class MedioContactoDAOSQL implements MedioContactoDAO {
 
-	private static final String insert = "INSERT INTO medioContacto(idMedioContacto, numeroFijo, numeroCelular, email) VALUES(?, ?, ?, ?)";
-	private static final String delete = "DELETE FROM medioContacto WHERE idMedioContacto = ?";
-	private static final String readall = "SELECT * FROM medioContacto";
-	private static final String update = "UPDATE medioContacto SET numeroFijo=? , numeroCelular=? , email=? WHERE idMedioContacto=? ;";
+	private static final String insert = "INSERT INTO mediocontacto(idMedioContacto, numeroFijo, numeroCelular, email) VALUES(?, ?, ?, ?)";
+	private static final String delete = "DELETE FROM mediocontacto WHERE idMedioContacto = ?";
+	private static final String readall = "SELECT * FROM mediocontacto";
+	private static final String update = "UPDATE mediocontacto SET numeroFijo=? , numeroCelular=? , email=? WHERE idMedioContacto=? ;";
 
 	
 	@Override

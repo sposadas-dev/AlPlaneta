@@ -7,6 +7,9 @@ public class MedioContactoDTO {
 	private String telefonoCelular;
 	private String email;
 
+	public MedioContactoDTO() {
+	}
+	
 	public MedioContactoDTO(int idMedioContacto,String telefonoFijo, String telefonoCelular, String email) {
 		this.idMedioContacto = idMedioContacto;
 		this.telefonoFijo = telefonoFijo;
