@@ -179,4 +179,15 @@ public class VentanaCliente extends JFrame {
 	public JButton getBtnRegistrar() {
 		return btnRegistrar;
 	}
+	
+	public void limpiarCampos(){
+		this.txtNombre.setText(null);
+		this.txtApellido.setText(null);
+		this.txtDni.setText(null);
+		this.dateFechaNacimiento.setDate(null);
+		this.txtTelefonoFijo.setText(null);
+		this.txtTelefonoCelular.setText(null);
+		this.txtEmail.setText(null);
+
+	}
 }

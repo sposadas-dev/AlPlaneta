@@ -30,7 +30,6 @@ public class VentanaReserva extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtMonto;
 	private JButton btnReservar;
 	private JButton btnCancelar;
 	private JComboBox<?> comboBoxTransporte;
@@ -55,7 +54,7 @@ public class VentanaReserva extends JFrame {
 	
 	private VentanaReserva() {
 		super();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(300, 200, 617, 436);
 		setResizable(false);
 		contentPane = new JPanel();
@@ -86,10 +85,6 @@ public class VentanaReserva extends JFrame {
 		lblRangoHorario.setBounds(323, 145, 113, 14);
 		contentPane.add(lblRangoHorario);
 		
-		JLabel lblMonto = new JLabel("Monto:");
-		lblMonto.setBounds(24, 207, 46, 14);
-		contentPane.add(lblMonto);
-		
 		comboBoxTransporte = new JComboBox();
 		comboBoxTransporte.setBounds(159, 142, 143, 20);
 		contentPane.add(comboBoxTransporte);
@@ -97,11 +92,6 @@ public class VentanaReserva extends JFrame {
 		comboBoxRangoHorario = new JComboBox();
 		comboBoxRangoHorario.setBounds(446, 142, 143, 20);
 		contentPane.add(comboBoxRangoHorario);
-		
-		txtMonto = new JTextField();
-		txtMonto.setBounds(159, 204, 143, 20);
-		contentPane.add(txtMonto);
-		txtMonto.setColumns(10);
 		
 		JSeparator separadorReserva = new JSeparator();
 		separadorReserva.setBounds(40, 281, 549, 20);
@@ -126,7 +116,7 @@ public class VentanaReserva extends JFrame {
 		contentPane.add(btnCancelar);
 		
 		btnCargaPasajeros = new JButton("Carga de pasajeros");
-		btnCargaPasajeros.setBounds(336, 203, 253, 23);
+		btnCargaPasajeros.setBounds(24, 213, 253, 23);
 		contentPane.add(btnCargaPasajeros);
 		
 		btnIrViajes = new JButton("Seleccionar Viaje");
@@ -167,13 +157,7 @@ public class VentanaReserva extends JFrame {
 		this.setVisible(visibilidad);
 	}
 	
-	public JTextField getTxtMonto() {
-		return txtMonto;
-	}
-
-	public void setTxtMonto(JTextField txtMonto) {
-		this.txtMonto = txtMonto;
-	}
+	
 
 	public JButton getBtnReservar() {
 		return btnReservar;

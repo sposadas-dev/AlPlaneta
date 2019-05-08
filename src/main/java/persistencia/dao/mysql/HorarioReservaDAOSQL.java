@@ -50,7 +50,6 @@ public class HorarioReservaDAOSQL implements HorarioReservaDAO {
 			e.printStackTrace();
 		}
 		return horarioReservas;
-
 	}
 
 	@Override

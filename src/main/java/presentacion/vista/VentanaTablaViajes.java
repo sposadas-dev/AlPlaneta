@@ -30,7 +30,7 @@ public class VentanaTablaViajes extends JFrame {
 	}
 	
 	private VentanaTablaViajes() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Carga de pasajeros");
 		setBounds(100, 100, 761, 399);
 		contentPane = new JPanel();

@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import dto.CiudadDTO;
 import dto.MedioContactoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.MedioContactoDAO;
@@ -70,11 +72,12 @@ public class MedioContactoDAOSQL implements MedioContactoDAO {
 			resultSet = statement.executeQuery();
 			
 			while(resultSet.next()){
-				mediosContacto.add(new MedioContactoDTO(resultSet.getInt("idMedioContacto"), 
-							resultSet.getString("numeroFijo"),
-							resultSet.getString("numeroCelular"),
-							resultSet.getString("email")
-							)
+				mediosContacto.add(new MedioContactoDTO(
+						resultSet.getInt("idMedioContacto"), 
+						resultSet.getString("numeroFijo"),
+						resultSet.getString("numeroCelular"),
+						resultSet.getString("email")
+				)
 					);
 				}
 			} 
@@ -105,4 +108,41 @@ public class MedioContactoDAOSQL implements MedioContactoDAO {
 		}
 		return false;
 	}
+	
+	@Override
+	public MedioContactoDTO getMedioContactoById(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet; 
+		ArrayList<MedioContactoDTO> mediosContacto= new ArrayList<MedioContactoDTO>();
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(readall);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()){
+				mediosContacto.add(new MedioContactoDTO(
+						resultSet.getInt("idMedioContacto"), 
+						resultSet.getString("numeroFijo"),
+						resultSet.getString("numeroCelular"),
+						resultSet.getString("email")));
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		MedioContactoDTO ret = null;
+		
+		for(MedioContactoDTO md: mediosContacto){
+			if(md.getIdMedioContacto()==id)
+				ret = md;
+		}
+		return ret;
+	}
+	
+	public static void main(String[] args) {
+		MedioContactoDAOSQL adm = new MedioContactoDAOSQL();
+		List<MedioContactoDTO> administratives = adm.readAll();
+		
+		for(MedioContactoDTO ad: administratives)
+			System.out.println(ad.getEmail());
+		}
 }

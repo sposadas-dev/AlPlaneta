@@ -8,6 +8,7 @@ import java.util.List;
 
 import dto.AdministrativoDTO;
 import dto.CiudadDTO;
+import dto.MedioContactoDTO;
 import dto.ViajeDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.ViajeDAO;
@@ -117,6 +118,12 @@ public class ViajeDAOSQL implements ViajeDAO {
 		return false;
 	}
 	
-	
+	public static void main(String[] args) {
+		ViajeDAOSQL adm = new ViajeDAOSQL();
+		List<ViajeDTO> administratives = adm.readAll();
+		
+		for(ViajeDTO ad: administratives)
+			System.out.println(ad.getOrigenViaje().getNombre());
+		}
 	
 }
