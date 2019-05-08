@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import dto.ClienteDTO;
 import dto.MedioContactoDTO;
 import persistencia.conexion.Conexion;
@@ -43,6 +44,8 @@ public class ClienteDAOSQL implements ClienteDAO {
 		ResultSet resultSet; // Guarda el resultado de la query
 		ArrayList<ClienteDTO> clientes = new ArrayList<ClienteDTO>();
 		Conexion conexion = Conexion.getConexion();
+		MedioContactoDAOSQL medioContactoDAOSQL = new MedioContactoDAOSQL();
+
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
@@ -53,12 +56,8 @@ public class ClienteDAOSQL implements ClienteDAO {
 						resultSet.getString("apellido"), 
 						resultSet.getString("dni"), 
 						resultSet.getDate("fechaNacimiento"),
-						new MedioContactoDTO(resultSet.getInt("idMedioContacto"),
-								resultSet.getString("numeroFijo"), 
-								resultSet.getString("numeroCelular"), 
-								resultSet.getString("email")
+						medioContactoDAOSQL.getMedioContactoById(resultSet.getInt("idMedioContacto"))
 						)
-					)
 				);
 			}
 		} catch (SQLException e) {
@@ -89,4 +88,13 @@ public class ClienteDAOSQL implements ClienteDAO {
 		}
 		return false;
 	}
+	
+	public static void main(String[] args) {
+		ClienteDAOSQL adm = new ClienteDAOSQL();
+		List<ClienteDTO> administratives = adm.readAll();
+		
+		for(ClienteDTO ad: administratives)
+			System.out.println(ad.getMedioContacto().getTelefonoCelular());
+		}
+
 }

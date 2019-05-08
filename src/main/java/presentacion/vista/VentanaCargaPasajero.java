@@ -22,7 +22,7 @@ public class VentanaCargaPasajero extends JFrame {
 	private JButton btnEliminar; 
 	private JButton btnAgregarPasajero; 
 	private JButton btnConfirmar;
-	private  String[] nombreColumnas = {"Nombre" , "Apellido","DNI"};
+	private  String[] nombreColumnas = {"Nombre" , "Apellido", "DNI"};
 
 	public static VentanaCargaPasajero getInstance(){
 		if(INSTANCE == null)
@@ -32,7 +32,7 @@ public class VentanaCargaPasajero extends JFrame {
 	}
 	
 	private VentanaCargaPasajero() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Carga de pasajeros");
 		setBounds(100, 100, 545, 350);
 		contentPane = new JPanel();

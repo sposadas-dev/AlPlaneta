@@ -12,16 +12,13 @@ public class ClienteDTO {
 	private MedioContactoDTO medioContacto;
 
 	public ClienteDTO(int idCliente, String nombre, String apellido, String dni, Date fechaNacimiento, MedioContactoDTO medioContacto){
+		super();
 		this.idCliente = idCliente;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.dni = dni;
 		this.fechaNacimiento = fechaNacimiento;
 		this.medioContacto = medioContacto;
-	}
-	
-	public ClienteDTO() {
-		super();
 	}
 
 	public int getIdCliente() {
@@ -71,9 +68,4 @@ public class ClienteDTO {
 	public void setMedioContacto(MedioContactoDTO medioContacto) {
 		this.medioContacto = medioContacto;
 	}
-	
-//	public String getFechaOrdenada() {
-//		SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");
-//		return date.format(fechaNacimiento);
-//	}
 }
