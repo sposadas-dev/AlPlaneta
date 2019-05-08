@@ -77,6 +77,8 @@ public class ViajeDAOSQL implements ViajeDAO {
 		
 		while(resultSet.next())
 		{
+			System.out.println(resultSet.getInt("idCiudadOrigen"));
+
 			viajes.add(new ViajeDTO(resultSet.getInt("idViaje"),
 			ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadOrigen")),
 			ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadDestino")),
@@ -123,7 +125,7 @@ public class ViajeDAOSQL implements ViajeDAO {
 		List<ViajeDTO> administratives = adm.readAll();
 		
 		for(ViajeDTO ad: administratives)
-			System.out.println(ad.getOrigenViaje().getNombre());
+			System.out.println(ad.getFechaLlegada());
 		}
 	
 }

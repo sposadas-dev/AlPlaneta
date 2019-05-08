@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import dto.CiudadDTO;
 import dto.MedioContactoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.MedioContactoDAO;
@@ -137,12 +135,4 @@ public class MedioContactoDAOSQL implements MedioContactoDAO {
 		}
 		return ret;
 	}
-	
-	public static void main(String[] args) {
-		MedioContactoDAOSQL adm = new MedioContactoDAOSQL();
-		List<MedioContactoDTO> administratives = adm.readAll();
-		
-		for(MedioContactoDTO ad: administratives)
-			System.out.println(ad.getEmail());
-		}
 }

@@ -20,7 +20,7 @@ public class VentanaTablaViajes extends JFrame {
 	private JTable tablaViajes;
 	private DefaultTableModel modelViajes;
 	private JButton btnConfirmar;
-	private  String[] nombreColumnas = {"ID" ,"ORIGEN","DESTINO","FECHA_SALIDA","FECHA_LLEGADA","PRECIO","HORA_SALIDA"};
+	private  String[] nombreColumnas = {"Origen","Destino","Fecha de salida","Fecha de llegada","Precio","Hora de salida"};
 
 	public static VentanaTablaViajes getInstance(){
 		if(INSTANCE == null)
@@ -31,8 +31,8 @@ public class VentanaTablaViajes extends JFrame {
 	
 	private VentanaTablaViajes() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setTitle("Carga de pasajeros");
-		setBounds(100, 100, 761, 399);
+		setTitle("Carga de viaje");
+		setBounds(250, 200, 761, 399);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

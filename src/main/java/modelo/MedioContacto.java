@@ -2,6 +2,7 @@ package modelo;
 
 import java.util.List;
 
+import dto.CiudadDTO;
 import dto.MedioContactoDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.MedioContactoDAO;
@@ -20,5 +21,9 @@ public class MedioContacto {
 	
 	public List<MedioContactoDTO> obtenerMediosContacto(){
 		return this.medio.readAll();		
+	}
+	
+	public MedioContactoDTO getMedioContactoById(int idMedioContacto){
+		return this.medio.getMedioContactoById(idMedioContacto);
 	}
 }

@@ -7,10 +7,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-
 import dto.AdministrativoDTO;
 import dto.CiudadDTO;
 import dto.ClienteDTO;
@@ -27,7 +25,6 @@ import modelo.Cliente;
 import modelo.MedioContacto;
 import modelo.ModeloCiudad;
 import modelo.ModeloViaje;
-import persistencia.dao.interfaz.PasajeroDAO;
 import persistencia.dao.mysql.CiudadDAOSQL;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.HorarioReservaDAOSQL;
@@ -72,7 +69,6 @@ public class Controlador implements ActionListener {
 	private PagoDTO pagoDTO;
 	
 	public Controlador(Vista vista) {
-//		public Controlador(){
 		this.vista = vista;
 		this.vista.getBtnClientes().addActionListener(ac->agregarPanelClientes(ac));
 		this.vista.getBtnPasajes().addActionListener(ap->agregarPanelPasajes(ap));
@@ -107,6 +103,7 @@ public class Controlador implements ActionListener {
 		
 		this.ventanaCliente = VentanaCliente.getInstance();
 		this.ventanaCliente.getBtnRegistrar().addActionListener(ac->altaCliente(ac));
+		this.ventanaCliente.getBtnCancelar().addActionListener(bc->salirVentanaCliente(bc));
 		
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->mostrarVentanaAltaDePasajeros(aP));
 		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(aP->altaPasajerosDeUnViaje(aP));
@@ -121,8 +118,13 @@ public class Controlador implements ActionListener {
 	}
 
 	
+	private void salirVentanaCliente(ActionEvent bc) {
+		this.ventanaCliente.cerrarVentana();
+	}
+
 	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
 	public void inicializar() throws Exception{	
+		this.llenarTablaClientes();
 		this.vista.show();
 				
 //		mostrarVentanaReserva();
@@ -144,20 +146,18 @@ public class Controlador implements ActionListener {
 		this.vista.getPanelReservas().setVisible(true);
 	}
 
-	
 	private void agregarCliente(ActionEvent c) {
 		this.ventanaCliente.mostrarVentana();
 	}
 
 	private void agregarPasaje(ActionEvent p) {
 		mostrarVentanaReserva();
-
 	}
 
 	private void llenarTablaClientes(){
 		this.vista.getModelClientes().setRowCount(0); //Para vaciar la tabla
 		this.vista.getModelClientes().setColumnCount(0);
-		this.vista.getModelClientes().setColumnIdentifiers(this.vista.getNombreColumnas());
+		this.vista.getModelClientes().setColumnIdentifiers(this.vista.getNombreColumnasClientes());
 			
 		this.clientes_en_tabla = cliente.obtenerClientes();
 			
@@ -174,8 +174,8 @@ public class Controlador implements ActionListener {
 							this.vista.getModelClientes().addRow(fila);
 		}		
 	}
-	
-		
+//	
+//		
 	
 	/*LABEL CANTIDAD DE PASAJEROS*/
 	
@@ -262,8 +262,6 @@ public class Controlador implements ActionListener {
 		this.ventanaReserva.getLblViajeSeleccionado().setText(viajeString);
 	}
 	
-	
-
 	/*- - - - - - - -  - - - - - - - METODO DE CLIENTE - - - - - - - - - - - - - - - - --  */	
 
 	private void altaCliente(ActionEvent client) {
@@ -277,29 +275,28 @@ public class Controlador implements ActionListener {
 		mContacto.setTelefonoFijo(this.ventanaCliente.getTxtTelefonoFijo().getText());
 		mContacto.setTelefonoCelular(this.ventanaCliente.getTxtTelefonoCelular().getText());
 		mContacto.setEmail(this.ventanaCliente.getTxtEmail().getText());
-	
-	
+		
+		medioContacto.agregarMedioContacto(mContacto);
+		
 		ClienteDTO nuevoCliente = new ClienteDTO(0,
 				this.ventanaCliente.getTxtNombre().getText(),
 				this.ventanaCliente.getTxtApellido().getText(),
 				this.ventanaCliente.getTxtDni().getText(),
 				fechaNacimiento,
 				obtenerMedioContactoDTO()
-		);		
-			medioContacto.agregarMedioContacto(mContacto);
+		);
 			cliente.agregarCliente(nuevoCliente);
 			llenarTablaClientes();
 			this.ventanaCliente.limpiarCampos();
 			this.ventanaCliente.dispose();
 		}
-		
 	}
 	
 	private MedioContactoDTO obtenerMedioContactoDTO() {
 		MedioContacto medioContacto = new MedioContacto(new DAOSQLFactory());
 		MedioContactoDTO mContactoDTO = new MedioContactoDTO();
 		ArrayList<MedioContactoDTO> medios = (ArrayList<MedioContactoDTO>) medioContacto.obtenerMediosContacto();
-		for(MedioContactoDTO m:medios){
+		for(MedioContactoDTO m: medios){
 			if(m.getEmail().toString().equals(this.ventanaCliente.getTxtEmail().getText()) &&
 				m.getTelefonoCelular().equals(this.ventanaCliente.getTxtTelefonoCelular().getText())&&
 				m.getTelefonoFijo().equals(this.ventanaCliente.getTxtTelefonoFijo().getText())){
@@ -350,7 +347,7 @@ public class Controlador implements ActionListener {
 					pasajerosEnEstaReserva.get(i).getNombre(),
 					pasajerosEnEstaReserva.get(i).getApellido(),
 					pasajerosEnEstaReserva.get(i).getDni()
-					};
+			};
 			this.ventanaCargaPasajero.getModelPasajeros().addRow(fila);
 		}
 		this.ventanaReserva.getLblCantidadDePasajeros().setText(pasajerosEnEstaReserva.size()+" Pasajeros fueron cargados");
@@ -473,15 +470,12 @@ public class Controlador implements ActionListener {
 	}
 
 	private void mostrarViajesDisponibles(ActionEvent iV) {
-		
 		this.ventanaTablaViajes.getModelViajes().setRowCount(0);
 		this.ventanaTablaViajes.getModelViajes().setColumnCount(0);
 		this.ventanaTablaViajes.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
 		ArrayList<ViajeDTO> viajes_en_tabla = (ArrayList<ViajeDTO>) new ViajeDAOSQL().readAll();
 		for(int i=0; i< viajes_en_tabla.size();i++){
 			Object[] fila = { 
-//				{"ID" ,"ORIGEN","DESTINO","FECHA_SALIDA","FECHA_LLEGADA","PRECIO","HORA_SALIDA"};
-					viajes_en_tabla.get(i).getId(),
 					viajes_en_tabla.get(i).getOrigenViaje().getNombre(),
 					viajes_en_tabla.get(i).getDestinoViaje().getNombre(),
 					viajes_en_tabla.get(i).getFechaSalida(),

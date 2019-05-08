@@ -24,12 +24,12 @@ public class Vista {
 	private JTable tablaClientes;
 	private JButton btnAgregarCliente;
 	private DefaultTableModel modelClientes;
-	private String[] nombreColumnas = {"Nombre" , "Apellido", "DNI","Teléfono Fijo","Teléfono Celular","Email"};
+	private String[] nombreColumnasClientes = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento","Teléfono Fijo","Teléfono Celular","Email"};
 
 	private JPanel panelReservas;
 	private JTable tablaReservas;
 	private DefaultTableModel modelReservas;
-	private  String[] nombreColumnasReservas = {"Fecha de salida","Origen" , "Destino"};
+	private String[] nombreColumnasReservas = {"Fecha de salida","Origen" , "Destino"};
 	
 	private JButton btnAgregarReserva;
 	private JButton btnEditar;
@@ -45,7 +45,7 @@ public class Vista {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setTitle("Al Planeta Project");
-		frame.setBounds(300, 200, 827, 480);
+		frame.setBounds(200, 60, 950, 630);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -53,10 +53,10 @@ public class Vista {
 		btnClientes.setBounds(10, 11, 147, 53);
 		frame.getContentPane().add(btnClientes);
 		
-		 btnPasajes = new JButton("Pasajes");
+		btnPasajes = new JButton("Pasajes");
 		btnPasajes.setBounds(155, 11, 147, 53);
 		frame.getContentPane().add(btnPasajes);
-		modelClientes = new DefaultTableModel(null,nombreColumnas){
+		modelClientes = new DefaultTableModel(null,nombreColumnasClientes){
 
 			@Override
 				public boolean isCellEditable(int row, int column){
@@ -65,32 +65,32 @@ public class Vista {
 			};
 		
 		panelClientes = new JPanel();
-		panelClientes.setBounds(0, 73, 801, 342);
+		panelClientes.setBounds(0, 75, 920, 503);
 		frame.getContentPane().add(panelClientes);
 		panelClientes.setLayout(null);
 		
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(10, 11, 640, 320);
+		spPasajeros.setBounds(10, 20, 770, 483);
 		panelClientes.add(spPasajeros);
 		tablaClientes = new JTable(modelClientes);
 		spPasajeros.setViewportView(tablaClientes);
 		panelClientes.setVisible(false);
 			
 		btnAgregarCliente = new JButton("Agregar");
-		btnAgregarCliente.setBounds(660, 49, 108, 46);
+		btnAgregarCliente.setBounds(790, 63, 108, 46);
 		panelClientes.add(btnAgregarCliente);
 		
 		panelReservas = new JPanel();
-		panelReservas.setBounds(0, 73, 775, 342);
+		panelReservas.setBounds(0, 73, 920, 505);
 		frame.getContentPane().add(panelReservas);
 		panelReservas.setLayout(null);
 		
 		JScrollPane spReservas = new JScrollPane();
-		spReservas.setBounds(10, 11, 567, 320);
+		spReservas.setBounds(26, 11, 729, 320);
 		panelReservas.add(spReservas);
 		modelReservas = new DefaultTableModel(null,nombreColumnasReservas){
-			@Override
-			public boolean isCellEditable(int row, int column){
+		@Override
+		public boolean isCellEditable(int row, int column){
 			return false;
 			}
 		};
@@ -98,15 +98,15 @@ public class Vista {
 		spReservas.setViewportView(tablaReservas);
 		
 		btnAgregarReserva = new JButton("Agregar");
-		btnAgregarReserva.setBounds(587, 47, 108, 46);
+		btnAgregarReserva.setBounds(786, 42, 108, 46);
 		panelReservas.add(btnAgregarReserva);
 		
 		btnEditar = new JButton("Editar");
-		btnEditar.setBounds(587, 105, 108, 46);
+		btnEditar.setBounds(786, 110, 108, 46);
 		panelReservas.add(btnEditar);
 		
 		btnEliminar = new JButton("Eliminar");
-		btnEliminar.setBounds(587, 160, 108, 46);
+		btnEliminar.setBounds(786, 170, 108, 46);
 		panelReservas.add(btnEliminar);
 		panelReservas.setVisible(false);
 	}
@@ -115,8 +115,8 @@ public class Vista {
 		return modelClientes;
 	}
 
-	public String[] getNombreColumnas() {
-		return nombreColumnas;
+	public String[] getNombreColumnasClientes() {
+		return nombreColumnasClientes;
 	}
 	
 	public JButton getBtnAgregarReserva() {

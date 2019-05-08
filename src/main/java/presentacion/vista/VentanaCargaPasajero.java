@@ -62,10 +62,6 @@ public class VentanaCargaPasajero extends JFrame {
 		contentPane.add(btnEliminar);
 		
 		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		btnConfirmar.setBounds(410, 222, 109, 37);
 		contentPane.add(btnConfirmar);
 		
