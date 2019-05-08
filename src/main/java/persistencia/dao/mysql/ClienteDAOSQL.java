@@ -51,6 +51,8 @@ public class ClienteDAOSQL implements ClienteDAO {
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
+				System.out.println(resultSet.getInt("idMedioContacto"));
+
 				clientes.add(new ClienteDTO(resultSet.getInt("idCliente"),
 						resultSet.getString("nombre"), 
 						resultSet.getString("apellido"), 
@@ -90,11 +92,17 @@ public class ClienteDAOSQL implements ClienteDAO {
 	}
 	
 	public static void main(String[] args) {
+//		ClienteDAOSQL adm = new ClienteDAOSQL();
+//		List<ClienteDTO> administratives = adm.readAll();
+//		
+//		for(ClienteDTO ad: administratives)
+//			System.out.println(ad.getMedioContacto().getTelefonoCelular());
+//		}
 		ClienteDAOSQL adm = new ClienteDAOSQL();
 		List<ClienteDTO> administratives = adm.readAll();
+//		ClienteDTO m= adm.readAll()(29);
 		
 		for(ClienteDTO ad: administratives)
 			System.out.println(ad.getMedioContacto().getTelefonoCelular());
-		}
-
+	}
 }

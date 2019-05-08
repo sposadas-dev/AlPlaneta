@@ -25,6 +25,8 @@ public class VentanaCliente extends JFrame {
 	private JTextField txtTelefonoCelular;
 	private JTextField txtEmail;
 	private JButton btnRegistrar;
+	private JButton btnCancelar;
+
 	private static VentanaCliente ventanaCliente;
 	
 	public static VentanaCliente getInstance(){
@@ -40,7 +42,7 @@ public class VentanaCliente extends JFrame {
 		setResizable(false);
 		setTitle("Registrar cliente");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(300, 200, 560, 435);
+		setBounds(400, 150, 560, 435);
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.controlHighlight);
@@ -135,7 +137,7 @@ public class VentanaCliente extends JFrame {
 		btnRegistrar.setBounds(127, 342, 131, 42);
 		contentPane.add(btnRegistrar);
 		
-		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setBackground(new Color(192, 57, 43));
 		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -178,6 +180,14 @@ public class VentanaCliente extends JFrame {
 	
 	public JButton getBtnRegistrar() {
 		return btnRegistrar;
+	}
+	
+	public JButton getBtnCancelar() {
+		return btnCancelar;
+	}
+	
+	public void cerrarVentana(){
+		this.dispose();
 	}
 	
 	public void limpiarCampos(){

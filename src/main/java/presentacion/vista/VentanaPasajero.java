@@ -29,7 +29,6 @@ public class VentanaPasajero extends JFrame {
 			return INSTANCE;
 	}
 	
-
 	private VentanaPasajero() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(500, 200, 366, 389);
