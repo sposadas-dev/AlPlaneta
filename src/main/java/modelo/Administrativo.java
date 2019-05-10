@@ -21,4 +21,8 @@ public class Administrativo {
 	public List<AdministrativoDTO> obtenerAdministrativos(){
 		return this.administrativo.readAll();		
 	}
+
+	public AdministrativoDTO obtenerAdministrativoDatosLogin(String user,String password) {
+		return administrativo.getByDatosLogin(user, password);
+	}
 }

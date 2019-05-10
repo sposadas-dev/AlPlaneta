@@ -7,8 +7,11 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+
+import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.CiudadDTO;
 import dto.ClienteDTO;
@@ -21,6 +24,7 @@ import dto.Pasaje_PasajerosDTO;
 import dto.PasajeroDTO;
 import dto.TransporteDTO;
 import dto.ViajeDTO;
+import modelo.Administrativo;
 import modelo.Cliente;
 import modelo.MedioContacto;
 import modelo.ModeloCiudad;
@@ -38,6 +42,7 @@ import presentacion.vista.VentanaCargaPasajero;
 import presentacion.vista.VentanaCargarViaje;
 import presentacion.vista.VentanaCliente;
 import presentacion.vista.VentanaFormaPago;
+import presentacion.vista.VentanaLogin;
 import presentacion.vista.VentanaPagoEfectivo;
 import presentacion.vista.VentanaPagoTarjeta;
 import presentacion.vista.VentanaPasajero;
@@ -68,6 +73,12 @@ public class Controlador implements ActionListener {
 	private HorarioReservaDTO horarioElegido;
 	private PagoDTO pagoDTO;
 	
+	
+	/*AGREGADO PARA 3ER REUNION */
+	private VentanaLogin ventanaLogin;
+	private Administrativo modeloAdminisrativo;
+	private DAOSQLFactory daoSqlFactory;
+	
 	public Controlador(Vista vista) {
 		this.vista = vista;
 		this.vista.getBtnClientes().addActionListener(ac->agregarPanelClientes(ac));
@@ -84,6 +95,12 @@ public class Controlador implements ActionListener {
 		this.ventanaCargarViaje = VentanaCargarViaje.getInstance();
 		this.ventanaCargaPasajero = VentanaCargaPasajero.getInstance();
 		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();
+		this.ventanaLogin = VentanaLogin.getInstance();
+		
+		/*Inicio de Modelos*/
+		this.daoSqlFactory = new DAOSQLFactory();
+		this.modeloAdminisrativo = new Administrativo(daoSqlFactory); 
+		/*Fin de Modelos*/
 		
 		this.viajes_en_tabla = new ArrayList<ViajeDTO>();
 		this.clientes_en_tabla = new ArrayList<ClienteDTO>();
@@ -91,6 +108,7 @@ public class Controlador implements ActionListener {
 		viajeSeleccionado = new ViajeDTO();
 		transporteSeleccionado = new TransporteDTO();
 		
+		this.ventanaLogin.getBtnLogin().addActionListener(log->logearse(log));
 		
 		this.ventanaReserva.getBtnReservar().addActionListener(reserv->darDeAltaUnPasaje(reserv));
 		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->mostrarVentanaCargaDePasajeros(cP));
@@ -117,6 +135,25 @@ public class Controlador implements ActionListener {
 		cliente = new Cliente(new DAOSQLFactory());
 	}
 
+/*IMPLEMENTADO BRANCH V3.0*/	
+	private void logearse(ActionEvent log) {
+		String usuario = ventanaLogin.getTextUsuario().getText();
+		String password = ventanaLogin.getTextPassword().getText();
+		
+		AdministrativoDTO administrativo = busquedaRolAdministrativo(usuario,password);
+		
+		if(administrativo!=null)
+			System.out.println("SE LOGEO CORRECTAMENTE");
+		else
+			System.out.println("NO EXISTE EL PERSONAL ADMINISTRATIVO");
+	}
+
+	private AdministrativoDTO busquedaRolAdministrativo(String user, String password) {
+		return modeloAdminisrativo.obtenerAdministrativoDatosLogin(user,password);
+	}
+/*FIN IMPLEMENTACION BRANCH V3.0*/
+	
+	
 	
 	private void salirVentanaCliente(ActionEvent bc) {
 		this.ventanaCliente.cerrarVentana();
@@ -124,16 +161,16 @@ public class Controlador implements ActionListener {
 
 	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
 	public void inicializar() throws Exception{	
-		this.llenarTablaClientes();
-		this.vista.show();
+//		this.llenarTablaClientes();
+//		this.vista.show();
 				
-//		mostrarVentanaReserva();
+		mostrarVentanaReserva();  // Ventana creacion de pasajes.
 	
-		llenarViajesEnTabla();
+//		llenarViajesEnTabla();
 		
 //		mostrarVentanaPago();
 		
-//		llenarValoresEnCargaDeViaje();
+		llenarValoresEnCargaDeViaje();
 	}
 		
 	private void agregarPanelClientes(ActionEvent ac) {
@@ -569,33 +606,33 @@ public class Controlador implements ActionListener {
 	}
 	
 private void darDeAltaUnPasaje(ActionEvent aP) {
-		MedioContactoDTO medio = new MedioContactoDTO(1,"44514652","1578966321","contacto@gmail.com");
-		java.util.Date d = new java.util.Date(); 
-		java.sql.Date date2 = new java.sql.Date(d.getTime());
-		ClienteDTO cliente = new ClienteDTO(1,"Pedro","Lopez","17325562",date2, medio);
-		
-		ViajeDTO viaje = viajeSeleccionado;
-		AdministrativoDTO administrativo = new AdministrativoDTO (1,"Andres Gandolfi");
-		int cantPasajeros = pasajerosEnEstaReserva.size();
-		TransporteDTO transporte = obtenerTransporteElegidoPorCliente(this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
-		BigDecimal valorViaje = totalaPagar;
-		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
-		List<PasajeroDTO> pasajeros = pasajerosEnEstaReserva;
-		
-		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativo,cantPasajeros,cliente,transporte,null,
-				valorViaje,estadoPasaje,pagoDTO,pasajeros);
-		
-		PasajeDAOSQL DAO = new PasajeDAOSQL();
-		
-		DAO.insert(pasajeDTO);
-		this.ventanaReserva.setVisible(false);
-		
-		for(PasajeroDTO p : pasajerosEnEstaReserva) {
-			Pasaje_PasajerosDTO pasaje_pasajero = new Pasaje_PasajerosDTO (0, pasajeDTO.getIdPasaje(), p.getIdPasajero());
-			/*FALTA CHEQUEAR LOS ID = 0*/
-			Pasaje_PasajerosDAOSQL DAOPP = new Pasaje_PasajerosDAOSQL();
-			DAOPP.insert(pasaje_pasajero);
-		}
+//		MedioContactoDTO medio = new MedioContactoDTO(1,"44514652","1578966321","contacto@gmail.com");
+//		java.util.Date d = new java.util.Date(); 
+//		java.sql.Date date2 = new java.sql.Date(d.getTime());
+//		ClienteDTO cliente = new ClienteDTO(1,"Pedro","Lopez","17325562",date2, medio);
+//		
+//		ViajeDTO viaje = viajeSeleccionado;
+//		AdministrativoDTO administrativo = new AdministrativoDTO (1,"Andres Gandolfi");
+//		int cantPasajeros = pasajerosEnEstaReserva.size();
+//		TransporteDTO transporte = obtenerTransporteElegidoPorCliente(this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
+//		BigDecimal valorViaje = totalaPagar;
+//		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
+//		List<PasajeroDTO> pasajeros = pasajerosEnEstaReserva;
+//		
+//		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativo,cantPasajeros,cliente,transporte,null,
+//				valorViaje,estadoPasaje,pagoDTO,pasajeros);
+//		
+//		PasajeDAOSQL DAO = new PasajeDAOSQL();
+//		
+//		DAO.insert(pasajeDTO);
+//		this.ventanaReserva.setVisible(false);
+//		
+//		for(PasajeroDTO p : pasajerosEnEstaReserva) {
+//			Pasaje_PasajerosDTO pasaje_pasajero = new Pasaje_PasajerosDTO (0, pasajeDTO.getIdPasaje(), p.getIdPasajero());
+//			/*FALTA CHEQUEAR LOS ID = 0*/
+//			Pasaje_PasajerosDAOSQL DAOPP = new Pasaje_PasajerosDAOSQL();
+//			DAOPP.insert(pasaje_pasajero);
+//		}
 
 	}
 

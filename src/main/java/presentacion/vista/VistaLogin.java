@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 public class VistaLogin extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -13,6 +14,7 @@ public class VistaLogin extends JFrame {
 	private JTextField textUsuario;
 	private JTextField textContrasenia;
 	private JButton btnEnviarDatos;
+	private JLabel lblError;
 	
 	public static VistaLogin getInstance(){
 		if(INSTANCE == null)
@@ -27,30 +29,34 @@ public class VistaLogin extends JFrame {
 		setTitle("Modificar persona");
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 360, 167);
+		setBounds(100, 100, 360, 266);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(118, 11, 115, 114);
+		panel.setBounds(10, 11, 334, 215);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		textUsuario = new JTextField();
-		textUsuario.setBounds(10, 11, 86, 20);
+		textUsuario.setBounds(113, 70, 86, 20);
 		panel.add(textUsuario);
 		textUsuario.setColumns(10);
 		
 		textContrasenia = new JTextField();
-		textContrasenia.setBounds(10, 55, 86, 20);
+		textContrasenia.setBounds(113, 121, 86, 20);
 		panel.add(textContrasenia);
 		textContrasenia.setColumns(10);
 		
 		btnEnviarDatos = new JButton("New button");
-		btnEnviarDatos.setBounds(10, 91, 89, 23);
+		btnEnviarDatos.setBounds(113, 166, 89, 23);
 		panel.add(btnEnviarDatos);
+		
+		lblError = new JLabel("New label");
+		lblError.setBounds(37, 28, 238, 14);
+		panel.add(lblError);
 		
 		this.setVisible(false);
 		
@@ -86,6 +92,14 @@ public class VistaLogin extends JFrame {
 
 	public static void setINSTANCE(VistaLogin iNSTANCE) {
 		INSTANCE = iNSTANCE;
+	}
+
+	public JLabel getLblError() {
+		return lblError;
+	}
+
+	public void setLblError(JLabel lblError) {
+		this.lblError = lblError;
 	}
 	
 	

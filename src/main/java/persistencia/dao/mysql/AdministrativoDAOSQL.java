@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.AdministrativoDTO;
-import modelo.Administrativo;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.AdministrativoDAO;
 
@@ -39,26 +38,24 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 	}
 
 	@Override
-	public boolean delete(AdministrativoDTO administrativo_a_eliminar) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public List<AdministrativoDTO> readAll() {
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
 		Conexion conexion = Conexion.getConexion();
 
 		ArrayList<AdministrativoDTO> administrativos = new ArrayList<AdministrativoDTO>();
-
+		DatosLoginDAOSQL dao = new DatosLoginDAOSQL();
+		
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
 				administrativos.add(
-						new AdministrativoDTO(resultSet.getInt("idAdministrativo"), resultSet.getString("nombre")));
+						new AdministrativoDTO(
+								resultSet.getInt("idAdministrativo"),
+								resultSet.getString("nombre"),
+								dao.getById(resultSet.getInt("idLogin"))));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -86,23 +83,36 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		return false;
 	}
 	
+	@Override
+	public AdministrativoDTO getByDatosLogin(String usuario, String constrasena) {
+		ArrayList<AdministrativoDTO> personales = (ArrayList<AdministrativoDTO>) readAll();
+		for(AdministrativoDTO adm: personales)
+			if(adm.getDatosLogin().getUsuario().equals(usuario)&&
+					adm.getDatosLogin().getContrasena().equals(constrasena))
+						return adm;
+		return null;
+	}
+	
 	public static void main(String[] args) {
 	
 	AdministrativoDAOSQL daoSQL = new AdministrativoDAOSQL();
 
 /*Probamos El Insert en la tabla, luego verificar de forma manual que este registrado en la tabla*/	
-	AdministrativoDTO DTO = new AdministrativoDTO(0,"LizzAdministrativa");
-	AdministrativoDTO DTO2 = new AdministrativoDTO(0,"MicaAdministrativa");
-	AdministrativoDTO DTO3 = new AdministrativoDTO(0,"SolAdministrativa");
+//	AdministrativoDTO DTO = new AdministrativoDTO(0,"LizzAdministrativa");
+//	AdministrativoDTO DTO2 = new AdministrativoDTO(0,"MicaAdministrativa");
+//	AdministrativoDTO DTO3 = new AdministrativoDTO(0,"SolAdministrativa");
 	
-	daoSQL.insert(DTO);
-	daoSQL.insert(DTO2);
-	daoSQL.insert(DTO3);
+//	daoSQL.insert(DTO);
+//	daoSQL.insert(DTO2);
+//	daoSQL.insert(DTO3);
 	
 /*Probamos el ReadALL*/	
-	ArrayList<AdministrativoDTO> administratives = (ArrayList<AdministrativoDTO>) daoSQL.readAll();
+//	ArrayList<AdministrativoDTO> administratives = (ArrayList<AdministrativoDTO>) daoSQL.readAll();
 	
-	for(AdministrativoDTO ad: administratives)
-		System.out.println(ad.getNombre());
+//	for(AdministrativoDTO ad: administratives)
+//		System.out.println(ad.getNombre());
 	}
+
+	
+	
 }

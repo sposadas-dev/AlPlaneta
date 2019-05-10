@@ -3,7 +3,6 @@ package persistencia.conexion;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
 public class Conexion {
@@ -23,7 +22,6 @@ public class Conexion {
 			log.error("Conexión fallida", e);
 		}
 	}
-
 
 	public static Conexion getConexion(){								
 		if(instancia == null){

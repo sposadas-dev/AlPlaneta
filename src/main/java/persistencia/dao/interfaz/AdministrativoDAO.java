@@ -9,10 +9,10 @@ public interface AdministrativoDAO {
 	
 	public boolean insert(AdministrativoDTO administativo);
 
-	public boolean delete(AdministrativoDTO administrativo_a_eliminar);
-	
 	public List<AdministrativoDTO> readAll();
 
 	public boolean update(AdministrativoDTO administrativo);
+
+	public AdministrativoDTO getByDatosLogin(String usuario, String contrasena);
 
 }
