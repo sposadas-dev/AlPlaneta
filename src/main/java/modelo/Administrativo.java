@@ -23,6 +23,7 @@ public class Administrativo {
 	}
 
 	public AdministrativoDTO obtenerAdministrativoDatosLogin(String user,String password) {
-		return administrativo.getByDatosLogin(user, password);
+		return null;
+//		return administrativo.getByDatosLogin(user, password);
 	}
 }

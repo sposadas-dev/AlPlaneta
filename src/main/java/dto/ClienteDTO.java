@@ -10,8 +10,9 @@ public class ClienteDTO {
 	private String dni;
 	private Date fechaNacimiento;
 	private MedioContactoDTO medioContacto;
+	private LoginDTO login;
 
-	public ClienteDTO(int idCliente, String nombre, String apellido, String dni, Date fechaNacimiento, MedioContactoDTO medioContacto){
+	public ClienteDTO(int idCliente, String nombre, String apellido, String dni, Date fechaNacimiento, MedioContactoDTO medioContacto, LoginDTO login){
 		super();
 		this.idCliente = idCliente;
 		this.nombre = nombre;
@@ -19,6 +20,7 @@ public class ClienteDTO {
 		this.dni = dni;
 		this.fechaNacimiento = fechaNacimiento;
 		this.medioContacto = medioContacto;
+		this.login = login;
 	}
 
 	public int getIdCliente() {
@@ -68,4 +70,13 @@ public class ClienteDTO {
 	public void setMedioContacto(MedioContactoDTO medioContacto) {
 		this.medioContacto = medioContacto;
 	}
+
+	public LoginDTO getLogin() {
+		return login;
+	}
+
+	public void setLogin(LoginDTO login) {
+		this.login = login;
+	}
+	
 }

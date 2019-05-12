@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dto.AdministrativoDTO;
 import dto.ClienteDTO;
+import dto.LoginDTO;
 import dto.MedioContactoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.ClienteDAO;
@@ -16,7 +18,8 @@ public class ClienteDAOSQL implements ClienteDAO {
 	private static final String insert = "INSERT INTO cliente(idCliente, nombre, apellido, dni, fechaNacimiento, idMedioContacto) VALUES(?, ?, ?, ?, ?, ?)";
 	private static final String readall = "SELECT * FROM cliente";
 	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ? WHERE idCliente=? ;";
-
+	private static final String browseLogin = "SELECT * FROM cliente WHERE idLogin = ?";
+	
 	@Override
 	public boolean insert(ClienteDTO cliente) {
 		PreparedStatement statement;
@@ -45,21 +48,21 @@ public class ClienteDAOSQL implements ClienteDAO {
 		ArrayList<ClienteDTO> clientes = new ArrayList<ClienteDTO>();
 		Conexion conexion = Conexion.getConexion();
 		MedioContactoDAOSQL medioContactoDAOSQL = new MedioContactoDAOSQL();
-
+		LoginDAOSQL dao =  new LoginDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("idMedioContacto"));
 
-				clientes.add(new ClienteDTO(resultSet.getInt("idCliente"),
+				clientes.add(new ClienteDTO(
+						resultSet.getInt("idCliente"),
 						resultSet.getString("nombre"), 
 						resultSet.getString("apellido"), 
 						resultSet.getString("dni"), 
 						resultSet.getDate("fechaNacimiento"),
-						medioContactoDAOSQL.getMedioContactoById(resultSet.getInt("idMedioContacto"))
-						)
+						medioContactoDAOSQL.getMedioContactoById(resultSet.getInt("idMedioContacto")),
+						dao.getById(resultSet.getInt("idLogin")))
 				);
 			}
 		} catch (SQLException e) {
@@ -91,18 +94,50 @@ public class ClienteDAOSQL implements ClienteDAO {
 		return false;
 	}
 	
+	
+	public ClienteDTO getByLoginId(int id) {
+			PreparedStatement statement;
+			ResultSet resultSet;
+			Conexion conexion = Conexion.getConexion();
+			ClienteDTO dto = null;
+			MedioContactoDAOSQL medioDAO = new MedioContactoDAOSQL();
+			LoginDAOSQL loginDAO = new LoginDAOSQL();
+			
+			try{
+				statement = conexion.getSQLConexion().prepareStatement(browseLogin);
+				statement.setInt(1, id);
+				resultSet = statement.executeQuery();
+				
+				if(resultSet.next()){
+					dto = new ClienteDTO(
+							resultSet.getInt("idCliente"),
+							resultSet.getString("nombre"),
+							resultSet.getString("apellido"),
+							resultSet.getString("dni"),
+							resultSet.getDate("fechaNacimiento"),
+							medioDAO.getMedioContactoById(resultSet.getInt("idMedioContacto")),
+							loginDAO.getById(resultSet.getInt("idLogin")));
+					return dto;
+				}
+				
+			}catch (SQLException e){
+				 e.printStackTrace();
+			}
+			return null;
+		}
+	
 	public static void main(String[] args) {
-//		ClienteDAOSQL adm = new ClienteDAOSQL();
-//		List<ClienteDTO> administratives = adm.readAll();
-//		
-//		for(ClienteDTO ad: administratives)
-//			System.out.println(ad.getMedioContacto().getTelefonoCelular());
-//		}
-		ClienteDAOSQL adm = new ClienteDAOSQL();
-		List<ClienteDTO> administratives = adm.readAll();
-//		ClienteDTO m= adm.readAll()(29);
+		ClienteDAOSQL dao = new ClienteDAOSQL();
 		
-		for(ClienteDTO ad: administratives)
-			System.out.println(ad.getMedioContacto().getTelefonoCelular());
+		List<ClienteDTO> list = dao.readAll();
+		
+		for(ClienteDTO elem: list){
+			System.out.println(elem.getNombre());
+		}
+		
+		System.out.println(dao.getByLoginId(5).getLogin().getUsuario());
+		System.out.println(dao.getByLoginId(5).getMedioContacto().getTelefonoCelular());
 	}
+	
+	
 }

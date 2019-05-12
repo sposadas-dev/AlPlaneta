@@ -16,6 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
+import java.awt.Color;
 
 public class VentanaLogin extends JFrame {
 
@@ -23,7 +25,8 @@ public class VentanaLogin extends JFrame {
 	private static VentanaLogin INSTANCE;
 	private JTextField textUsuario;
 	private JButton btnLogin;
-	private JTextField textPassword;
+	private JPasswordField passwordField;
+	private JLabel lblError;
 	
 	public static VentanaLogin getInstance(){
 		if(INSTANCE == null)
@@ -57,15 +60,20 @@ public class VentanaLogin extends JFrame {
 		btnLogin.setBounds(16, 227, 229, 23);
 		contentPane.add(btnLogin);
 		
-		textPassword = new JTextField();
-		textPassword.setColumns(10);
-		textPassword.setBounds(30, 153, 189, 20);
-		contentPane.add(textPassword);
-		
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setBounds(30, 128, 189, 14);
 		contentPane.add(lblPassword);
 		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(30, 153, 189, 20);
+		contentPane.add(passwordField);
+		
+		lblError = new JLabel("El usuario o contraseña es incorrecto");
+		lblError.setFont(new Font("Source Code Pro Semibold", Font.PLAIN, 9));
+		lblError.setForeground(Color.RED);
+		lblError.setBounds(30, 184, 189, 14);
+		contentPane.add(lblError);
+		lblError.setVisible(false);
 		this.setVisible(false);
 	}
 	
@@ -86,16 +94,20 @@ public class VentanaLogin extends JFrame {
 		return btnLogin;
 	}
 
-	public void setBtnLogin(JButton btnLogin) {
-		this.btnLogin = btnLogin;
+	public JPasswordField getPasswordField() {
+		return passwordField;
 	}
 
-	public JTextField getTextPassword() {
-		return textPassword;
+	public void setPasswordField(JPasswordField passwordField) {
+		this.passwordField = passwordField;
 	}
 
-	public void setTextPassword(JTextField textPassword) {
-		this.textPassword = textPassword;
+	public JLabel getLblError() {
+		return lblError;
+	}
+
+	public void setLblError(JLabel lblError) {
+		this.lblError = lblError;
 	}
 
 	public static void main(String[] args) {

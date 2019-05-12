@@ -3,9 +3,9 @@ package dto;
 public class AdministrativoDTO {
 	private int idAdministrativo;
 	private String nombre;
-	private DatosLoginDTO datosLogin;
+	private LoginDTO datosLogin;
 
-	public AdministrativoDTO(int idAdministrativo, String nombre, DatosLoginDTO datosLogin) {
+	public AdministrativoDTO(int idAdministrativo, String nombre, LoginDTO datosLogin) {
 		super();
 		this.idAdministrativo = idAdministrativo;
 		this.nombre = nombre;
@@ -28,11 +28,11 @@ public class AdministrativoDTO {
 		this.nombre = nombre;
 	}
 
-	public DatosLoginDTO getDatosLogin() {
+	public LoginDTO getDatosLogin() {
 		return datosLogin;
 	}
 
-	public void setDatosLogin(DatosLoginDTO datosLogin) {
+	public void setDatosLogin(LoginDTO datosLogin) {
 		this.datosLogin = datosLogin;
 	}
 	
