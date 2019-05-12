@@ -12,10 +12,9 @@ import persistencia.dao.interfaz.MedioContactoDAO;
 public class MedioContactoDAOSQL implements MedioContactoDAO {
 
 	private static final String insert = "INSERT INTO mediocontacto(idMedioContacto, numeroFijo, numeroCelular, email) VALUES(?, ?, ?, ?)";
-	private static final String delete = "DELETE FROM mediocontacto WHERE idMedioContacto = ?";
 	private static final String readall = "SELECT * FROM mediocontacto";
 	private static final String update = "UPDATE mediocontacto SET numeroFijo=? , numeroCelular=? , email=? WHERE idMedioContacto=? ;";
-
+	private static final String browse = "SELECT * FROM mediocontacto WHERE idMedioContacto = ?";
 	
 	@Override
 	public boolean insert(MedioContactoDTO medioContacto) {
@@ -39,26 +38,6 @@ public class MedioContactoDAOSQL implements MedioContactoDAO {
 		return false;
 	}
 
-	@Override
-	public boolean delete(MedioContactoDTO medioContacto_a_eliminar) {
-		PreparedStatement statement;
-		int chequeoUpdate = 0;
-		Conexion conexion = Conexion.getConexion();
-		try 
-		{
-			statement = conexion.getSQLConexion().prepareStatement(delete);
-			statement.setString(1, Integer.toString(medioContacto_a_eliminar.getIdMedioContacto()));
-			chequeoUpdate = statement.executeUpdate();
-			if(chequeoUpdate > 0) //Si se ejecutó devuelvo true
-					return true;
-			} 
-			catch (SQLException e) 
-			{
-				e.printStackTrace();
-			}
-			return false;
-	}
-		
 	@Override
 	public List<MedioContactoDTO> readAll(){
 		PreparedStatement statement;
@@ -108,31 +87,29 @@ public class MedioContactoDAOSQL implements MedioContactoDAO {
 	}
 	
 	@Override
-	public MedioContactoDTO getMedioContactoById(int id) {
+	public MedioContactoDTO getMedioContactoById(int idMedioContacto ){
 		PreparedStatement statement;
-		ResultSet resultSet; 
-		ArrayList<MedioContactoDTO> mediosContacto= new ArrayList<MedioContactoDTO>();
+		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
-		try {
-			statement = conexion.getSQLConexion().prepareStatement(readall);
+		MedioContactoDTO medioContacto;
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browse);
+			statement.setInt(1, idMedioContacto);
 			resultSet = statement.executeQuery();
-			while(resultSet.next()){
-				mediosContacto.add(new MedioContactoDTO(
+			
+			if(resultSet.next()){
+				medioContacto = new MedioContactoDTO(
 						resultSet.getInt("idMedioContacto"), 
 						resultSet.getString("numeroFijo"),
 						resultSet.getString("numeroCelular"),
-						resultSet.getString("email")));
+						resultSet.getString("email")
+				);
+				return medioContacto;
 			}
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
 		}
-		MedioContactoDTO ret = null;
-		
-		for(MedioContactoDTO md: mediosContacto){
-			if(md.getIdMedioContacto()==id)
-				ret = md;
-		}
-		return ret;
+		return null;
 	}
 }

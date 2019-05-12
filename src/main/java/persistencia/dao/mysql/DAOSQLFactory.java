@@ -16,18 +16,15 @@ import persistencia.dao.interfaz.ViajeDAO;
 
 public class DAOSQLFactory implements DAOAbstractFactory {
 	
-	public ClienteDAO createClienteDAO() 
-	{
+	public ClienteDAO createClienteDAO(){
 		return new ClienteDAOSQL();
 	}
 	
-	public AdministradorDAO createAdministradorDAO() 
-	{
+	public AdministradorDAO createAdministradorDAO() {
 		return new AdministradorDAOSQL();
 	}
 	
-	public AdministrativoDAO createAdministrativoDAO() 
-	{
+	public AdministrativoDAO createAdministrativoDAO() {
 		return new AdministrativoDAOSQL();
 	}
 	
@@ -63,14 +60,11 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 
 	@Override
 	public TransporteDAO createTransporteDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TransporteDAOSQL();
 	}
 
 	@Override
 	public ViajeDAO createViajeDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ViajeDAOSQL();
 	}
-
 }

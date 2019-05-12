@@ -14,5 +14,6 @@ public interface TransporteDAO {
 	public List<TransporteDTO> readAll();
 
 	public boolean update(TransporteDTO transporte);
-
+	
+	public TransporteDTO getTransporteById(int id);
 }

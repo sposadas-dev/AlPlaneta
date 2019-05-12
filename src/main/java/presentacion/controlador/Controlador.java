@@ -519,7 +519,7 @@ public class Controlador implements ActionListener {
 	private void llenarValoresEnReserva(){
 		llenarComboRangoDeHorarioEnReserva();
 
-		llenarComboTransporteEnReserva();
+//		llenarComboTransporteEnReserva();
 		
 		/*CAMBIAR LA SOLICITUD AL DAOSQL POR LA SOLICITUD AL MODELO*/
 /*       PREGUNTAR A SOL POR QUE NO FUNCIONA !! -.-"        */		
@@ -544,15 +544,15 @@ public class Controlador implements ActionListener {
 		}
 	}
 
-	private void llenarComboTransporteEnReserva() {
-		List<TransporteDTO> transportesDTO = new TransporteDAOSQL().readAll();
-		String[] transoportes = new String[transportesDTO.size()];
-		for(int i=0; i<transportesDTO.size();i++){
-			String rango = transportesDTO.get(i).getNombreTransporte();
-			transoportes [i] = rango;
-		}
-		this.ventanaReserva.getComboBoxTransporte().setModel(new DefaultComboBoxModel(transoportes));
-	}
+//	private void llenarComboTransporteEnReserva() {
+//		List<TransporteDTO> transportesDTO = new TransporteDAOSQL().readAll();
+//		String[] transoportes = new String[transportesDTO.size()];
+//		for(int i=0; i<transportesDTO.size();i++){
+//			String rango = transportesDTO.get(i).getNombreTransporte();
+//			transoportes [i] = rango;
+//		}
+//		this.ventanaReserva.getComboBoxTransporte().setModel(new DefaultComboBoxModel(transoportes));
+//	}
 
 	private void llenarComboRangoDeHorarioEnReserva() {
 		List<HorarioReservaDTO> horarios = new HorarioReservaDAOSQL().readAll();
@@ -616,9 +616,9 @@ public class Controlador implements ActionListener {
 	
 	private BigDecimal calcularMontoDePasaje() {
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
-		BigDecimal Valor2 = this.transporteSeleccionado.getPrecioBase();
-		Valor2 = Valor2.add(Valor1);
-		totalaPagar = Valor2;
+//		BigDecimal Valor2 = this.transporteSeleccionado.getPrecioBase();
+//		Valor2 = Valor2.add(Valor1);
+//		totalaPagar = Valor2;
 		
 		return totalaPagar.multiply(new BigDecimal(pasajerosEnEstaReserva.size()));
 	}
@@ -631,7 +631,7 @@ public class Controlador implements ActionListener {
 		TransporteDTO ret = null;
 		ArrayList<TransporteDTO> transportes = (ArrayList<TransporteDTO>) tDAO.readAll();
 		for(TransporteDTO t: transportes)
-			if(t.getNombreTransporte().equals(transporteComboBox))
+//			if(t.getNombreTransporte().equals(transporteComboBox))
 				ret = t;
 		return ret;
 	}
