@@ -1,22 +1,18 @@
 package dto;
 
-import java.math.BigDecimal;
-
 public class TransporteDTO {
+	
 	private int idTransporte;
-	private int capacidad;
-	private String nombreTransporte;
-	private BigDecimal precioBase;
+	private String nombre;
 
-	public TransporteDTO(int idTransporte, int capacidad, String nombreTransporte, BigDecimal precioBase) {
+	public TransporteDTO(int idTransporte, String nombre) {
 		super();
 		this.idTransporte = idTransporte;
-		this.capacidad = capacidad;
-		this.nombreTransporte = nombreTransporte;
-		this.precioBase = precioBase;
+		this.nombre = nombre;
 	}
 
 	public TransporteDTO() {
+		super();
 	}
 
 	public int getIdTransporte() {
@@ -27,28 +23,11 @@ public class TransporteDTO {
 		this.idTransporte = idTransporte;
 	}
 
-	public int getCapacidad() {
-		return capacidad;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setCapacidad(int capacidad) {
-		this.capacidad = capacidad;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
-
-	public String getNombreTransporte() {
-		return nombreTransporte;
-	}
-
-	public void setNombreTransporte(String nombreTransporte) {
-		this.nombreTransporte = nombreTransporte;
-	}
-
-	public BigDecimal getPrecioBase() {
-		return precioBase;
-	}
-
-	public void setPrecioBase(BigDecimal precioBase) {
-		this.precioBase = precioBase;
-	}
-
 }
