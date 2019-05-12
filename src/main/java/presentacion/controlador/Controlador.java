@@ -17,11 +17,12 @@ import dto.CiudadDTO;
 import dto.ClienteDTO;
 import dto.EstadoPasajeDTO;
 import dto.HorarioReservaDTO;
+import dto.LoginDTO;
 import dto.MedioContactoDTO;
 import dto.PagoDTO;
 import dto.PasajeDTO;
-import dto.Pasaje_PasajerosDTO;
 import dto.PasajeroDTO;
+import dto.RolDTO;
 import dto.TransporteDTO;
 import dto.ViajeDTO;
 import modelo.Administrativo;
@@ -29,12 +30,14 @@ import modelo.Cliente;
 import modelo.MedioContacto;
 import modelo.ModeloCiudad;
 import modelo.ModeloViaje;
+import persistencia.dao.mysql.AdministradorDAOSQL;
+import persistencia.dao.mysql.AdministrativoDAOSQL;
 import persistencia.dao.mysql.CiudadDAOSQL;
+import persistencia.dao.mysql.ClienteDAOSQL;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.HorarioReservaDAOSQL;
+import persistencia.dao.mysql.LoginDAOSQL;
 import persistencia.dao.mysql.PagoDAOSQL;
-import persistencia.dao.mysql.PasajeDAOSQL;
-import persistencia.dao.mysql.Pasaje_PasajerosDAOSQL;
 import persistencia.dao.mysql.PasajeroDAOSQL;
 import persistencia.dao.mysql.TransporteDAOSQL;
 import persistencia.dao.mysql.ViajeDAOSQL;
@@ -49,6 +52,7 @@ import presentacion.vista.VentanaPasajero;
 import presentacion.vista.VentanaReserva;
 import presentacion.vista.VentanaTablaViajes;
 import presentacion.vista.Vista;
+import presentacion.vista.VistaAdministrador;
 
 public class Controlador implements ActionListener {
 	private List<ViajeDTO> viajes_en_tabla;
@@ -66,13 +70,18 @@ public class Controlador implements ActionListener {
 	private VentanaPasajero ventanaPasajero;
 	private VentanaCargarViaje ventanaCargarViaje;
 	private VentanaTablaViajes ventanaTablaViajes;
+	private VistaAdministrador ventanaAdministrador;
+	
 	private ArrayList<PasajeroDTO> pasajerosEnEstaReserva;
 	private ViajeDTO viajeSeleccionado;
 	private TransporteDTO transporteSeleccionado;
 	private BigDecimal totalaPagar;
 	private HorarioReservaDTO horarioElegido;
 	private PagoDTO pagoDTO;
+	private LoginDTO usuarioLogeado;
 	
+	private AdministrativoDTO administrativoLogeado;
+	private ClienteDTO clienteLogeado;
 	
 	/*AGREGADO PARA 3ER REUNION */
 	private VentanaLogin ventanaLogin;
@@ -83,7 +92,6 @@ public class Controlador implements ActionListener {
 		this.vista = vista;
 		this.vista.getBtnClientes().addActionListener(ac->agregarPanelClientes(ac));
 		this.vista.getBtnPasajes().addActionListener(ap->agregarPanelPasajes(ap));
-
 		this.vista.getBtnAgregarCliente().addActionListener(c->agregarCliente(c));
 		this.vista.getBtnAgregarReserva().addActionListener(p->agregarPasaje(p));
 		
@@ -97,9 +105,20 @@ public class Controlador implements ActionListener {
 		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();
 		this.ventanaLogin = VentanaLogin.getInstance();
 		
+		/*ENTIDADES LOGEADAS*/
+		this.administrativoLogeado = null;
+		this.clienteLogeado = null;
+		
+		
+		
+		/*ventanas auxiliares*/
+		this.ventanaAdministrador = VistaAdministrador.getINSTANCE();
+		
 		/*Inicio de Modelos*/
 		this.daoSqlFactory = new DAOSQLFactory();
 		this.modeloAdminisrativo = new Administrativo(daoSqlFactory); 
+		this.usuarioLogeado = new LoginDTO();
+		
 		/*Fin de Modelos*/
 		
 		this.viajes_en_tabla = new ArrayList<ViajeDTO>();
@@ -118,7 +137,6 @@ public class Controlador implements ActionListener {
 		
 		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
 //		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
-		
 		this.ventanaCliente = VentanaCliente.getInstance();
 		this.ventanaCliente.getBtnRegistrar().addActionListener(ac->altaCliente(ac));
 		this.ventanaCliente.getBtnCancelar().addActionListener(bc->salirVentanaCliente(bc));
@@ -135,19 +153,62 @@ public class Controlador implements ActionListener {
 		cliente = new Cliente(new DAOSQLFactory());
 	}
 
-/*IMPLEMENTADO BRANCH V3.0*/	
+	/*IMPLEMENTADO BRANCH V3.0*/	
 	private void logearse(ActionEvent log) {
 		String usuario = ventanaLogin.getTextUsuario().getText();
-		String password = ventanaLogin.getTextPassword().getText();
+		String password = new String(ventanaLogin.getPasswordField().getPassword());
 		
-		AdministrativoDTO administrativo = busquedaRolAdministrativo(usuario,password);
 		
-		if(administrativo!=null)
-			System.out.println("SE LOGEO CORRECTAMENTE");
-		else
-			System.out.println("NO EXISTE EL PERSONAL ADMINISTRATIVO");
+		LoginDAOSQL dao = new LoginDAOSQL();
+		usuarioLogeado = null;
+		try {
+			usuarioLogeado = dao.getByDatos(usuario, password);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(usuarioLogeado==null){
+			this.ventanaLogin.getLblError().setVisible(true);
+			System.out.println("EL USUARIO O CONTRASENA ES INCORRECTO");
+		}else{
+			System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogeado.getUsuario()+usuarioLogeado.getContrasena());
+			if(usuarioLogeado.getRol().getIdRol()==2){
+				 administrativoLogeado = obtenerAdministrativo(usuarioLogeado);
+				 mostrarVentanaAdministrativo();
+			}else{
+				if(usuarioLogeado.getRol().getIdRol()==5){
+					 clienteLogeado = obtenerCliente(usuarioLogeado);
+					 mostrarVentanaCliente();
+				}}
+		}
+		
 	}
 
+	private void mostrarVentanaCliente() {
+		System.out.println("Se Logea como Cliente");
+		System.out.println(clienteLogeado.getNombre());
+		this.ventanaLogin.setVisible(false);
+		
+	}
+
+	/*MOSTRAR LA VENTANA PRINCIPAL DEL PARSONAL ADMINISTRATIVO*/
+	private void mostrarVentanaAdministrativo() {
+		System.out.println("Se Logea Como Administrativo");
+		System.out.println(administrativoLogeado.getNombre());
+		this.ventanaLogin.setVisible(false);
+
+	}
+/*-----------------------METODOS BUSCADOR POR ROLES ---------------------*/
+	private AdministrativoDTO obtenerAdministrativo(LoginDTO loginUsuario) {
+		AdministrativoDAOSQL dao = new AdministrativoDAOSQL();
+		return dao.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
+	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {
+		ClienteDAOSQL sql = new ClienteDAOSQL();
+		return sql.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
 	private AdministrativoDTO busquedaRolAdministrativo(String user, String password) {
 		return modeloAdminisrativo.obtenerAdministrativoDatosLogin(user,password);
 	}
@@ -161,16 +222,17 @@ public class Controlador implements ActionListener {
 
 	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
 	public void inicializar() throws Exception{	
+		this.ventanaLogin.setVisible(true);
 //		this.llenarTablaClientes();
 //		this.vista.show();
 				
-		mostrarVentanaReserva();  // Ventana creacion de pasajes.
+//		mostrarVentanaReserva();  // Ventana creacion de pasajes.
 	
 //		llenarViajesEnTabla();
 		
 //		mostrarVentanaPago();
 		
-		llenarValoresEnCargaDeViaje();
+//		llenarValoresEnCargaDeViaje();
 	}
 		
 	private void agregarPanelClientes(ActionEvent ac) {
@@ -302,31 +364,32 @@ public class Controlador implements ActionListener {
 	/*- - - - - - - -  - - - - - - - METODO DE CLIENTE - - - - - - - - - - - - - - - - --  */	
 
 	private void altaCliente(ActionEvent client) {
-		if(validarCampos()){	
-		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
-		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
-		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
-		
-		/*Obtenemos el medio de contacto del cliente*/
-		MedioContactoDTO mContacto = new MedioContactoDTO();
-		mContacto.setTelefonoFijo(this.ventanaCliente.getTxtTelefonoFijo().getText());
-		mContacto.setTelefonoCelular(this.ventanaCliente.getTxtTelefonoCelular().getText());
-		mContacto.setEmail(this.ventanaCliente.getTxtEmail().getText());
-		
-		medioContacto.agregarMedioContacto(mContacto);
-		
-		ClienteDTO nuevoCliente = new ClienteDTO(0,
-				this.ventanaCliente.getTxtNombre().getText(),
-				this.ventanaCliente.getTxtApellido().getText(),
-				this.ventanaCliente.getTxtDni().getText(),
-				fechaNacimiento,
-				obtenerMedioContactoDTO()
-		);
-			cliente.agregarCliente(nuevoCliente);
-			llenarTablaClientes();
-			this.ventanaCliente.limpiarCampos();
-			this.ventanaCliente.dispose();
-		}
+//		if(validarCampos()){	
+//		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
+//		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
+//		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
+//		
+//		/*Obtenemos el medio de contacto del cliente*/
+//		MedioContactoDTO mContacto = new MedioContactoDTO();
+//		mContacto.setTelefonoFijo(this.ventanaCliente.getTxtTelefonoFijo().getText());
+//		mContacto.setTelefonoCelular(this.ventanaCliente.getTxtTelefonoCelular().getText());
+//		mContacto.setEmail(this.ventanaCliente.getTxtEmail().getText());
+//		
+//		medioContacto.agregarMedioContacto(mContacto);
+//		
+//		ClienteDTO nuevoCliente = new ClienteDTO(0,
+//				this.ventanaCliente.getTxtNombre().getText(),
+//				this.ventanaCliente.getTxtApellido().getText(),
+//				this.ventanaCliente.getTxtDni().getText(),
+//				fechaNacimiento,
+//				obtenerMedioContactoDTO(),
+//				
+//		);
+//			cliente.agregarCliente(nuevoCliente);
+//			llenarTablaClientes();
+//			this.ventanaCliente.limpiarCampos();
+//			this.ventanaCliente.dispose();
+//		}
 	}
 	
 	private MedioContactoDTO obtenerMedioContactoDTO() {

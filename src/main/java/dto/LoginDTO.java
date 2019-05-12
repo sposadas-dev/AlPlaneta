@@ -1,18 +1,20 @@
 package dto;
 
-public class DatosLoginDTO {
+public class LoginDTO {
 	private  int idDatosLogin;
 	private String usuario;
 	private String contrasena;
+	private RolDTO rol;
 
-	public DatosLoginDTO(int idDatosLogin, String usuario, String contrasena) {
+	public LoginDTO(int idDatosLogin, String usuario, String contrasena, RolDTO rol) {
 		super();
 		this.idDatosLogin = idDatosLogin;
 		this.usuario = usuario;
 		this.contrasena = contrasena;
+		this.rol = rol;
 	}
 
-	public DatosLoginDTO() {
+	public LoginDTO() {
 	}
 
 	public String getUsuario() {
@@ -39,6 +41,12 @@ public class DatosLoginDTO {
 		this.idDatosLogin = idDatosLogin;
 	}
 
-	
-	
+	public RolDTO getRol() {
+		return rol;
+	}
+
+	public void setRol(RolDTO rol) {
+		this.rol = rol;
+	}
+
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.AdministrativoDTO;
+import dto.LoginDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.AdministrativoDAO;
 
@@ -17,6 +18,9 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 	private static final String readall = "SELECT * FROM administrativo";
 
 	private static final String update = "UPDATE administrativo SET nombre = ? WHERE idAdministrativo = ?";
+	
+	private static final String browse = "SELECT * FROM administrativo WHERE idAdministrativo = ?";
+	private static final String browseLogin = "SELECT * FROM administrativo WHERE idLogin = ?";
 
 	@Override
 	public boolean insert(AdministrativoDTO administativo) {
@@ -44,7 +48,7 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		Conexion conexion = Conexion.getConexion();
 
 		ArrayList<AdministrativoDTO> administrativos = new ArrayList<AdministrativoDTO>();
-		DatosLoginDAOSQL dao = new DatosLoginDAOSQL();
+		LoginDAOSQL dao = new LoginDAOSQL();
 		
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
@@ -92,27 +96,69 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 						return adm;
 		return null;
 	}
+	public AdministrativoDTO getById(int id ){
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		AdministrativoDTO dto;
+		
+		LoginDAOSQL dao = new LoginDAOSQL();
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browse);
+			statement.setInt(1, id);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				dto = new AdministrativoDTO(
+						resultSet.getInt("idAdministrativo"),
+						resultSet.getString("nombre"),
+						dao.getById(resultSet.getInt("idLogin")));
+				return dto;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public AdministrativoDTO getByLoginId(int id ){
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		AdministrativoDTO dto;
+		
+		LoginDAOSQL dao = new LoginDAOSQL();
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browseLogin);
+			statement.setInt(1, id);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				dto = new AdministrativoDTO(
+						resultSet.getInt("idAdministrativo"),
+						resultSet.getString("nombre"),
+						dao.getById(resultSet.getInt("idLogin")));
+				return dto;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public static void main(String[] args) {
-	
-	AdministrativoDAOSQL daoSQL = new AdministrativoDAOSQL();
-
-/*Probamos El Insert en la tabla, luego verificar de forma manual que este registrado en la tabla*/	
-//	AdministrativoDTO DTO = new AdministrativoDTO(0,"LizzAdministrativa");
-//	AdministrativoDTO DTO2 = new AdministrativoDTO(0,"MicaAdministrativa");
-//	AdministrativoDTO DTO3 = new AdministrativoDTO(0,"SolAdministrativa");
-	
-//	daoSQL.insert(DTO);
-//	daoSQL.insert(DTO2);
-//	daoSQL.insert(DTO3);
-	
-/*Probamos el ReadALL*/	
-//	ArrayList<AdministrativoDTO> administratives = (ArrayList<AdministrativoDTO>) daoSQL.readAll();
-	
-//	for(AdministrativoDTO ad: administratives)
-//		System.out.println(ad.getNombre());
+		AdministrativoDAOSQL dao = new AdministrativoDAOSQL();
+		
+		List<AdministrativoDTO> list = dao.readAll();
+		
+		for(AdministrativoDTO elem: list){
+			System.out.println(elem.getNombre());
+		}
+		
+		System.out.println(dao.getByLoginId(3).getNombre());
 	}
-
 	
 	
 }

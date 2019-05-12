@@ -6,21 +6,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dto.CiudadDTO;
-import dto.DatosLoginDTO;
-import dto.MedioContactoDTO;
+import dto.LoginDTO;
 import persistencia.conexion.Conexion;
-import persistencia.dao.interfaz.CiudadDAO;
-import persistencia.dao.interfaz.DatosLoginDAO;
+import persistencia.dao.interfaz.LoginDAO;
 
-public class DatosLoginDAOSQL implements DatosLoginDAO{
+public class LoginDAOSQL implements LoginDAO{
 	private static final String insert = "INSERT INTO login" + "(idLogin, usuario, contrasena)" + "VALUE(?,?,?)";
 	private static final String readall = "SELECT * FROM login";
 	private static final String delete = "DELETE FROM login WHERE idLogin = ?";
 	private static final String update = "UPDATE login SET nombre = ?, constrasena = ? WHERE idLogin = ?";
+	private static final String browse = "SELECT * FROM login WHERE idLogin = ?";
 
 	@Override
-	public boolean insert(DatosLoginDTO datos) {
+	public boolean insert(LoginDTO datos) {
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
@@ -38,19 +36,21 @@ public class DatosLoginDAOSQL implements DatosLoginDAO{
 	}
 
 	@Override
-	public List<DatosLoginDTO> readAll() {
+	public List<LoginDTO> readAll() {
 		PreparedStatement statement;
 		ResultSet resultSet; //Guarda el resultado de la query
-		ArrayList<DatosLoginDTO> datosLogin = new ArrayList<DatosLoginDTO>();
+		ArrayList<LoginDTO> datosLogin = new ArrayList<LoginDTO>();
 		Conexion conexion = Conexion.getConexion();
+		RolDAOSQL dao = new RolDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 			while(resultSet.next()){
-				datosLogin.add(new DatosLoginDTO(
+				datosLogin.add(new LoginDTO(
 						resultSet.getInt("idLogin"),
 						resultSet.getString("usuario"),
-						resultSet.getString("contrasena")));
+						resultSet.getString("contrasena"),
+						dao.getById(resultSet.getInt("idRol"))));
 			}
 		} 
 		catch (SQLException e) {
@@ -60,7 +60,7 @@ public class DatosLoginDAOSQL implements DatosLoginDAO{
 	}
 
 	@Override
-	public boolean update(DatosLoginDTO datosNuevos) {
+	public boolean update(LoginDTO datosNuevos) {
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
@@ -81,7 +81,7 @@ public class DatosLoginDAOSQL implements DatosLoginDAO{
 
 
 	@Override
-	public boolean delete(DatosLoginDTO datos_a_eliminar) {
+	public boolean delete(LoginDTO datos_a_eliminar) {
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
@@ -99,40 +99,50 @@ public class DatosLoginDAOSQL implements DatosLoginDAO{
 	}
 
 	@Override
-	public DatosLoginDTO getByDatos(String usr, String pass) throws Exception {
-		ArrayList<DatosLoginDTO> datos = (ArrayList<DatosLoginDTO>) this.readAll();
-		for(DatosLoginDTO d:datos)
+	public LoginDTO getByDatos(String usr, String pass) throws Exception {
+		ArrayList<LoginDTO> datos = (ArrayList<LoginDTO>) this.readAll();
+		for(LoginDTO d:datos)
 			if(d.getUsuario().equals(usr)&&d.getContrasena().equals(pass))
 				return d;
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public DatosLoginDTO getById(int id) {
+	public LoginDTO getById(int id) {
 			PreparedStatement statement;
-			ResultSet resultSet; 
-			ArrayList<DatosLoginDTO> datos= new ArrayList<DatosLoginDTO>();
+			ResultSet resultSet;
 			Conexion conexion = Conexion.getConexion();
-			try {
-				statement = conexion.getSQLConexion().prepareStatement(readall);
+			LoginDTO dto;
+			RolDAOSQL dao = new RolDAOSQL();
+			try{
+				statement = conexion.getSQLConexion().prepareStatement(browse);
+				statement.setInt(1, id);
 				resultSet = statement.executeQuery();
-				while(resultSet.next()){
-					datos.add(new DatosLoginDTO(
-							resultSet.getInt("idLogin"), 
-							resultSet.getString("usuario"),
-							resultSet.getString("contrasena")));
+				
+				if(resultSet.next()){
+					dto = new LoginDTO(
+							resultSet.getInt("idLogin"),
+					resultSet.getString("usuario"),
+					resultSet.getString("contrasena"),
+					dao.getById(resultSet.getInt("idRol")));
+					return dto;
 				}
-			} 
-			catch (SQLException e) {
-				e.printStackTrace();
+				
+			}catch (SQLException e){
+				 e.printStackTrace();
 			}
-			DatosLoginDTO ret = null;
-			
-			for(DatosLoginDTO datosLogin: datos){
-				if(datosLogin.getIdDatosLogin()==id)
-					ret = datosLogin;
-			}
-			return ret;
+			return null;
+		}
+	
+	public static void main(String[] args) {
+		LoginDAOSQL dao = new LoginDAOSQL();
+		
+		List<LoginDTO> list = dao.readAll();
+		
+		for(LoginDTO elem: list){
+			System.out.println(elem.getUsuario());
+		}
+		
+		System.out.println(dao.getById(1).getRol().getNombre());
 	}
 	
 }
