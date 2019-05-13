@@ -10,7 +10,7 @@ CREATE TABLE `administrativo` (
   KEY `idLogin` (`idLogin`)
 )
 
-INSERT INTO `administrativo` VALUES (1,'solAdministrativa',1),(2,'LizzAdministrativa',2),(3,'MicaAdministrativa',3);#
+INSERT INTO `administrativo` VALUES (1,'solAdministrativa',1),(2,'LizzAdministrativa',2),(3,'MicaAdministrativa',3);
 
 CREATE TABLE `ciudad` (
   `idCiudad` int(11) NOT NULL AUTO_INCREMENT,
@@ -83,7 +83,7 @@ CREATE TABLE `login` (
 )
 
 
-INSERT INTO `login` VALUES (1,'sol','sol123',2),(2,'lizz','liz123',1),(3,'Mica','mica123',3),(4,'Seba','seba123',5),(5,'Nico','nico123',5);
+INSERT INTO `login` VALUES (1,'sol','sol123',2),(2,'lizz','liz123',1),(3,'Mica','mica123',3),(4,'Seba','seba123',5),(5,'nicoAdministrador','nico123',1);
 
 CREATE TABLE `mediocontacto` (
   `idMedioContacto` int(11) NOT NULL AUTO_INCREMENT,
@@ -158,6 +158,16 @@ CREATE TABLE `transporte` (
   `nombreTransporte` varchar(45) NOT NULL,
   PRIMARY KEY (`idTransporte`)
 )
+
+CREATE TABLE `administrador` (
+  `idAdministrador` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) NOT NULL,
+  `idLogin` int(11) NOT NULL,
+  PRIMARY KEY (`idAdministrador`),
+  KEY `idLogin` (`idLogin`)
+)
+
+INSERT INTO `administrador` VALUES (1,'nicoAdministrador',5),(2,'lizz',2);
 
 INSERT INTO `transporte` VALUES (1,'avion'),(2,'Micro'),(3,'Buquebus');
 

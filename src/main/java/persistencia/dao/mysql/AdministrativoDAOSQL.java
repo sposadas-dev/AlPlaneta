@@ -13,7 +13,7 @@ import persistencia.dao.interfaz.AdministrativoDAO;
 
 public class AdministrativoDAOSQL implements AdministrativoDAO {
 
-	private static final String insert = "INSERT INTO administrativo(idAdministrativo, nombre)" + " VALUES (?, ?)";
+	private static final String insert = "INSERT INTO administrativo(idAdministrativo, nombre,idLogin)" + " VALUES (?, ?, ?)";
 
 	private static final String readall = "SELECT * FROM administrativo";
 
