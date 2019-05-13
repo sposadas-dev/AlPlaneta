@@ -35,8 +35,4 @@ public class AdministrativoDTO {
 	public void setDatosLogin(LoginDTO datosLogin) {
 		this.datosLogin = datosLogin;
 	}
-	
-	
-	
-
 }

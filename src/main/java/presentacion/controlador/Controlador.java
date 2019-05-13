@@ -297,13 +297,13 @@ public class Controlador implements ActionListener {
 		String horaSalida = ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
 		BigDecimal precio = new BigDecimal(ventanaCargarViaje.getTextPrecioViaje().getText());
 		
-		ViajeDTO nuevoViaje = new ViajeDTO(0, origen, destino, fechaSalida, fechaLlegada, precio, horaSalida);
+//		ViajeDTO nuevoViaje = new ViajeDTO(0, origen, destino, fechaSalida, fechaLlegada, precio, horaSalida);
 
 		// VER POR QUE NO FUNCIONA LA CONSULTA SQL EN EL MODELO	
 //		modeloViaje.agregarViaje(nuevoViaje);
-
-		ViajeDAOSQL sql = new ViajeDAOSQL();		
-		sql.insert(nuevoViaje);
+//
+//		ViajeDAOSQL sql = new ViajeDAOSQL();		
+//		sql.insert(nuevoViaje);
 		
 		llenarViajesEnTabla();
 		
@@ -353,12 +353,12 @@ public class Controlador implements ActionListener {
 		
 		int filaSeleccionada = this.ventanaTablaViajes.getTablaViajes().getSelectedRow();
 		viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
+//		
+//		String viajeString = String.valueOf(viajeSeleccionado.getId()) +
+//				" -   DE : "+  viajeSeleccionado.getOrigenViaje().getNombre() +
+//				"  -  HACIA : "+ viajeSeleccionado.getDestinoViaje().getNombre();
 		
-		String viajeString = String.valueOf(viajeSeleccionado.getId()) +
-				" -   DE : "+  viajeSeleccionado.getOrigenViaje().getNombre() +
-				"  -  HACIA : "+ viajeSeleccionado.getDestinoViaje().getNombre();
-		
-		this.ventanaReserva.getLblViajeSeleccionado().setText(viajeString);
+//		this.ventanaReserva.getLblViajeSeleccionado().setText(viajeString);
 	}
 	
 	/*- - - - - - - -  - - - - - - - METODO DE CLIENTE - - - - - - - - - - - - - - - - --  */	

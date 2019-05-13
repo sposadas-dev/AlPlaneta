@@ -21,6 +21,8 @@ public interface DAOAbstractFactory {
 	public TransporteDAO createTransporteDAO();
 
 	public ViajeDAO createViajeDAO();
+
+	public LoginDAO createLoginDAO();
 	
 //	public CoordinadorDAO createCoordinadorDAO();
 

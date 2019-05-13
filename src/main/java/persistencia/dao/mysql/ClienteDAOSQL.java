@@ -15,7 +15,7 @@ import persistencia.dao.interfaz.ClienteDAO;
 
 public class ClienteDAOSQL implements ClienteDAO {
 
-	private static final String insert = "INSERT INTO cliente(idCliente, nombre, apellido, dni, fechaNacimiento, idMedioContacto) VALUES(?, ?, ?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO cliente(idCliente, nombre, apellido, dni, fechaNacimiento, idMedioContacto, idLogin) VALUES(?, ?, ?, ?, ?, ?, ?)";
 	private static final String readall = "SELECT * FROM cliente";
 	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ? WHERE idCliente=? ;";
 	private static final String browseLogin = "SELECT * FROM cliente WHERE idLogin = ?";
@@ -32,6 +32,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 			statement.setString(4, cliente.getDni());
 			statement.setDate(5, cliente.getFechaNacimiento());
 			statement.setInt(6, cliente.getMedioContacto().getIdMedioContacto());
+			statement.setInt(7,cliente.getLogin().getIdDatosLogin());
 			
 			if (statement.executeUpdate() > 0) // Si se ejecuto devuelvo true
 				return true;
@@ -83,7 +84,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 			statement.setString(3, cliente_editar.getDni());
 			statement.setDate(4, cliente_editar.getFechaNacimiento());
 			statement.setInt(5, cliente_editar.getMedioContacto().getIdMedioContacto());
-			statement.setInt(5, cliente_editar.getIdCliente());
+			statement.setInt(6, cliente_editar.getIdCliente());
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true

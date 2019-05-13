@@ -11,10 +11,10 @@ import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.LoginDAO;
 
 public class LoginDAOSQL implements LoginDAO{
-	private static final String insert = "INSERT INTO login" + "(idLogin, usuario, contrasena)" + "VALUE(?,?,?)";
+	private static final String insert = "INSERT INTO login (idLogin, usuario, contrasena,idRol) VALUES (?,?,?,?)";
 	private static final String readall = "SELECT * FROM login";
 	private static final String delete = "DELETE FROM login WHERE idLogin = ?";
-	private static final String update = "UPDATE login SET nombre = ?, constrasena = ? WHERE idLogin = ?";
+	private static final String update = "UPDATE login SET usuario = ?, constrasena = ? WHERE idLogin = ?";
 	private static final String browse = "SELECT * FROM login WHERE idLogin = ?";
 
 	@Override
@@ -26,6 +26,7 @@ public class LoginDAOSQL implements LoginDAO{
 			statement.setInt(1, datos.getIdDatosLogin());
 			statement.setString(2, datos.getUsuario());
 			statement.setString(3, datos.getContrasena());
+			statement.setInt(4, datos.getRol().getIdRol());
 			if(statement.executeUpdate() > 0) 
 				return true;
 		} 
@@ -99,7 +100,7 @@ public class LoginDAOSQL implements LoginDAO{
 	}
 
 	@Override
-	public LoginDTO getByDatos(String usr, String pass) throws Exception {
+	public LoginDTO getByDatos(String usr, String pass) {
 		ArrayList<LoginDTO> datos = (ArrayList<LoginDTO>) this.readAll();
 		for(LoginDTO d:datos)
 			if(d.getUsuario().equals(usr)&&d.getContrasena().equals(pass))

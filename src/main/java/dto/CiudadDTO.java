@@ -11,11 +11,8 @@ public class CiudadDTO {
 	}
 
 	public CiudadDTO() {
+		super();
 	}
-
-//	public CiudadDTO(int id) {
-//		this.idCiudad = id;
-//	}
 
 	public int getIdCiudad() {
 		return idCiudad;

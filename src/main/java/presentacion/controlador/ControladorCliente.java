@@ -1,0 +1,119 @@
+package presentacion.controlador;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+
+import dto.ClienteDTO;
+import dto.LoginDTO;
+import dto.MedioContactoDTO;
+import dto.RolDTO;
+import modelo.Cliente;
+import modelo.Login;
+import modelo.MedioContacto;
+import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.PanelCliente;
+import presentacion.vista.VentanaCliente;
+
+public class ControladorCliente implements ActionListener{
+	
+	private VentanaCliente ventanaCliente;
+	private Cliente cliente;
+	private MedioContacto medioContacto; 
+	private Login login;
+
+	public ControladorCliente(VentanaCliente ventanaCliente, Cliente cliente){
+		this.ventanaCliente = ventanaCliente;
+		this.cliente = cliente;
+		
+		this.medioContacto =  new MedioContacto(new DAOSQLFactory());
+		this.login = new Login(new DAOSQLFactory());
+			
+		this.ventanaCliente.getBtnRegistrar().addActionListener(rc->registrarCliente(rc));
+	}
+
+	public void registrarCliente(ActionEvent rc){
+		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
+		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
+		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
+	
+		/*Obtenemos el medio de contacto del cliente*/
+		MedioContactoDTO mContacto = new MedioContactoDTO();
+		mContacto.setTelefonoFijo(this.ventanaCliente.getTxtTelefonoFijo().getText());
+		mContacto.setTelefonoCelular(this.ventanaCliente.getTxtTelefonoCelular().getText());
+		mContacto.setEmail(this.ventanaCliente.getTxtEmail().getText());
+	
+		medioContacto.agregarMedioContacto(mContacto);
+	
+		LoginDTO loginCliente = new LoginDTO();
+		loginCliente.setUsuario(this.ventanaCliente.getTxtUsuario().getText());
+		loginCliente.setContrasena(this.ventanaCliente.getTxtContrasenia().getText());
+		loginCliente.setRol(new RolDTO(5,"cliente"));
+		
+		login.agregarLogin(loginCliente);
+		
+		ClienteDTO nuevoCliente = new ClienteDTO(0,
+			this.ventanaCliente.getTxtNombre().getText(),
+			this.ventanaCliente.getTxtApellido().getText(),
+			this.ventanaCliente.getTxtDni().getText(),
+			fechaNacimiento,
+			obtenerMedioContactoDTO(),
+			obtenerLoginDTO()
+	);
+//		if(camposCorrectos()){
+			cliente.agregarCliente(nuevoCliente);
+			this.ventanaCliente.limpiarCampos();
+			this.ventanaCliente.dispose();
+//		}
+	}
+	
+	private MedioContactoDTO obtenerMedioContactoDTO() {
+		MedioContactoDTO mContactoDTO = new MedioContactoDTO();
+		List<MedioContactoDTO> medios = medioContacto.obtenerMediosContacto();
+		for(MedioContactoDTO m: medios){
+			if(m.getEmail().toString().equals(this.ventanaCliente.getTxtEmail().getText()) &&
+					m.getTelefonoCelular().equals(this.ventanaCliente.getTxtTelefonoCelular().getText())&&
+					m.getTelefonoFijo().equals(this.ventanaCliente.getTxtTelefonoFijo().getText())){
+			mContactoDTO = m;
+		}
+	}
+		return mContactoDTO;
+	}
+	
+	private LoginDTO obtenerLoginDTO() {
+		LoginDTO loginDTO = new LoginDTO();
+		List<LoginDTO> logins = login.obtenerLogin();
+		for(LoginDTO l: logins){
+			if(l.getUsuario().equals(this.ventanaCliente.getTxtUsuario().getText()) &&
+					l.getContrasena().equals(this.ventanaCliente.getTxtContrasenia().getText())){
+			loginDTO = l;
+		}
+	}
+		return loginDTO;
+	}
+
+	private boolean camposLlenos(){
+		if (ventanaCliente.getTxtNombre().getText().isEmpty() ||
+				ventanaCliente.getTxtApellido().getText().isEmpty() ||
+				ventanaCliente.getTxtDni().getText().isEmpty() ||				
+				(ventanaCliente.getDateFechaNacimiento().getDate()== null) ||
+				ventanaCliente.getTxtUsuario().getText().isEmpty() ||
+				ventanaCliente.getTxtContrasenia().getText().isEmpty() ||
+				ventanaCliente.getTxtTelefonoFijo().getText().isEmpty() ||
+				ventanaCliente.getTxtTelefonoCelular().getText().isEmpty() ||
+				ventanaCliente.getTxtEmail().getText().isEmpty()
+			){
+				JOptionPane.showMessageDialog(null, "Debe cargar todos los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			return true;
+		}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+	}
+}

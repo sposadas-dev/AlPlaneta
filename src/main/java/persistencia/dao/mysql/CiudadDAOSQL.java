@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.CiudadDTO;
+import dto.TransporteDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.CiudadDAO;
 
@@ -15,6 +16,8 @@ public class CiudadDAOSQL implements CiudadDAO {
 	private static final String readall = "SELECT * FROM ciudad";
 	private static final String delete = "DELETE FROM ciudad WHERE idCiudad = ?";
 	private static final String update = "UPDATE ciudad SET nombre = ? WHERE idCiudad = ?";
+	private static final String browse = "SELECT * FROM ciudad WHERE idCiudad = ?";
+
 
 	@Override
 	public boolean insert(CiudadDTO ciudad) {
@@ -43,7 +46,7 @@ public class CiudadDAOSQL implements CiudadDAO {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 			while(resultSet.next()){
-				ciudades.add(new CiudadDTO(resultSet.getInt("idCiudad"),resultSet.getString("nombre")));
+				ciudades.add(new CiudadDTO(resultSet.getInt("idCiudad"),resultSet.getString("ciudadNombre")));
 			}
 		} 
 		catch (SQLException e) {
@@ -116,28 +119,27 @@ public class CiudadDAOSQL implements CiudadDAO {
 	}
 	
 	@Override
-	public CiudadDTO getCiudadById(int id) {
+	public CiudadDTO getCiudadById(int idCiudad) {
 		PreparedStatement statement;
-		ResultSet resultSet; 
-		ArrayList<CiudadDTO> ciudades= new ArrayList<CiudadDTO>();
+		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
-		try {
-			statement = conexion.getSQLConexion().prepareStatement(readall);
+		CiudadDTO ciudad;
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browse);
+			statement.setInt(1, idCiudad);
 			resultSet = statement.executeQuery();
-			while(resultSet.next()){
-				ciudades.add(new CiudadDTO(resultSet.getInt("idCiudad"),resultSet.getString("nombre")));
+				
+			if(resultSet.next()){
+				ciudad = new CiudadDTO(resultSet.getInt("idCiudad"),
+												resultSet.getString("ciudadNombre")
+											  );
+				return ciudad;
 			}
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+				
+		}catch (SQLException e){
+			 e.printStackTrace();
 		}
-		CiudadDTO ret = null;
-		
-		for(CiudadDTO ciudad: ciudades){
-			if(ciudad.getIdCiudad()==id)
-				ret = ciudad;
-		}
-		return ret;
+		return null;
 	}
 		
 	public static void main(String[] args) {
@@ -147,7 +149,4 @@ public class CiudadDAOSQL implements CiudadDAO {
 		for(CiudadDTO ad: administratives)
 			System.out.println(ad.getNombre());
 		}
-	
-
-	
 }

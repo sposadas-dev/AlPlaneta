@@ -7,14 +7,14 @@ import dto.LoginDTO;
 
 public interface LoginDAO {
 	
-	public boolean insert(LoginDTO datos) throws Exception;
+	public boolean insert(LoginDTO datos);
 
-	public boolean delete(LoginDTO datos_a_eliminar) throws Exception;
+	public boolean delete(LoginDTO datos_a_eliminar);
 
-	public List<LoginDTO> readAll() throws Exception;
+	public List<LoginDTO> readAll();
 
-	public boolean update(LoginDTO datos) throws Exception;
+	public boolean update(LoginDTO datos);
 
-	public LoginDTO getByDatos(String usr,String pass)throws Exception;
+	public LoginDTO getByDatos(String usr,String pass);
 
 }

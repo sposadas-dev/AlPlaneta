@@ -2,6 +2,7 @@ package modelo;
 
 import java.util.List;
 
+import dto.TransporteDTO;
 import dto.ViajeDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.ViajeDAO;
@@ -16,6 +17,10 @@ public class ModeloViaje {
 	
 	public void agregarViaje(ViajeDTO nuevoViaje){
 		this.viaje.insert(nuevoViaje);
+	}
+	
+	public void borrarViaje(ViajeDTO viaje_a_eliminar){
+		this.viaje.delete(viaje_a_eliminar);
 	}
 	
 	public List<ViajeDTO> obtenerViajes(){

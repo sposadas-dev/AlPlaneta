@@ -20,7 +20,8 @@ public class VentanaTablaViajes extends JFrame {
 	private JTable tablaViajes;
 	private DefaultTableModel modelViajes;
 	private JButton btnConfirmar;
-	private  String[] nombreColumnas = {"Origen","Destino","Fecha de salida","Fecha de llegada","Precio","Hora de salida"};
+	private JButton btnAtras;
+	private  String[] nombreColumnas = {"Origen","Destino","Fecha de salida","Fecha de llegada","Hora de salida","Horas estimadas","Capacidad","Transporte","Precio"};
 
 	public static VentanaTablaViajes getInstance(){
 		if(INSTANCE == null)
@@ -32,14 +33,15 @@ public class VentanaTablaViajes extends JFrame {
 	private VentanaTablaViajes() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Carga de viaje");
-		setBounds(250, 200, 761, 399);
+		setBounds(250, 200, 975, 525);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(10, 42, 725, 258);
+		spPasajeros.setBounds(10, 42, 928, 334);
 		contentPane.add(spPasajeros);
 		
 		modelViajes = new DefaultTableModel(null,nombreColumnas){
@@ -56,23 +58,14 @@ public class VentanaTablaViajes extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnConfirmar.setBounds(410, 312, 109, 37);
+		btnConfirmar.setBounds(416, 415, 109, 37);
 		contentPane.add(btnConfirmar);
 		
+		btnAtras = new JButton("Atrás");
+		btnAtras.setBounds(198, 403, 89, 38);
+		contentPane.add(btnAtras);
+		
 		this.setVisible(false);
-	}
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaTablaViajes frame = new VentanaTablaViajes();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 
 	public void mostrarVentana(boolean b) {
@@ -103,6 +96,10 @@ public class VentanaTablaViajes extends JFrame {
 		this.btnConfirmar = btnConfirmar;
 	}
 
+	public JButton getBtnAtras() {
+		return btnAtras;
+	}
+	
 	public String[] getNombreColumnas() {
 		return nombreColumnas;
 	}
@@ -110,5 +107,4 @@ public class VentanaTablaViajes extends JFrame {
 	public void setNombreColumnas(String[] nombreColumnas) {
 		this.nombreColumnas = nombreColumnas;
 	}
-	
 }

@@ -75,6 +75,7 @@ public class Vista {
 		tablaClientes = new JTable(modelClientes);
 		spPasajeros.setViewportView(tablaClientes);
 		panelClientes.setVisible(false);
+	
 			
 		btnAgregarCliente = new JButton("Agregar");
 		btnAgregarCliente.setBounds(790, 63, 108, 46);

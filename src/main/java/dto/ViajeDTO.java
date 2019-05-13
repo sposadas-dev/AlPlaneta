@@ -7,34 +7,40 @@ public class ViajeDTO {
 	private int idViaje;
 	private CiudadDTO origenViaje;
 	private CiudadDTO destinoViaje;
-
 	private Date fechaSalida;
 	private Date fechaLlegada;
-
+	private String horaSalida;
+	private int horasEstimadas;
+	
+	private TransporteDTO transporte;
+	private int capacidad;
 	private BigDecimal precio;
-	String horaSalida;
 
-	public ViajeDTO(int id, CiudadDTO origenViaje, CiudadDTO destinoViaje, Date fechaSalida, Date fechaLlegada,
-			BigDecimal precio, String horaSalida) {
+	public ViajeDTO(int idViaje, CiudadDTO origenViaje, CiudadDTO destinoViaje, Date fechaSalida, Date fechaLlegada,
+			String horaSalida, int horasEstimadas,TransporteDTO transporte,int capacidad, BigDecimal precio ) {
 		super();
-		this.idViaje = id;
+		this.idViaje = idViaje;
 		this.origenViaje = origenViaje;
 		this.destinoViaje = destinoViaje;
 		this.fechaSalida = fechaSalida;
 		this.fechaLlegada = fechaLlegada;
-		this.precio = precio;
 		this.horaSalida = horaSalida;
+		this.horasEstimadas = horasEstimadas;
+		this.transporte = transporte;
+		this.capacidad = capacidad;
+		this.precio = precio;
 	}
 
 	public ViajeDTO() {
+		super();
 	}
 
-	public int getId() {
+	public int getIdViaje() {
 		return idViaje;
 	}
 
-	public void setId(int id) {
-		this.idViaje = id;
+	public void setIdViaje(int idViaje) {
+		this.idViaje = idViaje;
 	}
 
 	public CiudadDTO getOrigenViaje() {
@@ -69,14 +75,6 @@ public class ViajeDTO {
 		this.fechaLlegada = fechaLlegada;
 	}
 
-	public BigDecimal getPrecio() {
-		return precio;
-	}
-
-	public void setImporte(BigDecimal importe) {
-		this.precio = importe;
-	}
-
 	public String getHoraSalida() {
 		return horaSalida;
 	}
@@ -85,17 +83,35 @@ public class ViajeDTO {
 		this.horaSalida = horaSalida;
 	}
 
-	public int getIdViaje() {
-		return idViaje;
+	public int getHorasEstimadas() {
+		return horasEstimadas;
 	}
 
-	public void setIdViaje(int idViaje) {
-		this.idViaje = idViaje;
+	public void setHorasEstimadas(int horasEstimadas) {
+		this.horasEstimadas = horasEstimadas;
+	}
+
+	public TransporteDTO getTransporte() {
+		return transporte;
+	}
+
+	public void setTransporte(TransporteDTO transporte) {
+		this.transporte = transporte;
+	}
+
+	public int getCapacidad() {
+		return capacidad;
+	}
+
+	public void setCapacidad(int capacidad) {
+		this.capacidad = capacidad;
+	}
+
+	public BigDecimal getPrecio() {
+		return precio;
 	}
 
 	public void setPrecio(BigDecimal precio) {
 		this.precio = precio;
 	}
-
-	
 }
