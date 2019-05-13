@@ -11,10 +11,10 @@ import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.RolDAO;
 
 public class RolDAOSQL implements RolDAO{
-	private static final String insert = "INSERT INTO rol" + "(idRol, descripcion)" + "VALUE(?,?)";
+	private static final String insert = "INSERT INTO rol (idRol, descripcion) VALUES(?,?)";
 	private static final String readall = "SELECT * FROM rol";
 	private static final String delete = "DELETE FROM rol WHERE idRol = ?";
-	private static final String update = "UPDATE rol SET descripcion = ?,WHERE idRol = ?";
+	private static final String update = "UPDATE rol SET descripcion = ? WHERE idRol = ?";
 	
 	private static final String browse = "SELECT * FROM rol WHERE idRol = ?";
 

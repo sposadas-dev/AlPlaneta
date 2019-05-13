@@ -34,7 +34,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 			statement.setDate(3, pasaje.getFechaVencimiento());
 			statement.setBigDecimal(4, pasaje.getValorViaje());
 			statement.setInt(5, pasaje.getCliente().getIdCliente());
-			statement.setInt(6, pasaje.getViaje().getId());
+			statement.setInt(6, pasaje.getViaje().getIdViaje());
 			statement.setInt(7, pasaje.getTransporte().getIdTransporte());
 			statement.setInt(8, pasaje.getAdministrativo().getIdAdministrativo());
 			statement.setInt(9, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());

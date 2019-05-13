@@ -35,7 +35,7 @@ public class VentanaLogin extends JFrame {
 			return INSTANCE;
 	}
 	
-	private VentanaLogin() {
+	public VentanaLogin() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 283, 333);
 		contentPane = new JPanel();

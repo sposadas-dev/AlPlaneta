@@ -23,7 +23,7 @@ public class VistaLogin extends JFrame {
 			return INSTANCE;
 	}
 
-	private VistaLogin() {
+	public VistaLogin() {
 		super();
 		setResizable(false);
 		setTitle("Modificar persona");
@@ -60,6 +60,10 @@ public class VistaLogin extends JFrame {
 		
 		this.setVisible(false);
 		
+	}
+	
+	public void mostrarVentana(){
+		this.setVisible(true);
 	}
 
 	public static VistaLogin getINSTANCE() {

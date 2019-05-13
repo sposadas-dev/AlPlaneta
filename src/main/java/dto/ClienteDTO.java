@@ -78,5 +78,4 @@ public class ClienteDTO {
 	public void setLogin(LoginDTO login) {
 		this.login = login;
 	}
-	
 }

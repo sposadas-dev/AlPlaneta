@@ -6,6 +6,7 @@ import persistencia.dao.interfaz.CiudadDAO;
 import persistencia.dao.interfaz.ClienteDAO;
 import persistencia.dao.interfaz.CoordinadorDAO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
+import persistencia.dao.interfaz.LoginDAO;
 import persistencia.dao.interfaz.MedioContactoDAO;
 import persistencia.dao.interfaz.PagoDAO;
 import persistencia.dao.interfaz.PasajeDAO;
@@ -15,6 +16,10 @@ import persistencia.dao.interfaz.ViajeDAO;
 
 
 public class DAOSQLFactory implements DAOAbstractFactory {
+	
+	public LoginDAO createLoginDAO() {
+		return new LoginDAOSQL();
+	}
 	
 	public ClienteDAO createClienteDAO(){
 		return new ClienteDAOSQL();
