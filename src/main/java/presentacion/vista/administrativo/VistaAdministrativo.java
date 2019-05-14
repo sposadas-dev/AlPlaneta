@@ -1,24 +1,28 @@
-package presentacion.vista;
+package presentacion.vista.administrativo;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
 import persistencia.conexion.Conexion;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class VistaPrueba{
+public class VistaAdministrativo{
 	
 	private JFrame frame;
 	
@@ -33,7 +37,7 @@ public class VistaPrueba{
 	private JMenuItem itemAgregarPasaje;
 	
 
-	public VistaPrueba() {
+	public VistaAdministrativo() {
 		super();
 		initialize();
 	}

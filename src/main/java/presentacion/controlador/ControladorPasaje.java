@@ -8,9 +8,9 @@ import modelo.ModeloViaje;
 import dto.ClienteDTO;
 import dto.ViajeDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.VentanaCargaPasajero;
-import presentacion.vista.VentanaTablaViajes;
-import presentacion.vista.VentanaVisualizarClientes;
+import presentacion.vista.administrativo.VentanaCargaPasajero;
+import presentacion.vista.administrativo.VentanaTablaViajes;
+import presentacion.vista.administrativo.VentanaVisualizarClientes;
 
 public class ControladorPasaje {
 

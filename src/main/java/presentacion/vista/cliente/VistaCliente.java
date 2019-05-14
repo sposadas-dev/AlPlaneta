@@ -1,4 +1,4 @@
-package presentacion.vista;
+package presentacion.vista.cliente;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

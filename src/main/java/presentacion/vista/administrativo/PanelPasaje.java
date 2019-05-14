@@ -1,4 +1,4 @@
-package presentacion.vista;
+package presentacion.vista.administrativo;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;

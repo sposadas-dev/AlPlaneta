@@ -15,17 +15,17 @@ import modelo.Cliente;
 import modelo.Login;
 import modelo.MedioContacto;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.PanelCliente;
-import presentacion.vista.VentanaCliente;
+import presentacion.vista.administrativo.PanelCliente;
+import presentacion.vista.administrativo.VentanaRegistrarCliente;
 
 public class ControladorCliente implements ActionListener{
 	
-	private VentanaCliente ventanaCliente;
+	private VentanaRegistrarCliente ventanaCliente;
 	private Cliente cliente;
 	private MedioContacto medioContacto; 
 	private Login login;
 
-	public ControladorCliente(VentanaCliente ventanaCliente, Cliente cliente){
+	public ControladorCliente(VentanaRegistrarCliente ventanaCliente, Cliente cliente){
 		this.ventanaCliente = ventanaCliente;
 		this.cliente = cliente;
 		

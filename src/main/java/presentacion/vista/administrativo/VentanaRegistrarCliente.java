@@ -1,4 +1,4 @@
-package presentacion.vista;
+package presentacion.vista.administrativo;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,7 +13,7 @@ import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JSeparator;
 
-public class VentanaCliente extends JFrame {
+public class VentanaRegistrarCliente extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -29,19 +29,19 @@ public class VentanaCliente extends JFrame {
 	private JButton btnRegistrar;
 	private JButton btnCancelar;
 
-	private static VentanaCliente ventanaCliente;
+	private static VentanaRegistrarCliente ventanaCliente;
 	
 	
-	public static VentanaCliente getInstance(){
+	public static VentanaRegistrarCliente getInstance(){
 		if(ventanaCliente == null){	
-			ventanaCliente = new VentanaCliente();
+			ventanaCliente = new VentanaRegistrarCliente();
 			return ventanaCliente;
 		}else{
 			return ventanaCliente;
 		}
 	}
 	
-	public VentanaCliente() {
+	public VentanaRegistrarCliente() {
 		setResizable(false);
 		setTitle("Registrar cliente");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

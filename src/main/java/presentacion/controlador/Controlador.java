@@ -42,31 +42,31 @@ import persistencia.dao.mysql.PagoDAOSQL;
 import persistencia.dao.mysql.PasajeroDAOSQL;
 import persistencia.dao.mysql.TransporteDAOSQL;
 import persistencia.dao.mysql.ViajeDAOSQL;
-import presentacion.vista.VentanaCargaPasajero;
-import presentacion.vista.VentanaCargarViaje;
-import presentacion.vista.VentanaCliente;
-import presentacion.vista.VentanaFormaPago;
 import presentacion.vista.VentanaLogin;
-import presentacion.vista.VentanaPagoEfectivo;
-import presentacion.vista.VentanaPagoTarjeta;
-import presentacion.vista.VentanaPasajero;
+//import presentacion.vista.VentanaPagoEfectivo;
+//import presentacion.vista.VentanaPagoTarjeta;
 import presentacion.vista.VentanaReserva;
-import presentacion.vista.VentanaTablaViajes;
 import presentacion.vista.Vista;
-import presentacion.vista.VistaAdministrador;
+import presentacion.vista.administrador.VentanaCargarViaje;
+import presentacion.vista.administrador.VistaAdministrador;
+import presentacion.vista.administrativo.VentanaCargaPasajero;
+import presentacion.vista.administrativo.VentanaFormaPago;
+import presentacion.vista.administrativo.VentanaPasajero;
+import presentacion.vista.administrativo.VentanaRegistrarCliente;
+import presentacion.vista.administrativo.VentanaTablaViajes;
 
 public class Controlador implements ActionListener {
 	private List<ViajeDTO> viajes_en_tabla;
 	private List<ClienteDTO> clientes_en_tabla;
 	ModeloCiudad modeloCiudad;
 	private Vista vista;
-	private VentanaCliente ventanaCliente;
+	private VentanaRegistrarCliente ventanaCliente;
 	private Cliente cliente;
 	private MedioContacto medioContacto;
 	private VentanaReserva ventanaReserva;
 	private VentanaFormaPago ventanaFormaDePagos;
-	private VentanaPagoTarjeta ventanaPagoTarjeta;
-	private VentanaPagoEfectivo ventanaPagoEfectivo;
+//	private VentanaPagoTarjeta ventanaPagoTarjeta;
+//	private VentanaPagoEfectivo ventanaPagoEfectivo;
 	private VentanaCargaPasajero ventanaCargaPasajero;
 	private VentanaPasajero ventanaPasajero;
 	private VentanaCargarViaje ventanaCargarViaje;
@@ -99,8 +99,8 @@ public class Controlador implements ActionListener {
 		
 		this.ventanaReserva = VentanaReserva.getInstance();
 		this.ventanaFormaDePagos = VentanaFormaPago.getInstance();
-		this.ventanaPagoTarjeta = VentanaPagoTarjeta.getInstance();
-		this.ventanaPagoEfectivo = VentanaPagoEfectivo.getInstance();
+//		this.ventanaPagoTarjeta = VentanaPagoTarjeta.getInstance();
+//		this.ventanaPagoEfectivo = VentanaPagoEfectivo.getInstance();
 		this.ventanaPasajero = VentanaPasajero.getInstance();
 		this.ventanaCargarViaje = VentanaCargarViaje.getInstance();
 		this.ventanaCargaPasajero = VentanaCargaPasajero.getInstance();
@@ -115,7 +115,7 @@ public class Controlador implements ActionListener {
 		
 		
 		/*ventanas auxiliares*/
-		this.ventanaAdministrador = VistaAdministrador.getINSTANCE();
+//		this.ventanaAdministrador = VistaAdministrador.getINSTANCE();
 		
 		/*Inicio de Modelos*/
 		this.daoSqlFactory = new DAOSQLFactory();
@@ -140,7 +140,7 @@ public class Controlador implements ActionListener {
 		
 		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
 //		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
-		this.ventanaCliente = VentanaCliente.getInstance();
+		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaCliente.getBtnRegistrar().addActionListener(ac->altaCliente(ac));
 		this.ventanaCliente.getBtnCancelar().addActionListener(bc->salirVentanaCliente(bc));
 		
@@ -663,12 +663,12 @@ public class Controlador implements ActionListener {
 
 	private void redirigirSegunItemSeleccionado(String itemSeleccionado) {
 		if(itemSeleccionado.equals("TARJETA")){
-			ventanaPagoTarjeta.mostrarVentana(true);
+//			ventanaPagoTarjeta.mostrarVentana(true);
 //			ventanaFormaDePagos.mostrarVentana(false);
 			ventanaFormaDePagos.redimensionar();
 			}
 		else if(itemSeleccionado.equals("EFECTIVO")){
-			ventanaPagoEfectivo.mostrarVentana(true);
+//			ventanaPagoEfectivo.mostrarVentana(true);
 			ventanaFormaDePagos.mostrarVentana(false);
 		}
 	}
@@ -682,7 +682,7 @@ public class Controlador implements ActionListener {
 	public Controlador(Vista vista, Cliente cliente){
 		this.vista = vista;
 		this.vista.getBtnClientes().addActionListener(this);
-		this.ventanaCliente = VentanaCliente.getInstance();
+		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaCliente.getBtnRegistrar().addActionListener(this);
 		this.cliente = cliente;
 		this.ventanaReserva = VentanaReserva.getInstance();

@@ -12,24 +12,24 @@ import modelo.Login;
 import dto.ClienteDTO;
 import dto.LoginDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.VentanaCliente;
 import presentacion.vista.VentanaLogin;
-import presentacion.vista.VentanaVisualizarClientes;
-import presentacion.vista.VistaPrueba;
+import presentacion.vista.administrativo.VentanaRegistrarCliente;
+import presentacion.vista.administrativo.VentanaVisualizarClientes;
+import presentacion.vista.administrativo.VistaAdministrativo;
 
 public class ControladorPrueba implements ActionListener {
 
-	private VistaPrueba vista;
-	private VentanaCliente ventanaCliente;
+	private VistaAdministrativo vista;
+	private VentanaRegistrarCliente ventanaCliente;
 	private VentanaVisualizarClientes ventanaVisualizarCliente;
 	
 	private List<ClienteDTO> clientes_en_tabla;
 	
 	private Cliente cliente;	
 	
-	public ControladorPrueba(VistaPrueba vista) {
+	public ControladorPrueba(VistaAdministrativo vista) {
 		this.vista = vista;
-		this.ventanaCliente = VentanaCliente.getInstance();
+		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaVisualizarCliente = VentanaVisualizarClientes.getInstance();
 	
 		this.vista.getItemVisualizarClientes().addActionListener(ac->agregarPanelClientes(ac));
