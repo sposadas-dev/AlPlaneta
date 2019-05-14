@@ -13,4 +13,6 @@ public interface AdministradorDAO {
 	public List<AdministradorDTO> readAll();
 
 	public boolean update(AdministradorDTO administrador);
+	
+	public AdministradorDTO getById(int id );
 }
