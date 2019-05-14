@@ -10,12 +10,12 @@ import modelo.Cliente;
 import modelo.Login;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.VentanaLogin;
-import presentacion.vista.VistaPrueba;
+import presentacion.vista.administrativo.VistaAdministrativo;
 
 public class ControladorLogin {
 
 	private VentanaLogin ventanaLogin;
-	private VistaPrueba vista;
+	private VistaAdministrativo vistaAdministrativo;
 	private Login login;
 	private LoginDTO usuarioLogueado;
 	private AdministrativoDTO administrativoLogueado;
@@ -23,7 +23,7 @@ public class ControladorLogin {
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
-		this.vista = new VistaPrueba();
+		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
 	
 		this.login = login;
 		this.usuarioLogueado = null;
@@ -74,7 +74,7 @@ public class ControladorLogin {
 		System.out.println("Se Loguea Como Administrativo");
 		System.out.println(administrativoLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);
-		ControladorPrueba controladorPrueba = new ControladorPrueba(vista);
+		ControladorPrueba controladorPrueba = new ControladorPrueba(vistaAdministrativo);
 		controladorPrueba.inicializar();
 	}
 		

@@ -1,4 +1,4 @@
-package presentacion.vista;
+package presentacion.vista.administrador;
 
 import java.awt.EventQueue;
 

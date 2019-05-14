@@ -1,4 +1,4 @@
-package presentacion.vista;
+package presentacion.vista.administrativo;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
