@@ -122,6 +122,7 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		return null;
 	}
 	
+	@Override
 	public AdministrativoDTO getByLoginId(int id ){
 		PreparedStatement statement;
 		ResultSet resultSet;

@@ -13,10 +13,10 @@ import persistencia.dao.interfaz.PasajeroDAO;
 
 public class PasajeroDAOSQL implements PasajeroDAO {
 
-	private static final String insert = "INSERT INTO pasajero(idPasajero, nombre, apellido, dni) VALUES(?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO pasajero(idPasajero, nombre, apellido, dni, fechaNacimiento,telefono, email) VALUES(?, ?, ?, ?, ?, ? ,?)";
 	private static final String delete = "DELETE FROM pasajero WHERE idPasajero = ?";
 	private static final String readall = "SELECT * FROM pasajero";
-	private static final String update = "UPDATE pasajero SET nombre=?, apellido=?, dni=? WHERE idPasajero=?;";
+	private static final String update = "UPDATE pasajero SET nombre=?, apellido=?, dni=?, fechaNacimiento=?, telefono=?, email=? WHERE idPasajero=?;";
 	private static final String browse = "SELECT * FROM pasajero WHERE idPasajero=?";
 
 	@Override
@@ -29,6 +29,10 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 			statement.setString(2, pasajeroInsert.getNombre());
 			statement.setString(3, pasajeroInsert.getApellido());
 			statement.setString(4, pasajeroInsert.getDni());
+			statement.setDate(5, pasajeroInsert.getFechaNacimiento());
+			statement.setString(6, pasajeroInsert.getTelefono());
+			statement.setString(7, pasajeroInsert.getEmail());
+
 			if (statement.executeUpdate() > 0) {
 				return true;
 			}
@@ -67,8 +71,13 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-				pasajeros.add(new PasajeroDTO(resultSet.getInt("idPasajero"), resultSet.getString("nombre"),
-						resultSet.getString("apellido"), resultSet.getString("dni")));
+				pasajeros.add(new PasajeroDTO(resultSet.getInt("idPasajero"), 
+											  resultSet.getString("nombre"),
+											  resultSet.getString("apellido"), 
+											  resultSet.getString("dni"),
+											  resultSet.getDate("fechaNacimiento"),
+											  resultSet.getString("telefono"),
+											  resultSet.getString("email")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -87,7 +96,10 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 			statement.setString(1, pasajeroUpdate.getNombre());
 			statement.setString(2, pasajeroUpdate.getApellido());
 			statement.setString(3, pasajeroUpdate.getDni());
-			statement.setInt(4, pasajeroUpdate.getIdPasajero());
+			statement.setDate(4, pasajeroUpdate.getFechaNacimiento());
+			statement.setString(5, pasajeroUpdate.getTelefono());
+			statement.setString(6, pasajeroUpdate.getEmail());
+			statement.setInt(7, pasajeroUpdate.getIdPasajero());
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0)
 				return true;
@@ -109,11 +121,14 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 			statement.setInt(1, idPasajero);
 			resultSet = statement.executeQuery();
 			if (resultSet.next()){
-				pasajero = new PasajeroDTO(resultSet.getInt("idPasajero"),
-										   resultSet.getString("Nombre"),
-										   resultSet.getString("Apellido"),
-										   resultSet.getString("Dni")
-										   );
+				pasajero = new PasajeroDTO(resultSet.getInt("idPasajero"), 
+										   resultSet.getString("nombre"),
+										   resultSet.getString("apellido"), 
+										   resultSet.getString("dni"),
+										   resultSet.getDate("fechaNacimiento"),
+										   resultSet.getString("telefono"),
+										   resultSet.getString("email")
+						  );
 				return pasajero;
 			}
 		} 
@@ -123,27 +138,23 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 		return null;
 	}
 	
-
-	
-	
 	public static void main(String[] args) {
 		
-		PasajeroDAOSQL daoSQL = new PasajeroDAOSQL();
-
-	/*Probamos El Insert en la tabla, luego verificar de forma manual que este registrado en la tabla*/	
-		PasajeroDTO DTO = new PasajeroDTO(0,"LizzAdministrativa","Moreno","36584266");
-		PasajeroDTO DTO2 = new PasajeroDTO(0,"MicaAdministrativa","Perez","32125322");
-		PasajeroDTO DTO3 = new PasajeroDTO(0,"SolAdministrativa","Hoyos","25652544");
-		
-		daoSQL.insert(DTO);
-		daoSQL.insert(DTO2);
-		daoSQL.insert(DTO3);
-		
-	/*Probamos el ReadALL*/	
-		ArrayList<PasajeroDTO> array = (ArrayList<PasajeroDTO>) daoSQL.readAll();
-		
-		for(PasajeroDTO ad: array)
-			System.out.println(ad.getNombre());
+//		PasajeroDAOSQL daoSQL = new PasajeroDAOSQL();
+//
+//	/*Probamos El Insert en la tabla, luego verificar de forma manual que este registrado en la tabla*/	
+//		PasajeroDTO DTO = new PasajeroDTO(0,"LizzAdministrativa","Moreno","36584266");
+//		PasajeroDTO DTO2 = new PasajeroDTO(0,"MicaAdministrativa","Perez","32125322");
+//		PasajeroDTO DTO3 = new PasajeroDTO(0,"SolAdministrativa","Hoyos","25652544");
+//		
+//		daoSQL.insert(DTO);
+//		daoSQL.insert(DTO2);
+//		daoSQL.insert(DTO3);
+//		
+//	/*Probamos el ReadALL*/	
+//		ArrayList<PasajeroDTO> array = (ArrayList<PasajeroDTO>) daoSQL.readAll();
+//		
+//		for(PasajeroDTO ad: array)
+//			System.out.println(ad.getNombre());
 		}
-
 }

@@ -26,7 +26,8 @@ public class VistaLogin extends JFrame {
 	public VistaLogin() {
 		super();
 		setResizable(false);
-		setTitle("Modificar persona");
+		setLocationRelativeTo(null);
+		setTitle("Login");
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 360, 266);

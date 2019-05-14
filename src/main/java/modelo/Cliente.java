@@ -20,4 +20,8 @@ public class Cliente {
 	public List<ClienteDTO> obtenerClientes(){
 		return this.cliente.readAll();		
 	}
+	
+	public ClienteDTO getByLoginId(int idCliente){
+		return this.cliente.getByLoginId(idCliente);
+	}
 }
