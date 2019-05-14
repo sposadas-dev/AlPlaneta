@@ -22,7 +22,7 @@ public class VentanaCargaPasajero extends JFrame {
 	private JButton btnEliminar; 
 	private JButton btnAgregarPasajero; 
 	private JButton btnConfirmar;
-	private  String[] nombreColumnas = {"Nombre" , "Apellido", "DNI"};
+	private  String[] nombreColumnas = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento","Teléfono","Email"};
 
 	public static VentanaCargaPasajero getInstance(){
 		if(INSTANCE == null)
@@ -34,7 +34,7 @@ public class VentanaCargaPasajero extends JFrame {
 	private VentanaCargaPasajero() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Carga de pasajeros");
-		setBounds(100, 100, 545, 350);
+		setBounds(100, 100, 545, 406);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -62,8 +62,12 @@ public class VentanaCargaPasajero extends JFrame {
 		contentPane.add(btnEliminar);
 		
 		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.setBounds(410, 222, 109, 37);
+		btnConfirmar.setBounds(278, 319, 109, 37);
 		contentPane.add(btnConfirmar);
+		
+		JButton btnAtras = new JButton("Atrás");
+		btnAtras.setBounds(111, 319, 109, 37);
+		contentPane.add(btnAtras);
 		
 		this.setVisible(false);
 	}
@@ -132,6 +136,4 @@ public class VentanaCargaPasajero extends JFrame {
 	public void setBtnConfirmar(JButton btnConfirmar) {
 		this.btnConfirmar = btnConfirmar;
 	}
-	
-	
 }

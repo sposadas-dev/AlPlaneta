@@ -14,4 +14,6 @@ public interface ClienteDAO {
 
 	public boolean update(ClienteDTO cliente);
 
+	public ClienteDTO getByLoginId(int idCliente);
+
 }

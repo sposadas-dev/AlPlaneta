@@ -22,8 +22,7 @@ public class Administrativo {
 		return this.administrativo.readAll();		
 	}
 
-	public AdministrativoDTO obtenerAdministrativoDatosLogin(String user,String password) {
-		return null;
-//		return administrativo.getByDatosLogin(user, password);
+	public AdministrativoDTO getByLoginId(int idLogin) {
+		return this.administrativo.getByLoginId(idLogin);
 	}
 }

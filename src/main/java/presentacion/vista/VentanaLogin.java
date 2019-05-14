@@ -36,8 +36,9 @@ public class VentanaLogin extends JFrame {
 	}
 	
 	public VentanaLogin() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 283, 333);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -53,10 +54,6 @@ public class VentanaLogin extends JFrame {
 		contentPane.add(lblUsuario);
 		
 		btnLogin = new JButton("Login");
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		btnLogin.setBounds(16, 227, 229, 23);
 		contentPane.add(btnLogin);
 		
@@ -78,10 +75,10 @@ public class VentanaLogin extends JFrame {
 	}
 	
 	
-	
 	public void mostrarVentana(boolean mostrar){
 		this.setVisible(mostrar);
 	}
+	
 	public JTextField getTextUsuario() {
 		return textUsuario;
 	}

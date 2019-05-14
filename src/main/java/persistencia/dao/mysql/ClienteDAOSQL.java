@@ -95,7 +95,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 		return false;
 	}
 	
-	
+	@Override
 	public ClienteDTO getByLoginId(int id) {
 			PreparedStatement statement;
 			ResultSet resultSet;

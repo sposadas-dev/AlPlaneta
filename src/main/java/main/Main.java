@@ -13,20 +13,14 @@ import presentacion.vista.VistaPrueba;
 public class Main {
 	
 	public static void main(String[] args) throws Exception {
-//		Vista vista = new Vista();
-//		Controlador controlador = new Controlador(vista);
-//		controlador.inicializar();
-		
-		VistaPrueba vista = new VistaPrueba();
-		ControladorPrueba controlador = new ControladorPrueba(vista);
-		controlador.inicializar();
 
-		/*Para ver el login descomentar las siguientes lineas*/	
-		
-//		Login login = new Login(new DAOSQLFactory());
-//		VentanaLogin ventanaLogin = new VentanaLogin();
-//		ControladorLogin controladorLogin = new ControladorLogin(ventanaLogin, login);
-//		controladorLogin.iniciar();
-		
+//		VistaPrueba vista = new VistaPrueba();
+//		ControladorPrueba controlador = new ControladorPrueba(vista);
+//		controlador.inicializar();		
+
+		Login login = new Login(new DAOSQLFactory());
+		VentanaLogin ventanaLogin = new VentanaLogin();
+		ControladorLogin controladorLogin = new ControladorLogin(ventanaLogin, login);
+		controladorLogin.iniciar();
 	}
 }

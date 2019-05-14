@@ -8,6 +8,7 @@ import modelo.ModeloViaje;
 import dto.ClienteDTO;
 import dto.ViajeDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.VentanaCargaPasajero;
 import presentacion.vista.VentanaTablaViajes;
 import presentacion.vista.VentanaVisualizarClientes;
 
@@ -15,6 +16,8 @@ public class ControladorPasaje {
 
 	private VentanaVisualizarClientes ventanaVisualizarClientes;
 	private VentanaTablaViajes ventanaTablaViajes;
+	private VentanaCargaPasajero ventanaCargaPasajero;
+	
 	private List<ClienteDTO> clientes_en_tabla;
 	private List <ViajeDTO> viajes_en_tabla;
 	private ClienteDTO clienteSeleccionado; //cliente que selecciona en la tabla 

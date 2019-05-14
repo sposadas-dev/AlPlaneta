@@ -28,16 +28,16 @@ public class VistaAdministrador extends JFrame {
 		setTitle("Administrador");
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 360, 266);
+		setBounds(100, 100, 504, 291);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu menuViajes = new JMenu("Viajes");
-		menuBar.add(menuViajes);
+		JMenu menuCuentas = new JMenu("Cuentas");
+		menuBar.add(menuCuentas);
 		
-		JMenuItem ItemAgregarViaje = new JMenuItem("Agregar viaje");
-		menuViajes.add(ItemAgregarViaje);
+		JMenuItem itemAgregarCuenta = new JMenuItem("Agregar cuenta");
+		menuCuentas.add(itemAgregarCuenta);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

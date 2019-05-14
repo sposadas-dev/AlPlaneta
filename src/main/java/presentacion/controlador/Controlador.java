@@ -179,7 +179,8 @@ public class Controlador implements ActionListener {
 				if(usuarioLogeado.getRol().getIdRol()==5){
 					 clienteLogeado = obtenerCliente(usuarioLogeado);
 					 mostrarVentanaCliente();
-				}}
+				}
+			}
 		}
 		
 	}
@@ -209,9 +210,9 @@ public class Controlador implements ActionListener {
 		return sql.getByLoginId(loginUsuario.getIdDatosLogin());
 	}
 	
-	private AdministrativoDTO busquedaRolAdministrativo(String user, String password) {
-		return modeloAdminisrativo.obtenerAdministrativoDatosLogin(user,password);
-	}
+//	private AdministrativoDTO busquedaRolAdministrativo(String user, String password) {
+//		return modeloAdminisrativo.obtenerAdministrativoDatosLogin(user,password);
+//	}
 /*FIN IMPLEMENTACION BRANCH V3.0*/
 	
 	

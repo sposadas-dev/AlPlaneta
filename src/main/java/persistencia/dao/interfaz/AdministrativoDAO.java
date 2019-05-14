@@ -15,4 +15,6 @@ public interface AdministrativoDAO {
 
 	public AdministrativoDTO getByDatosLogin(String usuario, String contrasena);
 
+	public AdministrativoDTO getByLoginId(int id);
+
 }
