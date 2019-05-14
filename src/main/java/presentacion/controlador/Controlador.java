@@ -1,5 +1,6 @@
 package presentacion.controlador;
 
+import java.awt.PrintGraphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
@@ -80,8 +81,9 @@ public class Controlador implements ActionListener {
 	private PagoDTO pagoDTO;
 	private LoginDTO usuarioLogeado;
 	
-	private AdministrativoDTO administrativoLogeado;
-	private ClienteDTO clienteLogeado;
+	private AdministrativoDTO administrativoLogueado;
+	private ClienteDTO clienteLogueado;
+	private AdministradorDTO administradorLogueado;
 	
 	/*AGREGADO PARA 3ER REUNION */
 	private VentanaLogin ventanaLogin;
@@ -106,8 +108,9 @@ public class Controlador implements ActionListener {
 		this.ventanaLogin = VentanaLogin.getInstance();
 		
 		/*ENTIDADES LOGEADAS*/
-		this.administrativoLogeado = null;
-		this.clienteLogeado = null;
+		this.administrativoLogueado = null;
+		this.clienteLogueado = null;
+		this.administradorLogueado = null;
 		
 		
 		
@@ -170,14 +173,16 @@ public class Controlador implements ActionListener {
 		if(usuarioLogeado==null){
 			this.ventanaLogin.getLblError().setVisible(true);
 			System.out.println("EL USUARIO O CONTRASENA ES INCORRECTO");
-		}else{
-			System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogeado.getUsuario()+usuarioLogeado.getContrasena());
+		}
+		else{
+			System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogeado.getUsuario()+" "+usuarioLogeado.getContrasena()+" "+usuarioLogeado.getRol().getIdRol());
 			if(usuarioLogeado.getRol().getIdRol()==2){
-				 administrativoLogeado = obtenerAdministrativo(usuarioLogeado);
+				 administrativoLogueado = obtenerAdministrativo(usuarioLogeado);
 				 mostrarVentanaAdministrativo();
-			}else{
+			}
+			else{
 				if(usuarioLogeado.getRol().getIdRol()==5){
-					 clienteLogeado = obtenerCliente(usuarioLogeado);
+					 clienteLogueado = obtenerCliente(usuarioLogeado);
 					 mostrarVentanaCliente();
 				}
 			}
@@ -186,22 +191,36 @@ public class Controlador implements ActionListener {
 	}
 
 	private void mostrarVentanaCliente() {
-		System.out.println("Se Logea como Cliente");
-		System.out.println(clienteLogeado.getNombre());
+		System.out.println("Se Loguea como Cliente");
+		System.out.println(clienteLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);
 		
 	}
 
 	/*MOSTRAR LA VENTANA PRINCIPAL DEL PARSONAL ADMINISTRATIVO*/
 	private void mostrarVentanaAdministrativo() {
-		System.out.println("Se Logea Como Administrativo");
-		System.out.println(administrativoLogeado.getNombre());
+		System.out.println("Se Loguea Como Administrativo");
+		System.out.println(administrativoLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);
+		
+
+	}
+	
+	private void mostrarVentanaAdministrador() {
+		System.out.println("Se Loguea Como Administrador");
+		System.out.println(administradorLogueado.getNombre());
+		this.ventanaLogin.setVisible(false);
+		
 
 	}
 /*-----------------------METODOS BUSCADOR POR ROLES ---------------------*/
 	private AdministrativoDTO obtenerAdministrativo(LoginDTO loginUsuario) {
 		AdministrativoDAOSQL dao = new AdministrativoDAOSQL();
+		return dao.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
+	private AdministradorDTO obtenerAdministrador(LoginDTO loginUsuario) {
+		AdministradorDAOSQL dao = new AdministradorDAOSQL();		
 		return dao.getByLoginId(loginUsuario.getIdDatosLogin());
 	}
 	
