@@ -29,8 +29,8 @@ public class ModeloCiudad {
 	public void editarCiudad(CiudadDTO ciudadUpdate) throws Exception {
 		this.ciudad.update(ciudadUpdate);
 	}
-	
-	public CiudadDTO getCiudadByName(String nombreCiudad){
-		return this.ciudad.getCiudadByNombre(nombreCiudad);
+
+	public List<CiudadDTO> obtenerCiudadPorIdProvincia(int idProvincia) {
+		return this.ciudad.readAllByIdprovincia(idProvincia);
 	}
 }

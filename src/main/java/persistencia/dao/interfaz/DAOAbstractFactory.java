@@ -24,6 +24,8 @@ public interface DAOAbstractFactory {
 
 	public LoginDAO createLoginDAO();
 	
+	public ProvinciaDAO createProvinciaDAO();
+	
 //	public CoordinadorDAO createCoordinadorDAO();
 
 

@@ -1,8 +1,8 @@
 package presentacion.controlador;
 
-import java.awt.PrintGraphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -21,16 +21,17 @@ import dto.HorarioReservaDTO;
 import dto.LoginDTO;
 import dto.MedioContactoDTO;
 import dto.PagoDTO;
+import dto.PaisDTO;
 import dto.PasajeDTO;
 import dto.PasajeroDTO;
-import dto.RolDTO;
+import dto.ProvinciaDTO;
 import dto.TransporteDTO;
 import dto.ViajeDTO;
 import modelo.Administrativo;
 import modelo.Cliente;
 import modelo.MedioContacto;
 import modelo.ModeloCiudad;
-import modelo.ModeloViaje;
+import modelo.ModeloProvincia;
 import persistencia.dao.mysql.AdministradorDAOSQL;
 import persistencia.dao.mysql.AdministrativoDAOSQL;
 import persistencia.dao.mysql.CiudadDAOSQL;
@@ -39,6 +40,7 @@ import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.HorarioReservaDAOSQL;
 import persistencia.dao.mysql.LoginDAOSQL;
 import persistencia.dao.mysql.PagoDAOSQL;
+import persistencia.dao.mysql.PaisDAOSQL;
 import persistencia.dao.mysql.PasajeroDAOSQL;
 import persistencia.dao.mysql.TransporteDAOSQL;
 import persistencia.dao.mysql.ViajeDAOSQL;
@@ -90,6 +92,9 @@ public class Controlador implements ActionListener {
 	private Administrativo modeloAdminisrativo;
 	private DAOSQLFactory daoSqlFactory;
 	
+	/*ADMINSITRADOR*/
+	private ModeloProvincia modeloProvincia;
+	
 	public Controlador(Vista vista) {
 		this.vista = vista;
 		this.vista.getBtnClientes().addActionListener(ac->agregarPanelClientes(ac));
@@ -112,14 +117,14 @@ public class Controlador implements ActionListener {
 		this.clienteLogueado = null;
 		this.administradorLogueado = null;
 		
-		
-		
 		/*ventanas auxiliares*/
 //		this.ventanaAdministrador = VistaAdministrador.getINSTANCE();
 		
 		/*Inicio de Modelos*/
+		
 		this.daoSqlFactory = new DAOSQLFactory();
-		this.modeloAdminisrativo = new Administrativo(daoSqlFactory); 
+		this.modeloAdminisrativo = new Administrativo(daoSqlFactory);
+		this.modeloProvincia = new ModeloProvincia(daoSqlFactory);
 		this.usuarioLogeado = new LoginDTO();
 		
 		/*Fin de Modelos*/
@@ -127,8 +132,8 @@ public class Controlador implements ActionListener {
 		this.viajes_en_tabla = new ArrayList<ViajeDTO>();
 		this.clientes_en_tabla = new ArrayList<ClienteDTO>();
 		this.pasajerosEnEstaReserva = new ArrayList<PasajeroDTO>();
-		viajeSeleccionado = new ViajeDTO();
-		transporteSeleccionado = new TransporteDTO();
+		this.viajeSeleccionado = new ViajeDTO();
+		this.transporteSeleccionado = new TransporteDTO();
 		
 		this.ventanaLogin.getBtnLogin().addActionListener(log->logearse(log));
 		
@@ -149,8 +154,30 @@ public class Controlador implements ActionListener {
 		
 		this.ventanaPasajero.getBtnCargarDatos().addActionListener(aP->darDeAltaUnPasajero(aP));
 		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaUnViajes(aV));
-		
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(sV->seleccionarViaje(sV));
+/*//////////////////////////////////////////////////////////////////////////////////////////////////*/		
+/*/////////////////////////////////////// PRUEBA //////////////////////////////////////////////////*/
+	
+		this.ventanaCargarViaje.getComboBoxPaisOrigen().addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt){obtenerProvincias_porPaisOrigen(evt);}});
+		
+		this.ventanaCargarViaje.getComboBoxPaisDestino().addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt){obtenerProvincias_porPaisDestino(evt);}});
+		
+		this.ventanaCargarViaje.getComboBoxProvinciaOrigen().addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt){obtenerCiudades_porProvinciaOrigen(evt);}});
+		
+		this.ventanaCargarViaje.getComboBoxProvinciaDestino().addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt){obtenerCiudades_porProvinciaDestino(evt);}});
+		
+//		this.ventanaCargarViaje.getComboBoxCiudadOrigen().addMouseListener(new java.awt.event.MouseAdapter() {
+//            public void mouseClicked(java.awt.event.MouseEvent cit){obtenerCiudadesOrigen(cit);}});
+//		
+//		this.ventanaCargarViaje.getComboBoxCiudadDestino().addMouseListener(new java.awt.event.MouseAdapter() {
+//            public void mouseClicked(java.awt.event.MouseEvent cit){obtenerCiudadesDestino(cit);}});
+//		
+/*//////////////////////////////////////////////////////////////////////////////////////////////////*/		
+/*/////////////////////////////////////// PRUEBA //////////////////////////////////////////////////*/
 		
 		medioContacto = new MedioContacto(new DAOSQLFactory());
 		cliente = new Cliente(new DAOSQLFactory());
@@ -242,7 +269,9 @@ public class Controlador implements ActionListener {
 
 	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
 	public void inicializar() throws Exception{	
-		this.ventanaLogin.setVisible(true);
+//		this.ventanaLogin.setVisible(true);
+		llenarCiudadesEnCargaViajes();
+		this.ventanaCargarViaje.setVisible(true);
 //		this.llenarTablaClientes();
 //		this.vista.show();
 				
@@ -254,7 +283,169 @@ public class Controlador implements ActionListener {
 		
 //		llenarValoresEnCargaDeViaje();
 	}
+
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////*/
+	private void llenarComboBoxPaises() {
+		List<PaisDTO> paises = new PaisDAOSQL().readAll();
+		String[] nombresPaises = new String[paises.size()];
+		for(int i=0; i<paises.size();i++){
+			String pais = paises.get(i).getIdPais()+"-"+paises.get(i).getNombre();
+			nombresPaises [i] = pais;
+		}	
+/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+		this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresPaises));
+		this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresPaises));
+	}
+	
+	private void obtenerProvincias_porPaisOrigen(MouseEvent evt) {//obtener provinciasOrigen y setEnComboProvincia
+		String pais = ventanaCargarViaje.getComboBoxPaisOrigen().getSelectedItem().toString();
+		ventanaCargarViaje.getComboBoxProvinciaOrigen().setEnabled(true);
+    	llenarComboBoxProvinciasOrigen(Integer.parseInt(pais.substring(0)));
+	}
+
+	private void obtenerProvincias_porPaisDestino(MouseEvent evt) {//obteer provinciasDestino y setEnComboProvincia
+		String pais = ventanaCargarViaje.getComboBoxPaisDestino().getSelectedItem().toString();
+		ventanaCargarViaje.getComboBoxProvinciaDestino().setEnabled(true);
+    	llenarComboBoxProvinciasDestino(Integer.parseInt(pais.substring(0)));
+	}
+	
+	private void obtenerCiudades_porProvinciaOrigen(MouseEvent evt) {
+		String provincia = ventanaCargarViaje.getComboBoxProvinciaOrigen().getSelectedItem().toString();
+    	llenarComboBoxCiudadesOrigen(Integer.parseInt(provincia.substring(0)));
+	} 
+	
+	private void obtenerCiudades_porProvinciaDestino(MouseEvent evt) {
+		String provincia = ventanaCargarViaje.getComboBoxProvinciaDestino().getSelectedItem().toString();
+    	llenarComboBoxCiudadesDestino(Integer.parseInt(provincia.substring(0)));
+	} 
+	
+	private void llenarComboBoxProvinciasOrigen(int idPais) {
+		List<ProvinciaDTO> provincias = null;
+		try {
+			provincias = modeloProvincia.obtenerProvinciaPorIdPais(idPais);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		String[] nombresProvincias = new String[provincias.size()];
+		for(int i=0; i<provincias.size();i++){
+			String provincia = provincias.get(i).getIdProvincia()+"-"+provincias.get(i).getNombre();
+			nombresProvincias [i] = provincia;
+		}	
+/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+		this.ventanaCargarViaje.getComboBoxProvinciaOrigen().setModel(new DefaultComboBoxModel(nombresProvincias));
+	}
+	
+	private void llenarComboBoxProvinciasDestino(int idPais) {
+		List<ProvinciaDTO> provincias = null;
+		try {
+			provincias = modeloProvincia.obtenerProvinciaPorIdPais(idPais);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		String[] nombresProvincias = new String[provincias.size()];
+		for(int i=0; i<provincias.size();i++){
+			String provincia = provincias.get(i).getIdProvincia()+"-"+provincias.get(i).getNombre();
+			nombresProvincias [i] = provincia;
+		}	
+/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+		this.ventanaCargarViaje.getComboBoxProvinciaDestino().setModel(new DefaultComboBoxModel(nombresProvincias));
+	}
+	
+	private void llenarComboBoxCiudadesOrigen(int idProvincia) {
+		List<CiudadDTO> ciudades = null;
+		try {
+			ciudades = modeloCiudad.obtenerCiudadPorIdProvincia(idProvincia);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String[] nombresCiudades = new String[ciudades.size()];
+		
+		for(int i=0; i<ciudades.size();i++){
+			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
+			nombresCiudades [i] = ciudad;
+		}	
+/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+		this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresCiudades));
+		
+	}
+	
+	private void llenarComboBoxCiudadesDestino(int idProvincia) {
+		List<CiudadDTO> ciudades = null;
+		try {
+			ciudades = modeloCiudad.obtenerCiudadPorIdProvincia(idProvincia);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String[] nombresCiudades = new String[ciudades.size()];
+		
+		for(int i=0; i<ciudades.size();i++){
+			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
+			nombresCiudades [i] = ciudad;
+		}	
+/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+		this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresCiudades));
+	}
+
+	
+//	private void obtenerCiudadesOrigen(MouseEvent cit) {
+//		String ciudad = ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString();
+//		llenarComboBoxCiudadesOrigen(Integer.parseInt(ciudad.substring(0)));
+//	}
+	
+//	private void obtenerCiudadesDestino(MouseEvent cit) {
+//		String ciudad = ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString();
+//		llenarComboBoxCiudadesDestino(Integer.parseInt(ciudad.substring(0)));
+//	}
+	
+	
+	
+
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////*/
+	
+	private void llenarCiudadesEnCargaViajes() {
+/*INGRESAR VALOR DEFAULT A LOS COMBOBOX."Seleccione un pais - -*/
+		
+/*CARGAR LOS PAISES DE LA BASE DE DATOS.*/
+		llenarComboBoxPaises();
+/*UNA VEZ SELECIONADO EL PAIS, HABILITAR EL COMBO PROVINCIA, CORRESPONDIENTE AL PAIS CLICKOUT*/
+		/*obtener el id del pais*/
+/*MISMA ACCION PARA CIUDAD*/
+
+/*HABILITAR EL BOTON SELECCIONAR ORIGEN*/
+
+/*REALIZAR MISMA TAREA PARA DESTINO.*/
+
+/*UNA VEZ ACEPTADO: MOSTRAR LA CIUDAD ORIGEN Y DESTINO EN LA TABLA CON LOS DEMAS DATOS CORRESPONDIENTES*/
+
+		this.ventanaCargarViaje.getModelViajes().setRowCount(0);
+		this.ventanaCargarViaje.getModelViajes().setColumnCount(0);
+		this.ventanaCargarViaje.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
+		
+		
+/*CAMBIAR, CREAR LA CIUDAD*/		
+		ArrayList<ViajeDTO> viajes_en_tabla = (ArrayList<ViajeDTO>) new ViajeDAOSQL().readAll();
+		for(int i=0; i< viajes_en_tabla.size();i++){
+			Object[] fila = { 
+					viajes_en_tabla.get(i).getOrigenViaje().getNombre(),
+					viajes_en_tabla.get(i).getDestinoViaje().getNombre(),
+					viajes_en_tabla.get(i).getFechaSalida(),
+					viajes_en_tabla.get(i).getFechaLlegada(),
+					viajes_en_tabla.get(i).getPrecio(),
+					viajes_en_tabla.get(i).getHoraSalida()
+			};
+			this.ventanaTablaViajes.getModelViajes().addRow(fila);
+		}
+		this.ventanaTablaViajes.setVisible(true);
+		
+//		this.ventanaCargarViaje.getTablaViajes();
+		
+	}
+	
+	
+/*////////////////////////////////////////////////////////////////////////////////////////////////*/	
+	
 	private void agregarPanelClientes(ActionEvent ac) {
 		this.vista.getPanelClientes().setVisible(true);
 		this.vista.getPanelReservas().setVisible(false);
@@ -300,23 +491,23 @@ public class Controlador implements ActionListener {
 	
 	/*- - - - - - - -  - - - - - - - METODOS DE VIAJE - - - - - - - - - - - - - - - - --  */
 	private void darAltaUnViajes(ActionEvent aV) {
-		ModeloCiudad modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
-		ModeloViaje modeloViaje = new ModeloViaje(new DAOSQLFactory());
-		
-/*OBTENEMOS LA CIUDAD ELEGIDA EN LA VENTANACARGA DE VIAJES*/		
-		CiudadDTO origen = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString());
-		CiudadDTO destino = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString());
-
-/*OBTENEMOS LAS HORAS TANDO DE SALIDA COMO DE LLEGADA, Y LA PARSEAMOS A TIPO DATE DE SQL*/
-		java.util.Date dateOrigen = ventanaCargarViaje.getDateChooserFechaOrigen().getDate();
-		java.sql.Date fechaSalida = new java.sql.Date(dateOrigen.getTime());
-		
-		java.util.Date dateDestino = ventanaCargarViaje.getDateChooserFechaDestino().getDate();
-		java.sql.Date fechaLlegada = new java.sql.Date(dateDestino.getTime());
-		
-		String horaSalida = ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
-		BigDecimal precio = new BigDecimal(ventanaCargarViaje.getTextPrecioViaje().getText());
-		
+//		ModeloCiudad modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
+//		ModeloViaje modeloViaje = new ModeloViaje(new DAOSQLFactory());
+//		
+///*OBTENEMOS LA CIUDAD ELEGIDA EN LA VENTANACARGA DE VIAJES*/		
+//		CiudadDTO origen = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString());
+//		CiudadDTO destino = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString());
+//
+///*OBTENEMOS LAS HORAS TANDO DE SALIDA COMO DE LLEGADA, Y LA PARSEAMOS A TIPO DATE DE SQL*/
+//		java.util.Date dateOrigen = ventanaCargarViaje.getDateChooserFechaOrigen().getDate();
+//		java.sql.Date fechaSalida = new java.sql.Date(dateOrigen.getTime());
+//		
+//		java.util.Date dateDestino = ventanaCargarViaje.getDateChooserFechaDestino().getDate();
+//		java.sql.Date fechaLlegada = new java.sql.Date(dateDestino.getTime());
+//		
+//		String horaSalida = ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
+//		BigDecimal precio = new BigDecimal(ventanaCargarViaje.getTextPrecioViaje().getText());
+//		
 //		ViajeDTO nuevoViaje = new ViajeDTO(0, origen, destino, fechaSalida, fechaLlegada, precio, horaSalida);
 
 		// VER POR QUE NO FUNCIONA LA CONSULTA SQL EN EL MODELO	
