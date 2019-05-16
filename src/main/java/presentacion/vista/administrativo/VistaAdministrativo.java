@@ -21,6 +21,7 @@ import javax.swing.JProgressBar;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 public class VistaAdministrativo{
 	
@@ -90,7 +91,7 @@ public class VistaAdministrativo{
 		itemAgregarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPasajes.add(itemAgregarPasaje);
 	}
-		
+
 	public PanelPasaje getPanelPasaje() {
 		return panelPasaje;
 	}

@@ -11,8 +11,13 @@ public class RolDTO {
 	}
 
 	public RolDTO() {
+		super();
 	}
 
+	public RolDTO(String nombre) {
+		this.nombre = nombre;
+	}
+	
 	public int getIdRol() {
 		return idRol;
 	}

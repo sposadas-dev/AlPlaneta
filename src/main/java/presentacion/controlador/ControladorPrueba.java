@@ -3,12 +3,7 @@ package presentacion.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import modelo.Cliente;
-import modelo.Login;
 import dto.ClienteDTO;
 import dto.LoginDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
@@ -68,7 +63,7 @@ public class ControladorPrueba implements ActionListener {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
 		this.ventanaCliente.mostrarVentana();
 		ControladorCliente controladorCliente = new ControladorCliente(ventanaCliente,cliente);
-		this.llenarTablaClientes();
+//		this.llenarTablaClientes();
 	}
 
 	private void llenarTablaClientes(){
