@@ -92,6 +92,12 @@ public class Controlador implements ActionListener {
 	private Administrativo modeloAdminisrativo;
 	private DAOSQLFactory daoSqlFactory;
 	
+	private String ciudadOrigenSelected;
+	private String ciudadDestinoSelected;
+	private String provinciaOrigenSelected;
+	private String provinciaDestinoSelected;
+	
+	
 	/*ADMINSITRADOR*/
 	private ModeloProvincia modeloProvincia;
 	
@@ -283,8 +289,11 @@ public class Controlador implements ActionListener {
 		
 //		llenarValoresEnCargaDeViaje();
 	}
-
-/*/////////////////////////////////////////////////////////////////////////////////////////////////////*/
+	
+	
+/*< METODOS DE VIAJE > - - -   - - - - - - - - - - - - - - - - - - - - - - - - - - --  */
+	
+/*< ORIGEN-DESTINOS >*/
 	private void llenarComboBoxPaises() {
 		List<PaisDTO> paises = new PaisDAOSQL().readAll();
 		String[] nombresPaises = new String[paises.size()];
@@ -349,7 +358,6 @@ public class Controlador implements ActionListener {
 			String provincia = provincias.get(i).getIdProvincia()+"-"+provincias.get(i).getNombre();
 			nombresProvincias [i] = provincia;
 		}	
-/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
 		this.ventanaCargarViaje.getComboBoxProvinciaDestino().setModel(new DefaultComboBoxModel(nombresProvincias));
 	}
 	
@@ -366,7 +374,6 @@ public class Controlador implements ActionListener {
 			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
 			nombresCiudades [i] = ciudad;
 		}	
-/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
 		this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresCiudades));
 		
 	}
@@ -384,25 +391,70 @@ public class Controlador implements ActionListener {
 			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
 			nombresCiudades [i] = ciudad;
 		}	
-/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
 		this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresCiudades));
 	}
 
-	
-//	private void obtenerCiudadesOrigen(MouseEvent cit) {
-//		String ciudad = ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString();
-//		llenarComboBoxCiudadesOrigen(Integer.parseInt(ciudad.substring(0)));
-//	}
-	
-//	private void obtenerCiudadesDestino(MouseEvent cit) {
-//		String ciudad = ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString();
-//		llenarComboBoxCiudadesDestino(Integer.parseInt(ciudad.substring(0)));
-//	}
-	
-	
-	
+/*< / ORIGEN-DESTINOS >*/
 
+/*< VALIDACION DE ALTA VIAJESS >*/	
+	
+	private boolean viajeValido(){
+		boolean ret = false;
+		
+		this.ciudadOrigenSelected = ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString();
+		this.ciudadDestinoSelected = ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString();
+		
+		if(!(ciudadOrigenSelected.equals(ciudadDestinoSelected)) &&
+			!(provinciaOrigenSelected.equals(provinciaDestinoSelected))){
+			System.out.println("El origen y el destino tienen que ser diferentes");
+			ret = true;
+		}
+		return ret;
+	}
+/*< / VALIDACION DE ALTA VIAJESS >*/	
+	
+	private void darAltaUnViajes(ActionEvent aV) {
+		if(viajeValido())
+			System.out.println("Dar de alta el viaje");
+		
+		
+		
+//		ModeloCiudad modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
+//		ModeloViaje modeloViaje = new ModeloViaje(new DAOSQLFactory());
+//		
+///*OBTENEMOS LA CIUDAD ELEGIDA EN LA VENTANACARGA DE VIAJES*/		
+//		CiudadDTO origen = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString());
+//		CiudadDTO destino = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString());
+//
+///*OBTENEMOS LAS HORAS TANDO DE SALIDA COMO DE LLEGADA, Y LA PARSEAMOS A TIPO DATE DE SQL*/
+//		java.util.Date dateOrigen = ventanaCargarViaje.getDateChooserFechaOrigen().getDate();
+//		java.sql.Date fechaSalida = new java.sql.Date(dateOrigen.getTime());
+//		
+//		java.util.Date dateDestino = ventanaCargarViaje.getDateChooserFechaDestino().getDate();
+//		java.sql.Date fechaLlegada = new java.sql.Date(dateDestino.getTime());
+//		
+//		String horaSalida = ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
+//		BigDecimal precio = new BigDecimal(ventanaCargarViaje.getTextPrecioViaje().getText());
+//		
+//		ViajeDTO nuevoViaje = new ViajeDTO(0, origen, destino, fechaSalida, fechaLlegada, precio, horaSalida);
+
+		// VER POR QUE NO FUNCIONA LA CONSULTA SQL EN EL MODELO	
+//		modeloViaje.agregarViaje(nuevoViaje);
+//
+//		ViajeDAOSQL sql = new ViajeDAOSQL();		
+//		sql.insert(nuevoViaje);
+		
+		llenarViajesEnTabla();
+		
+	}	
+	
+	/*- - - - - - - -  - - - - - - - < / METODOS DE VIAJE> - - - - - - - - - - - - - - - - --  */
 /*/////////////////////////////////////////////////////////////////////////////////////////////////////*/
+	
+	
+	
+	
+	
 	
 	private void llenarCiudadesEnCargaViajes() {
 /*INGRESAR VALOR DEFAULT A LOS COMBOBOX."Seleccione un pais - -*/
@@ -489,36 +541,6 @@ public class Controlador implements ActionListener {
 	
 	/*LABEL CANTIDAD DE PASAJEROS*/
 	
-	/*- - - - - - - -  - - - - - - - METODOS DE VIAJE - - - - - - - - - - - - - - - - --  */
-	private void darAltaUnViajes(ActionEvent aV) {
-//		ModeloCiudad modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
-//		ModeloViaje modeloViaje = new ModeloViaje(new DAOSQLFactory());
-//		
-///*OBTENEMOS LA CIUDAD ELEGIDA EN LA VENTANACARGA DE VIAJES*/		
-//		CiudadDTO origen = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString());
-//		CiudadDTO destino = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString());
-//
-///*OBTENEMOS LAS HORAS TANDO DE SALIDA COMO DE LLEGADA, Y LA PARSEAMOS A TIPO DATE DE SQL*/
-//		java.util.Date dateOrigen = ventanaCargarViaje.getDateChooserFechaOrigen().getDate();
-//		java.sql.Date fechaSalida = new java.sql.Date(dateOrigen.getTime());
-//		
-//		java.util.Date dateDestino = ventanaCargarViaje.getDateChooserFechaDestino().getDate();
-//		java.sql.Date fechaLlegada = new java.sql.Date(dateDestino.getTime());
-//		
-//		String horaSalida = ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
-//		BigDecimal precio = new BigDecimal(ventanaCargarViaje.getTextPrecioViaje().getText());
-//		
-//		ViajeDTO nuevoViaje = new ViajeDTO(0, origen, destino, fechaSalida, fechaLlegada, precio, horaSalida);
-
-		// VER POR QUE NO FUNCIONA LA CONSULTA SQL EN EL MODELO	
-//		modeloViaje.agregarViaje(nuevoViaje);
-//
-//		ViajeDAOSQL sql = new ViajeDAOSQL();		
-//		sql.insert(nuevoViaje);
-		
-		llenarViajesEnTabla();
-		
-	}
 	
 	private void llenarValoresEnCargaDeViaje() throws Exception{
 		
