@@ -162,7 +162,7 @@ public class Controlador implements ActionListener {
 		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaUnViajes(aV));
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(sV->seleccionarViaje(sV));
 /*//////////////////////////////////////////////////////////////////////////////////////////////////*/		
-/*/////////////////////////////////////// PRUEBA //////////////////////////////////////////////////*/
+/*/////////////////////////////////////// CARGAR VALORES EN PAIS-PROVINCIA-CIUDAD /////////////////////*/
 	
 		this.ventanaCargarViaje.getComboBoxPaisOrigen().addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt){obtenerProvincias_porPaisOrigen(evt);}});
@@ -189,96 +189,17 @@ public class Controlador implements ActionListener {
 		cliente = new Cliente(new DAOSQLFactory());
 	}
 
-	/*IMPLEMENTADO BRANCH V3.0*/	
-	private void logearse(ActionEvent log) {
-		String usuario = ventanaLogin.getTextUsuario().getText();
-		String password = new String(ventanaLogin.getPasswordField().getPassword());
-		
-		
-		LoginDAOSQL dao = new LoginDAOSQL();
-		usuarioLogeado = null;
-		try {
-			usuarioLogeado = dao.getByDatos(usuario, password);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if(usuarioLogeado==null){
-			this.ventanaLogin.getLblError().setVisible(true);
-			System.out.println("EL USUARIO O CONTRASENA ES INCORRECTO");
-		}
-		else{
-			System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogeado.getUsuario()+" "+usuarioLogeado.getContrasena()+" "+usuarioLogeado.getRol().getIdRol());
-			if(usuarioLogeado.getRol().getIdRol()==2){
-				 administrativoLogueado = obtenerAdministrativo(usuarioLogeado);
-				 mostrarVentanaAdministrativo();
-			}
-			else{
-				if(usuarioLogeado.getRol().getIdRol()==5){
-					 clienteLogueado = obtenerCliente(usuarioLogeado);
-					 mostrarVentanaCliente();
-				}
-			}
-		}
-		
-	}
-
-	private void mostrarVentanaCliente() {
-		System.out.println("Se Loguea como Cliente");
-		System.out.println(clienteLogueado.getNombre());
-		this.ventanaLogin.setVisible(false);
-		
-	}
-
-	/*MOSTRAR LA VENTANA PRINCIPAL DEL PARSONAL ADMINISTRATIVO*/
-	private void mostrarVentanaAdministrativo() {
-		System.out.println("Se Loguea Como Administrativo");
-		System.out.println(administrativoLogueado.getNombre());
-		this.ventanaLogin.setVisible(false);
-		
-
-	}
 	
-	private void mostrarVentanaAdministrador() {
-		System.out.println("Se Loguea Como Administrador");
-		System.out.println(administradorLogueado.getNombre());
-		this.ventanaLogin.setVisible(false);
-		
-
-	}
-/*-----------------------METODOS BUSCADOR POR ROLES ---------------------*/
-	private AdministrativoDTO obtenerAdministrativo(LoginDTO loginUsuario) {
-		AdministrativoDAOSQL dao = new AdministrativoDAOSQL();
-		return dao.getByLoginId(loginUsuario.getIdDatosLogin());
-	}
-	
-	private AdministradorDTO obtenerAdministrador(LoginDTO loginUsuario) {
-		AdministradorDAOSQL dao = new AdministradorDAOSQL();		
-		return dao.getByLoginId(loginUsuario.getIdDatosLogin());
-	}
-	
-	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {
-		ClienteDAOSQL sql = new ClienteDAOSQL();
-		return sql.getByLoginId(loginUsuario.getIdDatosLogin());
-	}
-	
-//	private AdministrativoDTO busquedaRolAdministrativo(String user, String password) {
-//		return modeloAdminisrativo.obtenerAdministrativoDatosLogin(user,password);
-//	}
-/*FIN IMPLEMENTACION BRANCH V3.0*/
-	
-	
-	
-	private void salirVentanaCliente(ActionEvent bc) {
-		this.ventanaCliente.cerrarVentana();
-	}
-
 	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
 	public void inicializar() throws Exception{	
 //		this.ventanaLogin.setVisible(true);
+	
 		llenarCiudadesEnCargaViajes();
+		
 		this.ventanaCargarViaje.setVisible(true);
-//		this.llenarTablaClientes();
+
+		this.llenarTablaClientes();
+
 //		this.vista.show();
 				
 //		mostrarVentanaReserva();  // Ventana creacion de pasajes.
@@ -451,6 +372,107 @@ public class Controlador implements ActionListener {
 	/*- - - - - - - -  - - - - - - - < / METODOS DE VIAJE> - - - - - - - - - - - - - - - - --  */
 /*/////////////////////////////////////////////////////////////////////////////////////////////////////*/
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*IMPLEMENTADO BRANCH V3.0*/	
+	private void logearse(ActionEvent log) {
+		String usuario = ventanaLogin.getTextUsuario().getText();
+		String password = new String(ventanaLogin.getPasswordField().getPassword());
+		
+		
+		LoginDAOSQL dao = new LoginDAOSQL();
+		usuarioLogeado = null;
+		try {
+			usuarioLogeado = dao.getByDatos(usuario, password);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(usuarioLogeado==null){
+			this.ventanaLogin.getLblError().setVisible(true);
+			System.out.println("EL USUARIO O CONTRASENA ES INCORRECTO");
+		}
+		else{
+			System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogeado.getUsuario()+" "+usuarioLogeado.getContrasena()+" "+usuarioLogeado.getRol().getIdRol());
+			if(usuarioLogeado.getRol().getIdRol()==2){
+				 administrativoLogueado = obtenerAdministrativo(usuarioLogeado);
+				 mostrarVentanaAdministrativo();
+			}
+			else{
+				if(usuarioLogeado.getRol().getIdRol()==5){
+					 clienteLogueado = obtenerCliente(usuarioLogeado);
+					 mostrarVentanaCliente();
+				}
+			}
+		}
+		
+	}
+
+	private void mostrarVentanaCliente() {
+		System.out.println("Se Loguea como Cliente");
+		System.out.println(clienteLogueado.getNombre());
+		this.ventanaLogin.setVisible(false);
+		
+	}
+
+	/*MOSTRAR LA VENTANA PRINCIPAL DEL PARSONAL ADMINISTRATIVO*/
+	private void mostrarVentanaAdministrativo() {
+		System.out.println("Se Loguea Como Administrativo");
+		System.out.println(administrativoLogueado.getNombre());
+		this.ventanaLogin.setVisible(false);
+		
+
+	}
+	
+	private void mostrarVentanaAdministrador() {
+		System.out.println("Se Loguea Como Administrador");
+		System.out.println(administradorLogueado.getNombre());
+		this.ventanaLogin.setVisible(false);
+		
+
+	}
+/*-----------------------METODOS BUSCADOR POR ROLES ---------------------*/
+	private AdministrativoDTO obtenerAdministrativo(LoginDTO loginUsuario) {
+		AdministrativoDAOSQL dao = new AdministrativoDAOSQL();
+		return dao.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
+	private AdministradorDTO obtenerAdministrador(LoginDTO loginUsuario) {
+		AdministradorDAOSQL dao = new AdministradorDAOSQL();		
+		return dao.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
+	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {
+		ClienteDAOSQL sql = new ClienteDAOSQL();
+		return sql.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
+//	private AdministrativoDTO busquedaRolAdministrativo(String user, String password) {
+//		return modeloAdminisrativo.obtenerAdministrativoDatosLogin(user,password);
+//	}
+/*FIN IMPLEMENTACION BRANCH V3.0*/
+	
+	
+	
+	private void salirVentanaCliente(ActionEvent bc) {
+		this.ventanaCliente.cerrarVentana();
+	}
+
 	
 	
 	

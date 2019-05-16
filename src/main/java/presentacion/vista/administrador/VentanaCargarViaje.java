@@ -97,14 +97,6 @@ public class VentanaCargarViaje extends JFrame {
 		comboBoxCiudadOrigen.setBounds(250, 180, 113, 20);
 		contentPane.add(comboBoxCiudadOrigen);
 		
-		JLabel lblOrigen = new JLabel("Ciudad Origen:");
-		lblOrigen.setBounds(13, 11, 77, 14);
-		contentPane.add(lblOrigen);
-		
-		JLabel lblDestino = new JLabel("Ciudad Destino :");
-		lblDestino.setBounds(295, 11, 68, 14);
-		contentPane.add(lblDestino);
-		
 		comboBoxCiudadDestino = new JComboBox();
 		comboBoxCiudadDestino.setBounds(250, 243, 113, 20);
 		contentPane.add(comboBoxCiudadDestino);
@@ -173,6 +165,14 @@ public class VentanaCargarViaje extends JFrame {
 		btnSeleccionDestino = new JButton("Seleccion Destino");
 		btnSeleccionDestino.setBounds(373, 240, 188, 23);
 		contentPane.add(btnSeleccionDestino);
+		
+		JLabel lblProvinciaDestino = new JLabel("Provincia Destino");
+		lblProvinciaDestino.setBounds(131, 217, 98, 14);
+		contentPane.add(lblProvinciaDestino);
+		
+		JLabel lblCiudadDestino = new JLabel("Ciudad Destino");
+		lblCiudadDestino.setBounds(250, 218, 98, 14);
+		contentPane.add(lblCiudadDestino);
 		
 		inicializar();
 		this.setVisible(false);
