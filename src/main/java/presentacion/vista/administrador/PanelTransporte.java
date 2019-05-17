@@ -40,17 +40,17 @@ public class PanelTransporte extends JPanel {
 		setLayout(null);
 
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(32, 95, 1302, 234);
+		spPasajeros.setBounds(32, 96, 1302, 483);
 		add(spPasajeros);
 		tablaTransportes = new JTable(modelTransportes);
 		spPasajeros.setViewportView(tablaTransportes);
 		
 		btnRecargarTabla = new JButton("Recargar");
-		btnRecargarTabla.setBounds(421, 495, 165, 54);
+		btnRecargarTabla.setBounds(422, 608, 165, 54);
 		add(btnRecargarTabla);
 		
 		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.setBounds(661, 495, 136, 54);
+		btnConfirmar.setBounds(640, 608, 136, 54);
 		add(btnConfirmar);
 		
 		JPanel panelClientes = new JPanel();
@@ -60,7 +60,7 @@ public class PanelTransporte extends JPanel {
 		panelClientes.setLayout(null);
 		
 		lblTransportes = new JLabel("Transportes");
-		lblTransportes.setBounds(138, 0, 219, 65);
+		lblTransportes.setBounds(551, 0, 219, 65);
 		lblTransportes.setForeground(Color.WHITE);
 		lblTransportes.setFont(new Font("Tahoma", Font.BOLD, 36));
 		panelClientes.add(lblTransportes);

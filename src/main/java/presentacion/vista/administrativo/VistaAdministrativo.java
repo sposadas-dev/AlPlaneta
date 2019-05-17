@@ -90,6 +90,14 @@ public class VistaAdministrativo{
 		itemAgregarPasaje = new JMenuItem("Agregar pasaje");
 		itemAgregarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPasajes.add(itemAgregarPasaje);
+		
+		JMenuItem mntmCancelarPasaje = new JMenuItem("Cancelar pasaje");
+		mntmCancelarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(mntmCancelarPasaje);
+		
+		JMenuItem menuVisualizarPasajes = new JMenuItem("Visualizar pasajes");
+		menuVisualizarPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(menuVisualizarPasajes);
 	}
 
 	public PanelPasaje getPanelPasaje() {

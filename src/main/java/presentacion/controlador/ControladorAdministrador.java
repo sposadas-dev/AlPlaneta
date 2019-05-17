@@ -2,29 +2,24 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-
 import modelo.Administrativo;
 import modelo.Login;
 import modelo.Rol;
 import modelo.Transporte;
 import dto.AdministrativoDTO;
 import dto.LoginDTO;
-import dto.MedioContactoDTO;
 import dto.RolDTO;
 import dto.TransporteDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
-import presentacion.vista.administrador.VentanaAgregarTransporte;
 import presentacion.vista.administrador.VistaAdministrador;
 
 public class ControladorAdministrador {
 	
 	private VistaAdministrador vistaAdministrador;
 	private VentanaAgregarEmpleado ventanaAgregarEmpleado;
-	private VentanaAgregarTransporte ventanaAgregarTransporte;
 	private List<TransporteDTO> transportes_en_tabla;
 	private Transporte transporte;
 	private ControladorTransporte controladorTransporte;
@@ -34,31 +29,35 @@ public class ControladorAdministrador {
 	public ControladorAdministrador(VistaAdministrador vistaAdministrador){
 		this.vistaAdministrador = vistaAdministrador;
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
-		this.ventanaAgregarTransporte = VentanaAgregarTransporte.getInstance();
 		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
 		
 		this.vistaAdministrador.getItemAgregarTransporte().addActionListener(ac->agregarPanelTransporte(ac));
+		this.vistaAdministrador.getItemVisualizarTransportes().addActionListener(vt->visualizarTransportes(vt));
+
 		this.vistaAdministrador.getItemEditarTransporte().addActionListener(et->editarTransporte(et));
-		this.vistaAdministrador.getItemEliminarTransporte().addActionListener(et->eliminarTransporte(et));
+		this.vistaAdministrador.getItemEliminarTransporte().addActionListener(dt->eliminarTransporte(dt));
 		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
 		
 		this.transporte = new Transporte(new DAOSQLFactory());
-		this.login= new Login(new DAOSQLFactory());
+		this.login = new Login(new DAOSQLFactory());
 		this.controladorTransporte = new ControladorTransporte();
-		
 	}
+	
 
 	public void inicializar(){
-		this.vistaAdministrador.mostrarVentana(true);
+		this.vistaAdministrador.mostrarVentana();
+		this.llenarTablaTransportes();
 	}
 	
 	/*Mostrar la ventana para agregar un empleado y carga el comboBox de roles*/
 	private void mostrarVentanaAgregarEmpleado(ActionEvent ac) {
 		cargarcomboBoxRoles();
 		this.ventanaAgregarEmpleado.mostrarVentana(true);
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+
 	}
 	
 	/*Método para agregar a un empleado según el item que selecciona en el comboBox*/
@@ -97,7 +96,6 @@ public class ControladorAdministrador {
 	/*Carga del comboBox de roles*/
 	private void cargarcomboBoxRoles(){
 		ventanaAgregarEmpleado.getComboBoxRoles().removeAllItems();
-		ventanaAgregarEmpleado.getComboBoxRoles().addItem(new RolDTO(""));
 		Rol rol = new Rol(new DAOSQLFactory());
 		List<RolDTO> rolesDTO = rol.obtenerRoles();
 		String[] roles = new String[rolesDTO.size()-1]; //TODO: Puse -1 porque no se deberia cargar el rol "cliente" //VER
@@ -108,31 +106,34 @@ public class ControladorAdministrador {
 		this.ventanaAgregarEmpleado.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
 	}
 	
+	private void visualizarTransportes(ActionEvent vt) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
+		this.llenarTablaTransportes();
+	}
 	/*Agrega el panel de transporte en la vistaPrinciapal del Administrador*/
 	private void agregarPanelTransporte(ActionEvent ac) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
-		controladorTransporte.inicializar();
-		this.llenarTablaTransportes();
+		controladorTransporte.mostrarVentanaAgregarTransporte();
 	}
 	
 	private void editarTransporte(ActionEvent et) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
-		this.llenarTablaTransportes();
 		int filaSeleccionada = this.vistaAdministrador.getPanelTransporte().getTablaTransportes().getSelectedRow();
 		if (filaSeleccionada != -1){
-//			this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
 			controladorTransporte.editarTransporte(filaSeleccionada);
+			llenarTablaTransportes();
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
-	private void eliminarTransporte(ActionEvent et) {
+	private void eliminarTransporte(ActionEvent dt) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
 		int filaSeleccionada = this.vistaAdministrador.getPanelTransporte().getTablaTransportes().getSelectedRow();
 		if (filaSeleccionada != -1){
 			controladorTransporte.eliminarTransporte(filaSeleccionada);
-//			this.llenarTabla();
+			llenarTablaTransportes();
+		
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
@@ -141,8 +142,8 @@ public class ControladorAdministrador {
 	public void recargarTabla(ActionEvent r){
 		llenarTablaTransportes();
 	}
-	
-	private void llenarTablaTransportes(){
+
+	public void llenarTablaTransportes(){
 		this.vistaAdministrador.getPanelTransporte().getModelClientes().setRowCount(0); //Para vaciar la tabla
 		this.vistaAdministrador.getPanelTransporte().getModelClientes().setColumnCount(0);
 		this.vistaAdministrador.getPanelTransporte().getModelClientes().setColumnIdentifiers(this.vistaAdministrador.getPanelTransporte().getNombreColumnasClientes());

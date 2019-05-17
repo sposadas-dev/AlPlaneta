@@ -6,16 +6,24 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
+import persistencia.conexion.Conexion;
 import presentacion.vista.administrativo.PanelCliente;
+
 import javax.swing.JLabel;
+
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class VistaAdministrador extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private PanelTransporte panelTransporte;
 	private JMenuItem itemAgregarCuenta;
+	private JMenuItem itemVisualizarTransportes ;
 	private JMenuItem itemAgregarTransporte;
 	private JMenuItem itemEditarTransporte;
 	private JMenuItem itemEliminarTransporte;
@@ -34,9 +42,11 @@ public class VistaAdministrador extends JFrame {
 		super();
 		setTitle("Administrador");
 		setExtendedState(MAXIMIZED_BOTH);
-		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 504, 291);
+		setLocationRelativeTo(null);
+		setResizable(false);
+	
+		setBounds(0, 0, 1366, 730);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,6 +75,10 @@ public class VistaAdministrador extends JFrame {
 		JMenu menuTransporte = new JMenu("Transportes");
 		menuTransporte.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuTransporte);
+		
+		itemVisualizarTransportes = new JMenuItem("Visualizar transportes");
+		itemVisualizarTransportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuTransporte.add(itemVisualizarTransportes);
 		
 		itemAgregarTransporte = new JMenuItem("Agregar transporte");
 		itemAgregarTransporte.setFont(new Font("Segoe UI", Font.PLAIN, 16));
@@ -96,7 +110,25 @@ public class VistaAdministrador extends JFrame {
 		
 		this.setVisible(false);
 	}
-
+	
+	public void mostrarVentana(){
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter(){
+			@Override
+		    public void windowClosing(WindowEvent e) {
+		        int confirm = JOptionPane.showOptionDialog(
+		             null, "¿Estás seguro que quieres salir del programa?", 
+		             "Salir", JOptionPane.YES_NO_OPTION,
+		             JOptionPane.QUESTION_MESSAGE, null, null, null);
+		        if (confirm == 0) {
+		        	Conexion.getConexion().cerrarConexion();
+		           System.exit(0);
+		        }
+		    }
+		});
+		setVisible(true);
+	}
+	
 	public JMenuItem getItemEditarTransporte() {
 		return itemEditarTransporte;
 	}
@@ -112,6 +144,10 @@ public class VistaAdministrador extends JFrame {
 	public JMenuItem getItemAgregarCuenta() {
 		return itemAgregarCuenta;
 	}
+
+	public JMenuItem getItemVisualizarTransportes() {
+		return itemVisualizarTransportes;
+	}
 	
 	public JMenuItem getItemAgregarTransporte() {
 		return itemAgregarTransporte;
@@ -120,5 +156,4 @@ public class VistaAdministrador extends JFrame {
 	public JMenuItem getItemEliminarTransporte() {
 		return itemEliminarTransporte;
 	}
-
 }

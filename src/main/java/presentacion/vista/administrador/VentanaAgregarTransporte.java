@@ -46,7 +46,7 @@ public class VentanaAgregarTransporte extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(96, 163, 188));
-		panel.setBounds(0, 0, 407, 53);
+		panel.setBounds(0, 0, 417, 53);
 		contentPane.add(panel);
 		
 		JLabel lblAgregarTransporte = new JLabel("Agregar transporte");

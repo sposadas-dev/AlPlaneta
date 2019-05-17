@@ -20,6 +20,10 @@ public class VentanaEditarTransporte extends JFrame {
 	private JButton btnEditar;
 	private static VentanaEditarTransporte INSTANCE;
 
+	public void setTxtNombreTransporte(JTextField txtNombreTransporte) {
+		this.txtNombreTransporte = txtNombreTransporte;
+	}
+
 	public static VentanaEditarTransporte getInstance(){
 		if(INSTANCE == null)
 			return new VentanaEditarTransporte();

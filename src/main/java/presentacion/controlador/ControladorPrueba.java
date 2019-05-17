@@ -3,9 +3,12 @@ package presentacion.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+
 import modelo.Cliente;
+import modelo.Pasaje;
 import dto.ClienteDTO;
 import dto.LoginDTO;
+import dto.PasajeDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.VentanaLogin;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
@@ -19,8 +22,9 @@ public class ControladorPrueba implements ActionListener {
 	private VentanaVisualizarClientes ventanaVisualizarCliente;
 	
 	private List<ClienteDTO> clientes_en_tabla;
-	
-	private Cliente cliente;	
+	private List<PasajeDTO> pasajes_en_tabla;
+	private Cliente cliente;
+	private Pasaje pasaje;
 	
 	public ControladorPrueba(VistaAdministrativo vista) {
 		this.vista = vista;
@@ -34,6 +38,12 @@ public class ControladorPrueba implements ActionListener {
 		this.vista.getPanelCliente().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 	
 		this.cliente = new Cliente(new DAOSQLFactory());
+		this.pasaje = new Pasaje(new DAOSQLFactory());
+
+	}
+	
+	public ControladorPrueba(){
+		super();
 	}
 	
 	private void recargarTabla(ActionEvent r) {
@@ -83,6 +93,34 @@ public class ControladorPrueba implements ActionListener {
 							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()	
 			};
 			this.vista.getPanelCliente().getModelClientes().addRow(fila);
+		}		
+	}
+	
+	private void llenarTablaPasajes(){
+		this.vista.getPanelPasaje().getModelClientes().setRowCount(0); //Para vaciar la tabla
+		this.vista.getPanelPasaje().getModelClientes().setColumnCount(0);
+		this.vista.getPanelPasaje().getModelClientes().setColumnIdentifiers(this.vista.getPanelPasaje().getNombreColumnasClientes());
+
+
+		this.pasajes_en_tabla = pasaje.obtenerPasajes();
+			
+		for (int i = 0; i < this.pasajes_en_tabla.size(); i++)
+		{
+			Object[] fila = {
+							this.pasajes_en_tabla.get(i).getCliente().getDni(),
+							this.pasajes_en_tabla.get(i).getCliente().getNombre(),
+							this.pasajes_en_tabla.get(i).getCliente().getApellido(),
+							this.pasajes_en_tabla.get(i).getIdPasaje(),
+							this.pasajes_en_tabla.get(i).getViaje().getOrigenViaje().getNombre(),
+							this.pasajes_en_tabla.get(i).getViaje().getDestinoViaje().getNombre(),
+							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
+							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
+							this.pasajes_en_tabla.get(i).getViaje().getPrecio(),
+							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
+							this.pasajes_en_tabla.get(i).getCantidadPasajeros(),
+							this.pasajes_en_tabla.get(i).getEstadoDelPasaje().getNombre()
+			};
+							this.vista.getPanelPasaje().getModelClientes().addRow(fila);
 		}		
 	}
 

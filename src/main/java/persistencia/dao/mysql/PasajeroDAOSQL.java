@@ -44,7 +44,7 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 	}
 
 	@Override
-	public boolean delete(PasajeroDTO pasajeroDelete) throws Exception {
+	public boolean delete(PasajeroDTO pasajeroDelete){
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
@@ -86,7 +86,7 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 	}
 
 	@Override
-	public boolean update(PasajeroDTO pasajeroUpdate) throws Exception {
+	public boolean update(PasajeroDTO pasajeroUpdate) {
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
@@ -110,7 +110,7 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 	}
 
 	@Override
-	public PasajeroDTO browse(int idPasajero) throws Exception {
+	public PasajeroDTO browse(int idPasajero) {
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
