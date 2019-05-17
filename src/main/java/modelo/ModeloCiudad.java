@@ -14,23 +14,23 @@ public class ModeloCiudad {
 		this.ciudad = metodo_persistencia.createCiudadDAO();
 	}
 	
-	public void agregarCiudad(CiudadDTO ciudad) throws Exception{
+	public void agregarCiudad(CiudadDTO ciudad){
 		this.ciudad.insert(ciudad);
 	}
 	
-	public List<CiudadDTO> obtenerCiudades() throws Exception{
+	public List<CiudadDTO> obtenerCiudades(){
 		return this.ciudad.readAll();		
 	}
 
-	public void borrarCiudad(CiudadDTO ciudadDelete) throws Exception {
+	public void borrarCiudad(CiudadDTO ciudadDelete){
 		this.ciudad.delete(ciudadDelete);
 	}
 
-	public void editarCiudad(CiudadDTO ciudadUpdate) throws Exception {
+	public void editarCiudad(CiudadDTO ciudadUpdate){
 		this.ciudad.update(ciudadUpdate);
 	}
-	
-	public CiudadDTO getCiudadByName(String nombreCiudad){
-		return this.ciudad.getCiudadByNombre(nombreCiudad);
+
+	public List<CiudadDTO> obtenerCiudadPorIdProvincia(int idProvincia) {
+		return this.ciudad.readAllByIdprovincia(idProvincia);
 	}
 }

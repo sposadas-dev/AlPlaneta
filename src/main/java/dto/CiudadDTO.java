@@ -3,11 +3,13 @@ package dto;
 public class CiudadDTO {
 	private int idCiudad;
 	private String nombre;
+	private ProvinciaDTO provincia;
 	
-	public CiudadDTO(int idCiudad, String nombre) {
+	public CiudadDTO(int idCiudad, String nombre, ProvinciaDTO provincia) {
 		super();
 		this.idCiudad = idCiudad;
 		this.nombre = nombre;
+		this.provincia = provincia;
 	}
 
 	public CiudadDTO() {
@@ -29,7 +31,13 @@ public class CiudadDTO {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	
 
+	public ProvinciaDTO getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(ProvinciaDTO provincia) {
+		this.provincia = provincia;
+	}
 	
 }

@@ -7,16 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.CiudadDTO;
+import dto.ProvinciaDTO;
 import dto.TransporteDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.CiudadDAO;
 
 public class CiudadDAOSQL implements CiudadDAO {
-	private static final String insert = "INSERT INTO ciudad" + "(idCiudad, nombre)" + "VALUE(?,?)";
+	private static final String insert = "INSERT INTO ciudad" + "(idCiudad, ciudadNombre, idProvincia)" + "VALUE(?,?,?)";
 	private static final String readall = "SELECT * FROM ciudad";
 	private static final String delete = "DELETE FROM ciudad WHERE idCiudad = ?";
-	private static final String update = "UPDATE ciudad SET nombre = ? WHERE idCiudad = ?";
+	private static final String update = "UPDATE ciudad SET ciudadNombre = ? WHERE idCiudad = ?";
 	private static final String browse = "SELECT * FROM ciudad WHERE idCiudad = ?";
+	private static final String browseLogin = "SELECT * FROM ciudad WHERE idProvincia = ?";
 
 
 	@Override
@@ -27,6 +29,7 @@ public class CiudadDAOSQL implements CiudadDAO {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
 			statement.setInt(1, ciudad.getIdCiudad());
 			statement.setString(2, ciudad.getNombre());
+			statement.setInt(3, ciudad.getProvincia().getIdProvincia());
 			if(statement.executeUpdate() > 0) 
 				return true;
 		} 
@@ -42,11 +45,17 @@ public class CiudadDAOSQL implements CiudadDAO {
 		ResultSet resultSet; //Guarda el resultado de la query
 		ArrayList<CiudadDTO> ciudades = new ArrayList<CiudadDTO>();
 		Conexion conexion = Conexion.getConexion();
+		
+		ProvinciaDAOSQL dao = new ProvinciaDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 			while(resultSet.next()){
-				ciudades.add(new CiudadDTO(resultSet.getInt("idCiudad"),resultSet.getString("ciudadNombre")));
+				ciudades.add(new CiudadDTO(
+						resultSet.getInt("idCiudad"),
+						resultSet.getString("ciudadNombre"),
+						dao.getProvinciaById(resultSet.getInt("idProvincia"))
+						));
 			}
 		} 
 		catch (SQLException e) {
@@ -94,45 +103,23 @@ public class CiudadDAOSQL implements CiudadDAO {
 	}
 	
 	@Override
-	public CiudadDTO getCiudadByNombre(String nombre) {
-		PreparedStatement statement;
-		ResultSet resultSet;
-		ArrayList<CiudadDTO> ciudades= new ArrayList<CiudadDTO>();
-		Conexion conexion = Conexion.getConexion();
-		try {
-			statement = conexion.getSQLConexion().prepareStatement(readall);
-			resultSet = statement.executeQuery();
-			while(resultSet.next()){
-				ciudades.add(new CiudadDTO(resultSet.getInt("idCiudad"),resultSet.getString("nombre")));
-			}
-		} 
-		catch (SQLException e)	{
-			e.printStackTrace();
-		}
-		CiudadDTO ret = null;
-		
-		for(CiudadDTO ciudad: ciudades){
-			if(ciudad.getNombre().equals(nombre))
-				ret = ciudad;
-		}
-		return ret;
-	}
-	
-	@Override
 	public CiudadDTO getCiudadById(int idCiudad) {
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
 		CiudadDTO ciudad;
+		ProvinciaDAOSQL dao = new ProvinciaDAOSQL();
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browse);
 			statement.setInt(1, idCiudad);
 			resultSet = statement.executeQuery();
 				
 			if(resultSet.next()){
-				ciudad = new CiudadDTO(resultSet.getInt("idCiudad"),
-												resultSet.getString("ciudadNombre")
-											  );
+				ciudad = new CiudadDTO(
+						resultSet.getInt("idCiudad"),
+						resultSet.getString("ciudadNombre"),
+						dao.getProvinciaById(resultSet.getInt("idProvincia"))
+						);
 				return ciudad;
 			}
 				
@@ -142,11 +129,44 @@ public class CiudadDAOSQL implements CiudadDAO {
 		return null;
 	}
 		
+
+
+	@Override
+	public List<CiudadDTO> readAllByIdprovincia(int idProvincia) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		ArrayList<CiudadDTO> ciudades = new ArrayList<CiudadDTO>();
+		Conexion conexion = Conexion.getConexion();
+		ProvinciaDAOSQL dao = new ProvinciaDAOSQL();
+		
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(browseLogin);
+			statement.setInt(1, idProvincia);
+			resultSet = statement.executeQuery();
+			
+			while(resultSet.next()){
+				ciudades.add(new CiudadDTO(
+						resultSet.getInt("idCiudad"),
+						resultSet.getString("ciudadNombre"),
+						dao.getProvinciaById(resultSet.getInt("idProvincia"))));
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ciudades;
+	}
 	public static void main(String[] args) {
 		CiudadDAOSQL adm = new CiudadDAOSQL();
 		List<CiudadDTO> administratives = adm.readAll();
-		
-		for(CiudadDTO ad: administratives)
-			System.out.println(ad.getNombre());
+
+		int cont = 0; 
+		for(CiudadDTO ad: administratives) {
+			//System.out.println(ad.getNombre());
+			cont++;
 		}
+		//System.out.println("cantCiudades: "+cont);
+		for(CiudadDTO c : adm.readAllByIdprovincia(1818))
+			System.out.println(c.getNombre());
+	}
 }
