@@ -15,13 +15,13 @@ public class Main {
 //		ControladorPrueba controlador = new ControladorPrueba(vista);
 //		controlador.inicializar();		
 
-//		VistaAdministrador administrador = new VistaAdministrador();
-//		ControladorAdministrador controlador = new ControladorAdministrador(administrador);
-//		controlador.inicializar();
+		VistaAdministrador administrador = new VistaAdministrador();
+		ControladorAdministrador controlador = new ControladorAdministrador(administrador);
+		controlador.inicializar();
 		
-		Login login = new Login(new DAOSQLFactory());
-		VentanaLogin ventanaLogin = new VentanaLogin();
-		ControladorLogin controladorLogin = new ControladorLogin(ventanaLogin, login);
-		controladorLogin.iniciar();
+//		Login login = new Login(new DAOSQLFactory());
+//		VentanaLogin ventanaLogin = new VentanaLogin();
+//		ControladorLogin controladorLogin = new ControladorLogin(ventanaLogin, login);
+//		controladorLogin.iniciar();
 	}
 }
