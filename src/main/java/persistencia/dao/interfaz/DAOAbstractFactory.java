@@ -29,6 +29,8 @@ public interface DAOAbstractFactory {
 	public ProvinciaDAO createProvinciaDAO();
 
 	public PaisDAO createPaisDAO();
+
+	public FormaPagoDAO createFormaPagoDAO();
 	
 //	public CoordinadorDAO createCoordinadorDAO();
 

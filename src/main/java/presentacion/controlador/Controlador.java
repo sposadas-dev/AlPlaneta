@@ -55,7 +55,7 @@ import presentacion.vista.Vista;
 import presentacion.vista.administrador.VentanaCargarViaje;
 import presentacion.vista.administrador.VistaAdministrador;
 import presentacion.vista.administrativo.VentanaCargaPasajero;
-import presentacion.vista.administrativo.VentanaFormaPago;
+import presentacion.vista.administrativo.VentanaPago;
 import presentacion.vista.administrativo.VentanaPasajero;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VentanaTablaViajes;
@@ -68,7 +68,7 @@ public class Controlador implements ActionListener {
 	private Cliente cliente;
 	private MedioContacto medioContacto;
 	private VentanaReserva ventanaReserva;
-	private VentanaFormaPago ventanaFormaDePagos;
+	private VentanaPago ventanaFormaDePagos;
 //	private VentanaPagoTarjeta ventanaPagoTarjeta;
 //	private VentanaPagoEfectivo ventanaPagoEfectivo;
 	private VentanaCargaPasajero ventanaCargaPasajero;
@@ -136,7 +136,7 @@ public class Controlador implements ActionListener {
 		this.vista.getBtnAgregarReserva().addActionListener(p->agregarPasaje(p));
 		
 		this.ventanaReserva = VentanaReserva.getInstance();
-		this.ventanaFormaDePagos = VentanaFormaPago.getInstance();
+		this.ventanaFormaDePagos = VentanaPago.getInstance();
 //		this.ventanaPagoTarjeta = VentanaPagoTarjeta.getInstance();
 //		this.ventanaPagoEfectivo = VentanaPagoEfectivo.getInstance();
 		this.ventanaPasajero = VentanaPasajero.getInstance();
@@ -192,7 +192,7 @@ public class Controlador implements ActionListener {
 		this.ventanaLogin.getBtnLogin().addActionListener(log->logearse(log));
 		
 		this.ventanaReserva.getBtnReservar().addActionListener(reserv->darDeAltaUnPasaje(reserv));
-		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->mostrarVentanaCargaDePasajeros(cP));
+//		this.ventanaReserva.getBtnCargaPasajeros().addActionListener(cP->mostrarVentanaCargaDePasajeros(cP));
 		this.ventanaReserva.getBtnIrViajes().addActionListener(iV->mostrarViajesDisponibles(iV));
 		this.ventanaReserva.getBtnRealizarPago().addActionListener(rP->realizarPago(rP));
 //		this.ventanaReserva.getBtnReservar().addActionListener(gP->generarPasaje(gP));
@@ -200,13 +200,13 @@ public class Controlador implements ActionListener {
 		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
 //		this.ventanaPagoTarjeta.getBtnEnviar().addActionListener(rP->generarPasajeTarjeta(rP));
 		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
-		this.ventanaCliente.getBtnRegistrar().addActionListener(ac->altaCliente(ac));
+//		this.ventanaCliente.getBtnRegistrar().addActionListener(ac->altaCliente(ac));
 		this.ventanaCliente.getBtnCancelar().addActionListener(bc->salirVentanaCliente(bc));
 		
-		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->mostrarVentanaAltaDePasajeros(aP));
-		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(aP->altaPasajerosDeUnViaje(aP));
-		
-		this.ventanaPasajero.getBtnCargarDatos().addActionListener(aP->darDeAltaUnPasajero(aP));
+//		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(aP->mostrarVentanaAltaDePasajeros(aP));
+//		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(aP->altaPasajerosDeUnViaje(aP));
+//		
+//		this.ventanaPasajero.getBtnCargarDatos().addActionListener(aP->darDeAltaUnPasajero(aP));
 		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaViaje(aV));
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(sV->seleccionarViaje(sV));
 /*//////////////////////////////////////////////////////////////////////////////////////////////////*/		
@@ -782,7 +782,7 @@ public class Controlador implements ActionListener {
 	
 	/*- - - - - - - -  - - - - - - - METODO DE CLIENTE - - - - - - - - - - - - - - - - --  */	
 
-	private void altaCliente(ActionEvent client) {
+//	private void altaCliente(ActionEvent client) {
 //		if(validarCampos()){	
 //		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
 //		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
@@ -1274,7 +1274,7 @@ public class Controlador implements ActionListener {
 	}
 
 	private void mostrarVentanaReserva(){
-		llenarValoresEnReserva();
+//		llenarValoresEnReserva();
 		this.ventanaReserva.setVisible(true);
 	}
 
