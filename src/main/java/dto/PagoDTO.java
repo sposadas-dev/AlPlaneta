@@ -5,7 +5,7 @@ import java.sql.Date;
 
 public class PagoDTO {
 	private int idPago;
-	private FormaPagoDTO idFomaPago;
+	private FormaPagoDTO idFormaPago;
 	private Date fechaPago;
 	private BigDecimal monto;
 
@@ -13,7 +13,7 @@ public class PagoDTO {
 		this.idPago = idPago;
 		this.fechaPago = fechaPago;
 		this.monto = monto;
-		this.idFomaPago = pago;
+		this.idFormaPago = pago;
 	}
 
 
@@ -29,14 +29,15 @@ public class PagoDTO {
 		this.idPago = idPago;
 	}
 
-	public FormaPagoDTO getIdFomaPago() {
-		return idFomaPago;
+	public FormaPagoDTO getIdFormaPago() {
+		return idFormaPago;
 	}
 
-	public void setIdFomaPago(FormaPagoDTO idFomaPago) {
-		this.idFomaPago = idFomaPago;
+	public void setIdFormaPago(FormaPagoDTO idFormaPago) {
+		this.idFormaPago = idFormaPago;
 	}
-	
+
+
 	public Date getFechaPago() {
 		return fechaPago;
 	}

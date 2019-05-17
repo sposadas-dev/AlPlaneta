@@ -6,8 +6,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
+import javax.swing.DefaultComboBoxModel;
 import modelo.Cliente;
+import modelo.FormaPago;
 import modelo.ModeloViaje;
 import modelo.Pago;
 import modelo.Pasaje;
@@ -15,6 +16,7 @@ import modelo.Pasajero;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EstadoPasajeDTO;
+import dto.FormaPagoDTO;
 import dto.LoginDTO;
 import dto.PagoDTO;
 import dto.PasajeDTO;
@@ -191,6 +193,7 @@ public class ControladorPasaje {
 	
 	private void confirmarPasajeros(ActionEvent ap) {
 		this.ventanaCargaPasajero.setVisible(false);
+		cargarComboBoxFormaDePago();
 		this.ventanaPago.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
 		this.ventanaPago.setVisible(true);
 	}
@@ -208,7 +211,6 @@ public class ControladorPasaje {
 	}
 	
 	private void darDeAltaUnPasaje(ActionEvent aP) {
-		
 		ViajeDTO viaje = viajeSeleccionado;
 		ClienteDTO cliente = clienteSeleccionado;
 		RolDTO rol = new RolDTO(2,"administrativo");
@@ -258,6 +260,18 @@ public class ControladorPasaje {
 //							this.vista.getPanelPasaje().getModelClientes().addRow(fila);
 //		}		
 //	}	
+	
+	private void cargarComboBoxFormaDePago(){
+		ventanaPago.getComboBoxFormaPago().removeAllItems();
+		FormaPago formaPago = new FormaPago(new DAOSQLFactory());
+		List<FormaPagoDTO> formasPagosDTO = formaPago.obtenerFormaPago();
+		String[] formasPagos = new String[formasPagosDTO.size()]; 
+		for(int i=0; i < formasPagosDTO.size();i++){
+			String rango = formasPagosDTO.get(i).getTipo();
+			formasPagos [i] = rango;
+		}
+		this.ventanaPago.getComboBoxFormaPago().setModel(new DefaultComboBoxModel(formasPagos));
+	}
 	
 	private BigDecimal calcularMontoDePasaje() {
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();

@@ -134,14 +134,24 @@ CREATE TABLE `pasaje` (
   KEY `idEstadoPasaje` (`idEstadoPasaje`)
 ); 
 
+CREATE TABLE `pasajero` (
+    `idPasajero` int(11) NOT NULL AUTO_INCREMENT,
+    `nombre` varchar(45) NOT NULL,
+    `apellido` varchar(45) NOT NULL,
+    `dni` varchar(45) NOT NULL,
+    `fechaNacimiento` date,
+    `telefono` varchar(45) NOT NULL,
+    `email` varchar(45),
+    PRIMARY KEY (`idPasajero`)
+);
 
 CREATE TABLE `pasajes_pasajeros` (
   `idPasajePasajero` int(11) NOT NULL AUTO_INCREMENT,
   `idPasaje` int(11) NOT NULL,
-  `idCliente` int(11) NOT NULL,
+  `idPasajero` int(11) NOT NULL,
   PRIMARY KEY (`idPasajePasajero`),
   KEY `idPasaje` (`idPasaje`),
-  KEY `idCliente` (`idCliente`)
+  KEY `idPasajero` (`idPasajero`)
 );
 
 

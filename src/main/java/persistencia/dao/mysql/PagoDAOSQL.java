@@ -30,6 +30,8 @@ public class PagoDAOSQL implements PagoDAO {
 			statement.setInt(1, pagoInsert.getIdPago());
 			statement.setDate(2, pagoInsert.getFechaPago());
 			statement.setBigDecimal(3, pagoInsert.getMonto());
+			statement.setInt(4,pagoInsert.getIdFormaPago().getIdFormaPago());
+			
 			if (statement.executeUpdate() > 0) {
 				return true;
 			}

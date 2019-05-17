@@ -8,26 +8,29 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JRadioButton;
 
 import java.awt.Font;
+
 import javax.swing.JComboBox;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import dto.FormaPagoDTO;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class VentanaPago extends JFrame {
 
 	private JPanel contentPane;
-	private JComboBox<?> comboBoxEstadoPago;
-	private DefaultComboBoxModel modelo;
-	private JButton btnPago;
-	private static VentanaPago INSTANCE;
+	private JComboBox<FormaPagoDTO> comboBoxFormaDePago;
 	private JLabel lblSelecioneUnaForma;
 	private JLabel lblMontoAPagar;
 	private JTextField textImporteTotal;
 	private JLabel lblMontoaPagar;
+	private JButton btnPago;
+	private static VentanaPago INSTANCE;
 	
 	public static VentanaPago getInstance(){
 		if(INSTANCE == null)
@@ -48,21 +51,12 @@ public class VentanaPago extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		this.comboBoxEstadoPago = new JComboBox();
-		this.modelo = new DefaultComboBoxModel();
-		modelo.addElement("EFECTIVO");
-		modelo.addElement("TARJETA");
-		modelo.addElement("NINGUN PAGO");
-		comboBoxEstadoPago.setModel(modelo);
-		comboBoxEstadoPago.setBounds(218, 45, 167, 20);
-		contentPane.add(comboBoxEstadoPago);
+		this.comboBoxFormaDePago = new JComboBox<FormaPagoDTO>();
+		comboBoxFormaDePago.setBounds(218, 45, 167, 20);
+		contentPane.add(comboBoxFormaDePago);
 		
-		btnPago = new JButton("realizar Pago");
-		btnPago.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnPago.setBounds(10, 198, 375, 23); 	
+		btnPago = new JButton("Realizar pago");
+		btnPago.setBounds(218, 179, 121, 42); 	
 		contentPane.add(btnPago);
 		
 		lblSelecioneUnaForma = new JLabel("Seleccione una forma de pago");
@@ -86,21 +80,18 @@ public class VentanaPago extends JFrame {
 		lblMontoaPagar.setBounds(218, 98, 167, 14);
 		contentPane.add(lblMontoaPagar);
 		
+		JButton btnAtras = new JButton("Atrás");
+		btnAtras.setBounds(46, 179, 121, 42);
+		contentPane.add(btnAtras);
+		
 		this.setVisible(false);
 	}
-	
-	
-	public JComboBox<?> getComboBoxEstadoPago() {
-		return comboBoxEstadoPago;
+		
+	public JComboBox<FormaPagoDTO> getComboBoxFormaPago() {
+		return comboBoxFormaDePago;
 	}
-	public void setComboBoxEstadoPago(JComboBox<?> comboBoxEstadoPago) {
-		this.comboBoxEstadoPago = comboBoxEstadoPago;
-	}
-	public DefaultComboBoxModel getModelo() {
-		return modelo;
-	}
-	public void setModelo(DefaultComboBoxModel modelo) {
-		this.modelo = modelo;
+	public void setComboBoxEstadoPago(JComboBox<FormaPagoDTO> comboBoxEstadoPago) {
+		this.comboBoxFormaDePago = comboBoxEstadoPago;
 	}
 	
 	public void mostrarVentana(boolean mostrar){
@@ -128,10 +119,6 @@ public class VentanaPago extends JFrame {
 		});
 	}
 
-	public void redimensionar() {
-		setBounds(100, 100, 500, 400);
-	}
-
 	public JTextField getTextImporteTotal() {
 		return textImporteTotal;
 	}
@@ -147,7 +134,4 @@ public class VentanaPago extends JFrame {
 	public void setLblMontoaPagar(JLabel lblMontoaPagar) {
 		this.lblMontoaPagar = lblMontoaPagar;
 	}
-	
-	
-	
 }
