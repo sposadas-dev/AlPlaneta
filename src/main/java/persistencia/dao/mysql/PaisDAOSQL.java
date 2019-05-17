@@ -11,7 +11,7 @@ import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PaisDAO;
 
 public class PaisDAOSQL implements PaisDAO {
-	private static final String insert = "INSERT INTO pais" + "(idPais, nombre)" + "VALUE(?,?)";
+	private static final String insert = "INSERT INTO pais" + "(idPais, paisnombre)" + "VALUE(?,?)";
 	private static final String readall = "SELECT * FROM pais";
 	private static final String delete = "DELETE FROM pais WHERE idPais = ?";
 	private static final String update = "UPDATE pais SET nombre = ? WHERE idPais = ?";
@@ -47,7 +47,7 @@ public class PaisDAOSQL implements PaisDAO {
 			while(resultSet.next()){
 				paises.add(new PaisDTO(
 						resultSet.getInt("idPais"),
-						resultSet.getString("nombre")));
+						resultSet.getString("paisnombre")));
 			}
 		} 
 		catch (SQLException e) {
@@ -107,7 +107,7 @@ public class PaisDAOSQL implements PaisDAO {
 			if(resultSet.next()){
 				pais = new PaisDTO(
 						resultSet.getInt("idPais"),
-						resultSet.getString("nombre"));
+						resultSet.getString("paisnombre"));
 				return pais;
 			}
 				
@@ -120,8 +120,11 @@ public class PaisDAOSQL implements PaisDAO {
 	public static void main(String[] args) {
 		PaisDAOSQL adm = new PaisDAOSQL();
 		List<PaisDTO> administratives = adm.readAll();
-		
-		for(PaisDTO ad: administratives)
-			System.out.println(ad.getNombre());
+		int cont=0;
+		for(PaisDTO ad: administratives) {
+			cont++;
+			System.out.println(ad.getNombre());			
 		}
+		System.out.println("cantPaises: "+cont);
+	}
 }

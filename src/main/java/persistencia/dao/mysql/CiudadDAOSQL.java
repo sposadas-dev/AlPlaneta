@@ -13,12 +13,12 @@ import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.CiudadDAO;
 
 public class CiudadDAOSQL implements CiudadDAO {
-	private static final String insert = "INSERT INTO ciudad" + "(idCiudad, nombre, idProvincia)" + "VALUE(?,?,?)";
+	private static final String insert = "INSERT INTO ciudad" + "(idCiudad, ciudadNombre, idProvincia)" + "VALUE(?,?,?)";
 	private static final String readall = "SELECT * FROM ciudad";
 	private static final String delete = "DELETE FROM ciudad WHERE idCiudad = ?";
-	private static final String update = "UPDATE ciudad SET nombre = ? WHERE idCiudad = ?";
+	private static final String update = "UPDATE ciudad SET ciudadNombre = ? WHERE idCiudad = ?";
 	private static final String browse = "SELECT * FROM ciudad WHERE idCiudad = ?";
-	private static final String browseLogin = "SELECT * FROM ciudad WHERE idCiudad = ?";
+	private static final String browseLogin = "SELECT * FROM ciudad WHERE idProvincia = ?";
 
 
 	@Override
@@ -129,13 +129,7 @@ public class CiudadDAOSQL implements CiudadDAO {
 		return null;
 	}
 		
-	public static void main(String[] args) {
-		CiudadDAOSQL adm = new CiudadDAOSQL();
-		List<CiudadDTO> administratives = adm.readAll();
-		
-		for(CiudadDTO ad: administratives)
-			System.out.println(ad.getNombre());
-		}
+
 
 	@Override
 	public List<CiudadDTO> readAllByIdprovincia(int idProvincia) {
@@ -153,7 +147,7 @@ public class CiudadDAOSQL implements CiudadDAO {
 			while(resultSet.next()){
 				ciudades.add(new CiudadDTO(
 						resultSet.getInt("idCiudad"),
-						resultSet.getString("nombre"),
+						resultSet.getString("ciudadNombre"),
 						dao.getProvinciaById(resultSet.getInt("idProvincia"))));
 			}
 		} 
@@ -161,5 +155,18 @@ public class CiudadDAOSQL implements CiudadDAO {
 			e.printStackTrace();
 		}
 		return ciudades;
+	}
+	public static void main(String[] args) {
+		CiudadDAOSQL adm = new CiudadDAOSQL();
+		List<CiudadDTO> administratives = adm.readAll();
+
+		int cont = 0; 
+		for(CiudadDTO ad: administratives) {
+			//System.out.println(ad.getNombre());
+			cont++;
+		}
+		//System.out.println("cantCiudades: "+cont);
+		for(CiudadDTO c : adm.readAllByIdprovincia(1818))
+			System.out.println(c.getNombre());
 	}
 }

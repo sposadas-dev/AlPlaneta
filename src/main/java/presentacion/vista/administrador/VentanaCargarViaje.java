@@ -1,5 +1,6 @@
 package presentacion.vista.administrador;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -9,6 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JRadioButton;
 
 import java.awt.Font;
+import java.awt.SystemColor;
+
 import javax.swing.JComboBox;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -39,14 +42,17 @@ public class VentanaCargarViaje extends JFrame {
 	private JComboBox<?> comboBoxPaisDestino;
 	private JComboBox<?> comboBoxProvinciaOrigen;
 	private JComboBox<?> comboBoxProvinciaDestino;
-	private JButton btnSeleccionDestino;
-	private JButton btnSeleccionOrigen;
+	private JComboBox<?> comboBoxTransporte;
+
+
+	private JButton btnOK;
 	
 	private DefaultTableModel modelViajes;
 	private  String[] nombreColumnas = {"Origen","Destino"};
 	
 	private JLabel lblProvinciaOrigen;
 	private JLabel lblCiudadOrigen;
+	private JTextField textCapacidad;
 	
 	public static VentanaCargarViaje getInstance(){
 		if(INSTANCE == null)
@@ -57,14 +63,28 @@ public class VentanaCargarViaje extends JFrame {
 	
 	private VentanaCargarViaje() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(400, 150, 596, 495);
+		setBounds(400, 150, 871, 507);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		
+		JLabel lblAgregarReserva = new JLabel("Cargar viaje");
+		lblAgregarReserva.setForeground(Color.WHITE);
+		lblAgregarReserva.setBounds(26, 0, 210, 53);
+		lblAgregarReserva.setFont(new Font("Tahoma", Font.BOLD, 24));
+		contentPane.add(lblAgregarReserva);
+		
+		JPanel panelReserva = new JPanel();
+		panelReserva.setBackground(new Color(63, 72, 204));
+		panelReserva.setBounds(0, 0, 867, 53);
+		contentPane.add(panelReserva);
+		panelReserva.setLayout(null);
 		
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(13, 274, 553, 140);
+		spPasajeros.setBounds(13, 274, 839, 140);
 		contentPane.add(spPasajeros);
 		
 		modelViajes = new DefaultTableModel(null,nombreColumnas){
@@ -77,106 +97,143 @@ public class VentanaCargarViaje extends JFrame {
 		spPasajeros.setViewportView(tablaViajes);
 		
 		
-		btnCrearViaje = new JButton("Crear Viaje");
+		btnCrearViaje = new JButton("Cargar Viaje");
 		btnCrearViaje.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnCrearViaje.setBounds(376, 425, 190, 20); 	
+		btnCrearViaje.setBounds(347, 422, 173, 37); 	
 		contentPane.add(btnCrearViaje);
 		
 		dateChooserFechaOrigen = new JDateChooser();
-		dateChooserFechaOrigen.setBounds(121, 63, 153, 20);
+		dateChooserFechaOrigen.setBounds(98, 72, 153, 20);
 		contentPane.add(dateChooserFechaOrigen);
 		
 		dateChooserFechaDestino = new JDateChooser();
-		dateChooserFechaDestino.setBounds(413, 63, 153, 20);
+		dateChooserFechaDestino.setBounds(379, 72, 153, 20);
 		contentPane.add(dateChooserFechaDestino);
 		
 		comboBoxCiudadOrigen = new JComboBox();
-		comboBoxCiudadOrigen.setBounds(250, 180, 113, 20);
+		comboBoxCiudadOrigen.setBounds(446, 176, 190, 20);
 		contentPane.add(comboBoxCiudadOrigen);
 		
 		comboBoxCiudadDestino = new JComboBox();
-		comboBoxCiudadDestino.setBounds(250, 243, 113, 20);
+		comboBoxCiudadDestino.setBounds(446, 239, 190, 20);
 		contentPane.add(comboBoxCiudadDestino);
 		
-		JLabel lblNewLabel = new JLabel("Precio del Viaje :");
-		lblNewLabel.setBounds(284, 97, 100, 14);
+		JLabel lblNewLabel = new JLabel("Precio del Viaje:");
+		lblNewLabel.setBounds(281, 106, 100, 14);
 		contentPane.add(lblNewLabel);
 		
 		textPrecioViaje = new JTextField();
-		textPrecioViaje.setBounds(413, 94, 151, 20);
+		textPrecioViaje.setBounds(379, 103, 153, 20);
 		contentPane.add(textPrecioViaje);
 		textPrecioViaje.setColumns(10);
 		
 		JLabel lblFechaSalida = new JLabel("Fecha Salida: ");
-		lblFechaSalida.setBounds(13, 63, 77, 14);
+		lblFechaSalida.setBounds(10, 72, 96, 14);
 		contentPane.add(lblFechaSalida);
 		
-		JLabel lblNewLabel_1 = new JLabel("Fecha Llegada :");
-		lblNewLabel_1.setBounds(284, 63, 119, 20);
+		JLabel lblNewLabel_1 = new JLabel("Fecha Llegada:");
+		lblNewLabel_1.setBounds(288, 72, 100, 20);
 		contentPane.add(lblNewLabel_1);
 		
-		JLabel lblHorarioSalida = new JLabel("Horario Salida :");
-		lblHorarioSalida.setBounds(13, 88, 109, 14);
+		JLabel lblHorarioSalida = new JLabel("Horario Salida:");
+		lblHorarioSalida.setBounds(10, 106, 109, 14);
 		contentPane.add(lblHorarioSalida);
 		
 		comboBoxHorarioSalida = new JComboBox<String>();
-		comboBoxHorarioSalida.setBounds(121, 94, 153, 20);
+		comboBoxHorarioSalida.setBounds(98, 103, 153, 20);
 		contentPane.add(comboBoxHorarioSalida);
 		
 		comboBoxPaisOrigen = new JComboBox();
-		comboBoxPaisOrigen.setBounds(13, 180, 113, 20);
+		comboBoxPaisOrigen.setBounds(13, 177, 190, 20);
 		contentPane.add(comboBoxPaisOrigen);
 		
 		JLabel lblPaisOrigen = new JLabel("Pais Origen");
-		lblPaisOrigen.setBounds(13, 155, 98, 14);
+		lblPaisOrigen.setBounds(13, 152, 98, 14);
 		contentPane.add(lblPaisOrigen);
 		
 		comboBoxProvinciaOrigen = new JComboBox();
-		comboBoxProvinciaOrigen.setBounds(132, 180, 113, 20);
+		comboBoxProvinciaOrigen.setBounds(228, 176, 190, 20);
 		contentPane.add(comboBoxProvinciaOrigen);
 		
 		lblProvinciaOrigen = new JLabel("Provincia Origen");
-		lblProvinciaOrigen.setBounds(131, 156, 98, 14);
+		lblProvinciaOrigen.setBounds(227, 152, 98, 14);
 		contentPane.add(lblProvinciaOrigen);
 		
 		lblCiudadOrigen = new JLabel("Ciudad Origen");
-		lblCiudadOrigen.setBounds(250, 153, 98, 14);
+		lblCiudadOrigen.setBounds(446, 149, 98, 14);
 		contentPane.add(lblCiudadOrigen);
 		
-		btnSeleccionOrigen = new JButton("Seleccion Origen");
-		btnSeleccionOrigen.setBounds(376, 179, 188, 23);
-		contentPane.add(btnSeleccionOrigen);
+		btnOK = new JButton("OK");
+		btnOK.setBounds(764, 232, 88, 29);
+		contentPane.add(btnOK);
 		
 		JLabel lblPaisDestino = new JLabel("Pais Destino");
-		lblPaisDestino.setBounds(13, 217, 98, 14);
+		lblPaisDestino.setBounds(13, 214, 98, 14);
 		contentPane.add(lblPaisDestino);
 		
 		comboBoxPaisDestino = new JComboBox();
-		comboBoxPaisDestino.setBounds(13, 242, 113, 20);
+		comboBoxPaisDestino.setBounds(13, 239, 190, 20);
 		contentPane.add(comboBoxPaisDestino);
 		
 		comboBoxProvinciaDestino = new JComboBox();
-		comboBoxProvinciaDestino.setBounds(132, 242, 113, 20);
+		comboBoxProvinciaDestino.setBounds(228, 238, 190, 20);
 		contentPane.add(comboBoxProvinciaDestino);
 		
-		btnSeleccionDestino = new JButton("Seleccion Destino");
-		btnSeleccionDestino.setBounds(373, 240, 188, 23);
-		contentPane.add(btnSeleccionDestino);
-		
 		JLabel lblProvinciaDestino = new JLabel("Provincia Destino");
-		lblProvinciaDestino.setBounds(131, 217, 98, 14);
+		lblProvinciaDestino.setBounds(227, 213, 98, 14);
 		contentPane.add(lblProvinciaDestino);
 		
 		JLabel lblCiudadDestino = new JLabel("Ciudad Destino");
-		lblCiudadDestino.setBounds(250, 218, 98, 14);
+		lblCiudadDestino.setBounds(446, 214, 98, 14);
 		contentPane.add(lblCiudadDestino);
+		
+		JLabel lblTransporte = new JLabel("Transporte");
+		lblTransporte.setBounds(662, 151, 98, 14);
+		contentPane.add(lblTransporte);
+		
+		comboBoxTransporte = new JComboBox();
+		comboBoxTransporte.setBounds(662, 175, 190, 20);
+		contentPane.add(comboBoxTransporte);
+		
+		JLabel lblCapacidad = new JLabel("Capacidad");
+		lblCapacidad.setBounds(662, 213, 98, 14);
+		contentPane.add(lblCapacidad);
+		
+		textCapacidad = new JTextField();
+		textCapacidad.setColumns(10);
+		textCapacidad.setBounds(662, 238, 92, 20);
+		contentPane.add(textCapacidad);
 		
 		inicializar();
 		this.setVisible(false);
 	}
+	public JLabel getLblProvinciaOrigen() {
+		return lblProvinciaOrigen;
+	}
+
+	public void setLblProvinciaOrigen(JLabel lblProvinciaOrigen) {
+		this.lblProvinciaOrigen = lblProvinciaOrigen;
+	}
+
+	public JLabel getLblCiudadOrigen() {
+		return lblCiudadOrigen;
+	}
+
+	public void setLblCiudadOrigen(JLabel lblCiudadOrigen) {
+		this.lblCiudadOrigen = lblCiudadOrigen;
+	}
+
+	public JTextField getTextCapacidad() {
+		return textCapacidad;
+	}
+
+	public void setTextCapacidad(JTextField textCapacidad) {
+		this.textCapacidad = textCapacidad;
+	}
+
 	private void inicializar(){
 		/*REDIMENCIONAR LA VENTANA PARA LUEGO DE CARGAR VALORES SE MUESTRE LA TABLA*/
 		
@@ -186,8 +243,7 @@ public class VentanaCargarViaje extends JFrame {
 		this.comboBoxProvinciaOrigen.setEnabled(false);
 		this.comboBoxProvinciaDestino.setEnabled(false);
 		
-		this.btnSeleccionOrigen.setEnabled(false);
-		this.btnSeleccionDestino.setEnabled(false);
+		this.btnOK.setEnabled(false);
 	}
 
 	public JButton getBtnCrearViaje() {
@@ -296,20 +352,21 @@ public class VentanaCargarViaje extends JFrame {
 		this.comboBoxProvinciaDestino = comboBoxProvinciaDestino;
 	}
 
-	public JButton getBtnSeleccionDestino() {
-		return btnSeleccionDestino;
+
+	public JButton getBtnOK() {
+		return btnOK;
 	}
 
-	public void setBtnSeleccionDestino(JButton btnSeleccionDestino) {
-		this.btnSeleccionDestino = btnSeleccionDestino;
+	public void setBtnOK(JButton btnSeleccionOrigen) {
+		this.btnOK = btnSeleccionOrigen;
+	}
+	
+	public JComboBox<?> getComboBoxTransporte() {
+		return comboBoxTransporte;
 	}
 
-	public JButton getBtnSeleccionOrigen() {
-		return btnSeleccionOrigen;
-	}
-
-	public void setBtnSeleccionOrigen(JButton btnSeleccionOrigen) {
-		this.btnSeleccionOrigen = btnSeleccionOrigen;
+	public void setComboBoxTransporte(JComboBox<?> comboBoxTransporte) {
+		this.comboBoxTransporte = comboBoxTransporte;
 	}
 
 	public static void main(String[] args) {

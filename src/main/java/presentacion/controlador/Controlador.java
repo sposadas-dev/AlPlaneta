@@ -2,7 +2,6 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ import modelo.Cliente;
 import modelo.MedioContacto;
 import modelo.ModeloCiudad;
 import modelo.ModeloProvincia;
+import modelo.Transporte;
 import persistencia.dao.mysql.AdministradorDAOSQL;
 import persistencia.dao.mysql.AdministrativoDAOSQL;
 import persistencia.dao.mysql.CiudadDAOSQL;
@@ -81,7 +81,7 @@ public class Controlador implements ActionListener {
 	private BigDecimal totalaPagar;
 	private HorarioReservaDTO horarioElegido;
 	private PagoDTO pagoDTO;
-	private LoginDTO usuarioLogeado;
+	private LoginDTO usuarioLogueado;
 	
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
@@ -90,13 +90,15 @@ public class Controlador implements ActionListener {
 	/*AGREGADO PARA 3ER REUNION */
 	private VentanaLogin ventanaLogin;
 	private Administrativo modeloAdminisrativo;
-	private DAOSQLFactory daoSqlFactory;
+	private static DAOSQLFactory daoSqlFactory;
 	
 	private String ciudadOrigenSelected;
 	private String ciudadDestinoSelected;
 	private String provinciaOrigenSelected;
 	private String provinciaDestinoSelected;
 	
+	private boolean origenListo;
+	private boolean destinoListo;
 	
 	/*ADMINSITRADOR*/
 	private ModeloProvincia modeloProvincia;
@@ -118,6 +120,9 @@ public class Controlador implements ActionListener {
 		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();
 		this.ventanaLogin = VentanaLogin.getInstance();
 		
+		this.origenListo = false;
+		this.destinoListo = false;
+		
 		/*ENTIDADES LOGEADAS*/
 		this.administrativoLogueado = null;
 		this.clienteLogueado = null;
@@ -131,7 +136,8 @@ public class Controlador implements ActionListener {
 		this.daoSqlFactory = new DAOSQLFactory();
 		this.modeloAdminisrativo = new Administrativo(daoSqlFactory);
 		this.modeloProvincia = new ModeloProvincia(daoSqlFactory);
-		this.usuarioLogeado = new LoginDTO();
+		this.usuarioLogueado = new LoginDTO();
+		this.modeloCiudad = new ModeloCiudad(daoSqlFactory);
 		
 		/*Fin de Modelos*/
 		
@@ -159,22 +165,26 @@ public class Controlador implements ActionListener {
 		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(aP->altaPasajerosDeUnViaje(aP));
 		
 		this.ventanaPasajero.getBtnCargarDatos().addActionListener(aP->darDeAltaUnPasajero(aP));
-		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaUnViajes(aV));
+		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->{
+			try {darAltaViaje(aV);
+			} catch (Exception e1) {e1.printStackTrace();	}	});
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(sV->seleccionarViaje(sV));
 /*//////////////////////////////////////////////////////////////////////////////////////////////////*/		
 /*/////////////////////////////////////// CARGAR VALORES EN PAIS-PROVINCIA-CIUDAD /////////////////////*/
 	
-		this.ventanaCargarViaje.getComboBoxPaisOrigen().addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt){obtenerProvincias_porPaisOrigen(evt);}});
+		this.ventanaCargarViaje.getBtnOK().addActionListener(v->mostrarDatosViaje(v));
+		this.ventanaCargarViaje.getComboBoxPaisOrigen().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisOrigen(e);}});
 		
-		this.ventanaCargarViaje.getComboBoxPaisDestino().addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt){obtenerProvincias_porPaisDestino(evt);}});
 		
-		this.ventanaCargarViaje.getComboBoxProvinciaOrigen().addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt){obtenerCiudades_porProvinciaOrigen(evt);}});
+		this.ventanaCargarViaje.getComboBoxPaisDestino().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisDestino(e);}});
 		
-		this.ventanaCargarViaje.getComboBoxProvinciaDestino().addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt){obtenerCiudades_porProvinciaDestino(evt);}});
+		this.ventanaCargarViaje.getComboBoxProvinciaOrigen().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { obtenerCiudades_porProvinciaOrigen(e);}});
+		
+		this.ventanaCargarViaje.getComboBoxProvinciaDestino().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { obtenerCiudades_porProvinciaDestino(e);}});
 		
 //		this.ventanaCargarViaje.getComboBoxCiudadOrigen().addMouseListener(new java.awt.event.MouseAdapter() {
 //            public void mouseClicked(java.awt.event.MouseEvent cit){obtenerCiudadesOrigen(cit);}});
@@ -198,7 +208,7 @@ public class Controlador implements ActionListener {
 		
 		this.ventanaCargarViaje.setVisible(true);
 
-		this.llenarTablaClientes();
+	//			this.llenarTablaClientes();
 
 //		this.vista.show();
 				
@@ -223,30 +233,53 @@ public class Controlador implements ActionListener {
 			nombresPaises [i] = pais;
 		}	
 /* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
-		this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresPaises));
-		this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresPaises));
+		this.ventanaCargarViaje.getComboBoxPaisOrigen().setModel(new DefaultComboBoxModel(nombresPaises));
+		this.ventanaCargarViaje.getComboBoxPaisDestino().setModel(new DefaultComboBoxModel(nombresPaises));
 	}
 	
-	private void obtenerProvincias_porPaisOrigen(MouseEvent evt) {//obtener provinciasOrigen y setEnComboProvincia
+	private void obtenerProvincias_porPaisOrigen(ActionEvent e) {//MouseEvent evt) {//obtener provinciasOrigen y setEnComboProvincia
 		String pais = ventanaCargarViaje.getComboBoxPaisOrigen().getSelectedItem().toString();
+		System.out.println(pais);
 		ventanaCargarViaje.getComboBoxProvinciaOrigen().setEnabled(true);
-    	llenarComboBoxProvinciasOrigen(Integer.parseInt(pais.substring(0)));
+    	llenarComboBoxProvinciasOrigen(Integer.parseInt(obtenerIdDesdeCombo(pais)));
+	}
+	
+	private String obtenerIdDesdeCombo(String s) {
+		String ret = "";
+		for (int n = 0; n <s.length (); n ++) {
+			char c = s.charAt (n);
+			if(c != '-') {
+				ret+= c;
+			}
+			else{
+				return ret;
+			}
+		}
+		return ret;
 	}
 
-	private void obtenerProvincias_porPaisDestino(MouseEvent evt) {//obteer provinciasDestino y setEnComboProvincia
+	private void obtenerProvincias_porPaisDestino(ActionEvent evt) {//obteer provinciasDestino y setEnComboProvincia
 		String pais = ventanaCargarViaje.getComboBoxPaisDestino().getSelectedItem().toString();
 		ventanaCargarViaje.getComboBoxProvinciaDestino().setEnabled(true);
-    	llenarComboBoxProvinciasDestino(Integer.parseInt(pais.substring(0)));
+    	llenarComboBoxProvinciasDestino(Integer.parseInt(obtenerIdDesdeCombo(pais)));
 	}
 	
-	private void obtenerCiudades_porProvinciaOrigen(MouseEvent evt) {
+	private void obtenerCiudades_porProvinciaOrigen(ActionEvent evt) {
 		String provincia = ventanaCargarViaje.getComboBoxProvinciaOrigen().getSelectedItem().toString();
-    	llenarComboBoxCiudadesOrigen(Integer.parseInt(provincia.substring(0)));
+		ventanaCargarViaje.getComboBoxCiudadOrigen().setEnabled(true);
+		llenarComboBoxCiudadesOrigen(Integer.parseInt(obtenerIdDesdeCombo(provincia)));
+		origenListo = true;
+		if(origenListo && destinoListo) //Activa boton OK si seleccion destino y origen esta completa
+    		ventanaCargarViaje.getBtnOK().setEnabled(true);
 	} 
 	
-	private void obtenerCiudades_porProvinciaDestino(MouseEvent evt) {
+	private void obtenerCiudades_porProvinciaDestino(ActionEvent evt) {
 		String provincia = ventanaCargarViaje.getComboBoxProvinciaDestino().getSelectedItem().toString();
-    	llenarComboBoxCiudadesDestino(Integer.parseInt(provincia.substring(0)));
+		ventanaCargarViaje.getComboBoxCiudadDestino().setEnabled(true);
+    	llenarComboBoxCiudadesDestino(Integer.parseInt(obtenerIdDesdeCombo(provincia)));
+    	destinoListo = true;
+    	if(origenListo && destinoListo) //Activa boton OK si seleccion destino y origen esta completa
+    		ventanaCargarViaje.getBtnOK().setEnabled(true);
 	} 
 	
 	private void llenarComboBoxProvinciasOrigen(int idPais) {
@@ -287,10 +320,11 @@ public class Controlador implements ActionListener {
 		try {
 			ciudades = modeloCiudad.obtenerCiudadPorIdProvincia(idProvincia);
 		} catch (Exception e) {
+			System.out.println(ciudades);
 			e.printStackTrace();
 		}
 		String[] nombresCiudades = new String[ciudades.size()];
-		
+		System.out.println(nombresCiudades.length);
 		for(int i=0; i<ciudades.size();i++){
 			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
 			nombresCiudades [i] = ciudad;
@@ -334,11 +368,35 @@ public class Controlador implements ActionListener {
 	}
 /*< / VALIDACION DE ALTA VIAJESS >*/	
 	
-	private void darAltaUnViajes(ActionEvent aV) {
-		if(viajeValido())
+	private void mostrarDatosViaje(ActionEvent E) {
+		System.out.println("implementar");
+	}	
+	
+	private void darAltaViaje(ActionEvent aV) throws Exception {
+		CiudadDTO origen = null;
+		CiudadDTO destino = null;
+		
+		if(viajeValido()){
 			System.out.println("Dar de alta el viaje");
 		
-		
+			//SETEAR FECHA SALIDA
+			//SETEAR FECHA LLEGADA
+			
+			//BigDecimal precio = new BigDecimal(ventanaCargarViaje.getTextPrecioViaje().getText());
+			
+			for(CiudadDTO o : modeloCiudad.obtenerCiudades()) 
+				if(o.getNombre().equals(this.ciudadOrigenSelected) )
+					origen = o;
+			for(CiudadDTO d : modeloCiudad.obtenerCiudades()) 
+				if(d.getNombre().equals(this.ciudadDestinoSelected))
+					destino = d;
+	
+			//String horaSalida = ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
+			
+			//obtener id por nombre  int idTransporte = ventanaCargarViaje.getComboBoxTransporte().getSelectedItem().toString();
+			//horasEstimadas
+			//capacidad
+		}
 		
 //		ModeloCiudad modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
 //		ModeloViaje modeloViaje = new ModeloViaje(new DAOSQLFactory());
@@ -371,24 +429,6 @@ public class Controlador implements ActionListener {
 	
 	/*- - - - - - - -  - - - - - - - < / METODOS DE VIAJE> - - - - - - - - - - - - - - - - --  */
 /*/////////////////////////////////////////////////////////////////////////////////////////////////////*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/*IMPLEMENTADO BRANCH V3.0*/	
 	private void logearse(ActionEvent log) {
 		String usuario = ventanaLogin.getTextUsuario().getText();
@@ -396,27 +436,33 @@ public class Controlador implements ActionListener {
 		
 		
 		LoginDAOSQL dao = new LoginDAOSQL();
-		usuarioLogeado = null;
+		usuarioLogueado = null;
 		try {
-			usuarioLogeado = dao.getByDatos(usuario, password);
+			usuarioLogueado = dao.getByDatos(usuario, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		if(usuarioLogeado==null){
+		if(usuarioLogueado==null){
 			this.ventanaLogin.getLblError().setVisible(true);
 			System.out.println("EL USUARIO O CONTRASENA ES INCORRECTO");
 		}
 		else{
-			System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogeado.getUsuario()+" "+usuarioLogeado.getContrasena()+" "+usuarioLogeado.getRol().getIdRol());
-			if(usuarioLogeado.getRol().getIdRol()==2){
-				 administrativoLogueado = obtenerAdministrativo(usuarioLogeado);
+			System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogueado.getUsuario()+" "+usuarioLogueado.getContrasena()+" "+usuarioLogueado.getRol().getIdRol());
+			if(usuarioLogueado.getRol().getIdRol()==2){
+				 administrativoLogueado = obtenerAdministrativo(usuarioLogueado);
 				 mostrarVentanaAdministrativo();
 			}
 			else{
-				if(usuarioLogeado.getRol().getIdRol()==5){
-					 clienteLogueado = obtenerCliente(usuarioLogeado);
+				if(usuarioLogueado.getRol().getIdRol()==5){
+					 clienteLogueado = obtenerCliente(usuarioLogueado);
 					 mostrarVentanaCliente();
+				}
+				else{
+					if(usuarioLogueado.getRol().getIdRol()==1){
+						 administradorLogueado = obtenerAdministrador(usuarioLogueado);
+						 mostrarVentanaAdministrador();
+					}
 				}
 			}
 		}
@@ -443,9 +489,8 @@ public class Controlador implements ActionListener {
 		System.out.println("Se Loguea Como Administrador");
 		System.out.println(administradorLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);
-		
-
 	}
+	
 /*-----------------------METODOS BUSCADOR POR ROLES ---------------------*/
 	private AdministrativoDTO obtenerAdministrativo(LoginDTO loginUsuario) {
 		AdministrativoDAOSQL dao = new AdministrativoDAOSQL();
@@ -473,16 +518,13 @@ public class Controlador implements ActionListener {
 		this.ventanaCliente.cerrarVentana();
 	}
 
-	
-	
-	
-	
-	
 	private void llenarCiudadesEnCargaViajes() {
 /*INGRESAR VALOR DEFAULT A LOS COMBOBOX."Seleccione un pais - -*/
 		
 /*CARGAR LOS PAISES DE LA BASE DE DATOS.*/
 		llenarComboBoxPaises();
+/*CARGAR LOS PAISES DE LA BASE DE DATOS.*/
+		llenarComboTransporte();
 /*UNA VEZ SELECIONADO EL PAIS, HABILITAR EL COMBO PROVINCIA, CORRESPONDIENTE AL PAIS CLICKOUT*/
 		/*obtener el id del pais*/
 /*MISMA ACCION PARA CIUDAD*/
@@ -589,6 +631,16 @@ public class Controlador implements ActionListener {
 		/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
 				this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresCiudades));
 				this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresCiudades));
+	}
+	
+	private void llenarComboTransporte() {
+		ArrayList<TransporteDTO> transportes = (ArrayList<TransporteDTO>) new Transporte(daoSqlFactory).obtenerTransportes();
+			String[] nombresTransportes = new String[transportes.size()];
+			for(int i=0; i<transportes.size();i++){
+				nombresTransportes [i] = transportes.get(i).getNombre();
+			}	
+	/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+			this.ventanaCargarViaje.getComboBoxTransporte().setModel(new DefaultComboBoxModel(nombresTransportes));
 	}
 
 	private void mostrarVentanaCargarViaje() {
@@ -923,7 +975,7 @@ public class Controlador implements ActionListener {
 		this.ventanaReserva = VentanaReserva.getInstance();
 	}
 	
-private void darDeAltaUnPasaje(ActionEvent aP) {
+	private void darDeAltaUnPasaje(ActionEvent aP) {
 //		MedioContactoDTO medio = new MedioContactoDTO(1,"44514652","1578966321","contacto@gmail.com");
 //		java.util.Date d = new java.util.Date(); 
 //		java.sql.Date date2 = new java.sql.Date(d.getTime());
@@ -994,8 +1046,16 @@ private void darDeAltaUnPasaje(ActionEvent aP) {
 	public void actionPerformed(ActionEvent evento){
 
 	}
-//	public static void main(String[] args) throws Exception {
-//		Controlador c = new Controlador();
-//		c.inicializar();
-//	}
+	
+	public static void main(String[] args) throws Exception {
+		Vista vista = new Vista();
+		Controlador controlador = new Controlador(vista);
+		controlador.inicializar();
+		
+//		ModeloCiudad modelo = new ModeloCiudad(daoSqlFactory);
+//		for(CiudadDTO c : modelo.obtenerCiudadPorIdProvincia(1818)) {
+//			System.out.println(c.getIdCiudad() + c.getNombre());
+//		}
+//		
+	}
 }

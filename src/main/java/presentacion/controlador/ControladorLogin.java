@@ -2,6 +2,7 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 
+import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.LoginDTO;
@@ -10,6 +11,7 @@ import modelo.Cliente;
 import modelo.Login;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.VentanaLogin;
+import presentacion.vista.administrador.VistaAdministrador;
 import presentacion.vista.administrativo.VistaAdministrativo;
 
 public class ControladorLogin {
@@ -20,13 +22,17 @@ public class ControladorLogin {
 	private LoginDTO usuarioLogueado;
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
+	private AdministradorDTO administradorLogueado;
+	private VistaAdministrador vistaAdministrador;
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
 		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
+		this.vistaAdministrador = VistaAdministrador.getInstance();
 	
 		this.login = login;
 		this.usuarioLogueado = null;
+		this.administradorLogueado = null;
 	
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
 	}
@@ -58,6 +64,12 @@ public class ControladorLogin {
 					 clienteLogueado = obtenerCliente(usuarioLogueado);
 					 mostrarVentanaCliente();
 				}
+				else{
+					if(usuarioLogueado.getRol().getIdRol()==1){
+						 administradorLogueado = obtenerAdministrador(usuarioLogueado);
+						 mostrarVentanaAdministrador();
+					}
+				}
 			}
 		}
 	}
@@ -77,11 +89,24 @@ public class ControladorLogin {
 		ControladorPrueba controladorPrueba = new ControladorPrueba(vistaAdministrativo);
 		controladorPrueba.inicializar();
 	}
+	
+	private void mostrarVentanaAdministrador() {
+		System.out.println("Se Loguea Como Administrador");
+		System.out.println(administradorLogueado.getNombre());
+		this.ventanaLogin.setVisible(false);
+	}
+		
 		
 /*-----------------------METODOS BUSCADOR POR ROLES ---------------------*/
 	private AdministrativoDTO obtenerAdministrativo(LoginDTO loginUsuario) {
 		Administrativo administrativo = new Administrativo(new DAOSQLFactory());
 		return administrativo.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
+	private AdministradorDTO obtenerAdministrador(LoginDTO loginUsuario) {
+//		Administrador administrador = new Administrador(new DAOSQLFactory());
+//		return administrador.getByLoginId(loginUsuario.getIdDatosLogin());
+		return null;
 	}
 	
 	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {

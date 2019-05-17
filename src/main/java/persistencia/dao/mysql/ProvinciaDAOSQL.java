@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dto.CiudadDTO;
 import dto.ProvinciaDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.ProvinciaDAO;
@@ -153,9 +154,15 @@ public class ProvinciaDAOSQL implements ProvinciaDAO {
 	public static void main(String[] args) {
 		ProvinciaDAOSQL adm = new ProvinciaDAOSQL();
 		List<ProvinciaDTO> administratives = adm.readAll();
-		//readAllByIdPais
-		for(ProvinciaDTO ad: administratives)
-			System.out.println(ad.getNombre());
+		int cont = 0; 
+		for(ProvinciaDTO ad: administratives) {
+		//	System.out.println(ad.getNombre());
+			cont++;
 		}
-
+		//System.out.println("cantProvincias: "+cont);
+		for(ProvinciaDTO P : adm.readAllByIdPais(5))
+			System.out.println(P.getNombre());
+	}
+	
+	
 }
