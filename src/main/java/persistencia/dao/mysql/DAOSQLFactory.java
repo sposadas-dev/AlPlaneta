@@ -9,6 +9,7 @@ import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.LoginDAO;
 import persistencia.dao.interfaz.MedioContactoDAO;
 import persistencia.dao.interfaz.PagoDAO;
+import persistencia.dao.interfaz.PaisDAO;
 import persistencia.dao.interfaz.PasajeDAO;
 import persistencia.dao.interfaz.PasajeroDAO;
 import persistencia.dao.interfaz.ProvinciaDAO;
@@ -77,5 +78,10 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	@Override
 	public ProvinciaDAO createProvinciaDAO() {
 		return new ProvinciaDAOSQL();
+	}
+
+	@Override
+	public PaisDAO createPaisDAO() {
+		return new PaisDAOSQL();
 	}
 }

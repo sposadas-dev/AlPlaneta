@@ -53,6 +53,10 @@ public class VentanaCargarViaje extends JFrame {
 	private JLabel lblProvinciaOrigen;
 	private JLabel lblCiudadOrigen;
 	private JTextField textCapacidad;
+	private JLabel lblHorasEstimadas;
+	private JTextField textHorasEstimadas;
+	private JLabel lblHs;
+	private JLabel lblErrorOrigenDestino;
 	
 	public static VentanaCargarViaje getInstance(){
 		if(INSTANCE == null)
@@ -84,7 +88,7 @@ public class VentanaCargarViaje extends JFrame {
 		panelReserva.setLayout(null);
 		
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(13, 274, 839, 140);
+		spPasajeros.setBounds(13, 299, 839, 115);
 		contentPane.add(spPasajeros);
 		
 		modelViajes = new DefaultTableModel(null,nombreColumnas){
@@ -110,7 +114,7 @@ public class VentanaCargarViaje extends JFrame {
 		contentPane.add(dateChooserFechaOrigen);
 		
 		dateChooserFechaDestino = new JDateChooser();
-		dateChooserFechaDestino.setBounds(379, 72, 153, 20);
+		dateChooserFechaDestino.setBounds(601, 69, 153, 20);
 		contentPane.add(dateChooserFechaDestino);
 		
 		comboBoxCiudadOrigen = new JComboBox();
@@ -122,11 +126,11 @@ public class VentanaCargarViaje extends JFrame {
 		contentPane.add(comboBoxCiudadDestino);
 		
 		JLabel lblNewLabel = new JLabel("Precio del Viaje:");
-		lblNewLabel.setBounds(281, 106, 100, 14);
+		lblNewLabel.setBounds(503, 103, 100, 14);
 		contentPane.add(lblNewLabel);
 		
 		textPrecioViaje = new JTextField();
-		textPrecioViaje.setBounds(379, 103, 153, 20);
+		textPrecioViaje.setBounds(601, 100, 153, 20);
 		contentPane.add(textPrecioViaje);
 		textPrecioViaje.setColumns(10);
 		
@@ -135,7 +139,7 @@ public class VentanaCargarViaje extends JFrame {
 		contentPane.add(lblFechaSalida);
 		
 		JLabel lblNewLabel_1 = new JLabel("Fecha Llegada:");
-		lblNewLabel_1.setBounds(288, 72, 100, 20);
+		lblNewLabel_1.setBounds(510, 69, 100, 20);
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblHorarioSalida = new JLabel("Horario Salida:");
@@ -207,15 +211,46 @@ public class VentanaCargarViaje extends JFrame {
 		textCapacidad.setBounds(662, 238, 92, 20);
 		contentPane.add(textCapacidad);
 		
+		lblHorasEstimadas = new JLabel("Horas estimadas:");
+		lblHorasEstimadas.setBounds(275, 72, 100, 20);
+		contentPane.add(lblHorasEstimadas);
+		
+		textHorasEstimadas = new JTextField();
+		textHorasEstimadas.setColumns(10);
+		textHorasEstimadas.setBounds(379, 72, 74, 20);
+		contentPane.add(textHorasEstimadas);
+		
+		lblHs = new JLabel("hs.");
+		lblHs.setBounds(456, 72, 27, 20);
+		contentPane.add(lblHs);
+		
+		lblErrorOrigenDestino = new JLabel("");
+		lblErrorOrigenDestino.setFont(new Font("Tahoma", Font.ITALIC, 13));
+		lblErrorOrigenDestino.setForeground(Color.RED);
+		lblErrorOrigenDestino.setBounds(13, 272, 440, 14);
+		contentPane.add(lblErrorOrigenDestino);
+		
 		inicializar();
 		this.setVisible(false);
 	}
+	public JTextField getTextHorasEstimadas() {
+		return textHorasEstimadas;
+	}
+
+	public void setTextHorasEstimadas(JTextField textHorasEstimadas) {
+		this.textHorasEstimadas = textHorasEstimadas;
+	}
+
 	public JLabel getLblProvinciaOrigen() {
 		return lblProvinciaOrigen;
 	}
 
 	public void setLblProvinciaOrigen(JLabel lblProvinciaOrigen) {
 		this.lblProvinciaOrigen = lblProvinciaOrigen;
+	}
+	
+	public JLabel getLblErrorOrigenDestino() {
+		return lblErrorOrigenDestino;
 	}
 
 	public JLabel getLblCiudadOrigen() {

@@ -20,7 +20,7 @@ CREATE TABLE `ciudad` (
   KEY `idEstado` (`idProvincia`)
 );
 
-INSERT INTO ciudad VALUES (1,1818,'Cafayate'),(2,1818,'Buenos Aires'),(3,1818,'La Plata'),(4,1822,'Córdoba'),(5,1838,'Rosario'),(6,1831,'Posadas'),(7,1825,'Parana'),(8,81836,'Villa Mercedes');
+INSERT INTO ciudad VALUES (1,1818,'Cafayate'),(2,1818,'Buenos Aires'),(3,1818,'La Plata'),(4,1822,'Córdoba'),(5,1838,'Rosario'),(6,1831,'Posadas'),(7,1825,'Parana'),(8,1836,'Villa Mercedes');
 
 CREATE TABLE `cliente` (
   `idCliente` int(11) NOT NULL AUTO_INCREMENT,
@@ -71,7 +71,7 @@ CREATE TABLE `horario` (
 );
 
 
-INSERT INTO horario VALUES (1,'1:00'),(2,'2:00'),(3,'3:00'),(4,'4:00'),(5,'4:00'),(6,'5:00'),(7,'6:00'),(8,'7:00'),(9,'8:00'),(10,'9:00'),(11,'10:00'),(12,'11:00'),(13,'12:00');
+INSERT INTO horario VALUES (1,'1:00'),(2,'2:00'),(3,'3:00'),(4,'4:00'),(5,'5:00'),(6,'6:00'),(7,'7:00'),(8,'8:00'),(9,'9:00'),(10,'10:00'),(11,'11:00'),(12,'12:00');
 
 CREATE TABLE `login` (
   `idLogin` int(11) NOT NULL AUTO_INCREMENT,

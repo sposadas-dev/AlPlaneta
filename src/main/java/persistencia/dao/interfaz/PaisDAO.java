@@ -6,13 +6,13 @@ import dto.PaisDTO;
 
 public interface PaisDAO {
 	
-	public boolean insert(PaisDTO pais) throws Exception;
+	public boolean insert(PaisDTO pais);
 
-	public boolean delete(PaisDTO pais_a_eliminar) throws Exception;
+	public boolean delete(PaisDTO pais_a_eliminar);
 
-	public List<PaisDTO> readAll() throws Exception;
+	public List<PaisDTO> readAll();
 
-	public boolean update(PaisDTO pais) throws Exception;
+	public boolean update(PaisDTO pais);
 
 	public PaisDTO getPaisById(int id);
 

@@ -14,27 +14,28 @@ public class ModeloProvincia {
 		this.provincia = metodo_persistencia.createProvinciaDAO();
 	}
 	
-	public void agregarProvincia(ProvinciaDTO provincia) throws Exception{
+	public void agregarProvincia(ProvinciaDTO provincia){
 		this.provincia.insert(provincia);
 	}
 	
-	public List<ProvinciaDTO> obtenerProvincias() throws Exception{
-		return this.provincia.readAll();		
-	}
-
-	public void borrarProvincia(ProvinciaDTO provinciaDelete) throws Exception {
-		this.provincia.delete(provinciaDelete);
-	}
-
-	public void editarProvincia(ProvinciaDTO provinciaUpdate) throws Exception {
-		this.provincia.update(provinciaUpdate);
+	public void borrarProvincia(ProvinciaDTO provincia) {
+		this.provincia.delete(provincia);
 	}
 	
-	public void obtenerProvinciaByID(int idProvincia) throws Exception {
-		this.provincia.getProvinciaById(idProvincia);
+	public List<ProvinciaDTO> obtenerProvincias(){
+		return this.provincia.readAll();	
 	}
 	
-	public List<ProvinciaDTO> obtenerProvinciaPorIdPais(int idPais) throws Exception {
+	public void editarProvincia(ProvinciaDTO provincia){
+		this.provincia.update(provincia);
+	}
+	
+	public ProvinciaDTO getProvinciaById(int idProvincia){
+		return this.provincia.getProvinciaById(idProvincia);
+	}
+
+	public List<ProvinciaDTO> obtenerProvinciaPorIdPais(int idPais){
 		return this.provincia.readAllByIdPais(idPais);
 	}
+
 }

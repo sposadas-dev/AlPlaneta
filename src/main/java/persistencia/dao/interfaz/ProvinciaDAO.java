@@ -6,13 +6,12 @@ import dto.ProvinciaDTO;
 
 public interface ProvinciaDAO {
 	
-	public boolean insert(ProvinciaDTO provincia) throws Exception;
+	public boolean insert(ProvinciaDTO provincia);
 
-	public boolean delete(ProvinciaDTO provincia_a_eliminar) throws Exception;
+	public boolean delete(ProvinciaDTO provincia_a_eliminar);
 
-	public List<ProvinciaDTO> readAll() throws Exception;
-
-	public boolean update(ProvinciaDTO provincia) throws Exception;
+	public List<ProvinciaDTO> readAll();
+	public boolean update(ProvinciaDTO provincia);
 
 	public ProvinciaDTO getProvinciaById(int id);
 
