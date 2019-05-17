@@ -11,6 +11,7 @@ public class RolDTO {
 	}
 
 	public RolDTO() {
+		super();
 	}
 
 	public int getIdRol() {

@@ -13,7 +13,7 @@ import persistencia.dao.interfaz.AdministrativoDAO;
 
 public class AdministrativoDAOSQL implements AdministrativoDAO {
 
-	private static final String insert = "INSERT INTO administrativo(idAdministrativo, nombre,idLogin)" + " VALUES (?, ?, ?)";
+	private static final String insert = "INSERT INTO administrativo(idAdministrativo, nombre, idLogin)" + " VALUES (?, ?, ?)";
 
 	private static final String readall = "SELECT * FROM administrativo";
 
@@ -23,13 +23,14 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 	private static final String browseLogin = "SELECT * FROM administrativo WHERE idLogin = ?";
 
 	@Override
-	public boolean insert(AdministrativoDTO administativo) {
+	public boolean insert(AdministrativoDTO administrativo) {
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
-			statement.setInt(1, administativo.getIdAdministrativo());
-			statement.setString(2, administativo.getNombre());
+			statement.setInt(1, administrativo.getIdAdministrativo());
+			statement.setString(2, administrativo.getNombre());
+			statement.setInt(3, administrativo.getDatosLogin().getIdDatosLogin());
 
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -96,6 +97,7 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 						return adm;
 		return null;
 	}
+	
 	public AdministrativoDTO getById(int id ){
 		PreparedStatement statement;
 		ResultSet resultSet;

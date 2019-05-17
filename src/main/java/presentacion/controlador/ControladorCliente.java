@@ -21,6 +21,9 @@ import presentacion.vista.administrativo.VentanaRegistrarCliente;
 public class ControladorCliente implements ActionListener{
 	
 	private VentanaRegistrarCliente ventanaCliente;
+	private PanelCliente panelCliente;
+	private List<ClienteDTO> clientes_en_tabla;
+
 	private Cliente cliente;
 	private MedioContacto medioContacto; 
 	private Login login;
@@ -31,8 +34,9 @@ public class ControladorCliente implements ActionListener{
 		
 		this.medioContacto =  new MedioContacto(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
-			
+		this.panelCliente = new PanelCliente();
 		this.ventanaCliente.getBtnRegistrar().addActionListener(rc->registrarCliente(rc));
+		
 	}
 
 	public void registrarCliente(ActionEvent rc){
@@ -65,6 +69,7 @@ public class ControladorCliente implements ActionListener{
 	);
 //		if(camposCorrectos()){
 			cliente.agregarCliente(nuevoCliente);
+			this.llenarTablaClientes();
 			this.ventanaCliente.limpiarCampos();
 			this.ventanaCliente.dispose();
 //		}
@@ -111,6 +116,26 @@ public class ControladorCliente implements ActionListener{
 			}
 			return true;
 		}
+	
+	private void llenarTablaClientes(){
+		panelCliente.getModelClientes().setRowCount(0); //Para vaciar la tabla
+		panelCliente.getModelClientes().setColumnCount(0);
+		panelCliente.getModelClientes().setColumnIdentifiers(this.panelCliente.getNombreColumnasClientes());
+			
+		this.clientes_en_tabla = cliente.obtenerClientes();
+			
+		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
+			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
+							this.clientes_en_tabla.get(i).getApellido(),
+							this.clientes_en_tabla.get(i).getDni(),
+							this.clientes_en_tabla.get(i).getFechaNacimiento(),
+							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
+							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
+							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()	
+			};
+			this.panelCliente.getModelClientes().addRow(fila);
+		}		
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

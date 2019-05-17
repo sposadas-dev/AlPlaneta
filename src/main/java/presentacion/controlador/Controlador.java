@@ -803,172 +803,461 @@ public class Controlador implements ActionListener {
 //				fechaNacimiento,
 //				obtenerMedioContactoDTO(),
 //				
-//		);
-//			cliente.agregarCliente(nuevoCliente);
-//			llenarTablaClientes();
-//			this.ventanaCliente.limpiarCampos();
-//			this.ventanaCliente.dispose();
+////		mostrarVentanaReserva();  // Ventana creacion de pasajes.
+//	
+////		llenarViajesEnTabla();
+//		
+////		mostrarVentanaPago();
+//		
+////		llenarValoresEnCargaDeViaje();
+//	}
+//	
+//	
+///*< METODOS DE VIAJE > - - -   - - - - - - - - - - - - - - - - - - - - - - - - - - --  */
+//	
+///*< ORIGEN-DESTINOS >*/
+//	private void llenarComboBoxPaises() {
+//		List<PaisDTO> paises = new PaisDAOSQL().readAll();
+//		String[] nombresPaises = new String[paises.size()];
+//		for(int i=0; i<paises.size();i++){
+//			String pais = paises.get(i).getIdPais()+"-"+paises.get(i).getNombre();
+//			nombresPaises [i] = pais;
+//		}	
+///* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+//		this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresPaises));
+//		this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresPaises));
+//	}
+//	
+//	private void obtenerProvincias_porPaisOrigen(MouseEvent evt) {//obtener provinciasOrigen y setEnComboProvincia
+//		String pais = ventanaCargarViaje.getComboBoxPaisOrigen().getSelectedItem().toString();
+//		ventanaCargarViaje.getComboBoxProvinciaOrigen().setEnabled(true);
+//    	llenarComboBoxProvinciasOrigen(Integer.parseInt(pais.substring(0)));
+//	}
+//
+//	private void obtenerProvincias_porPaisDestino(MouseEvent evt) {//obteer provinciasDestino y setEnComboProvincia
+//		String pais = ventanaCargarViaje.getComboBoxPaisDestino().getSelectedItem().toString();
+//		ventanaCargarViaje.getComboBoxProvinciaDestino().setEnabled(true);
+//    	llenarComboBoxProvinciasDestino(Integer.parseInt(pais.substring(0)));
+//	}
+//	
+//	private void obtenerCiudades_porProvinciaOrigen(MouseEvent evt) {
+//		String provincia = ventanaCargarViaje.getComboBoxProvinciaOrigen().getSelectedItem().toString();
+//    	llenarComboBoxCiudadesOrigen(Integer.parseInt(provincia.substring(0)));
+//	} 
+//	
+//	private void obtenerCiudades_porProvinciaDestino(MouseEvent evt) {
+//		String provincia = ventanaCargarViaje.getComboBoxProvinciaDestino().getSelectedItem().toString();
+//    	llenarComboBoxCiudadesDestino(Integer.parseInt(provincia.substring(0)));
+//	} 
+//	
+//	private void llenarComboBoxProvinciasOrigen(int idPais) {
+//		List<ProvinciaDTO> provincias = null;
+//		try {
+//			provincias = modeloProvincia.obtenerProvinciaPorIdPais(idPais);
+//		} catch (Exception e) {
+//			e.printStackTrace();
 //		}
-	}
-	
-	private MedioContactoDTO obtenerMedioContactoDTO() {
-		MedioContacto medioContacto = new MedioContacto(new DAOSQLFactory());
-		MedioContactoDTO mContactoDTO = new MedioContactoDTO();
-		ArrayList<MedioContactoDTO> medios = (ArrayList<MedioContactoDTO>) medioContacto.obtenerMediosContacto();
-		for(MedioContactoDTO m: medios){
-			if(m.getEmail().toString().equals(this.ventanaCliente.getTxtEmail().getText()) &&
-				m.getTelefonoCelular().equals(this.ventanaCliente.getTxtTelefonoCelular().getText())&&
-				m.getTelefonoFijo().equals(this.ventanaCliente.getTxtTelefonoFijo().getText())){
-				mContactoDTO = m;
-			}
-		}
-		return mContactoDTO;
-	}
-	
-	
-	/*- - - - - - - -  - - - - - - - METODOS DE PASAJERO - - - - - - - - - - - - - - - - --  */	
-	
-	private void darDeAltaUnPasajero(ActionEvent aP) {
-		
-		PasajeroDTO pasajeroDTO = new PasajeroDTO();
-		pasajeroDTO.setNombre(this.ventanaPasajero.getTxtNombre().getText());
-		pasajeroDTO.setApellido(this.ventanaPasajero.getTxtApellido().getText());
-		pasajeroDTO.setDni(this.ventanaPasajero.getTxtDni().getText());
-		
-		PasajeroDAOSQL DAO = new PasajeroDAOSQL();
-		DAO.insert(pasajeroDTO);
-		
-		pasajerosEnEstaReserva.add(pasajeroDTO);
-		
-		/*LLENAMOS LA VENTANA CON LOS PASAJEROS DEL VIAJE*/
-		llenarTablaDePasajerosEnVentanaCargaPasajeros();
-		
-		/*VACIAR LOS TXTFIELD*/		
-		this.ventanaPasajero.getTxtNombre().setText("");
-		this.ventanaPasajero.getTxtApellido().setText("");;
-		this.ventanaPasajero.getTxtDni().setText("");
-		
-		this.ventanaPasajero.setVisible(false);	
-	}
-	
-	private void altaPasajerosDeUnViaje(ActionEvent aP) {
-		this.ventanaCargaPasajero.setVisible(false);
-		this.ventanaReserva.setVisible(true);
-	}
-	
-	private void llenarTablaDePasajerosEnVentanaCargaPasajeros(){
-		
-		this.ventanaCargaPasajero.getModelPasajeros().setRowCount(0);
-		this.ventanaCargaPasajero.getModelPasajeros().setColumnCount(0);
-		this.ventanaCargaPasajero.getModelPasajeros().setColumnIdentifiers(this.ventanaCargaPasajero.getNombreColumnas());
-		for(int i=0; i<pasajerosEnEstaReserva.size();i++){
-			Object[] fila = { 
-					pasajerosEnEstaReserva.get(i).getNombre(),
-					pasajerosEnEstaReserva.get(i).getApellido(),
-					pasajerosEnEstaReserva.get(i).getDni()
-			};
-			this.ventanaCargaPasajero.getModelPasajeros().addRow(fila);
-		}
-		this.ventanaReserva.getLblCantidadDePasajeros().setText(pasajerosEnEstaReserva.size()+" Pasajeros fueron cargados");
-		
-		
-//		ArrayList<PasajeroDTO> pasajeros_en_tabla = (ArrayList<PasajeroDTO>) new PasajeroDAOSQL().readAll();
-//		for(int i=0; i< pasajeros_en_tabla.size();i++){
+//		
+//		String[] nombresProvincias = new String[provincias.size()];
+//		for(int i=0; i<provincias.size();i++){
+//			String provincia = provincias.get(i).getIdProvincia()+"-"+provincias.get(i).getNombre();
+//			nombresProvincias [i] = provincia;
+//		}	
+///* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+//		this.ventanaCargarViaje.getComboBoxProvinciaOrigen().setModel(new DefaultComboBoxModel(nombresProvincias));
+//	}
+//	
+//	private void llenarComboBoxProvinciasDestino(int idPais) {
+//		List<ProvinciaDTO> provincias = null;
+//		try {
+//			provincias = modeloProvincia.obtenerProvinciaPorIdPais(idPais);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		String[] nombresProvincias = new String[provincias.size()];
+//		for(int i=0; i<provincias.size();i++){
+//			String provincia = provincias.get(i).getIdProvincia()+"-"+provincias.get(i).getNombre();
+//			nombresProvincias [i] = provincia;
+//		}	
+//		this.ventanaCargarViaje.getComboBoxProvinciaDestino().setModel(new DefaultComboBoxModel(nombresProvincias));
+//	}
+//	
+//	private void llenarComboBoxCiudadesOrigen(int idProvincia) {
+//		List<CiudadDTO> ciudades = null;
+//		try {
+//			ciudades = modeloCiudad.obtenerCiudadPorIdProvincia(idProvincia);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		String[] nombresCiudades = new String[ciudades.size()];
+//		
+//		for(int i=0; i<ciudades.size();i++){
+//			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
+//			nombresCiudades [i] = ciudad;
+//		}	
+//		this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresCiudades));
+//		
+//	}
+//	
+//	private void llenarComboBoxCiudadesDestino(int idProvincia) {
+//		List<CiudadDTO> ciudades = null;
+//		try {
+//			ciudades = modeloCiudad.obtenerCiudadPorIdProvincia(idProvincia);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		String[] nombresCiudades = new String[ciudades.size()];
+//		
+//		for(int i=0; i<ciudades.size();i++){
+//			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
+//			nombresCiudades [i] = ciudad;
+//		}	
+//		this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresCiudades));
+//	}
+//
+///*< / ORIGEN-DESTINOS >*/
+//
+///*< VALIDACION DE ALTA VIAJESS >*/	
+//	
+//	private boolean viajeValido(){
+//		boolean ret = false;
+//		
+//		this.ciudadOrigenSelected = ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString();
+//		this.ciudadDestinoSelected = ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString();
+//		
+//		if(!(ciudadOrigenSelected.equals(ciudadDestinoSelected)) &&
+//			!(provinciaOrigenSelected.equals(provinciaDestinoSelected))){
+//			System.out.println("El origen y el destino tienen que ser diferentes");
+//			ret = true;
+//		}
+//		return ret;
+//	}
+///*< / VALIDACION DE ALTA VIAJESS >*/	
+//	
+//	private void darAltaUnViajes(ActionEvent aV) {
+//		if(viajeValido())
+//			System.out.println("Dar de alta el viaje");
+//		
+//		
+//		
+////		ModeloCiudad modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
+////		ModeloViaje modeloViaje = new ModeloViaje(new DAOSQLFactory());
+////		
+/////*OBTENEMOS LA CIUDAD ELEGIDA EN LA VENTANACARGA DE VIAJES*/		
+////		CiudadDTO origen = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString());
+////		CiudadDTO destino = modeloCiudad.getCiudadByName(ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString());
+////
+/////*OBTENEMOS LAS HORAS TANDO DE SALIDA COMO DE LLEGADA, Y LA PARSEAMOS A TIPO DATE DE SQL*/
+////		java.util.Date dateOrigen = ventanaCargarViaje.getDateChooserFechaOrigen().getDate();
+////		java.sql.Date fechaSalida = new java.sql.Date(dateOrigen.getTime());
+////		
+////		java.util.Date dateDestino = ventanaCargarViaje.getDateChooserFechaDestino().getDate();
+////		java.sql.Date fechaLlegada = new java.sql.Date(dateDestino.getTime());
+////		
+////		String horaSalida = ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
+////		BigDecimal precio = new BigDecimal(ventanaCargarViaje.getTextPrecioViaje().getText());
+////		
+////		ViajeDTO nuevoViaje = new ViajeDTO(0, origen, destino, fechaSalida, fechaLlegada, precio, horaSalida);
+//
+//		// VER POR QUE NO FUNCIONA LA CONSULTA SQL EN EL MODELO	
+////		modeloViaje.agregarViaje(nuevoViaje);
+////
+////		ViajeDAOSQL sql = new ViajeDAOSQL();		
+////		sql.insert(nuevoViaje);
+//		
+//		llenarViajesEnTabla();
+//		
+//	}	
+//	
+//	/*- - - - - - - -  - - - - - - - < / METODOS DE VIAJE> - - - - - - - - - - - - - - - - --  */
+///*/////////////////////////////////////////////////////////////////////////////////////////////////////*/
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	/*IMPLEMENTADO BRANCH V3.0*/	
+//	private void logearse(ActionEvent log) {
+//		String usuario = ventanaLogin.getTextUsuario().getText();
+//		String password = new String(ventanaLogin.getPasswordField().getPassword());
+//		
+//		
+//		LoginDAOSQL dao = new LoginDAOSQL();
+//		usuarioLogeado = null;
+//		try {
+//			usuarioLogeado = dao.getByDatos(usuario, password);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		if(usuarioLogeado==null){
+//			this.ventanaLogin.getLblError().setVisible(true);
+//			System.out.println("EL USUARIO O CONTRASENA ES INCORRECTO");
+//		}
+//		else{
+//			System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogeado.getUsuario()+" "+usuarioLogeado.getContrasena()+" "+usuarioLogeado.getRol().getIdRol());
+//			if(usuarioLogeado.getRol().getIdRol()==2){
+//				 administrativoLogueado = obtenerAdministrativo(usuarioLogeado);
+//				 mostrarVentanaAdministrativo();
+//			}
+//			else{
+//				if(usuarioLogeado.getRol().getIdRol()==5){
+//					 clienteLogueado = obtenerCliente(usuarioLogeado);
+//					 mostrarVentanaCliente();
+//				}
+//			}
+//		}
+//		
+//	}
+//
+//	private void mostrarVentanaCliente() {
+//		System.out.println("Se Loguea como Cliente");
+//		System.out.println(clienteLogueado.getNombre());
+//		this.ventanaLogin.setVisible(false);
+//		
+//	}
+//
+//	/*MOSTRAR LA VENTANA PRINCIPAL DEL PARSONAL ADMINISTRATIVO*/
+//	private void mostrarVentanaAdministrativo() {
+//		System.out.println("Se Loguea Como Administrativo");
+//		System.out.println(administrativoLogueado.getNombre());
+//		this.ventanaLogin.setVisible(false);
+//		
+//
+//	}
+//	
+//	private void mostrarVentanaAdministrador() {
+//		System.out.println("Se Loguea Como Administrador");
+//		System.out.println(administradorLogueado.getNombre());
+//		this.ventanaLogin.setVisible(false);
+//		
+//
+//	}
+///*-----------------------METODOS BUSCADOR POR ROLES ---------------------*/
+//	private AdministrativoDTO obtenerAdministrativo(LoginDTO loginUsuario) {
+//		AdministrativoDAOSQL dao = new AdministrativoDAOSQL();
+//		return dao.getByLoginId(loginUsuario.getIdDatosLogin());
+//	}
+//	
+//	private AdministradorDTO obtenerAdministrador(LoginDTO loginUsuario) {
+//		AdministradorDAOSQL dao = new AdministradorDAOSQL();		
+//		return dao.getByLoginId(loginUsuario.getIdDatosLogin());
+//	}
+//	
+//	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {
+//		ClienteDAOSQL sql = new ClienteDAOSQL();
+//		return sql.getByLoginId(loginUsuario.getIdDatosLogin());
+//	}
+//	
+////	private AdministrativoDTO busquedaRolAdministrativo(String user, String password) {
+////		return modeloAdminisrativo.obtenerAdministrativoDatosLogin(user,password);
+////	}
+///*FIN IMPLEMENTACION BRANCH V3.0*/
+//	
+//	
+//	
+//	private void salirVentanaCliente(ActionEvent bc) {
+//		this.ventanaCliente.cerrarVentana();
+//	}
+//
+//	
+//	
+//	
+//	
+//	
+//	private void llenarCiudadesEnCargaViajes() {
+///*INGRESAR VALOR DEFAULT A LOS COMBOBOX."Seleccione un pais - -*/
+//		
+///*CARGAR LOS PAISES DE LA BASE DE DATOS.*/
+//		llenarComboBoxPaises();
+///*UNA VEZ SELECIONADO EL PAIS, HABILITAR EL COMBO PROVINCIA, CORRESPONDIENTE AL PAIS CLICKOUT*/
+//		/*obtener el id del pais*/
+///*MISMA ACCION PARA CIUDAD*/
+//
+///*HABILITAR EL BOTON SELECCIONAR ORIGEN*/
+//
+///*REALIZAR MISMA TAREA PARA DESTINO.*/
+//
+///*UNA VEZ ACEPTADO: MOSTRAR LA CIUDAD ORIGEN Y DESTINO EN LA TABLA CON LOS DEMAS DATOS CORRESPONDIENTES*/
+//
+//		this.ventanaCargarViaje.getModelViajes().setRowCount(0);
+//		this.ventanaCargarViaje.getModelViajes().setColumnCount(0);
+//		this.ventanaCargarViaje.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
+//		
+//		
+///*CAMBIAR, CREAR LA CIUDAD*/		
+//		ArrayList<ViajeDTO> viajes_en_tabla = (ArrayList<ViajeDTO>) new ViajeDAOSQL().readAll();
+//		for(int i=0; i< viajes_en_tabla.size();i++){
 //			Object[] fila = { 
-//					pasajeros_en_tabla.get(i).getNombre(),
-//					pasajeros_en_tabla.get(i).getApellido(),
-//					pasajeros_en_tabla.get(i).getDni()
-//					};
-		
+//					viajes_en_tabla.get(i).getOrigenViaje().getNombre(),
+//					viajes_en_tabla.get(i).getDestinoViaje().getNombre(),
+//					viajes_en_tabla.get(i).getFechaSalida(),
+//					viajes_en_tabla.get(i).getFechaLlegada(),
+//					viajes_en_tabla.get(i).getPrecio(),
+//					viajes_en_tabla.get(i).getHoraSalida()
+//			};
+//			this.ventanaTablaViajes.getModelViajes().addRow(fila);
 //		}
-	}
-
-	private void mostrarVentanaAltaDePasajeros(ActionEvent aP) {
-		this.ventanaReserva.mostrarVentana(false);
-		this.ventanaPasajero.setVisible(true);
-	}
-	
-	private void mostrarVentanaCargaDePasajeros(ActionEvent cP) {
-		this.ventanaReserva.mostrarVentana(false);
-		this.ventanaCargaPasajero.mostrarVentana(true);
-	}
-	
-	private void generarPasaje(ActionEvent pagar) {
-		this.ventanaReserva.mostrarVentana(false);
-		this.ventanaFormaDePagos.mostrarVentana(true);
-		
-		PasajeDTO pasajeDTO = new PasajeDTO();
-		
-/*OBTENER EL VIAJE SELECCIONADO*/
-		pasajeDTO.setViaje(this.viajeSeleccionado);
-		
-/*OBTENER EL TRASNPORTE*/
-//		System.out.println("------"+this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
-//		transporteSeleccionado = obtenerTransporteElegidoPorCliente(
-//								(String) this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
-//		pasajeDTO.setTransporte(transporteSeleccionado);
-				
-		
-/*OBTENER EL RANGO ELEGIDO POR EL CLIENTE*/
-		String rangoElegido = this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString();
-		
-/*OBTENER LOS PASAJEROS RELACIONADO A ESE PASAJE*/
-		pasajeDTO.setPasajeros(this.pasajerosEnEstaReserva);
-		
-/*OBTENER EL PAGO DEL PASAJE*/
-		horarioElegido = obtenerHorarioElegidoPorCliente(this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString());
-
-/*GENERAR EL PASAJE Y DARLO DE ALTA EN LA BASE DE DATOS*/
-		
-	}
-
-	private HorarioReservaDTO obtenerHorarioElegidoPorCliente(String horarioComboBox) {
-		HorarioReservaDAOSQL tDAO = new HorarioReservaDAOSQL();
-		HorarioReservaDTO ret = null;
-		ArrayList<HorarioReservaDTO> rangoshorarios = (ArrayList<HorarioReservaDTO>) tDAO.readAll();
-		for(HorarioReservaDTO h : rangoshorarios) {
-			if(h.getHoraInicio().equals(horarioComboBox.substring(0,5)) && (h.getHoraFin().equals(horarioComboBox.substring(8,13)))){
-				ret = h;
-			}
-		}
-		return ret;
-	}
-	/*- - - - - - - -  - - - - - - - METODOS DE RESERVA - - - - - - - - - - - - - - - - --  */		
-	
-	private void llenarValoresEnReserva(){
-		llenarComboRangoDeHorarioEnReserva();
-
-//		llenarComboTransporteEnReserva();
-		
-		/*CAMBIAR LA SOLICITUD AL DAOSQL POR LA SOLICITUD AL MODELO*/
-/*       PREGUNTAR A SOL POR QUE NO FUNCIONA !! -.-"        */		
-		llenarListModelViajesEnReserva();
-		
-	}
-
-	private void llenarListModelViajesEnReserva() {
-		
-		this.ventanaReserva.getListModelViajesDisponibles().removeAllElements();
-		
-		List<ViajeDTO> viajesDisponibles = new ViajeDAOSQL().readAll();
-		System.out.println("Se pidieron"+ viajesDisponibles.size()+" valores en la db de viajes");
-		String[] viajes = new String[viajesDisponibles.size()];
-		
-		for(int i=0; i<viajesDisponibles.size();i++){
-			CiudadDTO origen = viajesDisponibles.get(i).getOrigenViaje();
-			CiudadDTO destino = viajesDisponibles.get(i).getDestinoViaje();
-			
-			viajes [i] = origen.getNombre()+" - "+destino.getNombre();
-			this.ventanaReserva.getListModelViajesDisponibles().addElement(origen.getNombre()+" - "+destino.getNombre());
-		}
-	}
-
-//	private void llenarComboTransporteEnReserva() {
-//		List<TransporteDTO> transportesDTO = new TransporteDAOSQL().readAll();
-//		String[] transoportes = new String[transportesDTO.size()];
-//		for(int i=0; i<transportesDTO.size();i++){
-//			String rango = transportesDTO.get(i).getNombreTransporte();
-//			transoportes [i] = rango;
+//		this.ventanaTablaViajes.setVisible(true);
+//		
+////		this.ventanaCargarViaje.getTablaViajes();
+//		
+//	}
+//	
+//	
+///*////////////////////////////////////////////////////////////////////////////////////////////////*/	
+//	
+//	private void agregarPanelClientes(ActionEvent ac) {
+//		this.vista.getPanelClientes().setVisible(true);
+//		this.vista.getPanelReservas().setVisible(false);
+//	}
+//
+//	private void agregarPanelPasajes(ActionEvent ap) {
+//		this.vista.getPanelClientes().setVisible(false);
+//		this.vista.getPanelReservas().setVisible(true);
+//	}
+//
+//	private void agregarCliente(ActionEvent c) {
+//		this.ventanaCliente.mostrarVentana();
+//	}
+//
+//	private void agregarPasaje(ActionEvent p) {
+//		mostrarVentanaReserva();
+//	}
+//
+//	private void llenarTablaClientes(){
+//		this.vista.getModelClientes().setRowCount(0); //Para vaciar la tabla
+//		this.vista.getModelClientes().setColumnCount(0);
+//		this.vista.getModelClientes().setColumnIdentifiers(this.vista.getNombreColumnasClientes());
+//			
+//		this.clientes_en_tabla = cliente.obtenerClientes();
+//			
+//		for (int i = 0; i < this.clientes_en_tabla.size(); i++)
+//		{
+//			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
+//							this.clientes_en_tabla.get(i).getApellido(),
+//							this.clientes_en_tabla.get(i).getDni(),
+//							this.clientes_en_tabla.get(i).getFechaNacimiento(),
+//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
+//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
+//							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()	
+//			};
+//							this.vista.getModelClientes().addRow(fila);
+//		}		
+//	}
+////	
+////		
+//	
+//	/*LABEL CANTIDAD DE PASAJEROS*/
+//	
+//	
+//	private void llenarValoresEnCargaDeViaje() throws Exception{
+//		
+//		llenarComboRangoHorariosEnCargarViaje();//modificar para q levante de la base
+//
+//		llenarComboCiudadesEnCargarViaje();
+//
+//		mostrarVentanaCargarViaje();
+//		
+//	}
+//	
+//	private void llenarComboRangoHorariosEnCargarViaje() {
+//		String [] horarios = {"1:00", "2:00", "3:00", "4:00", "5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00"};
+//		this.ventanaCargarViaje.getComboBoxHorarioSalida().setModel(new DefaultComboBoxModel(horarios));
+//	}
+//
+//	private void llenarComboCiudadesEnCargarViaje() {
+//		/*CARGAMOS LOS VALORES DE LAS CIUDADES EN LA VENTANA DE DAR ALTA VIAJE*/
+//				List<CiudadDTO> ciudades = new CiudadDAOSQL().readAll();
+//				String[] nombresCiudades = new String[ciudades.size()];
+//				for(int i=0; i<ciudades.size();i++){
+//					nombresCiudades [i] = ciudades.get(i).getNombre();
+//				}	
+//		/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
+//				this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresCiudades));
+//				this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresCiudades));
+//	}
+//
+//	private void mostrarVentanaCargarViaje() {
+//		this.ventanaCargarViaje.setVisible(true);
+//		
+//	}
+//	
+//	private void llenarViajesEnTabla(){
+//		ViajeDAOSQL viajes = new ViajeDAOSQL();
+//		viajes_en_tabla = viajes.readAll();
+//	}
+//	
+//	private void seleccionarViaje(ActionEvent sV) {
+//		
+//		this.ventanaTablaViajes.setVisible(false);
+//		this.ventanaReserva.setVisible(true);
+//		
+//		int filaSeleccionada = this.ventanaTablaViajes.getTablaViajes().getSelectedRow();
+//		viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
+////		
+////		String viajeString = String.valueOf(viajeSeleccionado.getId()) +
+////				" -   DE : "+  viajeSeleccionado.getOrigenViaje().getNombre() +
+////				"  -  HACIA : "+ viajeSeleccionado.getDestinoViaje().getNombre();
+//		
+////		this.ventanaReserva.getLblViajeSeleccionado().setText(viajeString);
+//	}
+//	
+//	/*- - - - - - - -  - - - - - - - METODO DE CLIENTE - - - - - - - - - - - - - - - - --  */	
+//
+//	private void altaCliente(ActionEvent client) {
+////		if(validarCampos()){	
+////		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
+////		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
+////		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
+////		
+////		/*Obtenemos el medio de contacto del cliente*/
+////		MedioContactoDTO mContacto = new MedioContactoDTO();
+////		mContacto.setTelefonoFijo(this.ventanaCliente.getTxtTelefonoFijo().getText());
+////		mContacto.setTelefonoCelular(this.ventanaCliente.getTxtTelefonoCelular().getText());
+////		mContacto.setEmail(this.ventanaCliente.getTxtEmail().getText());
+////		
+////		medioContacto.agregarMedioContacto(mContacto);
+////		
+////		ClienteDTO nuevoCliente = new ClienteDTO(0,
+////				this.ventanaCliente.getTxtNombre().getText(),
+////				this.ventanaCliente.getTxtApellido().getText(),
+////				this.ventanaCliente.getTxtDni().getText(),
+////				fechaNacimiento,
+////				obtenerMedioContactoDTO(),
+////				
+////		);
+////			cliente.agregarCliente(nuevoCliente);
+////			llenarTablaClientes();
+////			this.ventanaCliente.limpiarCampos();
+////			this.ventanaCliente.dispose();
+////		}
+//	}
+//	
+//	private MedioContactoDTO obtenerMedioContactoDTO() {
+//		MedioContacto medioContacto = new MedioContacto(new DAOSQLFactory());
+//		MedioContactoDTO mContactoDTO = new MedioContactoDTO();
+//		ArrayList<MedioContactoDTO> medios = (ArrayList<MedioContactoDTO>) medioContacto.obtenerMediosContacto();
+//		for(MedioContactoDTO m: medios){
+//			if(m.getEmail().toString().equals(this.ventanaCliente.getTxtEmail().getText()) &&
+//				m.getTelefonoCelular().equals(this.ventanaCliente.getTxtTelefonoCelular().getText())&&
+//				m.getTelefonoFijo().equals(this.ventanaCliente.getTxtTelefonoFijo().getText())){
+//				mContactoDTO = m;
+//			}
 //		}
 //		this.ventanaReserva.getComboBoxTransporte().setModel(new DefaultComboBoxModel(transoportes));
 //	}
@@ -1109,12 +1398,49 @@ public class Controlador implements ActionListener {
 //		
 //		DAO.insert(pasajeDTO);
 //		this.ventanaReserva.setVisible(false);
+//		this.ventanaFormaDePagos.setVisible(true);
 //		
-//		for(PasajeroDTO p : pasajerosEnEstaReserva) {
-//			Pasaje_PasajerosDTO pasaje_pasajero = new Pasaje_PasajerosDTO (0, pasajeDTO.getIdPasaje(), p.getIdPasajero());
-//			/*FALTA CHEQUEAR LOS ID = 0*/
-//			Pasaje_PasajerosDAOSQL DAOPP = new Pasaje_PasajerosDAOSQL();
-//			DAOPP.insert(pasaje_pasajero);
+//		this.transporteSeleccionado = obtenerTransporteElegidoPorCliente(this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
+//		this.ventanaFormaDePagos.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
+//		
+//	}
+//	
+//	private BigDecimal calcularMontoDePasaje() {
+//		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
+////		BigDecimal Valor2 = this.transporteSeleccionado.getPrecioBase();
+////		Valor2 = Valor2.add(Valor1);
+////		totalaPagar = Valor2;
+//		
+//		return totalaPagar.multiply(new BigDecimal(pasajerosEnEstaReserva.size()));
+//	}
+//
+//
+//	/* - - - -  - - - - - - - - - -  - - OTROS METODOS - - - - - - - - - - - - - - - -  -*/	
+//	
+//	private TransporteDTO obtenerTransporteElegidoPorCliente(String transporteComboBox) {
+//		TransporteDAOSQL tDAO = new TransporteDAOSQL();
+//		TransporteDTO ret = null;
+//		ArrayList<TransporteDTO> transportes = (ArrayList<TransporteDTO>) tDAO.readAll();
+//		for(TransporteDTO t: transportes)
+////			if(t.getNombreTransporte().equals(transporteComboBox))
+//				ret = t;
+//		return ret;
+//	}
+//	
+////	private void generarPasajeTarjeta(ActionEvent rP) {
+////		String importeIngresado = ventanaPagoTarjeta.getTextImporteIngresado().toString();
+////	}
+////	
+//
+//	private void redirigirSegunItemSeleccionado(String itemSeleccionado) {
+//		if(itemSeleccionado.equals("TARJETA")){
+////			ventanaPagoTarjeta.mostrarVentana(true);
+////			ventanaFormaDePagos.mostrarVentana(false);
+//			ventanaFormaDePagos.redimensionar();
+//			}
+//		else if(itemSeleccionado.equals("EFECTIVO")){
+////			ventanaPagoEfectivo.mostrarVentana(true);
+//			ventanaFormaDePagos.mostrarVentana(false);
 //		}
 
 	}

@@ -21,6 +21,7 @@ import javax.swing.JProgressBar;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 public class VistaAdministrativo{
 	
@@ -89,8 +90,16 @@ public class VistaAdministrativo{
 		itemAgregarPasaje = new JMenuItem("Agregar pasaje");
 		itemAgregarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPasajes.add(itemAgregarPasaje);
-	}
 		
+		JMenuItem mntmCancelarPasaje = new JMenuItem("Cancelar pasaje");
+		mntmCancelarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(mntmCancelarPasaje);
+		
+		JMenuItem menuVisualizarPasajes = new JMenuItem("Visualizar pasajes");
+		menuVisualizarPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(menuVisualizarPasajes);
+	}
+
 	public PanelPasaje getPanelPasaje() {
 		return panelPasaje;
 	}

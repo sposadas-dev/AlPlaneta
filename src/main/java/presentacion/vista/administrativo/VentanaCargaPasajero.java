@@ -19,9 +19,10 @@ public class VentanaCargaPasajero extends JFrame {
 	private JPanel contentPane;
 	private JTable tablaPasajeros;
 	private DefaultTableModel modelPasajeros;
-	private JButton btnEliminar; 
 	private JButton btnAgregarPasajero; 
+	private JButton btnEliminar;
 	private JButton btnConfirmar;
+	private JButton btnAtras;
 	private  String[] nombreColumnas = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento","Teléfono","Email"};
 
 	public static VentanaCargaPasajero getInstance(){
@@ -32,9 +33,11 @@ public class VentanaCargaPasajero extends JFrame {
 	}
 	
 	private VentanaCargaPasajero() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Carga de pasajeros");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 545, 406);
+		setLocationRelativeTo(null); 
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -65,7 +68,7 @@ public class VentanaCargaPasajero extends JFrame {
 		btnConfirmar.setBounds(278, 319, 109, 37);
 		contentPane.add(btnConfirmar);
 		
-		JButton btnAtras = new JButton("Atrás");
+		btnAtras = new JButton("Atrás");
 		btnAtras.setBounds(111, 319, 109, 37);
 		contentPane.add(btnAtras);
 		
@@ -78,19 +81,6 @@ public class VentanaCargaPasajero extends JFrame {
 
 	public void setBtnEliminar(JButton btnEliminar) {
 		this.btnEliminar = btnEliminar;
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaCargaPasajero frame = new VentanaCargaPasajero();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 
 	public void mostrarVentana(boolean b) {
@@ -135,5 +125,9 @@ public class VentanaCargaPasajero extends JFrame {
 
 	public void setBtnConfirmar(JButton btnConfirmar) {
 		this.btnConfirmar = btnConfirmar;
+	}
+	
+	public JButton getBtnAtras() {
+		return btnAtras;
 	}
 }

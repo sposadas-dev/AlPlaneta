@@ -17,29 +17,32 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class VentanaFormaPago extends JFrame {
+public class VentanaPago extends JFrame {
 
 	private JPanel contentPane;
 	private JComboBox<?> comboBoxEstadoPago;
 	private DefaultComboBoxModel modelo;
 	private JButton btnPago;
-	private static VentanaFormaPago INSTANCE;
+	private static VentanaPago INSTANCE;
 	private JLabel lblSelecioneUnaForma;
 	private JLabel lblMontoAPagar;
 	private JTextField textImporteTotal;
 	private JLabel lblMontoaPagar;
 	
-	
-	public static VentanaFormaPago getInstance(){
+	public static VentanaPago getInstance(){
 		if(INSTANCE == null)
-			return new VentanaFormaPago();
+			return new VentanaPago();
 		else
 			return INSTANCE;
 	}
 	
-	private VentanaFormaPago() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	private VentanaPago() {
+		setTitle("Pago");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 413, 271);
+		setLocationRelativeTo(null); 
+
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -116,7 +119,7 @@ public class VentanaFormaPago extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaFormaPago frame = new VentanaFormaPago();
+					VentanaPago frame = new VentanaPago();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

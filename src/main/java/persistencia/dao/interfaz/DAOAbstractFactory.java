@@ -23,6 +23,8 @@ public interface DAOAbstractFactory {
 	public ViajeDAO createViajeDAO();
 
 	public LoginDAO createLoginDAO();
+
+	public RolDAO createRolDAO();
 	
 	public ProvinciaDAO createProvinciaDAO();
 

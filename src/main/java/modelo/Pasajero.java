@@ -14,19 +14,19 @@ public class Pasajero {
 		this.pasajero = metodo_persistencia.createPasajeroDAO();
 	}
 
-	public void agregarPasajero(PasajeroDTO pasajeroInsert) throws Exception {
+	public void agregarPasajero(PasajeroDTO pasajeroInsert){
 		this.pasajero.insert(pasajeroInsert);
 	}
 
-	public List<PasajeroDTO> obtenerPasajeros() throws Exception {
+	public List<PasajeroDTO> obtenerPasajeros() {
 		return this.pasajero.readAll();
 	}
 
-	public void borrarPasajero(PasajeroDTO pasajeroDelete) throws Exception {
+	public void borrarPasajero(PasajeroDTO pasajeroDelete) {
 		this.pasajero.delete(pasajeroDelete);
 	}
 
-	public void editarPasajero(PasajeroDTO pasajeroUpdate) throws Exception {
+	public void editarPasajero(PasajeroDTO pasajeroUpdate) {
 		this.pasajero.update(pasajeroUpdate);
 	}
 }
