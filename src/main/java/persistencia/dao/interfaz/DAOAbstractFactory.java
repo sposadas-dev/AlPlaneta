@@ -24,6 +24,8 @@ public interface DAOAbstractFactory {
 
 	public LoginDAO createLoginDAO();
 	
+	public FormaPagoDAO createFormaPagoDAO();
+	
 //	public CoordinadorDAO createCoordinadorDAO();
 
 

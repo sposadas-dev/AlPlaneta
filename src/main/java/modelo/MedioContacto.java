@@ -2,7 +2,6 @@ package modelo;
 
 import java.util.List;
 
-import dto.CiudadDTO;
 import dto.MedioContactoDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.MedioContactoDAO;
