@@ -26,6 +26,10 @@ public interface DAOAbstractFactory {
 
 	public RolDAO createRolDAO();
 	
+	public ProvinciaDAO createProvinciaDAO();
+
+	public PaisDAO createPaisDAO();
+	
 //	public CoordinadorDAO createCoordinadorDAO();
 
 

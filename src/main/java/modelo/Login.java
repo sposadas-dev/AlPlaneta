@@ -26,5 +26,5 @@ public class Login {
 	
 	public LoginDTO getLoginByDatos(String usr, String pass){
 		return this.login.getByDatos(usr, pass);
-	}
+	} 
 }
