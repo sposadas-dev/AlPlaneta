@@ -13,7 +13,7 @@ import persistencia.dao.interfaz.PagoDAO;
 
 public class PagoDAOSQL implements PagoDAO {
 
-	private static final String insert = "INSERT INTO pago (idPago, fechaPago, monto) VALUES (?,?,?)";
+	private static final String insert = "INSERT INTO pago (idPago, fechaPago, monto, idformapago) VALUES (?,?,?,?)";
 	private static final String readall = "SELECT * FROM pago";
 	private static final String delete = "DELETE FROM pago WHERE idPago=?";
 	private static final String update = "UPDATE pago SET fechaPago=?, monto=? WHERE idPago=?;";
@@ -62,6 +62,7 @@ public class PagoDAOSQL implements PagoDAO {
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
 		ArrayList<PagoDTO> pagos = new ArrayList<PagoDTO>();
+		FormaPagoDAOSQL formapagoDAOSQL = new FormaPagoDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
@@ -69,7 +70,9 @@ public class PagoDAOSQL implements PagoDAO {
 			while (resultSet.next()) {
 				pagos.add(new PagoDTO(resultSet.getInt("idPago"),
 								      resultSet.getDate("fechaPago"),
-									  resultSet.getBigDecimal("monto")));
+									  resultSet.getBigDecimal("monto"),
+									  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago"))
+									  ));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -104,6 +107,7 @@ public class PagoDAOSQL implements PagoDAO {
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
 		PagoDTO pago;
+		FormaPagoDAOSQL pagoDAOSQL = new FormaPagoDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(browse);
 			
@@ -112,8 +116,8 @@ public class PagoDAOSQL implements PagoDAO {
 			if (resultSet.next()){
 				pago = new PagoDTO(resultSet.getInt("idPasajero"),
 										   resultSet.getDate("fechaPago"),
-										   resultSet.getBigDecimal("monto")
-										   );
+										   resultSet.getBigDecimal("monto"),
+										   pagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago")) );
 				return pago;
 			}
 		} 

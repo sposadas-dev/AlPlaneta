@@ -6,6 +6,7 @@ import persistencia.dao.interfaz.CiudadDAO;
 import persistencia.dao.interfaz.ClienteDAO;
 import persistencia.dao.interfaz.CoordinadorDAO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
+import persistencia.dao.interfaz.FormaPagoDAO;
 import persistencia.dao.interfaz.LoginDAO;
 import persistencia.dao.interfaz.MedioContactoDAO;
 import persistencia.dao.interfaz.PagoDAO;
