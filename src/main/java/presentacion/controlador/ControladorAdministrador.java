@@ -122,9 +122,11 @@ public class ControladorAdministrador {
 		if (filaSeleccionada != -1){
 			controladorTransporte.editarTransporte(filaSeleccionada);
 			llenarTablaTransportes();
+
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
+		llenarTablaTransportes();
 	}
 	
 	private void eliminarTransporte(ActionEvent dt) {
