@@ -2,16 +2,21 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import modelo.Administrativo;
-import modelo.Login;
-import modelo.Rol;
-import modelo.Transporte;
+
 import dto.AdministrativoDTO;
 import dto.LoginDTO;
 import dto.RolDTO;
 import dto.TransporteDTO;
+import modelo.Administrativo;
+import modelo.Login;
+import modelo.ModeloCiudad;
+import modelo.ModeloPais;
+import modelo.ModeloProvincia;
+import modelo.Rol;
+import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
 import presentacion.vista.administrador.VistaAdministrador;
@@ -24,7 +29,11 @@ public class ControladorAdministrador {
 	private Transporte transporte;
 	private ControladorTransporte controladorTransporte;
 	private Login login;
-
+	
+/*AMB PAIS PROV CIUDAD*/	
+	private ModeloPais modeloPais;
+	private ModeloCiudad modeloCiudad;
+	private ModeloProvincia modeloProvincia;
 	
 	public ControladorAdministrador(VistaAdministrador vistaAdministrador){
 		this.vistaAdministrador = vistaAdministrador;
@@ -44,7 +53,10 @@ public class ControladorAdministrador {
 		this.transporte = new Transporte(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
 		this.controladorTransporte = new ControladorTransporte();
+		
+		
 	}
+
 	
 
 	public void inicializar(){

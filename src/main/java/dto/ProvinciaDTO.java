@@ -5,11 +5,11 @@ public class ProvinciaDTO {
 	private String nombre;
 	private PaisDTO pais;
 
-	public ProvinciaDTO(int idProvincia, String nombre, PaisDTO ciudad) {
+	public ProvinciaDTO(int idProvincia, String nombre, PaisDTO pais) {
 		super();
 		this.idProvincia = idProvincia;
 		this.nombre = nombre;
-		this.pais = ciudad;
+		this.pais = pais;
 	}
 
 	public ProvinciaDTO() {

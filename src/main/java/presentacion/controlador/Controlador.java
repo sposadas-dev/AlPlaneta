@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -19,7 +21,6 @@ import dto.ClienteDTO;
 import dto.EstadoPasajeDTO;
 import dto.HorarioReservaDTO;
 import dto.LoginDTO;
-import dto.MedioContactoDTO;
 import dto.PagoDTO;
 import dto.PaisDTO;
 import dto.PasajeDTO;
@@ -31,9 +32,9 @@ import modelo.Administrativo;
 import modelo.Cliente;
 import modelo.MedioContacto;
 import modelo.ModeloCiudad;
+import modelo.ModeloPais;
 import modelo.ModeloProvincia;
 import modelo.ModeloViaje;
-import modelo.Pais;
 import modelo.Transporte;
 import persistencia.dao.mysql.AdministradorDAOSQL;
 import persistencia.dao.mysql.AdministrativoDAOSQL;
@@ -44,7 +45,6 @@ import persistencia.dao.mysql.HorarioReservaDAOSQL;
 import persistencia.dao.mysql.LoginDAOSQL;
 import persistencia.dao.mysql.PagoDAOSQL;
 import persistencia.dao.mysql.PaisDAOSQL;
-import persistencia.dao.mysql.PasajeroDAOSQL;
 import persistencia.dao.mysql.TransporteDAOSQL;
 import persistencia.dao.mysql.ViajeDAOSQL;
 import presentacion.vista.VentanaLogin;
@@ -52,6 +52,7 @@ import presentacion.vista.VentanaLogin;
 //import presentacion.vista.VentanaPagoTarjeta;
 import presentacion.vista.VentanaReserva;
 import presentacion.vista.Vista;
+import presentacion.vista.administrador.VentanaAgregarPais;
 import presentacion.vista.administrador.VentanaCargarViaje;
 import presentacion.vista.administrador.VistaAdministrador;
 import presentacion.vista.administrativo.VentanaCargaPasajero;
@@ -61,6 +62,14 @@ import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VentanaTablaViajes;
 
 public class Controlador implements ActionListener {
+	
+/*AMB PAIS PROV CIUDAD*/	
+private ModeloPais controladorAdministrador_modeloPais;
+private ModeloCiudad controladorAdministrador_modeloCiudad;
+private ModeloProvincia controladorAdministrador_modeloProvincia;
+private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
+	
+	
 	private List<ViajeDTO> viajes_en_tabla;
 	private List<ClienteDTO> clientes_en_tabla;
 	private Vista vista;
@@ -122,13 +131,17 @@ public class Controlador implements ActionListener {
 	private boolean destinoListo;
 	
 	/*ADMINSITRADOR*/
-	private Pais modeloPais;
+	private ModeloPais modeloPais;
 	private ModeloProvincia modeloProvincia;
 	private ModeloCiudad modeloCiudad;
 	private Transporte modeloTransporte;
 	private ModeloViaje modeloViaje;
 	
 	public Controlador(Vista vista) {
+
+		
+		
+		
 		this.vista = vista;
 		this.vista.getBtnClientes().addActionListener(ac->agregarPanelClientes(ac));
 		this.vista.getBtnPasajes().addActionListener(ap->agregarPanelPasajes(ap));
@@ -144,6 +157,9 @@ public class Controlador implements ActionListener {
 		this.ventanaCargaPasajero = VentanaCargaPasajero.getInstance();
 		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();
 		this.ventanaLogin = VentanaLogin.getInstance();
+		
+/*abm pais ciudad prov*/
+this.controladorAdministrador_ventanaAgregarPais = VentanaAgregarPais.getInstance();
 		
 		//INICIALIZACION datos del viaje
 		this.fechaSalida=null;
@@ -177,7 +193,7 @@ public class Controlador implements ActionListener {
 		this.usuarioLogueado = new LoginDTO();
 		this.modeloCiudad = new ModeloCiudad(daoSqlFactory);
 		this.modeloProvincia = new ModeloProvincia(daoSqlFactory);
-		this.modeloPais = new Pais(daoSqlFactory);
+		this.modeloPais = new ModeloPais(daoSqlFactory);
 		this.modeloTransporte = new Transporte(daoSqlFactory);
 		this.modeloViaje = new ModeloViaje(daoSqlFactory);
 		
@@ -188,6 +204,10 @@ public class Controlador implements ActionListener {
 		this.pasajerosEnEstaReserva = new ArrayList<PasajeroDTO>();
 		this.viajeSeleccionado = new ViajeDTO();
 		this.transporteSeleccionado = new TransporteDTO();
+		
+		
+/*ABM PAIS CIUDAD PROV*/
+		this.controladorAdministrador_ventanaAgregarPais.getBtnAgregar().addActionListener(agP->agregarPais(agP));
 		
 		this.ventanaLogin.getBtnLogin().addActionListener(log->logearse(log));
 		
@@ -240,6 +260,13 @@ public class Controlador implements ActionListener {
 	}
 
 	
+private void agregarPais(ActionEvent agP) {
+	PaisDTO paisNuevo = new PaisDTO();
+	paisNuevo.setNombre(this.controladorAdministrador_ventanaAgregarPais.getTxtNombrePais().getText());
+	this.controladorAdministrador_modeloPais.agregarPais(paisNuevo);
+}
+
+
 	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
 	public void inicializar() throws Exception{	
 //		this.ventanaLogin.setVisible(true);
@@ -448,8 +475,9 @@ public class Controlador implements ActionListener {
 	public Date sumarRestarHorasFecha(Date fecha, int horas){
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(fecha); // Configuramos la fecha que se recibe
-		calendar.add(Calendar.HOUR, horas);  // numero de horas a añadir, o restar en caso de horas<0
-		return convertUtilToSql(calendar.getTime()); // Devuelve el objeto Date con las nuevas horas añadidas
+		calendar.add(Calendar.HOUR, horas);  // numero de horas a aÃ±adir, o restar en caso de horas<0
+		return convertUtilToSql(calendar.getTime()); // Devuelve el objeto Date con las nuevas horas aÃ±adidas
+
 	}
 	private Date agregarHorasAdate(Date fecha, String hora) {
 		String[] tokens = hora.split(":");
@@ -463,6 +491,159 @@ public class Controlador implements ActionListener {
 	    return d;
 	}
 	
+	private int eliminarPuntosEnFecha(String fecha) {
+		String ret = "";
+		for (int n = 0; n <fecha.length (); n ++) {
+			char c = fecha.charAt (n);
+			if(c != ':') {
+				ret+= c;
+			}
+			else {
+				return Integer.parseInt(ret);
+			}
+		}
+		return Integer.parseInt(ret);
+	}
+	
+	private Date calcularFechaLlegada(Date fecha, String horario, Integer horaAsumar) {
+		Date ret = null;
+		String diaRet = "";
+		String mesRet = "";
+		String añoRet = "";
+		
+		String[] fechaStr = fecha.toString().split("-");
+		String año = fechaStr[0];
+		String mes = fechaStr[1];
+		String dia = fechaStr[2];
+		
+		if(mes.equals("01") || mes.equals("03") || mes.equals("05") || mes.equals("07") || mes.equals("08") || mes.equals("10") || mes.equals("12")) { //ENERO,MARZO,MAYO,JULIO,AGOSTO,OCTUBRE,DICIEMBRE
+			//tiene 31 dias
+			if(dia.equals("31")) {
+				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+					diaRet = "1";
+					if(mes.equals("12")) {
+						mesRet = "1";
+						añoRet = (Integer.parseInt(año)+1)+"";
+					}
+					else {
+						mesRet = (Integer.parseInt(mes)+1)+"";
+						añoRet = año;
+					}
+				}
+				else {//no son mas de 24 hs, es mismo dia, mes y año
+					diaRet = dia;
+					mesRet = mes;
+					añoRet = año;
+				}
+			}
+			else { // no cambia mes
+				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+					diaRet = (Integer.parseInt(dia)+1)+"";
+					mesRet = mes;
+					añoRet = año;
+				}
+				else {
+					diaRet = dia;
+					mesRet = mes;
+					añoRet = año;
+				}
+			}
+		}
+		if(mes.equals("04") || mes.equals("06") || mes.equals("09") || mes.equals("11")) {
+			//tiene 30 dias
+			if(dia.equals("30")) {
+				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+					diaRet = "1";
+					mesRet = (Integer.parseInt(mes)+1)+"";;
+					añoRet = año;
+				}
+				else {//no son mas de 24 hs, es mismo dia, mes y año
+					diaRet = dia;
+					mesRet = mes;
+					añoRet = año;
+				}
+			}
+			else { // no cambia mes
+				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+					diaRet = (Integer.parseInt(dia)+1)+"";;
+					mesRet = mes;
+					añoRet = año;
+				}
+				else {
+					diaRet = dia;
+					mesRet = mes;
+					añoRet = año;
+				}
+			}			
+		}
+		if(mes.equals("02")) {
+			if ((Integer.parseInt(año) % 4 == 0) && ((Integer.parseInt(año) % 100 != 0) || (Integer.parseInt(año) % 400 == 0))) {
+				//año bisiesto, tiene 29 dias
+				if(dia.equals("29")) {
+					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+						diaRet = "1";
+						mesRet = (Integer.parseInt(mes)+1)+"";;
+						añoRet = año;
+					}
+					else {//no son mas de 24 hs, es mismo dia, mes y año
+						diaRet = dia;
+						mesRet = mes;
+						añoRet = año;
+					}
+				}
+				else { // no cambia mes
+					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+						diaRet = (Integer.parseInt(dia)+1)+"";;
+						mesRet = mes;
+						añoRet = año;
+					}
+					else {
+						diaRet = dia;
+						mesRet = mes;
+						añoRet = año;
+					}
+				}		
+				
+			}
+			else {
+				//año no bisiesto, tiene 28 dias
+				if(dia.equals("28")) {
+					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+						diaRet = "1";
+						mesRet = (Integer.parseInt(mes)+1)+"";
+						añoRet = año;
+					}
+					else {//no son mas de 24 hs, es mismo dia, mes y año
+						diaRet = dia;
+						mesRet = mes;
+						añoRet = año;
+					}
+				}
+				else { // no cambia mes
+					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+						diaRet = (Integer.parseInt(dia)+1)+"";
+						mesRet = mes;
+						añoRet = año;
+					}
+					else {
+						diaRet = dia;
+						mesRet = mes;
+						añoRet = año;
+					}
+				}		
+			}
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try { ret = convertUtilToSql(sdf.parse(añoRet+"-"+mesRet+"-"+diaRet));
+		} catch (ParseException e) { e.printStackTrace(); }
+
+		return ret;
+		
+	}
+
+	
 	private void darAltaViaje(ActionEvent aV) {//throws Exception {
 		//if(viajeValido()){
 			System.out.println("Dar de alta el viaje");
@@ -471,8 +652,9 @@ public class Controlador implements ActionListener {
 			this.horarioSalida = this.ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
 			
 			this.horasEstimadas = Integer.parseInt(this.ventanaCargarViaje.getTextHorasEstimadas().getText());
-			//this.fechaLlegada = sumarRestarHorasFecha(agregarHorasAdate(this.fechaSalida,this.horarioSalida),this.horasEstimadas);
-			
+			this.fechaLlegada = calcularFechaLlegada(this.fechaSalida,this.horarioSalida,this.horasEstimadas);
+			System.out.println(ventanaCargarViaje.getTextPrecioViaje().getText());
+			System.out.println(new BigDecimal(ventanaCargarViaje.getTextPrecioViaje().getText()));
 			this.precioViaje = new BigDecimal(ventanaCargarViaje.getTextPrecioViaje().getText());
 			
 			for(TransporteDTO t : modeloTransporte.obtenerTransportes())
@@ -507,7 +689,7 @@ public class Controlador implements ActionListener {
 			this.viajeSeleccionado = new ViajeDTO(0,this.ciudadOrigen,
 													this.ciudadDestino,
 													this.fechaSalida,
-					/*Cambiar x calculo de fecha*/	this.fechaSalida,
+													this.fechaLlegada,
 													this.horarioSalida,
 													this.horasEstimadas,
 													this.transporteSeleccionado,
@@ -527,7 +709,7 @@ public class Controlador implements ActionListener {
 		//}
 		llenarViajesEnTabla();
 	}	
-	
+		
 	/*- - - - - - - -  - - - - - - - < / METODOS DE VIAJE> - - - - - - - - - - - - - - - - --  */
 /*/////////////////////////////////////////////////////////////////////////////////////////////////////*/
 	/*IMPLEMENTADO BRANCH V3.0*/	

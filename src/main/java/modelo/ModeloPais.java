@@ -5,11 +5,11 @@ import dto.PaisDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.PaisDAO;
 
-public class Pais {
+public class ModeloPais {
 
 	private PaisDAO pais;
 	
-	public Pais(DAOAbstractFactory metodo_persistencia){
+	public ModeloPais(DAOAbstractFactory metodo_persistencia){
 		this.pais = metodo_persistencia.createPaisDAO();
 	}
 	
