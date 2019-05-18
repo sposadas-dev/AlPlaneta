@@ -18,6 +18,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 	private static final String insert = "INSERT INTO cliente(idCliente, nombre, apellido, dni, fechaNacimiento, idMedioContacto, idLogin) VALUES(?, ?, ?, ?, ?, ?, ?)";
 	private static final String readall = "SELECT * FROM cliente";
 	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ? WHERE idCliente=? ;";
+	private static final String browse = "SELECT * FROM cliente WHERE idCliente = ?";
 	private static final String browseLogin = "SELECT * FROM cliente WHERE idLogin = ?";
 	
 	@Override
@@ -93,6 +94,38 @@ public class ClienteDAOSQL implements ClienteDAO {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	@Override
+	public ClienteDTO getClienteById(int idCliente){
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		ClienteDTO cliente;
+		MedioContactoDAOSQL medioContactoDAOSQL = new MedioContactoDAOSQL();
+		LoginDAOSQL loginDAOSQL = new LoginDAOSQL();
+
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browse);
+			statement.setInt(1, idCliente);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				cliente = new ClienteDTO(resultSet.getInt("idCliente"),
+						resultSet.getString("nombre"), 
+						resultSet.getString("apellido"), 
+						resultSet.getString("dni"), 
+						resultSet.getDate("fechaNacimiento"),
+						medioContactoDAOSQL.getMedioContactoById(resultSet.getInt("idMedioContacto")),
+						loginDAOSQL.getById(resultSet.getInt("idLogin"))
+						);
+				return cliente;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@Override

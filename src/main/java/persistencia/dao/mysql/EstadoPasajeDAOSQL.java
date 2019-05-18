@@ -12,10 +12,10 @@ import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.EstadoPasajeDAO;
 
 public class EstadoPasajeDAOSQL implements EstadoPasajeDAO {
-	private static final String insert = "INSERT INTO estadopasaje" + "(idEstadoPasaje, nombre, descripcion)" + "VALUE(?,?,?)";
-	private static final String readall = "SELECT * FROM estadopasaje";
-	private static final String delete = "DELETE FROM estadopasaje WHERE idEstadoPasaje = ?";
-	private static final String update = "UPDATE estadoPasaje SET nombre = ? WHERE idEstadoPasaje = ?";
+	private static final String insert = "INSERT INTO estadospasaje" + "(idEstadoPasaje, nombre, descripcion)" + "VALUES(?,?,?)";
+	private static final String readall = "SELECT * FROM estadospasaje";
+	private static final String delete = "DELETE FROM estadospasaje WHERE idEstadoPasaje = ?";
+	private static final String update = "UPDATE estadosPasaje SET nombre = ? WHERE idEstadoPasaje = ?";
 
 	@Override
 	public boolean insert(EstadoPasajeDTO estado) {
@@ -128,7 +128,7 @@ public class EstadoPasajeDAOSQL implements EstadoPasajeDAO {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 			while(resultSet.next()){
-				estados.add(new EstadoPasajeDTO(resultSet.getInt("idEstado"),resultSet.getString("nombre"),resultSet.getString("descripcion")));
+				estados.add(new EstadoPasajeDTO(resultSet.getInt("idEstadoPasaje"),resultSet.getString("nombre"),resultSet.getString("descripcion")));
 			}
 		} 
 		catch (SQLException e) {

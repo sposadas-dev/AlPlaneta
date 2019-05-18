@@ -104,7 +104,7 @@ public class PagoDAOSQL implements PagoDAO {
 	}
 
 	@Override
-	public PagoDTO browse(int idPago) {
+	public PagoDTO getPagoById(int idPago) {
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();

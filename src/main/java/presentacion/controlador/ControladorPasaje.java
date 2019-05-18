@@ -204,7 +204,10 @@ public class ControladorPasaje {
 		 
 		pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));
 		pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
-	
+		FormaPagoDTO formaPago = new FormaPagoDTO();
+		formaPago.setTipo(ventanaPago.getComboBoxFormaPago().getSelectedItem().toString());
+		
+		pagoDTO.setIdFormaPago(formaPago);
 		pago.agregarPago(pagoDTO);
 				
 		this.ventanaPago.setVisible(false);
@@ -222,9 +225,9 @@ public class ControladorPasaje {
 		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
 		
+	//Configurar la fecha de vencimiento de la reserva
 		
-		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativo,cantPasajeros,cliente,null,
-				valorViaje,estadoPasaje,pagoDTO,pasajeros);
+		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativo,cliente,null,valorViaje,estadoPasaje,pagoDTO,pasajeros);
 		
 		
 		pasaje.agregarPasaje(pasajeDTO);
@@ -232,34 +235,6 @@ public class ControladorPasaje {
 		this.ventanaPago.setVisible(false);
 		
 	}
-	
-
-//	private void llenarTablaPasajes(){
-//		this.vista.getPanelPasaje().getModelClientes().setRowCount(0); //Para vaciar la tabla
-//		this.vista.getPanelPasaje().getModelClientes().setColumnCount(0);
-//		this.vista.getPanelPasaje().getModelClientes().setColumnIdentifiers(this.vista.getPanelPasaje().getNombreColumnasClientes());
-//
-//
-//		this.pasajes_en_tabla = pasaje.obtenerPasajes();
-//			
-//		for (int i = 0; i < this.pasajes_en_tabla.size(); i++)
-//		{
-//			Object[] fila = {
-//							this.pasajes_en_tabla.get(i).getCliente().getDni(),
-//							this.pasajes_en_tabla.get(i).getCliente().getNombre(),
-//							this.pasajes_en_tabla.get(i).getCliente().getApellido(),
-//							this.pasajes_en_tabla.get(i).getIdPasaje(),
-//							this.pasajes_en_tabla.get(i).getViaje().getOrigenViaje().getNombre(),
-//							this.pasajes_en_tabla.get(i).getViaje().getDestinoViaje().getNombre(),
-//							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-//							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
-//							this.pasajes_en_tabla.get(i).getViaje().getPrecio(),
-//							this.pasajes_en_tabla.get(i).getCantidadPasajeros(),
-//							this.pasajes_en_tabla.get(i).getEstadoDelPasaje().getNombre()
-//			};
-//							this.vista.getPanelPasaje().getModelClientes().addRow(fila);
-//		}		
-//	}	
 	
 	private void cargarComboBoxFormaDePago(){
 		ventanaPago.getComboBoxFormaPago().removeAllItems();
@@ -282,14 +257,14 @@ public class ControladorPasaje {
 	private EstadoPasajeDTO calcularEstadoPasaje() {
 		EstadoPasajeDTO ret;
 		if(totalaPagar.compareTo(pagoDTO.getMonto()) == 0){ //si son iguales
-			ret = new EstadoPasajeDTO(1,"Vendido","El monto abonado es el total a pagar");
+			ret = new EstadoPasajeDTO(1,"Vendido","se abono el total del pasaje");
 		}
 		else {
 			if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
-				ret = new EstadoPasajeDTO(3,"Pendiente","El monto abonado es 0");
+				ret = new EstadoPasajeDTO(3,"Pendiente","no se registro pago");
 			}
 			else {
-				ret = new EstadoPasajeDTO(2,"Reservado","El monto abonado es menor al total a pagar");
+				ret = new EstadoPasajeDTO(2,"Reservado","se abono un porcentaje del pasaje");
 			}
 		}
 		return ret;

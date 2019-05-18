@@ -163,5 +163,4 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		System.out.println(dao.getByLoginId(3).getNombre());
 	}
 	
-	
 }

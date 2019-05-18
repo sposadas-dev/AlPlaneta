@@ -29,4 +29,8 @@ public class Pago {
 	public void editarPago(PagoDTO pagoUpdate) {
 		this.pago.update(pagoUpdate);
 	}
+	
+	public void getPagoById(int idPago) {
+		this.pago.getPagoById(idPago);
+	}
 }

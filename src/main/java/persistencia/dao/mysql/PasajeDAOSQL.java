@@ -69,7 +69,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 	public List<PasajeDTO> readAll() {
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
-		ArrayList<PasajeDTO> reservas = new ArrayList<PasajeDTO>();
+		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
 		ClienteDAOSQL clienteDAOSQL = new ClienteDAOSQL();
 		ViajeDAOSQL viajeDAOSQL = new ViajeDAOSQL();
 		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
@@ -83,25 +83,26 @@ public class PasajeDAOSQL implements PasajeDAO {
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-//				reservas.add(
-//						new PasajeDTO(
-//						resultSet.getInt("idPasaje"),
-//						viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
-//						administrativoDAOSQL.getAdministrativodById(resultSet.getInt("idAdministrativo")),
-//						clienteDAOSQL.getClienteById(resultSet.getInt("idCliente")),
-//						resultSet.getDate("fechaVencimiento"),
-//						resultSet.getBigDecimal("valorViaje"),
-//						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
-//						pagoDAOSQL.getPagoById(resultSet.getInt("idPago"))
-//						)
-//						);
+				pasajes.add(
+						new PasajeDTO(
+						resultSet.getInt("idPasaje"),
+						viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
+						administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
+						clienteDAOSQL.getClienteById(resultSet.getInt("idCliente")),
+						resultSet.getDate("fechaVencimiento"),
+						resultSet.getBigDecimal("valorViaje"),
+						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
+						pagoDAOSQL.getPagoById(resultSet.getInt("idPago")),
+						pasajeros
+						)
+						);
 //						
 						
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return reservas;
+		return pasajes;
 	}
 	
 	@Override
