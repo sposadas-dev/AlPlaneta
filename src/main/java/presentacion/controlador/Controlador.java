@@ -478,6 +478,7 @@ public class Controlador implements ActionListener {
 		}
 		return Integer.parseInt(ret);
 	}
+	
 	private Date calcularFechaLlegada(Date fecha, String horario, Integer horaAsumar) {
 		Date ret = null;
 		String diaRet = "";
