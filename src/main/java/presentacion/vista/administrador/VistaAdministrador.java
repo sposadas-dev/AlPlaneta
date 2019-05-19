@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 import persistencia.conexion.Conexion;
 
 public class VistaAdministrador extends JFrame {
+	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private PanelTransporte panelTransporte;

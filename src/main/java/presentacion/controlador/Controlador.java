@@ -141,9 +141,6 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 	private ModeloViaje modeloViaje;
 	
 	public Controlador(Vista vista) {
-
-		
-		
 		
 		this.vista = vista;
 		this.vista.getBtnClientes().addActionListener(ac->agregarPanelClientes(ac));
@@ -853,21 +850,9 @@ private void agregarPais(ActionEvent agP) {
 	}
 
 	private void llenarCiudadesEnCargaViajes() {
-/*INGRESAR VALOR DEFAULT A LOS COMBOBOX."Seleccione un pais - -*/
-		
-/*CARGAR LOS PAISES DE LA BASE DE DATOS.*/
 		llenarComboBoxPaises();
 		llenarComboTransporte();
 		llenarCombroHorarioSalida();
-/*UNA VEZ SELECIONADO EL PAIS, HABILITAR EL COMBO PROVINCIA, CORRESPONDIENTE AL PAIS CLICKOUT*/
-		/*obtener el id del pais*/
-/*MISMA ACCION PARA CIUDAD*/
-
-/*HABILITAR EL BOTON SELECCIONAR ORIGEN*/
-
-/*REALIZAR MISMA TAREA PARA DESTINO.*/
-
-/*UNA VEZ ACEPTADO: MOSTRAR LA CIUDAD ORIGEN Y DESTINO EN LA TABLA CON LOS DEMAS DATOS CORRESPONDIENTES*/
 
 		this.ventanaCargarViaje.getModelViajes().setRowCount(0);
 		this.ventanaCargarViaje.getModelViajes().setColumnCount(0);

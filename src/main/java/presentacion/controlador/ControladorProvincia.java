@@ -10,8 +10,10 @@ import javax.swing.JOptionPane;
 
 import dto.PaisDTO;
 import dto.ProvinciaDTO;
+import dto.ViajeDTO;
 import modelo.ModeloPais;
 import modelo.ModeloProvincia;
+import modelo.ModeloViaje;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.TableroDeProvincias;
 import presentacion.vista.administrador.VentanaAgregarProvincia;
@@ -22,6 +24,7 @@ public class ControladorProvincia implements ActionListener {
 	private VentanaAgregarProvincia ventanaAgregarProvincia;
 	private VentanaEditarProvincia ventanaEditarProvincia;
 	private ModeloProvincia modeloProvincia;
+	private ModeloViaje modeloViaje;
 	private ModeloPais modeloPais;
 	private List<ProvinciaDTO> provincias_en_tabla;
 	private int filaSeleccionada;
@@ -42,13 +45,20 @@ public class ControladorProvincia implements ActionListener {
 		
 		this.tableroDeProvincias.getBtnAgregar().addActionListener(a->mostrarVentanaAgregarProvincia(a));
 		this.tableroDeProvincias.getBtnEditar().addActionListener(a->mostrarVentanaEditarProvincia(a));
+		this.tableroDeProvincias.getBtnBorrar().addActionListener(a->eliminarProvincia(a));
 		
 		this.ventanaAgregarProvincia.getBtnAgregar().addActionListener(rc->agregarProvincia(rc));
 		this.ventanaEditarProvincia.getBtnEditar().addActionListener(ac->editarProvincia(ac));
-
+		
+		
+		this.modeloViaje = new ModeloViaje(new DAOSQLFactory());
 		this.modeloPais = new ModeloPais(new DAOSQLFactory());
 		this.modeloProvincia = new ModeloProvincia(new DAOSQLFactory());
 		this.provincias_en_tabla = modeloProvincia.obtenerProvincias();
+	}
+
+	private void eliminarProvincia(ActionEvent a) {
+		eliminarProvincia();
 	}
 
 	private void mostrarVentanaEditarProvincia(ActionEvent a) {
@@ -126,16 +136,14 @@ public class ControladorProvincia implements ActionListener {
 	}
 	
 	public void llenarTablaVistaProvincias(){
-		System.out.println("ControladorPais-LlenarTablaPaises");
-		
 		this.tableroDeProvincias.getModelProvincias().setRowCount(0); //Para vaciar la tabla
 		this.tableroDeProvincias.getModelProvincias().setColumnCount(0);
 		this.tableroDeProvincias.getModelProvincias().setColumnIdentifiers(this.tableroDeProvincias.getNombreColumnas());
 
 		this.provincias_en_tabla = modeloProvincia.obtenerProvincias();
-			
+		System.out.println("provincias en tabla:"+this.provincias_en_tabla.size());	
+		
 		for (int i = 0; i < this.provincias_en_tabla.size(); i++){
-			
 			String[] fila = {
 					this.provincias_en_tabla.get(i).getPais().getNombre(),
 					this.provincias_en_tabla.get(i).getNombre()
@@ -144,15 +152,33 @@ public class ControladorProvincia implements ActionListener {
 		}
 	}
 	
-	public void eliminarProvincia(int filaSeleccionada){
+	public void eliminarProvincia(){
+		ProvinciaDTO p = provincias_en_tabla.get(this.tableroDeProvincias.getTablaProvincias().getSelectedRow());
 		int confirm = JOptionPane.showOptionDialog(
-		            null,"¿Estás seguro que quieres eliminar la provincia?", 
-				             "Eliminar provincia", JOptionPane.YES_NO_OPTION,
-				             JOptionPane.ERROR_MESSAGE, null, null, null);
-	 if (confirm == 0){
-		JOptionPane.showMessageDialog(null, "Provincia eliminada","Provincia", JOptionPane.INFORMATION_MESSAGE);
-	 }
+	            null,"¿Estás seguro que quieres eliminar la provincia?", 
+			             "Eliminar provincia", JOptionPane.YES_NO_OPTION,
+			             JOptionPane.WARNING_MESSAGE, null, null, null);
+		if (confirm == 0 && permiteEliminar(p) ){
+			this.modeloProvincia.borrarProvincia(p);
+			JOptionPane.showMessageDialog(null, "Provincia eliminade","Provincia", JOptionPane.INFORMATION_MESSAGE);
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "No pudo eliminarse","Provincia", JOptionPane.ERROR_MESSAGE);
+		}
+		llenarTablaVistaProvincias();
 	}
+	
+
+	private boolean permiteEliminar(ProvinciaDTO provinciaDTO) {
+		ArrayList<ViajeDTO> viajes = (ArrayList<ViajeDTO>) modeloViaje.obtenerViajes();
+		System.out.println("cantidad de viajes "+viajes.size());
+		for(ViajeDTO v: viajes){
+			if(v.getProvinciaOrigen().getIdProvincia() == provinciaDTO.getIdProvincia()||(v.getProvinciaDestino().getIdProvincia() == provinciaDTO.getIdProvincia()))
+				return false;
+		}	
+		return true;
+	}
+	
 	private String obtenerId(String s) {
 		String ret = "";
 		for (int n = 0; n <s.length (); n ++) {
