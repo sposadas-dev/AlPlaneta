@@ -129,6 +129,7 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 	
 	private boolean origenListo;
 	private boolean destinoListo;
+	private ArrayList<String> msjErrorOrigenDestino;
 	
 	/*ADMINSITRADOR*/
 	private ModeloPais modeloPais;
@@ -176,6 +177,7 @@ this.controladorAdministrador_ventanaAgregarPais = VentanaAgregarPais.getInstanc
 		this.ciudadDestino=null;
 		this.origenListo = false;
 		this.destinoListo = false;
+		this.msjErrorOrigenDestino = new ArrayList<String>();
 		//FIN datos del viaje
 		
 		/*ENTIDADES LOGEADAS*/
@@ -306,7 +308,6 @@ private void agregarPais(ActionEvent agP) {
 	
 	private void obtenerProvincias_porPaisOrigen(ActionEvent e) {//MouseEvent evt) {//obtener provinciasOrigen y setEnComboProvincia
 		String pais = ventanaCargarViaje.getComboBoxPaisOrigen().getSelectedItem().toString();
-		System.out.println(pais);
 		ventanaCargarViaje.getComboBoxProvinciaOrigen().setEnabled(true);
     	llenarComboBoxProvinciasOrigen(Integer.parseInt(obtenerIdDesdeCombo(pais)));
 	}
@@ -361,12 +362,7 @@ private void agregarPais(ActionEvent agP) {
 	
 	private void llenarComboBoxProvinciasOrigen(int idPais) {
 		List<ProvinciaDTO> provincias = null;
-		//try {
-			provincias = modeloProvincia.obtenerProvinciaPorIdPais(idPais);
-		//} catch (Exception e) {
-		//	e.printStackTrace();
-		//}
-		
+		provincias = modeloProvincia.obtenerProvinciaPorIdPais(idPais);
 		String[] nombresProvincias = new String[provincias.size()];
 		for(int i=0; i<provincias.size();i++){
 			String provincia = provincias.get(i).getIdProvincia()+"-"+provincias.get(i).getNombre();
@@ -396,7 +392,6 @@ private void agregarPais(ActionEvent agP) {
 		List<CiudadDTO> ciudades = null;
 		ciudades = modeloCiudad.obtenerCiudadPorIdProvincia(idProvincia);
 		String[] nombresCiudades = new String[ciudades.size()];
-		System.out.println(nombresCiudades.length);
 		for(int i=0; i<ciudades.size();i++){
 			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
 			nombresCiudades [i] = ciudad;
@@ -425,17 +420,28 @@ private void agregarPais(ActionEvent agP) {
 
 /*< VALIDACION DE ALTA VIAJES >*/	
 	private boolean viajeValido(){
-		if (!intValido(this.ventanaCargarViaje.getTextCapacidad().getText()))//Chequeo capacidad
-			return false;
-		if (!intValido(this.ventanaCargarViaje.getTextHorasEstimadas().getText()))//Chequeo horas estimadas
-			return false;
-		if(!precioValido())														//Chequeo precio
-			return false;
-		if(!ciudadDestinoValido()) {											//Chequeo ciudad y destino no sean las mismas
-			//this.ventanaCargarViaje.getLblErrorOrigenDestino().setText("La ciudad de origen y la ciudad de destino no pueden ser las mismas!");
-			return false;
+		boolean ret = true;
+		if (!intValido(this.ventanaCargarViaje.getTextCapacidad().getText())) {
+			this.msjErrorOrigenDestino.add("CAPACIDAD");
+			ret = ret && false;
 		}
-		return true;
+		if (!intValido(this.ventanaCargarViaje.getTextHorasEstimadas().getText())) {
+			this.msjErrorOrigenDestino.add("HORAS ESTIMADAS");
+			ret = ret && false;
+		}
+		if(!precioValido())	{
+			this.msjErrorOrigenDestino.add("PRECIO");
+			ret = ret && false;
+		}
+		if(!origenDestinoValido()) {
+			this.msjErrorOrigenDestino.add("ORIGEN-DESTINO");
+			ret = ret && false;
+		}
+		if (!fechaOrigenValida()) {
+			this.msjErrorOrigenDestino.add("FECHA DE SALIDA");
+			ret = ret && false;
+		}
+		return ret;
 	}
 
 	private boolean intValido(String s) {
@@ -444,16 +450,36 @@ private void agregarPais(ActionEvent agP) {
 		return false;
 	}
 	private boolean precioValido() {
-		if(entradaValida(this.ventanaCargarViaje.getTextCapacidad().getText(), Pattern.compile("[0-9]+\\,({1}[0-9]+)?")))
+		if(entradaValida(this.ventanaCargarViaje.getTextPrecioViaje().getText(), Pattern.compile("[0-9]+(\\,{1}[0-9]+)?")))
 			return true;
 		return false;
 	}
-	private boolean ciudadDestinoValido() {
+	private boolean origenDestinoValido() {
+		if (this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedIndex()==-1 || this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedIndex()==-1)
+			return false;
 		String ciudadOrigenElegida = quitarIdDeCombo(this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString());
 		String ciudadDestinoElegida = quitarIdDeCombo(this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString());
 		if(!(ciudadOrigenElegida.equals(ciudadDestinoElegida)))
 			return true;
 		return false;
+	}
+	
+	private boolean fechaOrigenValida() {
+		//calcular fecha actual:
+	    String hoy = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now());
+
+	    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+	    java.util.Date date = null;
+		try { date = sdf1.parse(hoy); } catch (ParseException e) { e.printStackTrace();	}
+	    java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());  
+	    
+
+		if(this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate().before(sqlStartDate)) {
+			return false;
+		}
+		if (this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate() == null)
+			return false;
+		return true;
 	}
 	private boolean entradaValida(String text,Pattern pattern) {
 		if(text.matches(pattern.toString())) {
@@ -464,8 +490,26 @@ private void agregarPais(ActionEvent agP) {
 /*< / VALIDACION DE ALTA VIAJESS >*/	
 	
 	private void mostrarDatosViaje(ActionEvent E) {
-
-		System.out.println("implementar");
+		this.msjErrorOrigenDestino = new ArrayList<String>();
+		this.ventanaCargarViaje.getLblErrores().setText("");
+		if(viajeValido()){
+			this.fechaSalida = convertUtilToSql(this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate());
+			this.horarioSalida = this.ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
+			this.horasEstimadas = Integer.parseInt(this.ventanaCargarViaje.getTextHorasEstimadas().getText());
+			
+			this.fechaLlegada = calcularFechaLlegada(this.fechaSalida,this.horarioSalida,this.horasEstimadas);
+			this.ventanaCargarViaje.getTxtFechaDestino().setText(this.fechaLlegada.toString());
+			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(true);
+		}
+		else {
+			String mensaje = ("DATOS INVÁLIDOS: ");
+			mensaje += this.msjErrorOrigenDestino.get(0);
+			for(int i=1; i< this.msjErrorOrigenDestino.size(); i++) {
+				mensaje += ", "+this.msjErrorOrigenDestino.get(i);
+			}
+			mensaje += ".";
+			this.ventanaCargarViaje.getLblErrores().setText(mensaje);
+		}
 	}	
 	private java.sql.Date convertUtilToSql(java.util.Date uDate) {
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
@@ -479,16 +523,143 @@ private void agregarPais(ActionEvent agP) {
 		return convertUtilToSql(calendar.getTime()); // Devuelve el objeto Date con las nuevas horas aÃ±adidas
 
 	}
-	private Date agregarHorasAdate(Date fecha, String hora) {
-		String[] tokens = hora.split(":");
+	
+	private Date calcularFechaLlegada(Date fecha, String horario, Integer horaAsumar) {
+		Date ret = null;
+		String diaRet = "";
+		String mesRet = "";
+		String añoRet = "";
 		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(this.fechaSalida);
-		cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(tokens[0]) * 3600000); //horas
-		cal.set(Calendar.MINUTE,Integer.parseInt(tokens[1]) * 60000); //minutos
-		Date d = convertUtilToSql(cal.getTime());
+		String[] fechaStr = fecha.toString().split("-");
+		String año = fechaStr[0];
+		String mes = fechaStr[1];
+		String dia = fechaStr[2];
 		
-	    return d;
+		if(mes.equals("01") || mes.equals("03") || mes.equals("05") || mes.equals("07") || mes.equals("08") || mes.equals("10") || mes.equals("12")) { //ENERO,MARZO,MAYO,JULIO,AGOSTO,OCTUBRE,DICIEMBRE
+			//tiene 31 dias
+			if(dia.equals("31")) {
+				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+					diaRet = "1";
+					if(mes.equals("12")) {
+						mesRet = "1";
+						añoRet = (Integer.parseInt(año)+1)+"";
+					}
+					else {
+						mesRet = (Integer.parseInt(mes)+1)+"";
+						añoRet = año;
+					}
+				}
+				else {//no son mas de 24 hs, es mismo dia, mes y año
+					diaRet = dia;
+					mesRet = mes;
+					añoRet = año;
+				}
+			}
+			else { // no cambia mes
+				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+					diaRet = (Integer.parseInt(dia)+1)+"";
+					mesRet = mes;
+					añoRet = año;
+				}
+				else {
+					diaRet = dia;
+					mesRet = mes;
+					añoRet = año;
+				}
+			}
+		}
+		if(mes.equals("04") || mes.equals("06") || mes.equals("09") || mes.equals("11")) {
+			//tiene 30 dias
+			if(dia.equals("30")) {
+				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+					diaRet = "1";
+					mesRet = (Integer.parseInt(mes)+1)+"";;
+					añoRet = año;
+				}
+				else {//no son mas de 24 hs, es mismo dia, mes y año
+					diaRet = dia;
+					mesRet = mes;
+					añoRet = año;
+				}
+			}
+			else { // no cambia mes
+				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+					diaRet = (Integer.parseInt(dia)+1)+"";;
+					mesRet = mes;
+					añoRet = año;
+				}
+				else {
+					diaRet = dia;
+					mesRet = mes;
+					añoRet = año;
+				}
+			}			
+		}
+		if(mes.equals("02")) {
+			if ((Integer.parseInt(año) % 4 == 0) && ((Integer.parseInt(año) % 100 != 0) || (Integer.parseInt(año) % 400 == 0))) {
+				//año bisiesto, tiene 29 dias
+				if(dia.equals("29")) {
+					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+						diaRet = "1";
+						mesRet = (Integer.parseInt(mes)+1)+"";;
+						añoRet = año;
+					}
+					else {//no son mas de 24 hs, es mismo dia, mes y año
+						diaRet = dia;
+						mesRet = mes;
+						añoRet = año;
+					}
+				}
+				else { // no cambia mes
+					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+						diaRet = (Integer.parseInt(dia)+1)+"";;
+						mesRet = mes;
+						añoRet = año;
+					}
+					else {
+						diaRet = dia;
+						mesRet = mes;
+						añoRet = año;
+					}
+				}		
+				
+			}
+			else {
+				//año no bisiesto, tiene 28 dias
+				if(dia.equals("28")) {
+					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+						diaRet = "1";
+						mesRet = (Integer.parseInt(mes)+1)+"";
+						añoRet = año;
+					}
+					else {//no son mas de 24 hs, es mismo dia, mes y año
+						diaRet = dia;
+						mesRet = mes;
+						añoRet = año;
+					}
+				}
+				else { // no cambia mes
+					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
+						diaRet = (Integer.parseInt(dia)+1)+"";
+						mesRet = mes;
+						añoRet = año;
+					}
+					else {
+						diaRet = dia;
+						mesRet = mes;
+						añoRet = año;
+					}
+				}		
+			}
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try { ret = convertUtilToSql(sdf.parse(añoRet+"-"+mesRet+"-"+diaRet));
+		} catch (ParseException e) { e.printStackTrace(); }
+
+		return ret;
+		
 	}
 	
 	private int eliminarPuntosEnFecha(String fecha) {
@@ -645,7 +816,7 @@ private void agregarPais(ActionEvent agP) {
 
 	
 	private void darAltaViaje(ActionEvent aV) {//throws Exception {
-		//if(viajeValido()){
+		if(viajeValido()){
 			System.out.println("Dar de alta el viaje");
 			
 			this.fechaSalida = convertUtilToSql(this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate());
@@ -688,6 +859,10 @@ private void agregarPais(ActionEvent agP) {
 			//Creo el viaje
 			this.viajeSeleccionado = new ViajeDTO(0,this.ciudadOrigen,
 													this.ciudadDestino,
+													this.provinciaOrigen,
+													this.provinciaDestino,
+													this.paisOrigen,
+													this.paisDestino,
 													this.fechaSalida,
 													this.fechaLlegada,
 													this.horarioSalida,
@@ -696,17 +871,29 @@ private void agregarPais(ActionEvent agP) {
 													this.capacidad,
 													this.precioViaje);
 			System.out.println("VIAJE CREADO: ");
-			System.out.print(this.viajeSeleccionado.getOrigenViaje().getIdCiudad()+"-"+this.viajeSeleccionado.getOrigenViaje().getNombre());
+			System.out.print(
+					this.viajeSeleccionado.getCiudadOrigen().getIdCiudad()+"-"+this.viajeSeleccionado.getCiudadOrigen().getNombre()+", "+
+					this.viajeSeleccionado.getProvinciaOrigen().getIdProvincia()+"-"+this.viajeSeleccionado.getProvinciaOrigen().getNombre()+", "+
+					this.viajeSeleccionado.getPaisOrigen().getIdPais()+"-"+this.viajeSeleccionado.getPaisOrigen().getNombre());
 			System.out.print(" a ");
-			System.out.println(this.viajeSeleccionado.getDestinoViaje().getIdCiudad()+"-"+this.viajeSeleccionado.getDestinoViaje().getNombre());
-
+			System.out.println(
+					this.viajeSeleccionado.getCiudadDestino().getIdCiudad()+"-"+this.viajeSeleccionado.getCiudadDestino().getNombre()+", "+
+					this.viajeSeleccionado.getProvinciaDestino().getIdProvincia()+"-"+this.viajeSeleccionado.getProvinciaDestino().getNombre()+", "+
+					this.viajeSeleccionado.getPaisDestino().getIdPais()+"-"+this.viajeSeleccionado.getPaisDestino().getNombre());
+			
 			//Agrego el viaje
 			modeloViaje.agregarViaje(this.viajeSeleccionado);
 			
-		//}
-		//else {
-			//MOSTRAR VENTANA ERROR?
-		//}
+		}
+		else {
+			String mensaje = ("DATOS INVÁLIDOS: ");
+			mensaje += this.msjErrorOrigenDestino.get(0);
+			for(int i=1; i< this.msjErrorOrigenDestino.size(); i++) {
+				mensaje += ", "+this.msjErrorOrigenDestino.get(i);
+			}
+			mensaje += ".";
+			this.ventanaCargarViaje.getLblErrores().setText(mensaje);
+		}
 		llenarViajesEnTabla();
 	}	
 		
@@ -808,7 +995,6 @@ private void agregarPais(ActionEvent agP) {
 		llenarComboBoxPaises();
 		llenarComboTransporte();
 		llenarCombroHorarioSalida();
-		calcularFechaLlegada();
 /*UNA VEZ SELECIONADO EL PAIS, HABILITAR EL COMBO PROVINCIA, CORRESPONDIENTE AL PAIS CLICKOUT*/
 		/*obtener el id del pais*/
 /*MISMA ACCION PARA CIUDAD*/
@@ -828,8 +1014,8 @@ private void agregarPais(ActionEvent agP) {
 		ArrayList<ViajeDTO> viajes_en_tabla = (ArrayList<ViajeDTO>) new ViajeDAOSQL().readAll();
 		for(int i=0; i< viajes_en_tabla.size();i++){
 			Object[] fila = { 
-					viajes_en_tabla.get(i).getOrigenViaje().getNombre(),
-					viajes_en_tabla.get(i).getDestinoViaje().getNombre(),
+					viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
+					viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
 					viajes_en_tabla.get(i).getFechaSalida(),
 					viajes_en_tabla.get(i).getFechaLlegada(),
 					viajes_en_tabla.get(i).getPrecio(),
@@ -930,11 +1116,6 @@ private void agregarPais(ActionEvent agP) {
 		String [] horarios = {"1:00", "2:00", "3:00", "4:00", "5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00"};
 		this.ventanaCargarViaje.getComboBoxHorarioSalida().setModel(new DefaultComboBoxModel(horarios));
 		//ASI? O HACER HORARIODTO?
-	}
-	
-	private void calcularFechaLlegada() {
-		//horasEstimadas;
-		//CALCULAR
 	}
 	
 	private void mostrarVentanaCargarViaje() {
@@ -1294,152 +1475,94 @@ private void agregarPais(ActionEvent agP) {
 //			};
 //			this.ventanaTablaViajes.getModelViajes().addRow(fila);
 //		}
-//		this.ventanaTablaViajes.setVisible(true);
-//		
-////		this.ventanaCargarViaje.getTablaViajes();
-//		
-//	}
-//	
-//	
-///*////////////////////////////////////////////////////////////////////////////////////////////////*/	
-//	
-//	private void agregarPanelClientes(ActionEvent ac) {
-//		this.vista.getPanelClientes().setVisible(true);
-//		this.vista.getPanelReservas().setVisible(false);
-//	}
-//
-//	private void agregarPanelPasajes(ActionEvent ap) {
-//		this.vista.getPanelClientes().setVisible(false);
-//		this.vista.getPanelReservas().setVisible(true);
-//	}
-//
-//	private void agregarCliente(ActionEvent c) {
-//		this.ventanaCliente.mostrarVentana();
-//	}
-//
-//	private void agregarPasaje(ActionEvent p) {
-//		mostrarVentanaReserva();
-//	}
-//
-//	private void llenarTablaClientes(){
-//		this.vista.getModelClientes().setRowCount(0); //Para vaciar la tabla
-//		this.vista.getModelClientes().setColumnCount(0);
-//		this.vista.getModelClientes().setColumnIdentifiers(this.vista.getNombreColumnasClientes());
-//			
-//		this.clientes_en_tabla = cliente.obtenerClientes();
-//			
-//		for (int i = 0; i < this.clientes_en_tabla.size(); i++)
-//		{
-//			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
-//							this.clientes_en_tabla.get(i).getApellido(),
-//							this.clientes_en_tabla.get(i).getDni(),
-//							this.clientes_en_tabla.get(i).getFechaNacimiento(),
-//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
-//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
-//							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()	
-//			};
-//							this.vista.getModelClientes().addRow(fila);
-//		}		
-//	}
-////	
-////		
-//	
-//	/*LABEL CANTIDAD DE PASAJEROS*/
-//	
-//	
-//	private void llenarValoresEnCargaDeViaje() throws Exception{
-//		
-//		llenarComboRangoHorariosEnCargarViaje();//modificar para q levante de la base
-//
-//		llenarComboCiudadesEnCargarViaje();
-//
-//		mostrarVentanaCargarViaje();
-//		
-//	}
-//	
-//	private void llenarComboRangoHorariosEnCargarViaje() {
-//		String [] horarios = {"1:00", "2:00", "3:00", "4:00", "5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00"};
-//		this.ventanaCargarViaje.getComboBoxHorarioSalida().setModel(new DefaultComboBoxModel(horarios));
-//	}
-//
-//	private void llenarComboCiudadesEnCargarViaje() {
-//		/*CARGAMOS LOS VALORES DE LAS CIUDADES EN LA VENTANA DE DAR ALTA VIAJE*/
-//				List<CiudadDTO> ciudades = new CiudadDAOSQL().readAll();
-//				String[] nombresCiudades = new String[ciudades.size()];
-//				for(int i=0; i<ciudades.size();i++){
-//					nombresCiudades [i] = ciudades.get(i).getNombre();
-//				}	
-//		/* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
-//				this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresCiudades));
-//				this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresCiudades));
-//	}
-//
-//	private void mostrarVentanaCargarViaje() {
-//		this.ventanaCargarViaje.setVisible(true);
-//		
-//	}
-//	
-//	private void llenarViajesEnTabla(){
-//		ViajeDAOSQL viajes = new ViajeDAOSQL();
-//		viajes_en_tabla = viajes.readAll();
-//	}
-//	
-//	private void seleccionarViaje(ActionEvent sV) {
-//		
-//		this.ventanaTablaViajes.setVisible(false);
-//		this.ventanaReserva.setVisible(true);
-//		
-//		int filaSeleccionada = this.ventanaTablaViajes.getTablaViajes().getSelectedRow();
-//		viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
-////		
-////		String viajeString = String.valueOf(viajeSeleccionado.getId()) +
-////				" -   DE : "+  viajeSeleccionado.getOrigenViaje().getNombre() +
-////				"  -  HACIA : "+ viajeSeleccionado.getDestinoViaje().getNombre();
-//		
-////		this.ventanaReserva.getLblViajeSeleccionado().setText(viajeString);
-//	}
-//	
-//	/*- - - - - - - -  - - - - - - - METODO DE CLIENTE - - - - - - - - - - - - - - - - --  */	
-//
-//	private void altaCliente(ActionEvent client) {
-////		if(validarCampos()){	
-////		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
-////		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
-////		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
-////		
-////		/*Obtenemos el medio de contacto del cliente*/
-////		MedioContactoDTO mContacto = new MedioContactoDTO();
-////		mContacto.setTelefonoFijo(this.ventanaCliente.getTxtTelefonoFijo().getText());
-////		mContacto.setTelefonoCelular(this.ventanaCliente.getTxtTelefonoCelular().getText());
-////		mContacto.setEmail(this.ventanaCliente.getTxtEmail().getText());
-////		
-////		medioContacto.agregarMedioContacto(mContacto);
-////		
-////		ClienteDTO nuevoCliente = new ClienteDTO(0,
-////				this.ventanaCliente.getTxtNombre().getText(),
-////				this.ventanaCliente.getTxtApellido().getText(),
-////				this.ventanaCliente.getTxtDni().getText(),
-////				fechaNacimiento,
-////				obtenerMedioContactoDTO(),
-////				
-////		);
-////			cliente.agregarCliente(nuevoCliente);
-////			llenarTablaClientes();
-////			this.ventanaCliente.limpiarCampos();
-////			this.ventanaCliente.dispose();
-////		}
-//	}
-//	
-//	private MedioContactoDTO obtenerMedioContactoDTO() {
-//		MedioContacto medioContacto = new MedioContacto(new DAOSQLFactory());
-//		MedioContactoDTO mContactoDTO = new MedioContactoDTO();
-//		ArrayList<MedioContactoDTO> medios = (ArrayList<MedioContactoDTO>) medioContacto.obtenerMediosContacto();
-//		for(MedioContactoDTO m: medios){
-//			if(m.getEmail().toString().equals(this.ventanaCliente.getTxtEmail().getText()) &&
-//				m.getTelefonoCelular().equals(this.ventanaCliente.getTxtTelefonoCelular().getText())&&
-//				m.getTelefonoFijo().equals(this.ventanaCliente.getTxtTelefonoFijo().getText())){
-//				mContactoDTO = m;
-//			}
+	}
+
+	private void mostrarVentanaAltaDePasajeros(ActionEvent aP) {
+		this.ventanaReserva.mostrarVentana(false);
+		this.ventanaPasajero.setVisible(true);
+	}
+	
+	private void mostrarVentanaCargaDePasajeros(ActionEvent cP) {
+		this.ventanaReserva.mostrarVentana(false);
+		this.ventanaCargaPasajero.mostrarVentana(true);
+	}
+	
+	private void generarPasaje(ActionEvent pagar) {
+		this.ventanaReserva.mostrarVentana(false);
+		this.ventanaFormaDePagos.mostrarVentana(true);
+		
+		PasajeDTO pasajeDTO = new PasajeDTO();
+		
+/*OBTENER EL VIAJE SELECCIONADO*/
+		pasajeDTO.setViaje(this.viajeSeleccionado);
+		
+/*OBTENER EL TRASNPORTE*/
+//		System.out.println("------"+this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
+//		transporteSeleccionado = obtenerTransporteElegidoPorCliente(
+//								(String) this.ventanaReserva.getComboBoxTransporte().getSelectedItem());
+//		pasajeDTO.setTransporte(transporteSeleccionado);
+				
+		
+/*OBTENER EL RANGO ELEGIDO POR EL CLIENTE*/
+		String rangoElegido = this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString();
+		
+/*OBTENER LOS PASAJEROS RELACIONADO A ESE PASAJE*/
+		pasajeDTO.setPasajeros(this.pasajerosEnEstaReserva);
+		
+/*OBTENER EL PAGO DEL PASAJE*/
+		horarioElegido = obtenerHorarioElegidoPorCliente(this.ventanaReserva.getComboBoxRangoHorario().getSelectedItem().toString());
+
+/*GENERAR EL PASAJE Y DARLO DE ALTA EN LA BASE DE DATOS*/
+		
+	}
+
+	private HorarioReservaDTO obtenerHorarioElegidoPorCliente(String horarioComboBox) {
+		HorarioReservaDAOSQL tDAO = new HorarioReservaDAOSQL();
+		HorarioReservaDTO ret = null;
+		ArrayList<HorarioReservaDTO> rangoshorarios = (ArrayList<HorarioReservaDTO>) tDAO.readAll();
+		for(HorarioReservaDTO h : rangoshorarios) {
+			if(h.getHoraInicio().equals(horarioComboBox.substring(0,5)) && (h.getHoraFin().equals(horarioComboBox.substring(8,13)))){
+				ret = h;
+			}
+		}
+		return ret;
+	}
+	/*- - - - - - - -  - - - - - - - METODOS DE RESERVA - - - - - - - - - - - - - - - - --  */		
+	
+	private void llenarValoresEnReserva(){
+		llenarComboRangoDeHorarioEnReserva();
+
+//		llenarComboTransporteEnReserva();
+		
+		/*CAMBIAR LA SOLICITUD AL DAOSQL POR LA SOLICITUD AL MODELO*/
+/*       PREGUNTAR A SOL POR QUE NO FUNCIONA !! -.-"        */		
+		llenarListModelViajesEnReserva();
+		
+	}
+
+	private void llenarListModelViajesEnReserva() {
+		
+		this.ventanaReserva.getListModelViajesDisponibles().removeAllElements();
+		
+		List<ViajeDTO> viajesDisponibles = new ViajeDAOSQL().readAll();
+		System.out.println("Se pidieron"+ viajesDisponibles.size()+" valores en la db de viajes");
+		String[] viajes = new String[viajesDisponibles.size()];
+		
+		for(int i=0; i<viajesDisponibles.size();i++){
+			CiudadDTO origen = viajesDisponibles.get(i).getCiudadOrigen();
+			CiudadDTO destino = viajesDisponibles.get(i).getCiudadDestino();
+			
+			viajes [i] = origen.getNombre()+" - "+destino.getNombre();
+			this.ventanaReserva.getListModelViajesDisponibles().addElement(origen.getNombre()+" - "+destino.getNombre());
+		}
+	}
+
+//	private void llenarComboTransporteEnReserva() {
+//		List<TransporteDTO> transportesDTO = new TransporteDAOSQL().readAll();
+//		String[] transoportes = new String[transportesDTO.size()];
+//		for(int i=0; i<transportesDTO.size();i++){
+//			String rango = transportesDTO.get(i).getNombreTransporte();
+//			transoportes [i] = rango;
 //		}
 //		this.ventanaReserva.getComboBoxTransporte().setModel(new DefaultComboBoxModel(transoportes));
 //	}
@@ -1467,8 +1590,8 @@ private void agregarPais(ActionEvent agP) {
 		ArrayList<ViajeDTO> viajes_en_tabla = (ArrayList<ViajeDTO>) new ViajeDAOSQL().readAll();
 		for(int i=0; i< viajes_en_tabla.size();i++){
 			Object[] fila = { 
-					viajes_en_tabla.get(i).getOrigenViaje().getNombre(),
-					viajes_en_tabla.get(i).getDestinoViaje().getNombre(),
+					viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
+					viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
 					viajes_en_tabla.get(i).getFechaSalida(),
 					viajes_en_tabla.get(i).getFechaLlegada(),
 					viajes_en_tabla.get(i).getPrecio(),
@@ -1673,9 +1796,7 @@ private void agregarPais(ActionEvent agP) {
 		Controlador controlador = new Controlador(vista);
 		controlador.inicializar();
 		
-//		ModeloCiudad modelo = new ModeloCiudad(daoSqlFactory);
-//		for(CiudadDTO c : modelo.obtenerCiudadPorIdProvincia(1818)) {
-//			System.out.println(c.getIdCiudad() + c.getNombre());
-//		}
+		
+
 	}
 }

@@ -30,10 +30,8 @@ public class VentanaCargarViaje extends JFrame {
 
 	private JButton btnCrearViaje;
 	private static VentanaCargarViaje INSTANCE;
-	private JTable tablaViajes;
 	private JTextField textPrecioViaje;
 	private JDateChooser dateChooserFechaOrigen;
-	private JDateChooser dateChooserFechaDestino;
 	private JComboBox<?> comboBoxHorarioSalida;
 	
 	private JComboBox<?> comboBoxCiudadOrigen;
@@ -57,6 +55,7 @@ public class VentanaCargarViaje extends JFrame {
 	private JTextField textHorasEstimadas;
 	private JLabel lblHs;
 	private JLabel lblErrorOrigenDestino;
+	private JTextField textFechaDestino;
 	
 	public static VentanaCargarViaje getInstance(){
 		if(INSTANCE == null)
@@ -67,7 +66,7 @@ public class VentanaCargarViaje extends JFrame {
 	
 	private VentanaCargarViaje() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(400, 150, 871, 507);
+		setBounds(400, 150, 871, 392);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -87,35 +86,22 @@ public class VentanaCargarViaje extends JFrame {
 		contentPane.add(panelReserva);
 		panelReserva.setLayout(null);
 		
-		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(13, 299, 839, 115);
-		contentPane.add(spPasajeros);
-		
 		modelViajes = new DefaultTableModel(null,nombreColumnas){
 			@Override
 				public boolean isCellEditable(int row, int column){
 				return false;
 				}
 			};
-		tablaViajes = new JTable(modelViajes);
-		spPasajeros.setViewportView(tablaViajes);
 		
 		
 		btnCrearViaje = new JButton("Cargar Viaje");
-		btnCrearViaje.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnCrearViaje.setBounds(347, 422, 173, 37); 	
+		btnCrearViaje.setEnabled(false);
+		btnCrearViaje.setBounds(345, 307, 173, 37); 	
 		contentPane.add(btnCrearViaje);
 		
 		dateChooserFechaOrigen = new JDateChooser();
 		dateChooserFechaOrigen.setBounds(98, 72, 153, 20);
 		contentPane.add(dateChooserFechaOrigen);
-		
-		dateChooserFechaDestino = new JDateChooser();
-		dateChooserFechaDestino.setBounds(601, 69, 153, 20);
-		contentPane.add(dateChooserFechaDestino);
 		
 		comboBoxCiudadOrigen = new JComboBox();
 		comboBoxCiudadOrigen.setBounds(446, 176, 190, 20);
@@ -225,10 +211,16 @@ public class VentanaCargarViaje extends JFrame {
 		contentPane.add(lblHs);
 		
 		lblErrorOrigenDestino = new JLabel("");
-		lblErrorOrigenDestino.setFont(new Font("Tahoma", Font.ITALIC, 13));
+		lblErrorOrigenDestino.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblErrorOrigenDestino.setForeground(Color.RED);
-		lblErrorOrigenDestino.setBounds(13, 272, 440, 14);
+		lblErrorOrigenDestino.setBounds(13, 272, 840, 14);
 		contentPane.add(lblErrorOrigenDestino);
+		
+		textFechaDestino = new JTextField();
+		textFechaDestino.setEditable(false);
+		textFechaDestino.setColumns(10);
+		textFechaDestino.setBounds(601, 66, 153, 20);
+		contentPane.add(textFechaDestino);
 		
 		inicializar();
 		this.setVisible(false);
@@ -249,7 +241,7 @@ public class VentanaCargarViaje extends JFrame {
 		this.lblProvinciaOrigen = lblProvinciaOrigen;
 	}
 	
-	public JLabel getLblErrorOrigenDestino() {
+	public JLabel getLblErrores() {
 		return lblErrorOrigenDestino;
 	}
 
@@ -306,12 +298,12 @@ public class VentanaCargarViaje extends JFrame {
 		this.dateChooserFechaOrigen = dateChooserFechaOrigen;
 	}
 
-	public JDateChooser getDateChooserFechaDestino() {
-		return dateChooserFechaDestino;
+	public JTextField getTxtFechaDestino() {
+		return textFechaDestino;
 	}
 
-	public void setDateChooserFechaDestino(JDateChooser dateChooserFechaDestino) {
-		this.dateChooserFechaDestino = dateChooserFechaDestino;
+	public void setTxtFechaDestino(JTextField textFechaDestino) {
+		this.textFechaDestino = textFechaDestino;
 	}
 
 	public JComboBox<?> getComboBoxCiudadOrigen() {
@@ -336,15 +328,6 @@ public class VentanaCargarViaje extends JFrame {
 
 	public void setComboBoxHorarioSalida(JComboBox<?> comboBoxHorarioSalida) {
 		this.comboBoxHorarioSalida = comboBoxHorarioSalida;
-	}
-
-	
-	public JTable getTablaViajes() {
-		return tablaViajes;
-	}
-
-	public void setTablaViajes(JTable tablaViajes) {
-		this.tablaViajes = tablaViajes;
 	}
 
 	public DefaultTableModel getModelViajes() {
