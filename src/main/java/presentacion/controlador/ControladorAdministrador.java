@@ -12,14 +12,10 @@ import dto.RolDTO;
 import dto.TransporteDTO;
 import modelo.Administrativo;
 import modelo.Login;
-import modelo.ModeloCiudad;
-import modelo.ModeloPais;
-import modelo.ModeloProvincia;
 import modelo.Rol;
 import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
-import presentacion.vista.administrador.VentanaAgregarPais;
 import presentacion.vista.administrador.VistaAdministrador;
 
 public class ControladorAdministrador {
@@ -27,25 +23,19 @@ public class ControladorAdministrador {
 	private VistaAdministrador vistaAdministrador;
 	private VentanaAgregarEmpleado ventanaAgregarEmpleado;
 	private List<TransporteDTO> transportes_en_tabla;
+	
 	private Transporte transporte;
 	private ControladorTransporte controladorTransporte;
 	private Login login;
 	
-/*AMB PAIS PROV CIUDAD*/	
-	private ModeloPais modeloPais;
-	private ModeloCiudad modeloCiudad;
-	private ModeloProvincia modeloProvincia;
 	private ControladorPais controladorPais;
 	private ControladorCiudad controladorCiudad;
 	private ControladorProvincia controladorProvincia;
-	
-	private VentanaAgregarPais ventanaAgregarPais;
 	
 	public ControladorAdministrador(VistaAdministrador vistaAdministrador){
 		this.vistaAdministrador = vistaAdministrador;
 //INSTANCES		
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
-		this.ventanaAgregarPais = VentanaAgregarPais.getInstance();
 
 //MENU ITEMS		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
@@ -53,14 +43,12 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemVisualizarTransportes().addActionListener(vt->visualizarTransportes(vt));
 		this.vistaAdministrador.getItemEditarTransporte().addActionListener(et->editarTransporte(et));
 		this.vistaAdministrador.getItemEliminarTransporte().addActionListener(dt->eliminarTransporte(dt));
-//ALTA DESTINOS	
+
+//ITEM DESTINOS	
 		this.vistaAdministrador.getItemPais().addActionListener(p->mostrarVentanaAgregarPais(p));
 		this.vistaAdministrador.getItemProvincia().addActionListener(p->mostrarVentanaAgregarProvincia(p));
 		this.vistaAdministrador.getItemCiudad().addActionListener(p->mostrarVentanaAgregarCiudad(p));
-//EDICION DESTINOS
-		this.vistaAdministrador.getItemEliminarPais().addActionListener(d->mostrarVentanaEliminarPais(d));
-		
-		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
+
 		
 //BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
@@ -70,28 +58,27 @@ public class ControladorAdministrador {
 
 //CONTROLADORES		
 		this.controladorTransporte = new ControladorTransporte();
+		
 		this.controladorPais = ControladorPais.getInstance();
 		this.controladorProvincia = ControladorProvincia.getInstance();
 		this.controladorCiudad = ControladorCiudad.getInstance();
 		
 	}
 
-	private void mostrarVentanaEliminarPais(ActionEvent d) {
-		
-	}
-
 	private void mostrarVentanaAgregarCiudad(ActionEvent p) {
-		this.controladorCiudad.mostrarVentanaAgregarCiudad();
+		this.controladorCiudad.llenarTablaVistaCiudades();
+		this.controladorCiudad.mostrarVistaCiudad();
 	}
 
 	private void mostrarVentanaAgregarProvincia(ActionEvent p) {
-		this.controladorProvincia.mostrarVentanaAgregarProvincia();
+		this.controladorProvincia.llenarTablaVistaProvincias();
+		this.controladorProvincia.mostrarVistaProvincia();
 	}
 
 	private void mostrarVentanaAgregarPais(ActionEvent p) {
-		this.controladorPais.mostrarVentanaAgregarPais();
+		this.controladorPais.llenarTablaVistaPaises();
+		this.controladorPais.mostrarVistaPais();
 	}
-
 
 	/*Agrega el panel de transporte en la vistaPrinciapal del Administrador*/
 	private void agregarPanelPaises(ActionEvent ac) {
@@ -101,7 +88,7 @@ public class ControladorAdministrador {
 
 	public void inicializar(){
 		this.vistaAdministrador.mostrarVentana();
-		this.llenarTablaTransportes();
+//		this.llenarTablaTransportes();
 	}
 	
 	/*Mostrar la ventana para agregar un empleado y carga el comboBox de roles*/

@@ -22,6 +22,7 @@ public class VentanaAgregarPais extends JFrame {
 	private JTextField txtNombrePais;
 	private JButton btnAgregar;
 	private static VentanaAgregarPais INSTANCE;
+	private VentanaPanelGeneral panelGeneral;
 
 
 	public static VentanaAgregarPais getInstance(){
@@ -77,6 +78,7 @@ public class VentanaAgregarPais extends JFrame {
 		btnAgregar.setBackground(new Color(5, 196, 107));
 		btnAgregar.setBounds(47, 177, 131, 42);
 		contentPane.add(btnAgregar);
+		
 	}
 	
 	public void mostrarVentana(){

@@ -20,7 +20,7 @@ public class VentanaEditarPais extends JFrame {
 	private JButton btnEditar;
 	private static VentanaEditarPais INSTANCE;
 
-	public void setTxtNombreTransporte(JTextField txtNombrePais) {
+	public void setTxtNombrePais(JTextField txtNombrePais) {
 		this.txtNombrePais = txtNombrePais;
 	}
 

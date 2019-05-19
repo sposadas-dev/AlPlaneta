@@ -9,7 +9,8 @@ import javax.swing.JOptionPane;
 import dto.PaisDTO;
 import modelo.ModeloPais;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.administrador.PanelGeneral;
+import presentacion.vista.administrador.VentanaPanelGeneral;
+import presentacion.vista.administrador.TableroDePaises;
 import presentacion.vista.administrador.VentanaAgregarPais;
 import presentacion.vista.administrador.VentanaEditarPais;
 
@@ -19,9 +20,10 @@ public class ControladorPais implements ActionListener {
 	private VentanaEditarPais ventanaEditarPais;
 	private ModeloPais modeloPais;
 	private List<PaisDTO> pais_en_tabla;
-	private int filaSeleccionada;
 	private static ControladorPais INSTANCE;
-	private PanelGeneral panelGeneral;
+	private VentanaPanelGeneral panelGeneral;
+	
+	private TableroDePaises tableroDePaises;
 	
 	public static ControladorPais getInstance(){
 		if(INSTANCE == null)
@@ -33,25 +35,31 @@ public class ControladorPais implements ActionListener {
 	private ControladorPais(){
 		this.ventanaAgregarPais = VentanaAgregarPais.getInstance();
 		this.ventanaEditarPais = VentanaEditarPais.getInstance();
+		this.tableroDePaises = TableroDePaises.getInstance();
+		
+		this.tableroDePaises.getBtnAgregar().addActionListener(a->mostrarVentanaAgregarPais(a));
+		this.tableroDePaises.getBtnEditar().addActionListener(a->mostrarVentanaEditarPais(a));
 		
 		this.ventanaAgregarPais.getBtnAgregar().addActionListener(rc->agregarPais(rc));
 		this.ventanaEditarPais.getBtnEditar().addActionListener(ac->editarPais(ac));
-
+		
 		this.modeloPais = new ModeloPais(new DAOSQLFactory());
-		pais_en_tabla = modeloPais.obtenerPaises();
-		this.panelGeneral = new PanelGeneral();
+		this.pais_en_tabla = modeloPais.obtenerPaises();
+		this.panelGeneral = new VentanaPanelGeneral();
 	}
 
-	public void mostrarVentanaAgregarPais() {
-		visualizarPaises();
-		this.ventanaAgregarPais.mostrarVentana();
-	}
-	
-	public void editarPais() {
+	private void mostrarVentanaEditarPais(ActionEvent a) {
+		System.out.println("ControladorPais-MostrarVentanaEditarPais");
 		this.ventanaEditarPais.mostrarVentana();
 	}
-	
+
+	private void mostrarVentanaAgregarPais(ActionEvent a) {
+		System.out.println("ControladorPais-MostrarVentanaAgregarPais");
+		this.ventanaAgregarPais.mostrarVentana();
+	}
+
 	public void agregarPais(ActionEvent rc) {
+		System.out.println();
 		int confirm = JOptionPane.showOptionDialog(
 	            null,"¿Estás seguro que quieres agregar el pais?", 
 			             "Agregar pais", JOptionPane.YES_NO_OPTION,
@@ -64,67 +72,59 @@ public class ControladorPais implements ActionListener {
 			this.ventanaAgregarPais.limpiarCampos();
 			this.ventanaAgregarPais.cerrarVentana();
 			JOptionPane.showMessageDialog(null, "Pais agregado","Pais", JOptionPane.INFORMATION_MESSAGE);
-
 		}
-	}
-	
-	public void editarPais(int filaSeleccionada){
-		this.filaSeleccionada = filaSeleccionada;
-		this.ventanaEditarPais.mostrarVentana();
-		ventanaEditarPais.getTxtNombrePais().setText(this.pais_en_tabla.get(this.filaSeleccionada).getNombre());
-		
+		llenarTablaVistaPaises();
 	}
 	
 	public void editarPais(ActionEvent ac) {
+		
 		int confirm = JOptionPane.showOptionDialog(
 	            null,"¿Estás seguro que quieres editar el Pais?", 
 			             "Editar pais", JOptionPane.YES_NO_OPTION,
 			             JOptionPane.WARNING_MESSAGE, null, null, null);
 		if (confirm == 0){
 			String nombrePais = this.ventanaEditarPais.getTxtNombrePais().getText();
-			this.modeloPais.editarPais(new PaisDTO(pais_en_tabla.get(this.filaSeleccionada).getIdPais(),nombrePais));
+			this.modeloPais.editarPais(new PaisDTO(pais_en_tabla.get(this.tableroDePaises.getTablaPaises().getSelectedRow()).getIdPais(),nombrePais));
+			System.out.println("se edito el pais");
 			ventanaEditarPais.limpiarCampos();
 			ventanaEditarPais.dispose();
 			JOptionPane.showMessageDialog(null, "Pais editado","Pais", JOptionPane.INFORMATION_MESSAGE);
-
 		}
-		
+		llenarTablaVistaPaises();
 	}
 	
 	public void eliminarPais(int filaSeleccionada){
-		this.llenarTabla();
 		int confirm = JOptionPane.showOptionDialog(
 		            null,"¿Estás seguro que quieres eliminar el pais?", 
 				             "Eliminar pais", JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE, null, null, null);
 	 if (confirm == 0){
 		JOptionPane.showMessageDialog(null, "Pais eliminado","Pais", JOptionPane.INFORMATION_MESSAGE);
-//comentario:
-		// verificar que ningun viaje tenga relacionado el pais a borrar
-//		this.modeloPais.borrarPais(pais_en_tabla.get(filaSeleccionada));
 	 }
 	}
 	
 
-	public void llenarTabla(){
+	public void llenarTablaVistaPaises(){
+		System.out.println("ControladorPais-LlenarTablaPaises");
 		
-		panelGeneral.getModel().setRowCount(0); //Para vaciar la tabla
-		panelGeneral.getModel().setColumnCount(0);
-		panelGeneral.getModel().setColumnIdentifiers(this.panelGeneral.getNombreColumnas());
+		this.tableroDePaises.getModelPaises().setRowCount(0); //Para vaciar la tabla
+		this.tableroDePaises.getModelPaises().setColumnCount(0);
+		this.tableroDePaises.getModelPaises().setColumnIdentifiers(this.panelGeneral.getNombreColumnas());
 
 		this.pais_en_tabla = modeloPais.obtenerPaises();
 			
 		for (int i = 0; i < this.pais_en_tabla.size(); i++){
-			Object[] fila = {this.pais_en_tabla.get(i).getNombre(),
-							this.pais_en_tabla.get(i).getIdPais(),
+			
+			String[] fila = {this.pais_en_tabla.get(i).getNombre(),
+							String.valueOf(this.pais_en_tabla.get(i).getIdPais()),
 			};
-			this.panelGeneral.getModel().addRow(fila);
+			this.tableroDePaises.getModelPaises().addRow(fila);
 		}
 	}
 	
 	private void visualizarPaises() {
-		this.panelGeneral.mostrarPanel(true);
-		this.llenarTabla();
+		this.llenarTablaVistaPaises();
+		
 	}
 	
 	@Override
@@ -161,6 +161,10 @@ public class ControladorPais implements ActionListener {
 
 	public void setPais_en_tabla(List<PaisDTO> pais_en_tabla) {
 		this.pais_en_tabla = pais_en_tabla;
+	}
+
+	public void mostrarVistaPais() {
+		this.tableroDePaises.show();
 	}
 	
 	

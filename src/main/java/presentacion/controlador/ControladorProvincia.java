@@ -13,7 +13,7 @@ import dto.ProvinciaDTO;
 import modelo.ModeloPais;
 import modelo.ModeloProvincia;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.administrador.PanelGeneral;
+import presentacion.vista.administrador.TableroDeProvincias;
 import presentacion.vista.administrador.VentanaAgregarProvincia;
 import presentacion.vista.administrador.VentanaEditarProvincia;
 
@@ -25,13 +25,12 @@ public class ControladorProvincia implements ActionListener {
 	private ModeloPais modeloPais;
 	private List<ProvinciaDTO> provincias_en_tabla;
 	private int filaSeleccionada;
-	private PanelGeneral panel;
-	
+	private TableroDeProvincias tableroDeProvincias;
 	private static ControladorProvincia INSTANCE;
 	
 	public static ControladorProvincia getInstance(){
 		if(INSTANCE == null)
-			return new ControladorProvincia ();
+			return new ControladorProvincia();
 		else
 			return INSTANCE;
 	}
@@ -39,21 +38,28 @@ public class ControladorProvincia implements ActionListener {
 	private ControladorProvincia(){
 		this.ventanaAgregarProvincia = VentanaAgregarProvincia.getInstance();
 		this.ventanaEditarProvincia = VentanaEditarProvincia.getInstance();
+		this.tableroDeProvincias = TableroDeProvincias.getInstance();
+		
+		this.tableroDeProvincias.getBtnAgregar().addActionListener(a->mostrarVentanaAgregarProvincia(a));
+		this.tableroDeProvincias.getBtnEditar().addActionListener(a->mostrarVentanaEditarProvincia(a));
 		
 		this.ventanaAgregarProvincia.getBtnAgregar().addActionListener(rc->agregarProvincia(rc));
 		this.ventanaEditarProvincia.getBtnEditar().addActionListener(ac->editarProvincia(ac));
 
 		this.modeloPais = new ModeloPais(new DAOSQLFactory());
 		this.modeloProvincia = new ModeloProvincia(new DAOSQLFactory());
-		provincias_en_tabla = modeloProvincia.obtenerProvincias();
-		this.panel = new PanelGeneral();
+		this.provincias_en_tabla = modeloProvincia.obtenerProvincias();
 	}
 
-	public void mostrarVentanaAgregarProvincia() {
+	private void mostrarVentanaEditarProvincia(ActionEvent a) {
+		this.ventanaEditarProvincia.mostrarVentana();
+	}
+
+	private void mostrarVentanaAgregarProvincia(ActionEvent a) {
 		llenarComboBoxPaises();
 		this.ventanaAgregarProvincia.mostrarVentana();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void llenarComboBoxPaises() {
 		List<PaisDTO> paises = modeloPais.obtenerPaises();
@@ -89,8 +95,8 @@ public class ControladorProvincia implements ActionListener {
 			this.ventanaAgregarProvincia.limpiarCampos();
 			this.ventanaAgregarProvincia.cerrarVentana();
 			JOptionPane.showMessageDialog(null, "Transporte agregado","Transporte", JOptionPane.INFORMATION_MESSAGE);
-
 		}
+		llenarTablaVistaProvincias();
 	}
 	
 	private boolean permiteAgregarProvincia() {
@@ -99,13 +105,6 @@ public class ControladorProvincia implements ActionListener {
 		for(ProvinciaDTO p: provDB)
 			ret = ret && !(p.getNombre().equals(this.ventanaAgregarProvincia.getTxtNombreProvincia().getText()));
 		return ret;
-	}
-
-	public void editarProvincia(int filaSeleccionada){
-		this.filaSeleccionada = filaSeleccionada;
-		this.ventanaEditarProvincia.mostrarVentana();
-		ventanaEditarProvincia.getTxtNombreProvincia().setText(this.provincias_en_tabla.get(this.filaSeleccionada).getNombre());
-		
 	}
 	
 	public void editarProvincia(ActionEvent ac) {
@@ -123,7 +122,26 @@ public class ControladorProvincia implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Provincia editada","Provincia", JOptionPane.INFORMATION_MESSAGE);
 
 		}
+		llenarTablaVistaProvincias();
+	}
+	
+	public void llenarTablaVistaProvincias(){
+		System.out.println("ControladorPais-LlenarTablaPaises");
 		
+		this.tableroDeProvincias.getModelProvincias().setRowCount(0); //Para vaciar la tabla
+		this.tableroDeProvincias.getModelProvincias().setColumnCount(0);
+		this.tableroDeProvincias.getModelProvincias().setColumnIdentifiers(this.tableroDeProvincias.getNombreColumnas());
+
+		this.provincias_en_tabla = modeloProvincia.obtenerProvincias();
+			
+		for (int i = 0; i < this.provincias_en_tabla.size(); i++){
+			
+			String[] fila = {
+					this.provincias_en_tabla.get(i).getPais().getNombre(),
+					this.provincias_en_tabla.get(i).getNombre()
+			};
+			this.tableroDeProvincias.getModelProvincias().addRow(fila);
+		}
 	}
 	
 	public void eliminarProvincia(int filaSeleccionada){
@@ -133,10 +151,6 @@ public class ControladorProvincia implements ActionListener {
 				             JOptionPane.ERROR_MESSAGE, null, null, null);
 	 if (confirm == 0){
 		JOptionPane.showMessageDialog(null, "Provincia eliminada","Provincia", JOptionPane.INFORMATION_MESSAGE);
-// comentario:
-		// RELACIONAR EL VIAJE CON LA PROVINCIA Y PAIS ADEMAS DE CIUDAD PARA DARLE DE BAJA
-		// SI ES QUE NO TIENE NINGUN VIAJE RELACIONADO.
-//		this.modeloProvincia.borrarProvincia(provincias_en_tabla.get(filaSeleccionada));
 	 }
 	}
 	private String obtenerId(String s) {
@@ -204,6 +218,11 @@ public class ControladorProvincia implements ActionListener {
 	public void setFilaSeleccionada(int filaSeleccionada) {
 		this.filaSeleccionada = filaSeleccionada;
 	}
+	
+	public void mostrarVistaProvincia() {
+		this.tableroDeProvincias.show();
+	}
+	
 	
 	
 }

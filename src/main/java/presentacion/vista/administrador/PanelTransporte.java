@@ -30,6 +30,7 @@ public class PanelTransporte extends JPanel {
 			}
 		};
 		setLayout(null);
+		
 
 		JScrollPane spPasajeros = new JScrollPane();
 		spPasajeros.setBounds(32, 96, 1302, 483);

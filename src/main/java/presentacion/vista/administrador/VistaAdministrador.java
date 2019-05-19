@@ -18,6 +18,8 @@ public class VistaAdministrador extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private PanelTransporte panelTransporte;
+	private VentanaPanelGeneral panelGeneral;
+
 	private JMenuItem itemAgregarCuenta;
 	private JMenuItem itemVisualizarTransportes ;
 	private JMenuItem itemAgregarTransporte;
@@ -79,29 +81,18 @@ public class VistaAdministrador extends JFrame {
 		mnDestinos.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(mnDestinos);
 		
-		itemPais = new JMenuItem("Agregar Pais");
+		itemPais = new JMenuItem("Menu de Pais");
 		itemPais.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mnDestinos.add(itemPais);
 		
-		itemProvincia = new JMenuItem("Agregar Provincia");
+		itemProvincia = new JMenuItem("Menu de Provincia");
 		itemProvincia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mnDestinos.add(itemProvincia);
 		
-		itemCiudad = new JMenuItem("Agregar Ciudad");
+		itemCiudad = new JMenuItem("Menu de Ciudad");
 		itemCiudad.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mnDestinos.add(itemCiudad);
 		
-		itemEliminarPais = new JMenuItem("Eliminar Pais");
-		itemEliminarPais.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		mnDestinos.add(itemEliminarPais);
-		
-		itemEliminarProvincia = new JMenuItem("Eliminar Provincia");
-		itemEliminarProvincia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		mnDestinos.add(itemEliminarProvincia);
-		
-		itemEliminarCiudad = new JMenuItem("Eliminar Ciudad");
-		itemEliminarCiudad.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		mnDestinos.add(itemEliminarCiudad);
 		
 		JMenu menuTransporte = new JMenu("Transportes");
 		menuTransporte.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -235,6 +226,13 @@ public class VistaAdministrador extends JFrame {
 	public void setItemEliminarProvincia(JMenuItem itemEliminarProvincia) {
 		this.itemEliminarProvincia = itemEliminarProvincia;
 	}
-	
+
+	public VentanaPanelGeneral getPanelGeneral() {
+		return panelGeneral;
+	}
+
+	public void setPanelGeneral(VentanaPanelGeneral panelGeneral) {
+		this.panelGeneral = panelGeneral;
+	}
 	
 }

@@ -1,27 +1,24 @@
 package presentacion.vista.administrador;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import java.awt.Color;
-
-import javax.swing.JLabel;
-
 import java.awt.Font;
 
-import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class VentanaEditarCiudad extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txtNombreProvincia;
+	private JTextField txtNombreCiudad;
 	private JButton btnEditar;
 	private static VentanaEditarCiudad INSTANCE;
 
-	public void setTxtNombreProvincia(JTextField txtNombreProvincia) {
-		this.txtNombreProvincia = txtNombreProvincia;
+	public void setTxtNombreCiudad(JTextField txtNombreCiudad) {
+		this.txtNombreCiudad = txtNombreCiudad;
 	}
 
 	public static VentanaEditarCiudad getInstance(){
@@ -32,7 +29,7 @@ public class VentanaEditarCiudad extends JFrame {
 	}
 	
 	public VentanaEditarCiudad() {
-		setTitle("Editar provincia");
+		setTitle("Editar ciudad");
 		setResizable(false);;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 423, 303);
@@ -49,20 +46,20 @@ public class VentanaEditarCiudad extends JFrame {
 		panel.setBounds(0, 0, 407, 53);
 		contentPane.add(panel);
 		
-		JLabel lblAgregarProvincia = new JLabel("Editar provincia");
-		lblAgregarProvincia.setForeground(Color.WHITE);
-		lblAgregarProvincia.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblAgregarProvincia.setBounds(27, 0, 253, 53);
-		panel.add(lblAgregarProvincia);
+		JLabel lblAgregarCiudad = new JLabel("Editar ciudad");
+		lblAgregarCiudad.setForeground(Color.WHITE);
+		lblAgregarCiudad.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lblAgregarCiudad.setBounds(27, 0, 253, 53);
+		panel.add(lblAgregarCiudad);
 		
-		JLabel lblNewLabel = new JLabel("Nombre de la provincia:");
+		JLabel lblNewLabel = new JLabel("Nombre de la ciudad:");
 		lblNewLabel.setBounds(47, 111, 131, 14);
 		contentPane.add(lblNewLabel);
 		
-		txtNombreProvincia = new JTextField();
-		txtNombreProvincia.setBounds(181, 108, 170, 20);
-		contentPane.add(txtNombreProvincia);
-		txtNombreProvincia.setColumns(10);
+		txtNombreCiudad = new JTextField();
+		txtNombreCiudad.setBounds(181, 108, 170, 20);
+		contentPane.add(txtNombreCiudad);
+		txtNombreCiudad.setColumns(10);
 		
 		JButton button = new JButton("Cancelar");
 		button.setForeground(Color.WHITE);
@@ -91,11 +88,11 @@ public class VentanaEditarCiudad extends JFrame {
 		return btnEditar;
 	}
 
-	public JTextField getTxtNombreProvincia() {
-		return txtNombreProvincia;
+	public JTextField getTxtNombreCiudad() {
+		return txtNombreCiudad;
 	}
 	
 	public void limpiarCampos(){
-		this.txtNombreProvincia.setText(null);
+		this.txtNombreCiudad.setText(null);
 	}
 }

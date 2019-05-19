@@ -13,9 +13,10 @@ import dto.ProvinciaDTO;
 import modelo.ModeloCiudad;
 import modelo.ModeloProvincia;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.administrador.PanelGeneral;
+import presentacion.vista.administrador.TableroDeCiudades;
 import presentacion.vista.administrador.VentanaAgregarCiudad;
 import presentacion.vista.administrador.VentanaEditarCiudad;
+import presentacion.vista.administrador.VentanaPanelGeneral;
 
 public class ControladorCiudad implements ActionListener {
 
@@ -25,7 +26,8 @@ public class ControladorCiudad implements ActionListener {
 	private ModeloProvincia modeloProvincia;
 	private List<CiudadDTO> ciudades_en_tabla;
 	private int filaSeleccionada;
-	private PanelGeneral panel;
+	private VentanaPanelGeneral panel;
+	private TableroDeCiudades tableroDeCiudades;
 
 	private static ControladorCiudad INSTANCE;
 
@@ -39,23 +41,31 @@ public class ControladorCiudad implements ActionListener {
 	private ControladorCiudad() {
 		this.ventanaAgregarCiudad = VentanaAgregarCiudad.getInstance();
 		this.ventanaEditarCiudad = VentanaEditarCiudad.getInstance();
-
+		this.tableroDeCiudades = TableroDeCiudades.getInstance();
+		
+		this.tableroDeCiudades.getBtnAgregar().addActionListener(a->mostrarVentanaAgregarCiudad(a));
+		this.tableroDeCiudades.getBtnEditar().addActionListener(a->mostrarVentanaEditarCiudad(a));
+		
 		this.ventanaAgregarCiudad.getBtnAgregar().addActionListener(rc -> agregarCiudad(rc));
 		this.ventanaEditarCiudad.getBtnEditar().addActionListener(ac -> editarCiudad(ac));
 
 		this.modeloProvincia = new ModeloProvincia(new DAOSQLFactory());
 		this.modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
-		ciudades_en_tabla = modeloCiudad.obtenerCiudades();
-		this.panel = new PanelGeneral();
+		this.ciudades_en_tabla = modeloCiudad.obtenerCiudades();
+		this.panel = new VentanaPanelGeneral();
 	}
 
-	public void mostrarVentanaAgregarCiudad() {
-		llenarComboBoxPaises();
+	private void mostrarVentanaEditarCiudad(ActionEvent a) {
+		this.ventanaEditarCiudad.mostrarVentana();
+	}
+
+	private void mostrarVentanaAgregarCiudad(ActionEvent a) {
+		llenarComboBoxProvincias();
 		this.ventanaAgregarCiudad.mostrarVentana();
 	}
 
 	@SuppressWarnings("unchecked")
-	private void llenarComboBoxPaises() {
+	private void llenarComboBoxProvincias() {
 		List<ProvinciaDTO> provincias = modeloProvincia.obtenerProvincias();
 
 		String[] nombresProvincias = new String[provincias.size()];
@@ -74,7 +84,7 @@ public class ControladorCiudad implements ActionListener {
 
 		int confirm = JOptionPane.showOptionDialog(null, "¿Estás seguro que quieres agregar la provincia?",
 				"Agregar provincia", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		if (confirm == 0 && permiteAgregarProvincia()) {
+		if (confirm == 0 && permiteAgregarCiudad()) {
 
 			String idProvincia = obtenerId(
 					this.ventanaAgregarCiudad.getComboBoxProvincias().getSelectedItem().toString());
@@ -89,9 +99,10 @@ public class ControladorCiudad implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Transporte agregado", "Transporte", JOptionPane.INFORMATION_MESSAGE);
 
 		}
+		llenarTablaVistaCiudades();
 	}
 
-	private boolean permiteAgregarProvincia() {
+	private boolean permiteAgregarCiudad() {
 		boolean ret = true;
 		ArrayList<CiudadDTO> ciudadDB = (ArrayList<CiudadDTO>) modeloCiudad.obtenerCiudades();
 		for (CiudadDTO p : ciudadDB)
@@ -99,30 +110,41 @@ public class ControladorCiudad implements ActionListener {
 		return ret;
 	}
 
-	public void editarProvincia(int filaSeleccionada) {
-		this.filaSeleccionada = filaSeleccionada;
-		this.ventanaEditarCiudad.mostrarVentana();
-		ventanaEditarCiudad.getTxtNombreProvincia()
-				.setText(this.ciudades_en_tabla.get(this.filaSeleccionada).getNombre());
-
-	}
-
 	public void editarCiudad(ActionEvent ac) {
 		int confirm = JOptionPane.showOptionDialog(null, "¿Estás seguro que quieres editar la provincia?",
 				"Editar provincia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
 		if (confirm == 0) {
 			CiudadDTO nuevaCiudad = ciudades_en_tabla.get(this.filaSeleccionada);
-			nuevaCiudad.setNombre(this.ventanaEditarCiudad.getTxtNombreProvincia().getText());
+			nuevaCiudad.setNombre(this.ventanaEditarCiudad.getTxtNombreCiudad().getText());
 			System.out.println("a editar " + nuevaCiudad.getNombre());
 			this.modeloCiudad.editarCiudad(nuevaCiudad);
 			ventanaEditarCiudad.limpiarCampos();
 			ventanaEditarCiudad.dispose();
-			JOptionPane.showMessageDialog(null, "Provincia editada", "Provincia", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Ciudad editada", "Ciudad", JOptionPane.INFORMATION_MESSAGE);
 
 		}
+		llenarTablaVistaCiudades();
 
 	}
+	public void llenarTablaVistaCiudades(){
+		System.out.println("ControladorPais-LlenarTablaPaises");
+		
+		this.tableroDeCiudades.getModelCiudades().setRowCount(0); //Para vaciar la tabla
+		this.tableroDeCiudades.getModelCiudades().setColumnCount(0);
+		this.tableroDeCiudades.getModelCiudades().setColumnIdentifiers(this.tableroDeCiudades.getNombreColumnas());
 
+		this.ciudades_en_tabla = modeloCiudad.obtenerCiudades();
+			
+		for (int i = 0; i < this.ciudades_en_tabla.size(); i++){
+			
+			String[] fila = {
+					this.ciudades_en_tabla.get(i).getProvincia().getNombre(),
+					this.ciudades_en_tabla.get(i).getNombre()
+			};
+			this.tableroDeCiudades.getModelCiudades().addRow(fila);
+		}
+	}
+	
 	public void eliminarProvincia(int filaSeleccionada) {
 		int confirm = JOptionPane.showOptionDialog(null, "¿Estás seguro que quieres eliminar la provincia?",
 				"Eliminar provincia", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
@@ -201,11 +223,11 @@ public class ControladorCiudad implements ActionListener {
 		this.filaSeleccionada = filaSeleccionada;
 	}
 
-	public PanelGeneral getPanel() {
+	public VentanaPanelGeneral getPanel() {
 		return panel;
 	}
 
-	public void setPanel(PanelGeneral panel) {
+	public void setPanel(VentanaPanelGeneral panel) {
 		this.panel = panel;
 	}
 
@@ -217,4 +239,7 @@ public class ControladorCiudad implements ActionListener {
 		INSTANCE = iNSTANCE;
 	}
 
+	public void mostrarVistaCiudad(){
+		this.tableroDeCiudades.show();
+	}
 }
