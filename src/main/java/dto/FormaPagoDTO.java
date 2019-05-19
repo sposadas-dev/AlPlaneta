@@ -10,6 +10,11 @@ public class FormaPagoDTO {
 		this.tipo = tipo;
 	}
 
+	public FormaPagoDTO() {
+		super();
+	}
+
+
 	public int getIdFormaPago() {
 		return idFormaPago;
 	}

@@ -15,7 +15,7 @@ public class Conexion {
 		try{
 			Class.forName("com.mysql.jdbc.Driver"); 
 			//
-			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/alplaneta?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","pass");
+			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/alplaneta","root","pass");
 			log.info("Conexion exitosa");
 		}
 		catch(Exception e)

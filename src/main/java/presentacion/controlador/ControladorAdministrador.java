@@ -5,10 +5,12 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import modelo.Administrativo;
+import modelo.FormaPago;
 import modelo.Login;
 import modelo.Rol;
 import modelo.Transporte;
 import dto.AdministrativoDTO;
+import dto.FormaPagoDTO;
 import dto.LoginDTO;
 import dto.RolDTO;
 import dto.TransporteDTO;
@@ -21,9 +23,15 @@ public class ControladorAdministrador {
 	private VistaAdministrador vistaAdministrador;
 	private VentanaAgregarEmpleado ventanaAgregarEmpleado;
 	private List<TransporteDTO> transportes_en_tabla;
+	private List<FormaPagoDTO> fpago_en_tabla;
 	private Transporte transporte;
+	private FormaPago formapago;
 	private ControladorTransporte controladorTransporte;
+	private ControladorFormaPago controladorFormaPago;
+	
 	private Login login;
+	
+	
 
 	
 	public ControladorAdministrador(VistaAdministrador vistaAdministrador){
@@ -34,22 +42,32 @@ public class ControladorAdministrador {
 		
 		this.vistaAdministrador.getItemAgregarTransporte().addActionListener(ac->agregarPanelTransporte(ac));
 		this.vistaAdministrador.getItemVisualizarTransportes().addActionListener(vt->visualizarTransportes(vt));
-
 		this.vistaAdministrador.getItemEditarTransporte().addActionListener(et->editarTransporte(et));
 		this.vistaAdministrador.getItemEliminarTransporte().addActionListener(dt->eliminarTransporte(dt));
 		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
+		
+		this.vistaAdministrador.getItemAgregarFormaPago().addActionListener(afp->agregarPanelFormaPago(afp));
+		this.vistaAdministrador.getItemVisualizarFormaPago().addActionListener(vfp->visualizarFormaPago(vfp));
+		this.vistaAdministrador.getItemEditarFormaPago().addActionListener(efp->editarFormaPago(efp));
+		this.vistaAdministrador.getItemEliminarFormaPago().addActionListener(dfp->eliminarFormaPago(dfp));
+		this.vistaAdministrador.getPanelFormaPago().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
+	
+		
 
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
 		
 		this.transporte = new Transporte(new DAOSQLFactory());
+		this.formapago = new FormaPago(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
 		this.controladorTransporte = new ControladorTransporte();
+		this.controladorFormaPago = new ControladorFormaPago();
 	}
 	
 
 	public void inicializar(){
 		this.vistaAdministrador.mostrarVentana();
 		this.llenarTablaTransportes();
+		this.llenarTablaFormaPago();
 	}
 	
 	/*Mostrar la ventana para agregar un empleado y carga el comboBox de roles*/
@@ -57,6 +75,7 @@ public class ControladorAdministrador {
 		cargarcomboBoxRoles();
 		this.ventanaAgregarEmpleado.mostrarVentana(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 
 	}
 	
@@ -105,9 +124,10 @@ public class ControladorAdministrador {
 		}
 		this.ventanaAgregarEmpleado.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
 	}
-	
+	//----------------------Transportes-----------------------------------
 	private void visualizarTransportes(ActionEvent vt) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.llenarTablaTransportes();
 	}
 	/*Agrega el panel de transporte en la vistaPrinciapal del Administrador*/
@@ -146,16 +166,69 @@ public class ControladorAdministrador {
 	}
 
 	public void llenarTablaTransportes(){
-		this.vistaAdministrador.getPanelTransporte().getModelClientes().setRowCount(0); //Para vaciar la tabla
-		this.vistaAdministrador.getPanelTransporte().getModelClientes().setColumnCount(0);
-		this.vistaAdministrador.getPanelTransporte().getModelClientes().setColumnIdentifiers(this.vistaAdministrador.getPanelTransporte().getNombreColumnasClientes());
+		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setColumnCount(0);
+		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setColumnIdentifiers(this.vistaAdministrador.getPanelTransporte().getNombreColumnasTransporte());
 			
 		this.transportes_en_tabla = transporte.obtenerTransportes();
 			
 		for (int i = 0; i < this.transportes_en_tabla.size(); i++){
 			Object[] fila = {this.transportes_en_tabla.get(i).getNombre(),
 			};
-			this.vistaAdministrador.getPanelTransporte().getModelClientes().addRow(fila);
+			this.vistaAdministrador.getPanelTransporte().getModelTransportes().addRow(fila);
+		}		
+	}
+	
+	//------------------------------FormaPago-------------------------------------------------
+	
+	private void visualizarFormaPago(ActionEvent vfp) {
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.llenarTablaFormaPago();
+	}
+	/*Agrega el panel de Forma pago en la vistaPrinciapal del Administrador*/
+	private void agregarPanelFormaPago(ActionEvent afp) {
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
+		controladorFormaPago.mostrarVentanaAgregarFormaPago();
+	}
+	
+	private void editarFormaPago(ActionEvent efp) {
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
+		int filaSeleccionada = this.vistaAdministrador.getPanelFormaPago().getTablaFormaPago().getSelectedRow();
+		if (filaSeleccionada != -1){
+			controladorFormaPago.editarFormaPago(filaSeleccionada);
+			llenarTablaFormaPago();
+
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+		llenarTablaFormaPago();
+	}
+	
+	private void eliminarFormaPago(ActionEvent dt) {
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
+		int filaSeleccionada = this.vistaAdministrador.getPanelFormaPago().getTablaFormaPago().getSelectedRow();
+		if (filaSeleccionada != -1){
+			controladorFormaPago.eliminarFormaPago(filaSeleccionada);
+			llenarTablaFormaPago();
+		
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+
+	public void llenarTablaFormaPago(){
+		this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().setColumnCount(0);
+		this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().setColumnIdentifiers(this.vistaAdministrador.getPanelFormaPago().getNombreColumnasFormaPago());
+			
+		this.fpago_en_tabla = formapago.obtenerFormaPago();
+			
+		for (int i = 0; i < this.fpago_en_tabla.size(); i++){
+			Object[] fila = {this.fpago_en_tabla.get(i).getTipo(),
+			};
+			this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().addRow(fila);
 		}		
 	}
 }

@@ -83,7 +83,7 @@ public class ControladorTransporte implements ActionListener {
 	public void eliminarTransporte(int filaSeleccionada){
 		int confirm = JOptionPane.showOptionDialog(
 		            null,"¿Estás seguro que quieres eliminar el transporte?", 
-				             "Eliminar localidad", JOptionPane.YES_NO_OPTION,
+				             "Eliminar transporte", JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE, null, null, null);
 	 if (confirm == 0){
 		JOptionPane.showMessageDialog(null, "Transporte eliminado","Transporte", JOptionPane.INFORMATION_MESSAGE);
