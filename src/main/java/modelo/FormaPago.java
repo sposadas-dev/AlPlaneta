@@ -16,7 +16,12 @@ public class FormaPago {
 	public void agregarFormaPago(FormaPagoDTO formap) {
 		this.formapago.insert(formap);
 	}
-	
+	public void borrarFormaPago(FormaPagoDTO fp_a_eliminar) {
+		this.formapago.delete(fp_a_eliminar);
+	}
+	public void editarFormaPago(FormaPagoDTO fp_a_editar){
+		this.formapago.update(fp_a_editar);
+	}
 	public List<FormaPagoDTO> obtenerFormaPago(){
 		return this.formapago.readAll();
 	}
