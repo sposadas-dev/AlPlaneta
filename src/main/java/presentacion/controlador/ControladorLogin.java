@@ -6,6 +6,7 @@ import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.LoginDTO;
+import modelo.Administrador;
 import modelo.Administrativo;
 import modelo.Cliente;
 import modelo.Login;
@@ -94,6 +95,8 @@ public class ControladorLogin {
 		System.out.println("Se Loguea Como Administrador");
 		System.out.println(administradorLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);
+		ControladorAdministrador controladorAdministrador = new ControladorAdministrador(vistaAdministrador);
+		controladorAdministrador.inicializar();
 	}
 		
 		
@@ -104,9 +107,8 @@ public class ControladorLogin {
 	}
 	
 	private AdministradorDTO obtenerAdministrador(LoginDTO loginUsuario) {
-//		Administrador administrador = new Administrador(new DAOSQLFactory());
-//		return administrador.getByLoginId(loginUsuario.getIdDatosLogin());
-		return null;
+		Administrador administrador = new Administrador(new DAOSQLFactory());
+		return administrador.getByLoginId(loginUsuario.getIdDatosLogin());
 	}
 	
 	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {

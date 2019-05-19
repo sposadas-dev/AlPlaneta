@@ -14,7 +14,7 @@ public class Main {
 //		VistaPrueba vista = new VistaPrueba();
 //		ControladorPrueba controlador = new ControladorPrueba(vista);
 //		controlador.inicializar();		
-
+//
 //		VistaAdministrador administrador = new VistaAdministrador();
 //		ControladorAdministrador controlador = new ControladorAdministrador(administrador);
 //		controlador.inicializar();
