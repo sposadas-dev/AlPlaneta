@@ -8,23 +8,20 @@ public class PasajeDTO {
 	private int idPasaje;
 	private ViajeDTO viaje;
 	private AdministrativoDTO administrativo;
-	private int cantidadPasajeros;
 	private ClienteDTO cliente;
-	private TransporteDTO transporte;
 	private Date fechaVencimiento;
 	private BigDecimal valorViaje;
 	private EstadoPasajeDTO estadoDelPasaje;
 	private PagoDTO pago;
 	private List<PasajeroDTO> pasajeros;
 
-	public PasajeDTO(int idPasaje, ViajeDTO viaje, AdministrativoDTO administrativo, int cantidadPasajeros,
+	public PasajeDTO(int idPasaje, ViajeDTO viaje, AdministrativoDTO administrativo,
 			ClienteDTO cliente, Date fechaVencimiento, BigDecimal valorViaje,
 			EstadoPasajeDTO estadoDelPasaje, PagoDTO pago, List<PasajeroDTO> pasajeros) {
 		super();
 		this.idPasaje = idPasaje;
 		this.viaje = viaje;
 		this.administrativo = administrativo;
-		this.cantidadPasajeros = cantidadPasajeros;
 		this.cliente = cliente;
 		this.fechaVencimiento = fechaVencimiento;
 		this.valorViaje = valorViaje;
@@ -61,28 +58,12 @@ public class PasajeDTO {
 		this.administrativo = administrativo;
 	}
 
-	public int getCantidadPasajeros() {
-		return cantidadPasajeros;
-	}
-
-	public void setCantidadPasajeros(int cantidadPasajeros) {
-		this.cantidadPasajeros = cantidadPasajeros;
-	}
-
 	public ClienteDTO getCliente() {
 		return cliente;
 	}
 
 	public void setCliente(ClienteDTO cliente) {
 		this.cliente = cliente;
-	}
-
-	public TransporteDTO getTransporte() {
-		return transporte;
-	}
-
-	public void setTransporte(TransporteDTO transporte) {
-		this.transporte = transporte;
 	}
 
 	public Date getFechaVencimiento() {

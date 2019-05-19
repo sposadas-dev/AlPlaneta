@@ -30,9 +30,11 @@ public class PagoDAOSQL implements PagoDAO {
 			statement.setInt(1, pagoInsert.getIdPago());
 			statement.setDate(2, pagoInsert.getFechaPago());
 			statement.setBigDecimal(3, pagoInsert.getMonto());
-			if (statement.executeUpdate() > 0) {
+			statement.setInt(4,pagoInsert.getIdFormaPago().getIdFormaPago());
+		
+			if (statement.executeUpdate() > 0) 
 				return true;
-			}
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
@@ -102,7 +104,7 @@ public class PagoDAOSQL implements PagoDAO {
 	}
 
 	@Override
-	public PagoDTO browse(int idPago) {
+	public PagoDTO getPagoById(int idPago) {
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
@@ -114,7 +116,7 @@ public class PagoDAOSQL implements PagoDAO {
 			statement.setInt(1, idPago);
 			resultSet = statement.executeQuery();
 			if (resultSet.next()){
-				pago = new PagoDTO(resultSet.getInt("idPasajero"),
+				pago = new PagoDTO(resultSet.getInt("idPago"),
 										   resultSet.getDate("fechaPago"),
 										   resultSet.getBigDecimal("monto"),
 										   pagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago")) );

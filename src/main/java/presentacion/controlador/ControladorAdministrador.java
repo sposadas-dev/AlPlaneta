@@ -149,6 +149,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
 		this.llenarTablaTransportes();
 	}
+	
 	/*Agrega el panel de transporte en la vistaPrinciapal del Administrador*/
 	private void agregarPanelTransporte(ActionEvent ac) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);

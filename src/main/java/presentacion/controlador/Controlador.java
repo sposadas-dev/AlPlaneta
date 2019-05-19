@@ -1659,7 +1659,6 @@ private void agregarPais(ActionEvent agP) {
 		if(itemSeleccionado.equals("TARJETA")){
 //			ventanaPagoTarjeta.mostrarVentana(true);
 //			ventanaFormaDePagos.mostrarVentana(false);
-			ventanaFormaDePagos.redimensionar();
 			}
 		else if(itemSeleccionado.equals("EFECTIVO")){
 //			ventanaPagoEfectivo.mostrarVentana(true);

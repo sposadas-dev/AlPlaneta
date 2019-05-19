@@ -21,9 +21,12 @@ public class FormaPago {
 		return this.formapago.readAll();
 	}
 	
-	public FormaPagoDTO getFormaPagoById(int idFormaPago)
-	{
+	public FormaPagoDTO getFormaPagoById(int idFormaPago){
 		return this.formapago.getFormaPagoById(idFormaPago);
+	}
+	
+	public FormaPagoDTO getFormaPagoByName(String name){
+		return this.formapago.getFormaPagoByName(name);
 	}
 
 }

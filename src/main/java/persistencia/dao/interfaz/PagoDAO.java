@@ -14,6 +14,6 @@ public interface PagoDAO {
 
 	public boolean update(PagoDTO pagoUpdate);
 
-	public PagoDTO browse(int idPago);
+	public PagoDTO getPagoById(int idPago);
 
 }
