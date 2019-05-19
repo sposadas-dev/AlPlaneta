@@ -5,8 +5,44 @@ import java.sql.Date;
 
 public class ViajeDTO {
 	private int idViaje;
-	private CiudadDTO origenViaje;
-	private CiudadDTO destinoViaje;
+	private CiudadDTO ciudadOrigen;
+	private CiudadDTO ciudadDestino;
+	private ProvinciaDTO provinciaOrigen;
+	private ProvinciaDTO provinciaDestino;
+	private PaisDTO paisOrigen;
+	public ProvinciaDTO getProvinciaOrigen() {
+		return provinciaOrigen;
+	}
+
+	public void setProvinciaOrigen(ProvinciaDTO provinciaOrigen) {
+		this.provinciaOrigen = provinciaOrigen;
+	}
+
+	public ProvinciaDTO getProvinciaDestino() {
+		return provinciaDestino;
+	}
+
+	public void setProvinciaDestino(ProvinciaDTO provinciaDestino) {
+		this.provinciaDestino = provinciaDestino;
+	}
+
+	public PaisDTO getPaisOrigen() {
+		return paisOrigen;
+	}
+
+	public void setPaisOrigen(PaisDTO paisOrigen) {
+		this.paisOrigen = paisOrigen;
+	}
+
+	public PaisDTO getPaisDestino() {
+		return paisDestino;
+	}
+
+	public void setPaisDestino(PaisDTO paisDestino) {
+		this.paisDestino = paisDestino;
+	}
+
+	private PaisDTO paisDestino;
 	private Date fechaSalida;
 	private Date fechaLlegada;
 	private String horaSalida;
@@ -16,12 +52,17 @@ public class ViajeDTO {
 	private int capacidad;
 	private BigDecimal precio;
 
-	public ViajeDTO(int idViaje, CiudadDTO origenViaje, CiudadDTO destinoViaje, Date fechaSalida, Date fechaLlegada,
+	public ViajeDTO(int idViaje, CiudadDTO ciudadOrigen, CiudadDTO ciudadDestino, ProvinciaDTO provinciaOrigen, 
+			ProvinciaDTO provinciaDestino, PaisDTO paisOrigen, PaisDTO paisDestino, Date fechaSalida, Date fechaLlegada,
 			String horaSalida, int horasEstimadas,TransporteDTO transporte,int capacidad, BigDecimal precio ) {
 		super();
 		this.idViaje = idViaje;
-		this.origenViaje = origenViaje;
-		this.destinoViaje = destinoViaje;
+		this.ciudadOrigen = ciudadOrigen;
+		this.ciudadDestino = ciudadDestino;
+		this.provinciaOrigen = provinciaOrigen;
+		this.provinciaDestino = provinciaDestino;
+		this.paisOrigen = paisOrigen;
+		this.paisDestino = paisDestino;
 		this.fechaSalida = fechaSalida;
 		this.fechaLlegada = fechaLlegada;
 		this.horaSalida = horaSalida;
@@ -43,20 +84,20 @@ public class ViajeDTO {
 		this.idViaje = idViaje;
 	}
 
-	public CiudadDTO getOrigenViaje() {
-		return origenViaje;
+	public CiudadDTO getCiudadOrigen() {
+		return ciudadOrigen;
 	}
 
-	public void setOrigenViaje(CiudadDTO origenViaje) {
-		this.origenViaje = origenViaje;
+	public void setCiudadOrigen(CiudadDTO ciudadOrigen) {
+		this.ciudadOrigen = ciudadOrigen;
 	}
 
-	public CiudadDTO getDestinoViaje() {
-		return destinoViaje;
+	public CiudadDTO getCiudadDestino() {
+		return ciudadDestino;
 	}
 
-	public void setDestinoViaje(CiudadDTO destinoViaje) {
-		this.destinoViaje = destinoViaje;
+	public void setCiudadDestino(CiudadDTO ciudadDestino) {
+		this.ciudadDestino = ciudadDestino;
 	}
 
 	public Date getFechaSalida() {

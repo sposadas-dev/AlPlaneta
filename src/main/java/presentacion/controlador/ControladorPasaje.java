@@ -140,8 +140,8 @@ public class ControladorPasaje {
 		this.viajes_en_tabla = viaje.obtenerViajes();
 			
 		for (int i = 0; i < this.viajes_en_tabla.size(); i++){
-			Object[] fila = {this.viajes_en_tabla.get(i).getOrigenViaje().getNombre(),
-							this.viajes_en_tabla.get(i).getDestinoViaje().getNombre(),
+			Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
+							this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
 							this.viajes_en_tabla.get(i).getFechaSalida(),
 							this.viajes_en_tabla.get(i).getFechaLlegada(),
 							this.viajes_en_tabla.get(i).getHoraSalida(),
