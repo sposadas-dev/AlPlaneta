@@ -18,7 +18,7 @@ public class PasajeDTO {
 	private List<PasajeroDTO> pasajeros;
 
 	public PasajeDTO(int idPasaje, ViajeDTO viaje, AdministrativoDTO administrativo, int cantidadPasajeros,
-			ClienteDTO cliente, TransporteDTO transporte, Date fechaVencimiento, BigDecimal valorViaje,
+			ClienteDTO cliente, Date fechaVencimiento, BigDecimal valorViaje,
 			EstadoPasajeDTO estadoDelPasaje, PagoDTO pago, List<PasajeroDTO> pasajeros) {
 		super();
 		this.idPasaje = idPasaje;
@@ -26,7 +26,6 @@ public class PasajeDTO {
 		this.administrativo = administrativo;
 		this.cantidadPasajeros = cantidadPasajeros;
 		this.cliente = cliente;
-		this.transporte = transporte;
 		this.fechaVencimiento = fechaVencimiento;
 		this.valorViaje = valorViaje;
 		this.estadoDelPasaje = estadoDelPasaje;

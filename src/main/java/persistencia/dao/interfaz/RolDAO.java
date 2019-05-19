@@ -6,13 +6,13 @@ import dto.RolDTO;
 
 public interface RolDAO {
 	
-	public boolean insert(RolDTO rol) throws Exception;
+	public boolean insert(RolDTO rol) ;
 
-	public boolean delete(RolDTO rol) throws Exception;
+	public boolean delete(RolDTO rol);
 
-	public List<RolDTO> readAll() throws Exception;
+	public List<RolDTO> readAll();
 
-	public boolean update(RolDTO rol) throws Exception;
+	public boolean update(RolDTO rol);
 	
 	public RolDTO getById(int id);
 }

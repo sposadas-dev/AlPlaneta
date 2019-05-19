@@ -23,10 +23,14 @@ public interface DAOAbstractFactory {
 	public ViajeDAO createViajeDAO();
 
 	public LoginDAO createLoginDAO();
+
+	public RolDAO createRolDAO();
 	
 	public ProvinciaDAO createProvinciaDAO();
 
 	public PaisDAO createPaisDAO();
+
+	public FormaPagoDAO createFormaPagoDAO();
 	
 //	public CoordinadorDAO createCoordinadorDAO();
 

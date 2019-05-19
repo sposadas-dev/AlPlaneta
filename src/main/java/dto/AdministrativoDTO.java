@@ -12,6 +12,10 @@ public class AdministrativoDTO {
 		this.datosLogin = datosLogin;
 	}
 	
+	public AdministrativoDTO() {
+		super();
+	}
+	
 	public int getIdAdministrativo() {
 		return idAdministrativo;
 	}

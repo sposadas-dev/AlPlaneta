@@ -18,6 +18,7 @@ public class RolDAOSQL implements RolDAO{
 	
 	private static final String browse = "SELECT * FROM rol WHERE idRol = ?";
 
+	@Override
 	public boolean insert(RolDTO rol) {
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
@@ -34,6 +35,7 @@ public class RolDAOSQL implements RolDAO{
 		return false;
 	}
 
+	@Override
 	public List<RolDTO> readAll() {
 		PreparedStatement statement;
 		ResultSet resultSet; //Guarda el resultado de la query
