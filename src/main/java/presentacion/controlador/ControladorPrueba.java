@@ -2,12 +2,14 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import modelo.Cliente;
 import modelo.Pasaje;
+import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.LoginDTO;
 import dto.PasajeDTO;
@@ -24,13 +26,13 @@ public class ControladorPrueba implements ActionListener {
 	private VentanaRegistrarCliente ventanaCliente;
 	private VentanaVisualizarClientes ventanaVisualizarCliente;
 	private VentanaVisualizarPasaje ventanaVisualizarPasaje;
-	
+	private AdministrativoDTO administrativoLogueado;
 	private List<ClienteDTO> clientes_en_tabla;
 	private List<PasajeDTO> pasajes_en_tabla;
 	private Cliente cliente;
 	private Pasaje pasaje;
 	
-	public ControladorPrueba(VistaAdministrativo vista) {
+	public ControladorPrueba(VistaAdministrativo vista,AdministrativoDTO administrativoLogueado) {
 		this.vista = vista;
 		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaVisualizarCliente = VentanaVisualizarClientes.getInstance();
@@ -43,11 +45,18 @@ public class ControladorPrueba implements ActionListener {
 
 		this.vista.getPanelCliente().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
-		
+
+		this.administrativoLogueado = administrativoLogueado;
 		this.cliente = new Cliente(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
 	}
 
+	private BigDecimal calcularMontoDePasajePagado(int filaSeleccionada) {
+		BigDecimal Valor1 = this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje();
+		BigDecimal totalaPagar = this.pasajes_en_tabla.get(filaSeleccionada).getPago().getMonto();
+		return Valor1.subtract(totalaPagar);
+	}
+	
 	private void verDatosPasaje(ActionEvent vp) {
 		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
 		if (filaSeleccionada != -1){
@@ -58,6 +67,8 @@ public class ControladorPrueba implements ActionListener {
 			this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getDestinoViaje().getNombre());
 			this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
 			this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
+			this.ventanaVisualizarPasaje.getLblRestante().setText(" "+calcularMontoDePasajePagado(filaSeleccionada));
+
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
@@ -87,7 +98,7 @@ public class ControladorPrueba implements ActionListener {
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.ventanaVisualizarCliente.mostrarVentana(true);
 		this.llenarTablaPasajes();
-		ControladorPasaje controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente);
+		ControladorPasaje controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
 		controladorPasaje.iniciar();
 	}
 	

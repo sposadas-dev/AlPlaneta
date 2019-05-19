@@ -14,8 +14,8 @@ public class Pasaje {
 		this.pasaje = metodo_persistencia.createPasajeDAO();
 	}
 	
-	public void agregarPasaje(PasajeDTO nuevoCliente){
-		this.pasaje.insert(nuevoCliente);
+	public void agregarPasaje(PasajeDTO nuevoPasaje){
+		this.pasaje.insert(nuevoPasaje);
 	}
 	
 	public List<PasajeDTO> obtenerPasajes(){

@@ -62,27 +62,27 @@ public class Pasaje_PasajerosDAOSQL implements Pasaje_PasajerosDAO {
 	}
 	
 	@Override
-	public List<PasajeDTO> readAll() {
+	public List<Pasaje_PasajerosDTO> readAll() {
 
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
-		ArrayList<PasajeDTO> reservas = new ArrayList<PasajeDTO>();
+		List<Pasaje_PasajerosDTO> pasajes = new ArrayList<Pasaje_PasajerosDTO>();
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-//				reservas.add(
-//						new Pasaje_PasajerosDTO(
-//						resultSet.getInt("idPasajePasajero"),
-//						resultSet.getInt("idPasaje"), 
-//						resultSet.getInt("idPasajero"), 
+				pasajes.add(
+						new Pasaje_PasajerosDTO(
+						resultSet.getInt("idPasajePasajero"),
+						resultSet.getInt("idPasaje"), 
+						resultSet.getInt("idPasajero")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return reservas;
+		return pasajes;
 	}
 	@Override
 	public boolean update(Pasaje_PasajerosDTO pasaje_pasajero_editar) {
@@ -103,12 +103,13 @@ public class Pasaje_PasajerosDAOSQL implements Pasaje_PasajerosDAO {
 		return false;
 
 	}
-
 	@Override
 	public boolean getById(int id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	
 
 
 }

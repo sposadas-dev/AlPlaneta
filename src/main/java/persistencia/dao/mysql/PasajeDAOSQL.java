@@ -13,8 +13,7 @@ import persistencia.dao.interfaz.PasajeDAO;
 
 public class PasajeDAOSQL implements PasajeDAO {
 	
-	private static final String insert = "INSERT INTO pasaje(idPasaje,fechaVencimiento, valorViaje, idCliente, idViaje, idAdministrativo, idEstadoPasaje, idPago)"
-			+ " VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO pasaje(idPasaje,fechaVencimiento, valorViaje, idCliente, idViaje, idAdministrativo, idEstadoPasaje, idPago) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String delete = "DELETE FROM pasaje  WHERE idPasaje = ?";
 	
@@ -76,6 +75,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 		EstadoPasajeDAOSQL estadoPasajeDAOSQL = new EstadoPasajeDAOSQL();
 		PagoDAOSQL pagoDAOSQL = new PagoDAOSQL();
 		ArrayList<PasajeroDTO> pasajeros = new ArrayList<PasajeroDTO>();
+		Pasaje_PasajerosDAOSQL pasaje_pasajeros = new Pasaje_PasajerosDAOSQL();
 
 		Conexion conexion = Conexion.getConexion();
 		try {
@@ -95,9 +95,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 						pagoDAOSQL.getPagoById(resultSet.getInt("idPago")),
 						pasajeros
 						)
-						);
-//						
-						
+						);							
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

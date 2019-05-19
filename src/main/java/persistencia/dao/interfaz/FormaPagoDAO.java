@@ -16,6 +16,8 @@ public interface FormaPagoDAO {
 	public boolean update(FormaPagoDTO estado);
 
 	public FormaPagoDTO getFormaPagoById(int idFormaPago);
+
+	public FormaPagoDTO getFormaPagoByName(String name);
 	
 
 }

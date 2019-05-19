@@ -9,6 +9,7 @@ import javax.swing.JRadioButton;
 
 import java.awt.Font;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -24,6 +25,11 @@ import java.awt.event.ActionEvent;
 public class VentanaPago extends JFrame {
 
 	private JPanel contentPane;
+	private ButtonGroup bg;
+	private JRadioButton radioPaga;
+	private JRadioButton radioReservaSinPagar; 
+	
+
 	private JComboBox<FormaPagoDTO> comboBoxFormaDePago;
 	private JLabel lblSelecioneUnaForma;
 	private JLabel lblMontoAPagar;
@@ -38,13 +44,14 @@ public class VentanaPago extends JFrame {
 		else
 			return INSTANCE;
 	}
+
 	
 	private VentanaPago() {
 		setTitle("Pago");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 413, 271);
 		setLocationRelativeTo(null); 
-
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -52,15 +59,18 @@ public class VentanaPago extends JFrame {
 		contentPane.setLayout(null);
 		
 		this.comboBoxFormaDePago = new JComboBox<FormaPagoDTO>();
-		comboBoxFormaDePago.setBounds(218, 45, 167, 20);
+		comboBoxFormaDePago.setBounds(218, 68, 167, 20);
 		contentPane.add(comboBoxFormaDePago);
+		comboBoxFormaDePago.setEnabled(false);
+
+		
 		
 		btnPago = new JButton("Realizar pago");
 		btnPago.setBounds(218, 179, 121, 42); 	
 		contentPane.add(btnPago);
 		
 		lblSelecioneUnaForma = new JLabel("Seleccione una forma de pago");
-		lblSelecioneUnaForma.setBounds(10, 47, 198, 17);
+		lblSelecioneUnaForma.setBounds(10, 70, 198, 17);
 		contentPane.add(lblSelecioneUnaForma);
 		
 		lblMontoAPagar = new JLabel("Monto a pagar :");
@@ -74,6 +84,7 @@ public class VentanaPago extends JFrame {
 		textImporteTotal = new JTextField();
 		textImporteTotal.setBounds(218, 148, 167, 20);
 		contentPane.add(textImporteTotal);
+		textImporteTotal.setEditable(false);
 		textImporteTotal.setColumns(10);
 		
 		lblMontoaPagar = new JLabel("-");
@@ -83,6 +94,37 @@ public class VentanaPago extends JFrame {
 		JButton btnAtras = new JButton("Atrás");
 		btnAtras.setBounds(46, 179, 121, 42);
 		contentPane.add(btnAtras);
+		
+		radioPaga = new JRadioButton("Paga");
+		radioPaga.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(radioPaga.isSelected()){
+					comboBoxFormaDePago.setEnabled(true);
+					textImporteTotal.setText("");
+					textImporteTotal.setEditable(true);
+
+				}
+			}
+		});
+		radioPaga.setBounds(60, 27, 109, 23);
+		contentPane.add(radioPaga);
+		
+		radioReservaSinPagar = new JRadioButton("Reserva sin pagar");
+		 radioReservaSinPagar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(radioReservaSinPagar.isSelected()){
+					comboBoxFormaDePago.setEnabled(false);
+					textImporteTotal.setText("0");
+					textImporteTotal.setEditable(false);
+				}
+			}
+		});
+		radioReservaSinPagar .setBounds(207, 27, 167, 23);
+		contentPane.add(radioReservaSinPagar );
+		
+		bg = new ButtonGroup();
+		bg.add(radioPaga);
+		bg.add(radioReservaSinPagar);
 		
 		this.setVisible(false);
 	}
@@ -133,5 +175,13 @@ public class VentanaPago extends JFrame {
 
 	public void setLblMontoaPagar(JLabel lblMontoaPagar) {
 		this.lblMontoaPagar = lblMontoaPagar;
+	}
+	
+	public JRadioButton getRadioPaga() {
+		return radioPaga;
+	}
+
+	public JRadioButton getRadioReservaSinPagar() {
+		return radioReservaSinPagar;
 	}
 }

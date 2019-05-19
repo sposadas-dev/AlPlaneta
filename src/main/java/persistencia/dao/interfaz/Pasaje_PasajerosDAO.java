@@ -7,11 +7,10 @@ import dto.Pasaje_PasajerosDTO;
 
 public interface Pasaje_PasajerosDAO {
 
-	public List<PasajeDTO> readAll();
+	public List<Pasaje_PasajerosDTO> readAll();
 
 	public boolean getById(int id);
 	
-
 	public boolean update(Pasaje_PasajerosDTO pasaje_pasajeros);
 
 	public boolean delete(Pasaje_PasajerosDTO pasaje_pasajeros);

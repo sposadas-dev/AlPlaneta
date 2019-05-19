@@ -9,7 +9,6 @@ public class PasajeDTO {
 	private ViajeDTO viaje;
 	private AdministrativoDTO administrativo;
 	private ClienteDTO cliente;
-	private TransporteDTO transporte;
 	private Date fechaVencimiento;
 	private BigDecimal valorViaje;
 	private EstadoPasajeDTO estadoDelPasaje;
@@ -65,14 +64,6 @@ public class PasajeDTO {
 
 	public void setCliente(ClienteDTO cliente) {
 		this.cliente = cliente;
-	}
-
-	public TransporteDTO getTransporte() {
-		return transporte;
-	}
-
-	public void setTransporte(TransporteDTO transporte) {
-		this.transporte = transporte;
 	}
 
 	public Date getFechaVencimiento() {
