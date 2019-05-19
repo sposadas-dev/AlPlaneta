@@ -411,7 +411,7 @@ public class Controlador implements ActionListener {
 			ret = ret && false;
 		}
 		if(!origenDestinoValido()) {
-			this.msjErrorOrigenDestino.add("ORIGEN Y DESTINO SON IGUALES");
+			this.msjErrorOrigenDestino.add("ORIGEN-DESTINO");
 			ret = ret && false;
 		}
 		if (!fechaOrigenValida()) {
@@ -427,11 +427,13 @@ public class Controlador implements ActionListener {
 		return false;
 	}
 	private boolean precioValido() {
-		if(entradaValida(this.ventanaCargarViaje.getTextCapacidad().getText(), Pattern.compile("[0-9]+(\\,{1}[0-9]+)?")))
+		if(entradaValida(this.ventanaCargarViaje.getTextPrecioViaje().getText(), Pattern.compile("[0-9]+(\\,{1}[0-9]+)?")))
 			return true;
 		return false;
 	}
 	private boolean origenDestinoValido() {
+		if (this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedIndex()==-1 || this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedIndex()==-1)
+			return false;
 		String ciudadOrigenElegida = quitarIdDeCombo(this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString());
 		String ciudadDestinoElegida = quitarIdDeCombo(this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString());
 		if(!(ciudadOrigenElegida.equals(ciudadDestinoElegida)))
@@ -440,19 +442,18 @@ public class Controlador implements ActionListener {
 	}
 	
 	private boolean fechaOrigenValida() {
-		//if(FECHA ES ANTERIOR A HOY)
-		/*SimpleDateFormat formatoDelTexto = new SimpleDateFormat("yyyy-MM-dd");
+		//calcular fecha actual:
 	    String hoy = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now());
-	    
-	    Date dateHoy = null;
-	    try { convertUtilToSql(dateHoy = formatoDelTexto.parse(hoy));
-		} catch (ParseException e) { e.printStackTrace(); }
-	    
-		if(!this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate().before(dateHoy)) {
-			System.out.println("FECHA ANTIGUA");
 
-			return true;
-		}*/
+	    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+	    java.util.Date date = null;
+		try { date = sdf1.parse(hoy); } catch (ParseException e) { e.printStackTrace();	}
+	    java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());  
+	    
+
+		if(this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate().before(sqlStartDate)) {
+			return false;
+		}
 		if (this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate() == null)
 			return false;
 		return true;
@@ -466,7 +467,8 @@ public class Controlador implements ActionListener {
 /*< / VALIDACION DE ALTA VIAJESS >*/	
 	
 	private void mostrarDatosViaje(ActionEvent E) {
-		//validar datos: orig y destino no sean iguales, horas estimadas y capacidad sean int, precio sea double
+		this.msjErrorOrigenDestino = new ArrayList<String>();
+		this.ventanaCargarViaje.getLblErrores().setText("");
 		if(viajeValido()){
 			this.fechaSalida = convertUtilToSql(this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate());
 			this.horarioSalida = this.ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
@@ -483,7 +485,7 @@ public class Controlador implements ActionListener {
 				mensaje += ", "+this.msjErrorOrigenDestino.get(i);
 			}
 			mensaje += ".";
-			this.ventanaCargarViaje.getLblErrorOrigenDestino().setText(mensaje);
+			this.ventanaCargarViaje.getLblErrores().setText(mensaje);
 		}
 	}	
 	private java.sql.Date convertUtilToSql(java.util.Date uDate) {
@@ -491,23 +493,7 @@ public class Controlador implements ActionListener {
         return sDate;
     }
 	
-	/*public Date sumarRestarHorasFecha(Date fecha, int horas){
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(fecha); // Configuramos la fecha que se recibe
-		calendar.add(Calendar.HOUR, horas);  // numero de horas a añadir, o restar en caso de horas<0
-		return convertUtilToSql(calendar.getTime()); // Devuelve el objeto Date con las nuevas horas añadidas
-	}
-	private Date agregarHorasAdate(Date fecha, String hora) {
-		String[] tokens = hora.split(":");
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(this.fechaSalida);
-		cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(tokens[0]) * 3600000); //horas
-		cal.set(Calendar.MINUTE,Integer.parseInt(tokens[1]) * 60000); //minutos
-		Date d = convertUtilToSql(cal.getTime());
-		
-	    return d;
-	}*/
+
 	
 	private int eliminarPuntosEnFecha(String fecha) {
 		String ret = "";
@@ -737,7 +723,7 @@ public class Controlador implements ActionListener {
 				mensaje += ", "+this.msjErrorOrigenDestino.get(i);
 			}
 			mensaje += ".";
-			this.ventanaCargarViaje.getLblErrorOrigenDestino().setText(mensaje);
+			this.ventanaCargarViaje.getLblErrores().setText(mensaje);
 		}
 		llenarViajesEnTabla();
 	}	
@@ -1372,6 +1358,8 @@ public class Controlador implements ActionListener {
 		Vista vista = new Vista();
 		Controlador controlador = new Controlador(vista);
 		controlador.inicializar();
+		
+		
 
 	}
 }
