@@ -2,16 +2,18 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import modelo.Administrativo;
-import modelo.Login;
-import modelo.Rol;
-import modelo.Transporte;
+
 import dto.AdministrativoDTO;
 import dto.LoginDTO;
 import dto.RolDTO;
 import dto.TransporteDTO;
+import modelo.Administrativo;
+import modelo.Login;
+import modelo.Rol;
+import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
 import presentacion.vista.administrador.VistaAdministrador;
@@ -21,35 +23,72 @@ public class ControladorAdministrador {
 	private VistaAdministrador vistaAdministrador;
 	private VentanaAgregarEmpleado ventanaAgregarEmpleado;
 	private List<TransporteDTO> transportes_en_tabla;
+	
 	private Transporte transporte;
 	private ControladorTransporte controladorTransporte;
 	private Login login;
-
+	
+	private ControladorPais controladorPais;
+	private ControladorCiudad controladorCiudad;
+	private ControladorProvincia controladorProvincia;
 	
 	public ControladorAdministrador(VistaAdministrador vistaAdministrador){
 		this.vistaAdministrador = vistaAdministrador;
+//INSTANCES		
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
-		
+
+//MENU ITEMS		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
-		
 		this.vistaAdministrador.getItemAgregarTransporte().addActionListener(ac->agregarPanelTransporte(ac));
 		this.vistaAdministrador.getItemVisualizarTransportes().addActionListener(vt->visualizarTransportes(vt));
-
 		this.vistaAdministrador.getItemEditarTransporte().addActionListener(et->editarTransporte(et));
 		this.vistaAdministrador.getItemEliminarTransporte().addActionListener(dt->eliminarTransporte(dt));
-		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 
+//ITEM DESTINOS	
+		this.vistaAdministrador.getItemPais().addActionListener(p->mostrarVentanaAgregarPais(p));
+		this.vistaAdministrador.getItemProvincia().addActionListener(p->mostrarVentanaAgregarProvincia(p));
+		this.vistaAdministrador.getItemCiudad().addActionListener(p->mostrarVentanaAgregarCiudad(p));
+
+		
+//BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
 		
 		this.transporte = new Transporte(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
+
+//CONTROLADORES		
 		this.controladorTransporte = new ControladorTransporte();
+		
+		this.controladorPais = ControladorPais.getInstance();
+		this.controladorProvincia = ControladorProvincia.getInstance();
+		this.controladorCiudad = ControladorCiudad.getInstance();
+		
 	}
-	
+
+	private void mostrarVentanaAgregarCiudad(ActionEvent p) {
+		this.controladorCiudad.llenarTablaVistaCiudades();
+		this.controladorCiudad.mostrarVistaCiudad();
+	}
+
+	private void mostrarVentanaAgregarProvincia(ActionEvent p) {
+		this.controladorProvincia.llenarTablaVistaProvincias();
+		this.controladorProvincia.mostrarVistaProvincia();
+	}
+
+	private void mostrarVentanaAgregarPais(ActionEvent p) {
+		this.controladorPais.llenarTablaVistaPaises();
+		this.controladorPais.mostrarVistaPais();
+	}
+
+	/*Agrega el panel de transporte en la vistaPrinciapal del Administrador*/
+	private void agregarPanelPaises(ActionEvent ac) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
+		controladorTransporte.mostrarVentanaAgregarTransporte();
+	}
 
 	public void inicializar(){
 		this.vistaAdministrador.mostrarVentana();
-		this.llenarTablaTransportes();
+//		this.llenarTablaTransportes();
 	}
 	
 	/*Mostrar la ventana para agregar un empleado y carga el comboBox de roles*/

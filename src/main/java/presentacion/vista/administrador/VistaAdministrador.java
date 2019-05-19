@@ -1,34 +1,39 @@
 package presentacion.vista.administrador;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-
-import persistencia.conexion.Conexion;
-import presentacion.vista.administrativo.PanelCliente;
-
-import javax.swing.JLabel;
-
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import persistencia.conexion.Conexion;
 
 public class VistaAdministrador extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private PanelTransporte panelTransporte;
+	private VentanaPanelGeneral panelGeneral;
+
 	private JMenuItem itemAgregarCuenta;
 	private JMenuItem itemVisualizarTransportes ;
 	private JMenuItem itemAgregarTransporte;
 	private JMenuItem itemEditarTransporte;
 	private JMenuItem itemEliminarTransporte;
+	
+	private JMenuItem itemPais;
+	private JMenuItem itemProvincia;
+	private JMenuItem itemCiudad;
 
 	private static VistaAdministrador INSTANCE;
+	private JMenuItem itemEliminarPais;
+	private JMenuItem itemEliminarCiudad;
+	private JMenuItem itemEliminarProvincia;
 	
 
 	public static VistaAdministrador getInstance(){
@@ -71,6 +76,23 @@ public class VistaAdministrador extends JFrame {
 		JMenuItem itemAgregarViaje = new JMenuItem("Agregar viaje");
 		itemAgregarViaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuViajes.add(itemAgregarViaje);
+		
+		JMenu mnDestinos = new JMenu("Destinos");
+		mnDestinos.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		menuBar.add(mnDestinos);
+		
+		itemPais = new JMenuItem("Menu de Pais");
+		itemPais.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		mnDestinos.add(itemPais);
+		
+		itemProvincia = new JMenuItem("Menu de Provincia");
+		itemProvincia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		mnDestinos.add(itemProvincia);
+		
+		itemCiudad = new JMenuItem("Menu de Ciudad");
+		itemCiudad.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		mnDestinos.add(itemCiudad);
+		
 		
 		JMenu menuTransporte = new JMenu("Transportes");
 		menuTransporte.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -156,4 +178,61 @@ public class VistaAdministrador extends JFrame {
 	public JMenuItem getItemEliminarTransporte() {
 		return itemEliminarTransporte;
 	}
+
+	public JMenuItem getItemPais() {
+		return itemPais;
+	}
+
+	public void setItemPais(JMenuItem itemPais) {
+		this.itemPais = itemPais;
+	}
+
+	public JMenuItem getItemProvincia() {
+		return itemProvincia;
+	}
+
+	public void setItemProvincia(JMenuItem itemProvincia) {
+		this.itemProvincia = itemProvincia;
+	}
+
+	public JMenuItem getItemCiudad() {
+		return itemCiudad;
+	}
+
+	public void setItemCiudad(JMenuItem itemCiudad) {
+		this.itemCiudad = itemCiudad;
+	}
+
+	public JMenuItem getItemEliminarPais() {
+		return itemEliminarPais;
+	}
+
+	public void setItemEliminarPais(JMenuItem itemEliminarPais) {
+		this.itemEliminarPais = itemEliminarPais;
+	}
+
+	public JMenuItem getItemEliminarCiudad() {
+		return itemEliminarCiudad;
+	}
+
+	public void setItemEliminarCiudad(JMenuItem itemEliminarCiudad) {
+		this.itemEliminarCiudad = itemEliminarCiudad;
+	}
+
+	public JMenuItem getItemEliminarProvincia() {
+		return itemEliminarProvincia;
+	}
+
+	public void setItemEliminarProvincia(JMenuItem itemEliminarProvincia) {
+		this.itemEliminarProvincia = itemEliminarProvincia;
+	}
+
+	public VentanaPanelGeneral getPanelGeneral() {
+		return panelGeneral;
+	}
+
+	public void setPanelGeneral(VentanaPanelGeneral panelGeneral) {
+		this.panelGeneral = panelGeneral;
+	}
+	
 }

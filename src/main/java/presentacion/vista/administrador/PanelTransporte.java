@@ -1,22 +1,14 @@
 package presentacion.vista.administrador;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.Color;
+import java.awt.Font;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.Color;
-import java.awt.Font;
 
 public class PanelTransporte extends JPanel {
 
@@ -38,6 +30,7 @@ public class PanelTransporte extends JPanel {
 			}
 		};
 		setLayout(null);
+		
 
 		JScrollPane spPasajeros = new JScrollPane();
 		spPasajeros.setBounds(32, 96, 1302, 483);

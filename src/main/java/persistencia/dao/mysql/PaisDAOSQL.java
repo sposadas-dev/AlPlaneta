@@ -14,12 +14,13 @@ public class PaisDAOSQL implements PaisDAO {
 	private static final String insert = "INSERT INTO pais" + "(idPais, paisnombre)" + "VALUE(?,?)";
 	private static final String readall = "SELECT * FROM pais";
 	private static final String delete = "DELETE FROM pais WHERE idPais = ?";
-	private static final String update = "UPDATE pais SET nombre = ? WHERE idPais = ?";
+	private static final String update = "UPDATE pais SET paisnombre = ? WHERE idPais = ?";
 	private static final String browse = "SELECT * FROM pais WHERE idPais = ?";
 
 
 	@Override
 	public boolean insert(PaisDTO pais) {
+	System.out.println("DAOSQL-PAIS-INSERT: "+pais.getIdPais()+" "+pais.getNombre());
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
@@ -119,12 +120,20 @@ public class PaisDAOSQL implements PaisDAO {
 		
 	public static void main(String[] args) {
 		PaisDAOSQL adm = new PaisDAOSQL();
-		List<PaisDTO> administratives = adm.readAll();
+		
+		PaisDTO argentina = adm.getPaisById(5);
+		System.out.println(argentina.getIdPais()+" "+argentina.getNombre());
+		
+		argentina.setNombre("Argentina");
+		adm.update(argentina);
+		
+		System.out.println(adm.getPaisById(5).getNombre());
+//		List<PaisDTO> administratives = adm.readAll();
 		int cont=0;
-		for(PaisDTO ad: administratives) {
-			cont++;
-			System.out.println(ad.getNombre());			
-		}
+//		for(PaisDTO ad: administratives) {
+//			cont++;
+//			System.out.println(ad.getNombre());			
+//		}
 		System.out.println("cantPaises: "+cont);
 	}
 }
