@@ -12,12 +12,9 @@ import java.awt.Font;
 public class PanelPasaje extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JButton btnAgregarReserva;
 	private DefaultTableModel modelReservas;
-	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Hora de salida", "Valor unitario", "Estado"};
+	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor unitario", "Transporte","Estado"};
 	private JTable tablaReservas;
-	private JButton btnEditarReserva;
-	private JButton btnCancelar;
 	private JButton btnVisualizarPasaje;
 
 	public PanelPasaje() {
@@ -35,18 +32,6 @@ public class PanelPasaje extends JPanel {
 		add(spPasajeros);
 		tablaReservas = new JTable(modelReservas);
 		spPasajeros.setViewportView(tablaReservas);
-		
-		btnAgregarReserva = new JButton("Agregar pasaje");
-		btnAgregarReserva.setBounds(108, 491, 133, 50);
-		add(btnAgregarReserva);		
-		
-		btnEditarReserva = new JButton("Editar");
-		btnEditarReserva.setBounds(323, 491, 120, 50);
-		add(btnEditarReserva);
-		
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(541, 502, 126, 50);
-		add(btnCancelar);
 		
 		btnVisualizarPasaje = new JButton("Visualizar pasaje");
 		btnVisualizarPasaje.setBounds(710, 513, 133, 50);
@@ -69,35 +54,36 @@ public class PanelPasaje extends JPanel {
 		this.setVisible(visibilidad);
 	}
 
-	public JButton getBtnAgregarCliente() {
-		return btnAgregarReserva;
-	}
-
-	public DefaultTableModel getModelClientes() {
+	public DefaultTableModel getModelReservas() {
 		return modelReservas;
 	}
 
-	public void setModelClientes(DefaultTableModel modelClientes) {
-		this.modelReservas = modelClientes;
+	public void setModelReservas(DefaultTableModel modelReservas) {
+		this.modelReservas = modelReservas;
 	}
 
-	public String[] getNombreColumnasClientes() {
+	public String[] getNombreColumnasReservas() {
 		return nombreColumnasReservas;
 	}
 
-	public void setNombreColumnasClientes(String[] nombreColumnasClientes) {
-		this.nombreColumnasReservas = nombreColumnasClientes;
+	public void setNombreColumnasReservas(String[] nombreColumnasReservas) {
+		this.nombreColumnasReservas = nombreColumnasReservas;
 	}
 
-	public JTable getTablaClientes() {
+	public JTable getTablaReservas() {
 		return tablaReservas;
 	}
 
-	public void setTablaClientes(JTable tablaClientes) {
-		this.tablaReservas = tablaClientes;
+	public void setTablaReservas(JTable tablaReservas) {
+		this.tablaReservas = tablaReservas;
 	}
-	
-	public JButton getBtnAgregarReserva() {
-		return btnAgregarReserva;
+
+	public JButton getBtnVisualizarPasaje() {
+		return btnVisualizarPasaje;
 	}
+
+	public void setBtnVisualizarPasaje(JButton btnVisualizarPasaje) {
+		this.btnVisualizarPasaje = btnVisualizarPasaje;
+	}
+
 }

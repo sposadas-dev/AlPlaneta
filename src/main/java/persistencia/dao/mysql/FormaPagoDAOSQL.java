@@ -105,6 +105,31 @@ public class FormaPagoDAOSQL implements FormaPagoDAO {
 		}
 		return false;
 	}
+	
+	@Override
+	public FormaPagoDTO getFormaPagoByName(String name) {
+		PreparedStatement statement;
+		ResultSet resultSet; //Guarda el resultado de la query
+		ArrayList<FormaPagoDTO> formasPago= new ArrayList<FormaPagoDTO>();
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(readall);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()){
+				formasPago.add(new FormaPagoDTO(resultSet.getInt("idformapago"),resultSet.getString("tipo")));
+			}
+		} 
+		catch (SQLException e)	{
+			e.printStackTrace();
+		}
+		FormaPagoDTO ret = null;
+		
+		for(FormaPagoDTO forma: formasPago){
+			if(forma.getTipo().equals(name))
+				ret = forma;
+		}
+		return ret;
+	}
 
 	@Override
 	public FormaPagoDTO getFormaPagoById(int idFormaPago) {

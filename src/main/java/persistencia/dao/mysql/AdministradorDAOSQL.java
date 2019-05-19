@@ -124,6 +124,7 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		return null;
 	}
 	
+	@Override
 	public AdministradorDTO getByLoginId(int id ){
 		PreparedStatement statement;
 		ResultSet resultSet;

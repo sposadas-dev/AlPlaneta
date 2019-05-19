@@ -35,7 +35,7 @@ public class VentanaPasajero extends JFrame {
 	private VentanaPasajero() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null); 
-		setBounds(500, 200, 366, 463);
+		setBounds(500, 200, 561, 418);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setBackground(SystemColor.controlHighlight);
@@ -44,40 +44,40 @@ public class VentanaPasajero extends JFrame {
 		
 		JPanel panelCargarPasajeros = new JPanel();
 		panelCargarPasajeros.setBackground(new Color(9, 132, 227));
-		panelCargarPasajeros.setBounds(0, 0, 350, 53);
+		panelCargarPasajeros.setBounds(0, 0, 545, 53);
 		contentPane.add(panelCargarPasajeros);
 		panelCargarPasajeros.setLayout(null);
 		
 		JLabel lblCargarPasajero = new JLabel("Cargar pasajero");
-		lblCargarPasajero.setBounds(70, 0, 210, 53);
+		lblCargarPasajero.setBounds(162, 0, 210, 53);
 		panelCargarPasajeros.add(lblCargarPasajero);
 		lblCargarPasajero.setForeground(Color.WHITE);
 		lblCargarPasajero.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(57, 92, 63, 14);
+		lblNombre.setBounds(40, 92, 63, 14);
 		contentPane.add(lblNombre);
 		
 		JLabel lblApellido = new JLabel("Apellido:");
-		lblApellido.setBounds(57, 140, 63, 14);
+		lblApellido.setBounds(274, 92, 63, 14);
 		contentPane.add(lblApellido);
 		
 		JLabel lblDni = new JLabel("DNI:");
-		lblDni.setBounds(57, 187, 46, 14);
+		lblDni.setBounds(40, 153, 46, 14);
 		contentPane.add(lblDni);
 		
 		txtNombre = new JTextField();
-		txtNombre.setBounds(130, 89, 131, 20);
+		txtNombre.setBounds(96, 89, 131, 20);
 		contentPane.add(txtNombre);
 		txtNombre.setColumns(10);
 		
 		txtApellido = new JTextField();
-		txtApellido.setBounds(130, 137, 131, 20);
+		txtApellido.setBounds(348, 89, 131, 20);
 		contentPane.add(txtApellido);
 		txtApellido.setColumns(10);
 		
 		txtDni = new JTextField();
-		txtDni.setBounds(130, 184, 131, 20);
+		txtDni.setBounds(96, 150, 131, 20);
 		contentPane.add(txtDni);
 		txtDni.setColumns(10);
 		
@@ -89,33 +89,33 @@ public class VentanaPasajero extends JFrame {
 		btnCargarDatos.setForeground(Color.WHITE);
 		btnCargarDatos.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnCargarDatos.setBackground(new Color(76, 209, 55));
-		btnCargarDatos.setBounds(112, 371, 131, 42);
+		btnCargarDatos.setBounds(204, 302, 166, 53);
 		contentPane.add(btnCargarDatos);
 		
 		JLabel lblTelfono = new JLabel("Teléfono:");
-		lblTelfono.setBounds(57, 267, 46, 14);
+		lblTelfono.setBounds(40, 222, 79, 14);
 		contentPane.add(lblTelfono);
 		
 		txtTelefono = new JTextField();
-		txtTelefono.setBounds(130, 264, 131, 20);
+		txtTelefono.setBounds(96, 219, 131, 20);
 		contentPane.add(txtTelefono);
 		txtTelefono.setColumns(10);
 		
 		JLabel lblMail = new JLabel("Email:");
-		lblMail.setBounds(57, 313, 46, 14);
+		lblMail.setBounds(279, 222, 58, 14);
 		contentPane.add(lblMail);
 		
 		txtEmail = new JTextField();
-		txtEmail.setBounds(130, 310, 131, 20);
+		txtEmail.setBounds(348, 219, 131, 20);
 		contentPane.add(txtEmail);
 		txtEmail.setColumns(10);
 		
 		JLabel lblFechaNacimiento = new JLabel("Fecha de nacimiento:");
-		lblFechaNacimiento.setBounds(57, 228, 123, 14);
+		lblFechaNacimiento.setBounds(274, 153, 123, 14);
 		contentPane.add(lblFechaNacimiento);
 		
 		JDateChooser dateFechaNacimiento = new JDateChooser();
-		dateFechaNacimiento.setBounds(171, 225, 135, 20);
+		dateFechaNacimiento.setBounds(400, 147, 135, 20);
 		contentPane.add(dateFechaNacimiento);
 	}
 	

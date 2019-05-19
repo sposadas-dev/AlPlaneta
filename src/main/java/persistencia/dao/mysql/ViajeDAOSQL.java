@@ -16,7 +16,7 @@ import persistencia.dao.interfaz.ViajeDAO;
 
 public class ViajeDAOSQL implements ViajeDAO {
 
-	private static final String insert = "INSERT INTO viaje (idViaje, fechaSalida, fechaLlegada, precio, idCiudadOrigen, idCiudadDestino, horaSalida, idTransporte, horasEstimadas, capacidad) VALUES (?,?,?,?,?,?,?,?,?,?)";
+	private static final String insert = "INSERT INTO viaje (idViaje, fechaSalida, fechaLlegada, precio, idCiudadOrigen, idCiudadDestino, idProvinciaOrigen, idProvinciaDestino, idPaisOrigen, idPaisDestino, horaSalida, idTransporte, horasEstimadas, capacidad) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String delete = "DELETE FROM viaje WHERE idViaje = ?";
 	private static final String readall = "SELECT * FROM viaje";
 	private static final String update = "UPDATE viaje SET precio =? WHERE idViaje= ?;";
@@ -34,12 +34,16 @@ public class ViajeDAOSQL implements ViajeDAO {
 			statement.setDate(2, viaje.getFechaSalida());
 			statement.setDate(3, viaje.getFechaLlegada());
 			statement.setBigDecimal(4, viaje.getPrecio());
-			statement.setInt(5, viaje.getOrigenViaje().getIdCiudad());
-			statement.setInt(6, viaje.getDestinoViaje().getIdCiudad());
-			statement.setString(7, viaje.getHoraSalida());
-			statement.setInt(8, viaje.getTransporte().getIdTransporte());
-			statement.setInt(9, viaje.getHorasEstimadas());
-			statement.setInt(10, viaje.getCapacidad());
+			statement.setInt(5, viaje.getCiudadOrigen().getIdCiudad());
+			statement.setInt(6, viaje.getCiudadOrigen().getIdCiudad());
+			statement.setInt(7, viaje.getProvinciaOrigen().getIdProvincia());
+			statement.setInt(8, viaje.getProvinciaDestino().getIdProvincia());
+			statement.setInt(9, viaje.getPaisOrigen().getIdPais());
+			statement.setInt(10, viaje.getPaisDestino().getIdPais());
+			statement.setString(11, viaje.getHoraSalida());
+			statement.setInt(12, viaje.getTransporte().getIdTransporte());
+			statement.setInt(13, viaje.getHorasEstimadas());
+			statement.setInt(14, viaje.getCapacidad());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -75,6 +79,8 @@ public class ViajeDAOSQL implements ViajeDAO {
 		Conexion conexion = Conexion.getConexion();
 	
 		CiudadDAOSQL ciudadDAOSQL = new CiudadDAOSQL();
+		ProvinciaDAOSQL provinciaDAOSQL = new ProvinciaDAOSQL();
+		PaisDAOSQL paisDAOSQL = new PaisDAOSQL();
 		TransporteDAOSQL transporteDAOSQL = new TransporteDAOSQL();
 	
 		try {
@@ -85,6 +91,10 @@ public class ViajeDAOSQL implements ViajeDAO {
 				viajes.add(new ViajeDTO(resultSet.getInt("idViaje"),
 				ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadOrigen")),
 				ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadDestino")),
+				provinciaDAOSQL.getProvinciaById(resultSet.getInt("idProvinciaOrigen")),
+				provinciaDAOSQL.getProvinciaById(resultSet.getInt("idProvinciaDestino")),
+				paisDAOSQL.getPaisById(resultSet.getInt("idPaisOrigen")),
+				paisDAOSQL.getPaisById(resultSet.getInt("idPaisDestino")),
 									   resultSet.getDate("fechaSalida"),
 									   resultSet.getDate("fechaLlegada"),
 									   resultSet.getString("horaSalida"),
@@ -131,6 +141,8 @@ public class ViajeDAOSQL implements ViajeDAO {
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
 		CiudadDAOSQL ciudadDAOSQL = new CiudadDAOSQL();
+		ProvinciaDAOSQL provinciaDAOSQL = new ProvinciaDAOSQL();
+		PaisDAOSQL paisDAOSQL = new PaisDAOSQL();
 		TransporteDAOSQL transporteDAOSQL = new TransporteDAOSQL();
 		
 		ViajeDTO viaje;
@@ -143,7 +155,11 @@ public class ViajeDAOSQL implements ViajeDAO {
 				viaje = new ViajeDTO(resultSet.getInt("idViaje"),
 						ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadOrigen")),
 						ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadDestino")),
-											   resultSet.getDate("fechaSalida"),
+						provinciaDAOSQL.getProvinciaById(resultSet.getInt("idProvinciaOrigen")),
+						provinciaDAOSQL.getProvinciaById(resultSet.getInt("idProvinciaDestino")),
+						paisDAOSQL.getPaisById(resultSet.getInt("idPaisOrigen")),
+						paisDAOSQL.getPaisById(resultSet.getInt("idPaisDestino")),
+									resultSet.getDate("fechaSalida"),
 											   resultSet.getDate("fechaLlegada"),
 											   resultSet.getString("horaSalida"),
 											   resultSet.getInt("horasEstimadas"),

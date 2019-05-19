@@ -15,4 +15,6 @@ public interface AdministradorDAO {
 	public boolean update(AdministradorDTO administrador);
 	
 	public AdministradorDTO getById(int id );
+
+	public AdministradorDTO getByLoginId(int id);
 }

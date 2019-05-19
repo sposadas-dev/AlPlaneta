@@ -134,14 +134,24 @@ CREATE TABLE `pasaje` (
   KEY `idEstadoPasaje` (`idEstadoPasaje`)
 ); 
 
+CREATE TABLE `pasajero` (
+    `idPasajero` int(11) NOT NULL AUTO_INCREMENT,
+    `nombre` varchar(45) NOT NULL,
+    `apellido` varchar(45) NOT NULL,
+    `dni` varchar(45) NOT NULL,
+    `fechaNacimiento` date,
+    `telefono` varchar(45) NOT NULL,
+    `email` varchar(45),
+    PRIMARY KEY (`idPasajero`)
+);
 
 CREATE TABLE `pasajes_pasajeros` (
   `idPasajePasajero` int(11) NOT NULL AUTO_INCREMENT,
   `idPasaje` int(11) NOT NULL,
-  `idCliente` int(11) NOT NULL,
+  `idPasajero` int(11) NOT NULL,
   PRIMARY KEY (`idPasajePasajero`),
   KEY `idPasaje` (`idPasaje`),
-  KEY `idCliente` (`idCliente`)
+  KEY `idPasajero` (`idPasajero`)
 );
 
 
@@ -169,7 +179,7 @@ CREATE TABLE `administrador` (
 
 INSERT INTO administrador VALUES (1,'nicoAdministrador',5),(2,'lizz',2);
 
-INSERT INTO transporte VALUES (1,'avion'),(2,'Micro'),(3,'Buquebus');
+INSERT INTO transporte VALUES (1,'Avion'),(2,'Micro'),(3,'Buquebus');
 
 CREATE TABLE `viaje` (
   `idViaje` int(11) NOT NULL AUTO_INCREMENT,
@@ -178,6 +188,10 @@ CREATE TABLE `viaje` (
   `precio` decimal(11,0) NOT NULL,
   `idCiudadOrigen` int(11) NOT NULL,
   `idCiudadDestino` int(11) NOT NULL,
+  `idProvinciaOrigen` int(11) NOT NULL,
+  `idProvinciaDestino` int(11) NOT NULL,
+   `idPaisOrigen` int(11) NOT NULL,
+  `idPaisDestino` int(11) NOT NULL,
   `horaSalida` varchar(255) DEFAULT NULL,
   `idTransporte` int(11) NOT NULL,
   `horasEstimadas` int(11) NOT NULL,
@@ -185,7 +199,11 @@ CREATE TABLE `viaje` (
   PRIMARY KEY (`idViaje`),
   KEY `idCiudadOrigen` (`idCiudadOrigen`),
   KEY `idCiudadDestino` (`idCiudadDestino`),
+  KEY `idProvinciaOrigen` (`idProvinciaOrigen`),
+  KEY `idProvinciaDestino` (`idProvinciaDestino`),
+  KEY `idPaisOrigen` (`idPaisOrigen`),
+  KEY `idPaisDestino` (`idPaisDestino`),
   KEY `idTransporte` (`idTransporte`)
 );
 
-INSERT INTO viaje VALUES (1,'2019-05-01','2019-05-02',500,2,1,'12:00',1,12,500),(2,'2019-05-04','2019-05-16',700,2,4,'3:00',2,14,150),(3,'2019-05-16','2019-05-28',1200,2,4,'7:00',3,24,1000);
+INSERT INTO viaje VALUES (1,'2019-05-01','2019-05-02',500,2,1,1818,1818,5,5,'12:00',1,12,500),(2,'2019-05-04','2019-05-16',700,2,4,1818,1822,5,5,'3:00',2,14,150),(3,'2019-05-16','2019-05-28',1200,2,4,1818,1822,5,5,'7:00',3,24,1000);

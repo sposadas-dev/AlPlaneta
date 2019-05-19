@@ -70,8 +70,8 @@ public class CiudadDAOSQL implements CiudadDAO {
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(update);
-			statement.setInt(1, ciudadNueva.getIdCiudad());
-			statement.setString(2, ciudadNueva.getNombre());
+			statement.setString(1,ciudadNueva.getNombre());
+			statement.setInt(2, ciudadNueva.getIdCiudad());
 
 			if(statement.executeUpdate() > 0)
 				return true;
@@ -158,15 +158,22 @@ public class CiudadDAOSQL implements CiudadDAO {
 	}
 	public static void main(String[] args) {
 		CiudadDAOSQL adm = new CiudadDAOSQL();
-		List<CiudadDTO> administratives = adm.readAll();
+		
+		CiudadDTO ciudad = adm.getCiudadById(1);
+		System.out.println(ciudad.getNombre());
+		ciudad.setNombre("Cafayate");
+		adm.update(ciudad);
+		System.out.println(adm.getCiudadById(1).getNombre());
+		
+//		List<CiudadDTO> administratives = adm.readAll();
 
-		int cont = 0; 
-		for(CiudadDTO ad: administratives) {
-			//System.out.println(ad.getNombre());
-			cont++;
-		}
+//		int cont = 0; 
+//		for(CiudadDTO ad: administratives) {
+//			//System.out.println(ad.getNombre());
+//			cont++;
+//		}
 		//System.out.println("cantCiudades: "+cont);
-		for(CiudadDTO c : adm.readAllByIdprovincia(1818))
-			System.out.println(c.getNombre());
+//		for(CiudadDTO c : adm.readAllByIdprovincia(1818))
+//			System.out.println(c.getNombre());
 	}
 }

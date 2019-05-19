@@ -35,7 +35,9 @@ public class VistaAdministrativo{
 	private JMenuItem itemRegistrarCliente;
 	private JMenuItem itemVisualizarClientes;
 	
+	private JMenuItem itemVisualizarPasajes;
 	private JMenuItem itemAgregarPasaje;
+	 
 	
 
 	public VistaAdministrativo() {
@@ -60,7 +62,7 @@ public class VistaAdministrativo{
 		panelCliente.getBtnRecargarTabla().setVisible(true);
 		
 		panelPasaje = new PanelPasaje();
-		panelPasaje.getTablaClientes().setSize(1114, 900);
+		panelPasaje.getTablaReservas().setSize(1114, 900);
 		panelPasaje.setSize(1352, 700);
 		panelPasaje.setLocation(0, 0);
 		frame.getContentPane().add(panelPasaje);
@@ -95,9 +97,9 @@ public class VistaAdministrativo{
 		mntmCancelarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPasajes.add(mntmCancelarPasaje);
 		
-		JMenuItem menuVisualizarPasajes = new JMenuItem("Visualizar pasajes");
-		menuVisualizarPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuPasajes.add(menuVisualizarPasajes);
+		itemVisualizarPasajes = new JMenuItem("Visualizar pasajes");
+		itemVisualizarPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(itemVisualizarPasajes);
 	}
 
 	public PanelPasaje getPanelPasaje() {
@@ -116,6 +118,10 @@ public class VistaAdministrativo{
 		return itemAgregarPasaje;
 	}
 
+	public JMenuItem getItemVisualizarPasajes() {
+		return itemVisualizarPasajes;
+	}
+	
 	public PanelCliente getPanelCliente() {
 		return panelCliente;
 	}
