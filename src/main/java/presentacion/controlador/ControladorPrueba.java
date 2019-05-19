@@ -63,8 +63,8 @@ public class ControladorPrueba implements ActionListener {
 			this.ventanaVisualizarPasaje.setVisible(true);
 			this.ventanaVisualizarPasaje.getLblClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
 			this.ventanaVisualizarPasaje.getLblDniDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getDni());
-			this.ventanaVisualizarPasaje.getLblOrigenDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getOrigenViaje().getNombre());
-			this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getDestinoViaje().getNombre());
+			this.ventanaVisualizarPasaje.getLblOrigenDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadOrigen().getNombre());
+			this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadDestino().getNombre());
 			this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
 			this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
 			this.ventanaVisualizarPasaje.getLblRestante().setText(" "+calcularMontoDePasajePagado(filaSeleccionada));
@@ -149,8 +149,8 @@ public class ControladorPrueba implements ActionListener {
 							this.pasajes_en_tabla.get(i).getCliente().getNombre(),
 							this.pasajes_en_tabla.get(i).getCliente().getApellido(),
 							this.pasajes_en_tabla.get(i).getIdPasaje(),
-							this.pasajes_en_tabla.get(i).getViaje().getOrigenViaje().getNombre(),
-							this.pasajes_en_tabla.get(i).getViaje().getDestinoViaje().getNombre(),
+							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
+							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
 							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),

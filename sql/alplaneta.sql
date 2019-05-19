@@ -50,7 +50,7 @@ INSERT INTO provincia VALUES (1,3,'Azerbaijan'),(2,3,'Nargorni Karabakh'),(3,3,'
 CREATE TABLE `formapago` (
   `idformapago` int(11) NOT NULL AUTO_INCREMENT,
   `tipo` varchar(255) NOT NULL,
-  PRIMARY KEY (`idformpago`)
+  PRIMARY KEY (`idformapago`)
 );
 
 INSERT INTO formapago VALUES (1,'Efectivo'),(2,'Tarjeta');

@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -675,144 +677,6 @@ private void agregarPais(ActionEvent agP) {
 		}
 		return Integer.parseInt(ret);
 	}
-	
-	private Date calcularFechaLlegada(Date fecha, String horario, Integer horaAsumar) {
-		Date ret = null;
-		String diaRet = "";
-		String mesRet = "";
-		String añoRet = "";
-		
-		String[] fechaStr = fecha.toString().split("-");
-		String año = fechaStr[0];
-		String mes = fechaStr[1];
-		String dia = fechaStr[2];
-		
-		if(mes.equals("01") || mes.equals("03") || mes.equals("05") || mes.equals("07") || mes.equals("08") || mes.equals("10") || mes.equals("12")) { //ENERO,MARZO,MAYO,JULIO,AGOSTO,OCTUBRE,DICIEMBRE
-			//tiene 31 dias
-			if(dia.equals("31")) {
-				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
-					diaRet = "1";
-					if(mes.equals("12")) {
-						mesRet = "1";
-						añoRet = (Integer.parseInt(año)+1)+"";
-					}
-					else {
-						mesRet = (Integer.parseInt(mes)+1)+"";
-						añoRet = año;
-					}
-				}
-				else {//no son mas de 24 hs, es mismo dia, mes y año
-					diaRet = dia;
-					mesRet = mes;
-					añoRet = año;
-				}
-			}
-			else { // no cambia mes
-				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
-					diaRet = (Integer.parseInt(dia)+1)+"";
-					mesRet = mes;
-					añoRet = año;
-				}
-				else {
-					diaRet = dia;
-					mesRet = mes;
-					añoRet = año;
-				}
-			}
-		}
-		if(mes.equals("04") || mes.equals("06") || mes.equals("09") || mes.equals("11")) {
-			//tiene 30 dias
-			if(dia.equals("30")) {
-				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
-					diaRet = "1";
-					mesRet = (Integer.parseInt(mes)+1)+"";;
-					añoRet = año;
-				}
-				else {//no son mas de 24 hs, es mismo dia, mes y año
-					diaRet = dia;
-					mesRet = mes;
-					añoRet = año;
-				}
-			}
-			else { // no cambia mes
-				if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
-					diaRet = (Integer.parseInt(dia)+1)+"";;
-					mesRet = mes;
-					añoRet = año;
-				}
-				else {
-					diaRet = dia;
-					mesRet = mes;
-					añoRet = año;
-				}
-			}			
-		}
-		if(mes.equals("02")) {
-			if ((Integer.parseInt(año) % 4 == 0) && ((Integer.parseInt(año) % 100 != 0) || (Integer.parseInt(año) % 400 == 0))) {
-				//año bisiesto, tiene 29 dias
-				if(dia.equals("29")) {
-					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
-						diaRet = "1";
-						mesRet = (Integer.parseInt(mes)+1)+"";;
-						añoRet = año;
-					}
-					else {//no son mas de 24 hs, es mismo dia, mes y año
-						diaRet = dia;
-						mesRet = mes;
-						añoRet = año;
-					}
-				}
-				else { // no cambia mes
-					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
-						diaRet = (Integer.parseInt(dia)+1)+"";;
-						mesRet = mes;
-						añoRet = año;
-					}
-					else {
-						diaRet = dia;
-						mesRet = mes;
-						añoRet = año;
-					}
-				}		
-				
-			}
-			else {
-				//año no bisiesto, tiene 28 dias
-				if(dia.equals("28")) {
-					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
-						diaRet = "1";
-						mesRet = (Integer.parseInt(mes)+1)+"";
-						añoRet = año;
-					}
-					else {//no son mas de 24 hs, es mismo dia, mes y año
-						diaRet = dia;
-						mesRet = mes;
-						añoRet = año;
-					}
-				}
-				else { // no cambia mes
-					if(horaAsumar+eliminarPuntosEnFecha(horario) >= 24) {
-						diaRet = (Integer.parseInt(dia)+1)+"";
-						mesRet = mes;
-						añoRet = año;
-					}
-					else {
-						diaRet = dia;
-						mesRet = mes;
-						añoRet = año;
-					}
-				}		
-			}
-		}
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		
-		try { ret = convertUtilToSql(sdf.parse(añoRet+"-"+mesRet+"-"+diaRet));
-		} catch (ParseException e) { e.printStackTrace(); }
-
-		return ret;
-		
-	}
 
 	
 	private void darAltaViaje(ActionEvent aV) {//throws Exception {
@@ -1475,7 +1339,7 @@ private void agregarPais(ActionEvent agP) {
 //			};
 //			this.ventanaTablaViajes.getModelViajes().addRow(fila);
 //		}
-	}
+//	}
 
 	private void mostrarVentanaAltaDePasajeros(ActionEvent aP) {
 		this.ventanaReserva.mostrarVentana(false);
