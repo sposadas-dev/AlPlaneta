@@ -32,8 +32,6 @@ public class ControladorAdministrador {
 	private Login login;
 	
 	
-
-	
 	public ControladorAdministrador(VistaAdministrador vistaAdministrador){
 		this.vistaAdministrador = vistaAdministrador;
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
@@ -50,7 +48,8 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemVisualizarFormaPago().addActionListener(vfp->visualizarFormaPago(vfp));
 		this.vistaAdministrador.getItemEditarFormaPago().addActionListener(efp->editarFormaPago(efp));
 		this.vistaAdministrador.getItemEliminarFormaPago().addActionListener(dfp->eliminarFormaPago(dfp));
-		this.vistaAdministrador.getPanelFormaPago().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
+		
+		this.vistaAdministrador.getPanelFormaPago().getBtnRecargarTabla().addActionListener(r->recargarTablaFormaPago(r));
 	
 		
 
@@ -217,6 +216,9 @@ public class ControladorAdministrador {
 		}
 	}
 	
+	public void recargarTablaFormaPago(ActionEvent r){
+		llenarTablaFormaPago();
+	}
 
 	public void llenarTablaFormaPago(){
 		this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().setRowCount(0); //Para vaciar la tabla

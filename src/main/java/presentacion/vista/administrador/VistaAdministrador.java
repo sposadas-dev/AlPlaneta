@@ -112,23 +112,23 @@ public class VistaAdministrador extends JFrame {
 		
 	//--------------------FormaPago-----------------------------------//	
 		
-		JMenu menuFormaPago = new JMenu("Formas Pago");
+		JMenu menuFormaPago = new JMenu("Formas de pago");
 		menuFormaPago.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuFormaPago);
 		
-		itemVisualizarFormaPago = new JMenuItem("Visualizar formaPago");
+		itemVisualizarFormaPago = new JMenuItem("Visualizar formas de pago");
 		itemVisualizarFormaPago.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuFormaPago.add(itemVisualizarFormaPago);
 		
-	    itemAgregarFormaPago = new JMenuItem("Agregar formaPago");
+	    itemAgregarFormaPago = new JMenuItem("Agregar forma de pago");
 		itemAgregarFormaPago.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuFormaPago.add(itemAgregarFormaPago);
 		
-		itemEditarFormaPago = new JMenuItem("Editar FormaPago");
+		itemEditarFormaPago = new JMenuItem("Editar forma de pago");
 		itemEditarFormaPago.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuFormaPago.add(itemEditarFormaPago);
 		
-		itemEliminarFormaPago = new JMenuItem("Eliminar FormaPago");
+		itemEliminarFormaPago = new JMenuItem("Eliminar forma de pago");
 		itemEliminarFormaPago.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuFormaPago.add(itemEliminarFormaPago);
 				

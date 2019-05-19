@@ -51,7 +51,7 @@ public class PanelFormaPago  extends JPanel {
 		panelFomaPago.setLayout(null);
 		
 		lblFormaPago = new JLabel("Formas de pago");
-		lblFormaPago.setBounds(551, 0, 219, 65);
+		lblFormaPago.setBounds(453, 0, 301, 65);
 		lblFormaPago.setForeground(Color.WHITE);
 		lblFormaPago.setFont(new Font("Tahoma", Font.BOLD, 36));
 		panelFomaPago.add(lblFormaPago);

@@ -50,21 +50,21 @@ public class VentanaEditarFormaPago extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(96, 163, 188));
-		panel.setBounds(0, 0, 407, 53);
+		panel.setBounds(0, 0, 417, 53);
 		contentPane.add(panel);
 		
-		JLabel lblEditarFormaPago = new JLabel("Editar Forma Pago");
+		JLabel lblEditarFormaPago = new JLabel("Editar forma de pago");
 		lblEditarFormaPago.setForeground(Color.WHITE);
 		lblEditarFormaPago.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblEditarFormaPago.setBounds(27, 0, 253, 53);
+		lblEditarFormaPago.setBounds(27, 0, 323, 53);
 		panel.add(lblEditarFormaPago);
 		
-		JLabel lblNewLabel = new JLabel("Nombre del Forma Pago:");
-		lblNewLabel.setBounds(47, 111, 131, 14);
+		JLabel lblNewLabel = new JLabel("Nombre de la forma de pago:");
+		lblNewLabel.setBounds(32, 111, 153, 14);
 		contentPane.add(lblNewLabel);
 		
 		txtTipoFormaPago = new JTextField();
-		txtTipoFormaPago.setBounds(181, 108, 170, 20);
+		txtTipoFormaPago.setBounds(210, 108, 170, 20);
 		contentPane.add(txtTipoFormaPago);
 		txtTipoFormaPago.setColumns(10);
 		

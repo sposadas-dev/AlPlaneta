@@ -18,8 +18,8 @@ public class ControladorFormaPago implements ActionListener {
 
 	private VentanaAgregarFormaPago ventanaAgregarFormaPago;
 	private VentanaEditarFormaPago ventanaEditarFormaPago;
-	private FormaPago FormaPago;
-	private List<FormaPagoDTO> formapago_en_tabla;
+	private FormaPago formaPago;
+	private List<FormaPagoDTO> formas_de_pagos_en_tabla;
 	private int filaSeleccionada;
 	
 	public ControladorFormaPago(){
@@ -29,8 +29,8 @@ public class ControladorFormaPago implements ActionListener {
 		this.ventanaAgregarFormaPago.getBtnAgregar().addActionListener(rc->agregarFormaPago(rc));
 		this.ventanaEditarFormaPago.getBtnEditar().addActionListener(ac->editarFormaPago(ac));
 
-		this.FormaPago = new FormaPago(new DAOSQLFactory());
-		formapago_en_tabla = FormaPago.obtenerFormaPago();
+		this.formaPago = new FormaPago(new DAOSQLFactory());
+		this.formas_de_pagos_en_tabla = formaPago.obtenerFormaPago();
 	}
 
 	public void mostrarVentanaAgregarFormaPago() {
@@ -43,17 +43,17 @@ public class ControladorFormaPago implements ActionListener {
 	
 	public void agregarFormaPago(ActionEvent rc) {
 		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres agregar el FormaPago?", 
+	            null,"¿Estás seguro que quieres agregar la forma de pago?", 
 			             "Agregar forma de pago", JOptionPane.YES_NO_OPTION,
 			             JOptionPane.INFORMATION_MESSAGE, null, null, null);
 		if (confirm == 0){
 			FormaPagoDTO nuevoFormaPago = new FormaPagoDTO();
 			nuevoFormaPago.setTipo(this.ventanaAgregarFormaPago.getTxtTipoPago().getText());
-			FormaPago.agregarFormaPago(nuevoFormaPago);
+			formaPago.agregarFormaPago(nuevoFormaPago);
 	
 			this.ventanaAgregarFormaPago.limpiarCampos();
 			this.ventanaAgregarFormaPago.cerrarVentana();
-			JOptionPane.showMessageDialog(null, "FormaPago agregado","FormaPago", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Forma de pago agregado","Forma de pago", JOptionPane.INFORMATION_MESSAGE);
 
 		}
 	}
@@ -61,21 +61,21 @@ public class ControladorFormaPago implements ActionListener {
 	public void editarFormaPago(int filaSeleccionada){
 		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarFormaPago.mostrarVentana();
-		ventanaEditarFormaPago.getTxtTipoFormaPago().setText(this.formapago_en_tabla.get(this.filaSeleccionada).getTipo());
+		ventanaEditarFormaPago.getTxtTipoFormaPago().setText(this.formas_de_pagos_en_tabla.get(this.filaSeleccionada).getTipo());
 		
 	}
 	
 	public void editarFormaPago(ActionEvent ac) {
 		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres editar el FormaPago?", 
+	            null,"¿Estás seguro que quieres editar la forma de pago?", 
 			             "Editar Forma Pago", JOptionPane.YES_NO_OPTION,
 			             JOptionPane.WARNING_MESSAGE, null, null, null);
 		if (confirm == 0){
 			String tipo = this.ventanaEditarFormaPago.getTxtTipoFormaPago().getText();
-			this.FormaPago.editarFormaPago(new FormaPagoDTO(formapago_en_tabla.get(this.filaSeleccionada).getIdFormaPago(),tipo));
+			this.formaPago.editarFormaPago(new FormaPagoDTO(formas_de_pagos_en_tabla.get(this.filaSeleccionada).getIdFormaPago(),tipo));
 			ventanaEditarFormaPago.limpiarCampos();
 			ventanaEditarFormaPago.dispose();
-			JOptionPane.showMessageDialog(null, "Forma de pago editado","Forma Pago", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Forma de pago editado","Forma de pago", JOptionPane.INFORMATION_MESSAGE);
 
 		}
 		
@@ -83,12 +83,12 @@ public class ControladorFormaPago implements ActionListener {
 	
 	public void eliminarFormaPago(int filaSeleccionada){
 		int confirm = JOptionPane.showOptionDialog(
-		            null,"¿Estás seguro que quieres eliminar el FormaPago?", 
+		            null,"¿Estás seguro que quieres eliminar la forma de pago?", 
 				             "Eliminar FormaPago", JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE, null, null, null);
 	 if (confirm == 0){
-		JOptionPane.showMessageDialog(null, "FormaPago eliminado","FormaPago", JOptionPane.INFORMATION_MESSAGE);
-		this.FormaPago.borrarFormaPago(formapago_en_tabla.get(filaSeleccionada));
+		JOptionPane.showMessageDialog(null, "Forma de pago eliminado","Forma de pago", JOptionPane.INFORMATION_MESSAGE);
+		this.formaPago.borrarFormaPago(formas_de_pagos_en_tabla.get(filaSeleccionada));
 	 }
 	}
 	

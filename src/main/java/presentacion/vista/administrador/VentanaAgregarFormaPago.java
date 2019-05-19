@@ -49,18 +49,18 @@ public class VentanaAgregarFormaPago extends JFrame {
 		panel.setBounds(0, 0, 417, 53);
 		contentPane.add(panel);
 		
-		JLabel lblAgregarFormaPago = new JLabel("Agregar Forma Pago");
+		JLabel lblAgregarFormaPago = new JLabel("Agregar forma de pago");
 		lblAgregarFormaPago.setForeground(Color.WHITE);
 		lblAgregarFormaPago.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblAgregarFormaPago.setBounds(27, 0, 253, 53);
+		lblAgregarFormaPago.setBounds(27, 0, 390, 53);
 		panel.add(lblAgregarFormaPago);
 		
-		JLabel lblNewLabel = new JLabel("Tipo de pago:");
-		lblNewLabel.setBounds(47, 111, 131, 14);
+		JLabel lblNewLabel = new JLabel("Nombre de la forma de pago:");
+		lblNewLabel.setBounds(34, 111, 188, 14);
 		contentPane.add(lblNewLabel);
 		
 		txtTipoPago = new JTextField();
-		txtTipoPago.setBounds(193, 108, 170, 20);
+		txtTipoPago.setBounds(206, 108, 170, 20);
 		contentPane.add(txtTipoPago);
 		txtTipoPago.setColumns(10);
 		

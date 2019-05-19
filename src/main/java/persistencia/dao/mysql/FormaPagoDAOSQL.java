@@ -15,9 +15,9 @@ public class FormaPagoDAOSQL implements FormaPagoDAO {
 	
 	private static final String insert = "INSERT INTO formapago(idformapago, tipo) VALUES (?,?)";
 	private static final String readall = "SELECT * from formapago";
-	private static final String update  = "UPDATE formapago SET  idformapago=?, tipo=?";
+	private static final String update  = "UPDATE formapago SET tipo = ? WHERE idformapago = ?";
 	private static final String browse = "SELECT * FROM formapago WHERE idformapago=?";
-	private static final String delete = "DELETE * from formapago where idformapago = ? ";
+	private static final String delete = "DELETE FROM formapago WHERE idformapago = ? ";
 	
 	public boolean insert(FormaPagoDTO estado) {
 		
@@ -85,14 +85,15 @@ public class FormaPagoDAOSQL implements FormaPagoDAO {
 	}
 
 	@Override
-	public boolean update(FormaPagoDTO actulizada) {
+	public boolean update(FormaPagoDTO forma_de_pago_a_editar) {
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(update);
-			statement.setInt(1, actulizada.getIdFormaPago());
-			statement.setString(2, actulizada.getTipo());
+			statement.setString(1, forma_de_pago_a_editar.getTipo());
+			statement.setInt(2, forma_de_pago_a_editar.getIdFormaPago());
+			
 			
 			chequeoUpdate = statement.executeUpdate();
 			
