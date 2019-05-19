@@ -2,96 +2,219 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
-import dto.TransporteDTO;
-import modelo.Transporte;
+import dto.CiudadDTO;
+import dto.ProvinciaDTO;
+import modelo.ModeloCiudad;
+import modelo.ModeloProvincia;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.administrador.VentanaAgregarTransporte;
-import presentacion.vista.administrador.VentanaEditarTransporte;
-import presentacion.vista.administrador.VistaAdministrador;
+import presentacion.vista.administrador.PanelGeneral;
+import presentacion.vista.administrador.VentanaAgregarCiudad;
+import presentacion.vista.administrador.VentanaEditarCiudad;
 
 public class ControladorCiudad implements ActionListener {
 
-	private VentanaAgregarTransporte ventanaAgregarTransporte;
-	private VentanaEditarTransporte ventanaEditarTransporte;
-	private Transporte transporte;
-	private List<TransporteDTO> transportes_en_tabla;
+	private VentanaAgregarCiudad ventanaAgregarCiudad;
+	private VentanaEditarCiudad ventanaEditarCiudad;
+	private ModeloCiudad modeloCiudad;
+	private ModeloProvincia modeloProvincia;
+	private List<CiudadDTO> ciudades_en_tabla;
 	private int filaSeleccionada;
-	
-	public ControladorCiudad(){
-		this.ventanaAgregarTransporte = VentanaAgregarTransporte.getInstance();
-		this.ventanaEditarTransporte = VentanaEditarTransporte.getInstance();
-		
-		this.ventanaAgregarTransporte.getBtnAgregar().addActionListener(rc->agregarTransporte(rc));
-		this.ventanaEditarTransporte.getBtnEditar().addActionListener(ac->editarTransporte(ac));
+	private PanelGeneral panel;
 
-		this.transporte = new Transporte(new DAOSQLFactory());
-		transportes_en_tabla = transporte.obtenerTransportes();
+	private static ControladorCiudad INSTANCE;
+
+	public static ControladorCiudad getInstance() {
+		if (INSTANCE == null)
+			return new ControladorCiudad();
+		else
+			return INSTANCE;
 	}
 
-	public void mostrarVentanaAgregarTransporte() {
-		this.ventanaAgregarTransporte.mostrarVentana();
+	private ControladorCiudad() {
+		this.ventanaAgregarCiudad = VentanaAgregarCiudad.getInstance();
+		this.ventanaEditarCiudad = VentanaEditarCiudad.getInstance();
+
+		this.ventanaAgregarCiudad.getBtnAgregar().addActionListener(rc -> agregarCiudad(rc));
+		this.ventanaEditarCiudad.getBtnEditar().addActionListener(ac -> editarCiudad(ac));
+
+		this.modeloProvincia = new ModeloProvincia(new DAOSQLFactory());
+		this.modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
+		ciudades_en_tabla = modeloCiudad.obtenerCiudades();
+		this.panel = new PanelGeneral();
 	}
-	
-	public void editarTransporte() {
-		this.ventanaEditarTransporte.mostrarVentana();
+
+	public void mostrarVentanaAgregarCiudad() {
+		llenarComboBoxPaises();
+		this.ventanaAgregarCiudad.mostrarVentana();
 	}
-	
-	public void agregarTransporte(ActionEvent rc) {
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres agregar el transporte?", 
-			             "Agregar transporte", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		if (confirm == 0){
-			TransporteDTO nuevoTransporte = new TransporteDTO();
-			nuevoTransporte.setNombre(this.ventanaAgregarTransporte.getTxtNombreTransporte().getText());
-			transporte.agregarTransporte(nuevoTransporte);
-	
-			this.ventanaAgregarTransporte.limpiarCampos();
-			this.ventanaAgregarTransporte.cerrarVentana();
-			JOptionPane.showMessageDialog(null, "Transporte agregado","Transporte", JOptionPane.INFORMATION_MESSAGE);
+
+	@SuppressWarnings("unchecked")
+	private void llenarComboBoxPaises() {
+		List<ProvinciaDTO> provincias = modeloProvincia.obtenerProvincias();
+
+		String[] nombresProvincias = new String[provincias.size()];
+		for (int i = 0; i < provincias.size(); i++) {
+			String pais = provincias.get(i).getIdProvincia() + "-" + provincias.get(i).getNombre();
+			nombresProvincias[i] = pais;
+		}
+		this.ventanaAgregarCiudad.getComboBoxProvincias().setModel(new DefaultComboBoxModel<Object>(nombresProvincias));
+	}
+
+	public void editarProvincia() {
+		this.ventanaEditarCiudad.mostrarVentana();
+	}
+
+	public void agregarCiudad(ActionEvent rc) {
+
+		int confirm = JOptionPane.showOptionDialog(null, "¿Estás seguro que quieres agregar la provincia?",
+				"Agregar provincia", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+		if (confirm == 0 && permiteAgregarProvincia()) {
+
+			String idProvincia = obtenerId(
+					this.ventanaAgregarCiudad.getComboBoxProvincias().getSelectedItem().toString());
+			CiudadDTO nuevoCiudad = new CiudadDTO();
+
+			nuevoCiudad.setNombre(this.ventanaAgregarCiudad.getTxtNombreCiudad().getText());
+			nuevoCiudad.setProvincia(modeloProvincia.getProvinciaById(Integer.parseInt(idProvincia)));
+			modeloCiudad.agregarCiudad(nuevoCiudad);
+
+			this.ventanaAgregarCiudad.limpiarCampos();
+			this.ventanaAgregarCiudad.cerrarVentana();
+			JOptionPane.showMessageDialog(null, "Transporte agregado", "Transporte", JOptionPane.INFORMATION_MESSAGE);
 
 		}
 	}
-	
-	public void editarTransporte(int filaSeleccionada){
+
+	private boolean permiteAgregarProvincia() {
+		boolean ret = true;
+		ArrayList<CiudadDTO> ciudadDB = (ArrayList<CiudadDTO>) modeloCiudad.obtenerCiudades();
+		for (CiudadDTO p : ciudadDB)
+			ret = ret && !(p.getNombre().equals(this.ventanaAgregarCiudad.getTxtNombreCiudad().getText()));
+		return ret;
+	}
+
+	public void editarProvincia(int filaSeleccionada) {
 		this.filaSeleccionada = filaSeleccionada;
-		this.ventanaEditarTransporte.mostrarVentana();
-		ventanaEditarTransporte.getTxtNombreTransporte().setText(this.transportes_en_tabla.get(this.filaSeleccionada).getNombre());
-		
+		this.ventanaEditarCiudad.mostrarVentana();
+		ventanaEditarCiudad.getTxtNombreProvincia()
+				.setText(this.ciudades_en_tabla.get(this.filaSeleccionada).getNombre());
+
 	}
-	
-	public void editarTransporte(ActionEvent ac) {
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres editar el transporte?", 
-			             "Editar transporte", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0){
-			String nombreTransporte = this.ventanaEditarTransporte.getTxtNombreTransporte().getText();
-			this.transporte.editarTransporte(new TransporteDTO(transportes_en_tabla.get(this.filaSeleccionada).getIdTransporte(),nombreTransporte));
-			ventanaEditarTransporte.limpiarCampos();
-			ventanaEditarTransporte.dispose();
-			JOptionPane.showMessageDialog(null, "Transporte editado","Transporte", JOptionPane.INFORMATION_MESSAGE);
+
+	public void editarCiudad(ActionEvent ac) {
+		int confirm = JOptionPane.showOptionDialog(null, "¿Estás seguro que quieres editar la provincia?",
+				"Editar provincia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+		if (confirm == 0) {
+			CiudadDTO nuevaCiudad = ciudades_en_tabla.get(this.filaSeleccionada);
+			nuevaCiudad.setNombre(this.ventanaEditarCiudad.getTxtNombreProvincia().getText());
+			System.out.println("a editar " + nuevaCiudad.getNombre());
+			this.modeloCiudad.editarCiudad(nuevaCiudad);
+			ventanaEditarCiudad.limpiarCampos();
+			ventanaEditarCiudad.dispose();
+			JOptionPane.showMessageDialog(null, "Provincia editada", "Provincia", JOptionPane.INFORMATION_MESSAGE);
 
 		}
-		
+
 	}
-	
-	public void eliminarTransporte(int filaSeleccionada){
-		int confirm = JOptionPane.showOptionDialog(
-		            null,"¿Estás seguro que quieres eliminar el transporte?", 
-				             "Eliminar localidad", JOptionPane.YES_NO_OPTION,
-				             JOptionPane.ERROR_MESSAGE, null, null, null);
-	 if (confirm == 0){
-		JOptionPane.showMessageDialog(null, "Transporte eliminado","Transporte", JOptionPane.INFORMATION_MESSAGE);
-		this.transporte.borrarTransporte(transportes_en_tabla.get(filaSeleccionada));
-	 }
+
+	public void eliminarProvincia(int filaSeleccionada) {
+		int confirm = JOptionPane.showOptionDialog(null, "¿Estás seguro que quieres eliminar la provincia?",
+				"Eliminar provincia", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
+		if (confirm == 0) {
+			JOptionPane.showMessageDialog(null, "Provincia eliminada", "Provincia", JOptionPane.INFORMATION_MESSAGE);
+			// comentario:
+			// RELACIONAR EL VIAJE CON LA PROVINCIA Y PAIS ADEMAS DE CIUDAD PARA
+			// DARLE DE BAJA
+			// SI ES QUE NO TIENE NINGUN VIAJE RELACIONADO.
+			// this.modeloProvincia.borrarProvincia(provincias_en_tabla.get(filaSeleccionada));
+		}
 	}
-	
+
+	private String obtenerId(String s) {
+		String ret = "";
+		for (int n = 0; n < s.length(); n++) {
+			char c = s.charAt(n);
+			if (c != '-') {
+				ret += c;
+			} else {
+				return ret;
+			}
+		}
+		return ret;
+	}
+
 	@Override
-	public void actionPerformed(ActionEvent arg0) {	
+	public void actionPerformed(ActionEvent arg0) {
 	}
+
+	public VentanaAgregarCiudad getVentanaAgregarCiudad() {
+		return ventanaAgregarCiudad;
+	}
+
+	public void setVentanaAgregarCiudad(VentanaAgregarCiudad ventanaAgregarCiudad) {
+		this.ventanaAgregarCiudad = ventanaAgregarCiudad;
+	}
+
+	public VentanaEditarCiudad getVentanaEditarCiudad() {
+		return ventanaEditarCiudad;
+	}
+
+	public void setVentanaEditarCiudad(VentanaEditarCiudad ventanaEditarCiudad) {
+		this.ventanaEditarCiudad = ventanaEditarCiudad;
+	}
+
+	public ModeloCiudad getModeloCiudad() {
+		return modeloCiudad;
+	}
+
+	public void setModeloCiudad(ModeloCiudad modeloCiudad) {
+		this.modeloCiudad = modeloCiudad;
+	}
+
+	public ModeloProvincia getModeloProvincia() {
+		return modeloProvincia;
+	}
+
+	public void setModeloProvincia(ModeloProvincia modeloProvincia) {
+		this.modeloProvincia = modeloProvincia;
+	}
+
+	public List<CiudadDTO> getCiudades_en_tabla() {
+		return ciudades_en_tabla;
+	}
+
+	public void setCiudades_en_tabla(List<CiudadDTO> ciudades_en_tabla) {
+		this.ciudades_en_tabla = ciudades_en_tabla;
+	}
+
+	public int getFilaSeleccionada() {
+		return filaSeleccionada;
+	}
+
+	public void setFilaSeleccionada(int filaSeleccionada) {
+		this.filaSeleccionada = filaSeleccionada;
+	}
+
+	public PanelGeneral getPanel() {
+		return panel;
+	}
+
+	public void setPanel(PanelGeneral panel) {
+		this.panel = panel;
+	}
+
+	public static ControladorCiudad getINSTANCE() {
+		return INSTANCE;
+	}
+
+	public static void setINSTANCE(ControladorCiudad iNSTANCE) {
+		INSTANCE = iNSTANCE;
+	}
+
 }

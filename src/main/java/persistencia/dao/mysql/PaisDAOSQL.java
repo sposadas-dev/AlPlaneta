@@ -20,6 +20,7 @@ public class PaisDAOSQL implements PaisDAO {
 
 	@Override
 	public boolean insert(PaisDTO pais) {
+	System.out.println("DAOSQL-PAIS-INSERT: "+pais.getIdPais()+" "+pais.getNombre());
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {

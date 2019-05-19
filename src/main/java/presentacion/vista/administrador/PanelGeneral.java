@@ -10,20 +10,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class PanelTransporte extends JPanel {
+public class PanelGeneral extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JButton btnRecargarTabla;
-	private DefaultTableModel modelTransportes;
-	private String[] nombreColumnasClientes = {"Nombre del transporte"};
-	private JTable tablaTransportes;
+	private DefaultTableModel model;
+	private String[] nombreColumnas = {"Nombre del transporte"};
+	private JTable tabla;
 	private JButton btnConfirmar;
-	private JLabel lblTransportes;
+	private JLabel lbl;
 
 	
-	public PanelTransporte() {
+	public PanelGeneral() {
 		
-		modelTransportes = new DefaultTableModel(null,nombreColumnasClientes){
+		model = new DefaultTableModel(null,nombreColumnas){
 		@Override
 			public boolean isCellEditable(int row, int column){
 				return false;
@@ -34,8 +34,8 @@ public class PanelTransporte extends JPanel {
 		JScrollPane spPasajeros = new JScrollPane();
 		spPasajeros.setBounds(32, 96, 1302, 483);
 		add(spPasajeros);
-		tablaTransportes = new JTable(modelTransportes);
-		spPasajeros.setViewportView(tablaTransportes);
+		tabla = new JTable(model);
+		spPasajeros.setViewportView(tabla);
 		
 		btnRecargarTabla = new JButton("Recargar");
 		btnRecargarTabla.setBounds(422, 608, 165, 54);
@@ -51,17 +51,17 @@ public class PanelTransporte extends JPanel {
 		add(panelClientes);
 		panelClientes.setLayout(null);
 		
-		lblTransportes = new JLabel("Transportes");
-		lblTransportes.setBounds(551, 0, 219, 65);
-		lblTransportes.setForeground(Color.WHITE);
-		lblTransportes.setFont(new Font("Tahoma", Font.BOLD, 36));
-		panelClientes.add(lblTransportes);
+		lbl = new JLabel("-");
+		lbl.setBounds(551, 0, 219, 65);
+		lbl.setForeground(Color.WHITE);
+		lbl.setFont(new Font("Tahoma", Font.BOLD, 36));
+		panelClientes.add(lbl);
 	
 		btnConfirmar.setVisible(false);
 		btnRecargarTabla.setVisible(false);
 	}
 
-	public void mostrarPanelTransporte(boolean visibilidad){
+	public void mostrarPanel(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}
 	
@@ -69,31 +69,32 @@ public class PanelTransporte extends JPanel {
 		return btnRecargarTabla;
 	}
 
-	public DefaultTableModel getModelClientes() {
-		return modelTransportes;
+	public DefaultTableModel getModel() {
+		return model;
 	}
 
-	public void setModelClientes(DefaultTableModel modelClientes) {
-		this.modelTransportes = modelClientes;
+	public void setModel(DefaultTableModel model) {
+		this.model = model;
 	}
 
-	public String[] getNombreColumnasClientes() {
-		return nombreColumnasClientes;
+	public String[] getNombreColumnas() {
+		return nombreColumnas;
 	}
 
-	public void setNombreColumnasClientes(String[] nombreColumnasClientes) {
-		this.nombreColumnasClientes = nombreColumnasClientes;
+	public void setNombreColumnas(String[] nombreColumnas) {
+		this.nombreColumnas = nombreColumnas;
 	}
 
-	public JTable getTablaTransportes() {
-		return tablaTransportes;
+	public JTable getTabla() {
+		return tabla;
 	}
 
-	public void setTablaTransportes(JTable tablaTransportes) {
-		this.tablaTransportes = tablaTransportes;
+	public void setTabla(JTable tabla) {
+		this.tabla = tabla;
 	}
 	
 	public JButton getBtnConfirmar() {
 		return btnConfirmar;
 	}
+	
 }

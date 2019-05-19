@@ -19,6 +19,7 @@ import modelo.Rol;
 import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
+import presentacion.vista.administrador.VentanaAgregarPais;
 import presentacion.vista.administrador.VistaAdministrador;
 
 public class ControladorAdministrador {
@@ -34,30 +35,69 @@ public class ControladorAdministrador {
 	private ModeloPais modeloPais;
 	private ModeloCiudad modeloCiudad;
 	private ModeloProvincia modeloProvincia;
+	private ControladorPais controladorPais;
+	private ControladorCiudad controladorCiudad;
+	private ControladorProvincia controladorProvincia;
+	
+	private VentanaAgregarPais ventanaAgregarPais;
 	
 	public ControladorAdministrador(VistaAdministrador vistaAdministrador){
 		this.vistaAdministrador = vistaAdministrador;
+//INSTANCES		
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
-		
+		this.ventanaAgregarPais = VentanaAgregarPais.getInstance();
+
+//MENU ITEMS		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
-		
 		this.vistaAdministrador.getItemAgregarTransporte().addActionListener(ac->agregarPanelTransporte(ac));
 		this.vistaAdministrador.getItemVisualizarTransportes().addActionListener(vt->visualizarTransportes(vt));
-
 		this.vistaAdministrador.getItemEditarTransporte().addActionListener(et->editarTransporte(et));
 		this.vistaAdministrador.getItemEliminarTransporte().addActionListener(dt->eliminarTransporte(dt));
+//ALTA DESTINOS	
+		this.vistaAdministrador.getItemPais().addActionListener(p->mostrarVentanaAgregarPais(p));
+		this.vistaAdministrador.getItemProvincia().addActionListener(p->mostrarVentanaAgregarProvincia(p));
+		this.vistaAdministrador.getItemCiudad().addActionListener(p->mostrarVentanaAgregarCiudad(p));
+//EDICION DESTINOS
+		this.vistaAdministrador.getItemEliminarPais().addActionListener(d->mostrarVentanaEliminarPais(d));
+		
 		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
-
+		
+//BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
 		
 		this.transporte = new Transporte(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
+
+//CONTROLADORES		
 		this.controladorTransporte = new ControladorTransporte();
-		
+		this.controladorPais = ControladorPais.getInstance();
+		this.controladorProvincia = ControladorProvincia.getInstance();
+		this.controladorCiudad = ControladorCiudad.getInstance();
 		
 	}
 
-	
+	private void mostrarVentanaEliminarPais(ActionEvent d) {
+		
+	}
+
+	private void mostrarVentanaAgregarCiudad(ActionEvent p) {
+		this.controladorCiudad.mostrarVentanaAgregarCiudad();
+	}
+
+	private void mostrarVentanaAgregarProvincia(ActionEvent p) {
+		this.controladorProvincia.mostrarVentanaAgregarProvincia();
+	}
+
+	private void mostrarVentanaAgregarPais(ActionEvent p) {
+		this.controladorPais.mostrarVentanaAgregarPais();
+	}
+
+
+	/*Agrega el panel de transporte en la vistaPrinciapal del Administrador*/
+	private void agregarPanelPaises(ActionEvent ac) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
+		controladorTransporte.mostrarVentanaAgregarTransporte();
+	}
 
 	public void inicializar(){
 		this.vistaAdministrador.mostrarVentana();
