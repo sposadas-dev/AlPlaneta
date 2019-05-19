@@ -10,18 +10,10 @@ public class FormaPagoDTO {
 		this.tipo = tipo;
 	}
 
-<<<<<<< src/main/java/dto/FormaPagoDTO.java
 	public FormaPagoDTO() {
 		super();
 	}
 
-
-=======
-	public FormaPagoDTO(){
-		super();
-	}
-	
->>>>>>> src/main/java/dto/FormaPagoDTO.java
 	public int getIdFormaPago() {
 		return idFormaPago;
 	}
@@ -37,6 +29,4 @@ public class FormaPagoDTO {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-	
-	
 }

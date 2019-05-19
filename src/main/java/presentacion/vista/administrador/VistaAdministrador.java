@@ -19,13 +19,19 @@ public class VistaAdministrador extends JFrame {
 	private JPanel contentPane;
 	private PanelTransporte panelTransporte;
 	private VentanaPanelGeneral panelGeneral;
-
+	private PanelFormaPago panelFormaPago;
+	
 	private JMenuItem itemAgregarCuenta;
 	private JMenuItem itemVisualizarTransportes ;
 	private JMenuItem itemAgregarTransporte;
 	private JMenuItem itemEditarTransporte;
 	private JMenuItem itemEliminarTransporte;
 	
+	private JMenuItem itemVisualizarFormaPago;
+	private JMenuItem itemAgregarFormaPago;
+	private JMenuItem itemEditarFormaPago;
+	private JMenuItem itemEliminarFormaPago;
+
 	private JMenuItem itemPais;
 	private JMenuItem itemProvincia;
 	private JMenuItem itemCiudad;
@@ -266,13 +272,6 @@ public class VistaAdministrador extends JFrame {
 		setVisible(true);
 	}
 	
-	
-	
-	
-	public JMenuItem getItemEliminarTransporte() {
-		return itemEliminarTransporte;
-	}
-
 	public JMenuItem getItemPais() {
 		return itemPais;
 	}
