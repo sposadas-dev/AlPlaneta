@@ -74,7 +74,7 @@ public class VentanaCargarViaje extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		
-		JLabel lblAgregarReserva = new JLabel("Cargar viaje");
+		JLabel lblAgregarReserva = new JLabel("Cargar viajee");
 		lblAgregarReserva.setForeground(Color.WHITE);
 		lblAgregarReserva.setBounds(26, 0, 210, 53);
 		lblAgregarReserva.setFont(new Font("Tahoma", Font.BOLD, 24));
