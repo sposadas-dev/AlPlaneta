@@ -13,6 +13,10 @@ public class FormaPagoDTO {
 	public FormaPagoDTO() {
 		super();
 	}
+	
+	public FormaPagoDTO(String tipo) {
+		this.tipo = tipo;
+	}
 
 	public int getIdFormaPago() {
 		return idFormaPago;

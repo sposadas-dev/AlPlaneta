@@ -18,6 +18,7 @@ public class PagoDAOSQL implements PagoDAO {
 	private static final String delete = "DELETE FROM pago WHERE idPago=?";
 	private static final String update = "UPDATE pago SET fechaPago=?, monto=? WHERE idPago=?;";
 	private static final String browse = "SELECT * FROM pago WHERE idPago=?";
+	private static final String ultimoRegistro = "SELECT * FROM pago ORDER BY idPago desc limit 1";
 	
 	@Override
 	public boolean insert(PagoDTO pagoInsert) {
@@ -129,4 +130,28 @@ public class PagoDAOSQL implements PagoDAO {
 		return null;
 	}
 
+	@Override
+	public PagoDTO getUltimoRegistroPago() {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		PagoDTO pago;
+		FormaPagoDAOSQL pagoDAOSQL = new FormaPagoDAOSQL();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(ultimoRegistro);
+			
+			resultSet = statement.executeQuery();
+			if (resultSet.next()){
+				pago = new PagoDTO(resultSet.getInt("idPago"),
+										   resultSet.getDate("fechaPago"),
+										   resultSet.getBigDecimal("monto"),
+										   pagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago")) );
+				return pago;
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

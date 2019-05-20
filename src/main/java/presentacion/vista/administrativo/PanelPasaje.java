@@ -34,7 +34,7 @@ public class PanelPasaje extends JPanel {
 		spPasajeros.setViewportView(tablaReservas);
 		
 		btnVisualizarPasaje = new JButton("Visualizar pasaje");
-		btnVisualizarPasaje.setBounds(710, 513, 133, 50);
+		btnVisualizarPasaje.setBounds(539, 526, 133, 50);
 		add(btnVisualizarPasaje);
 		
 		JPanel panelPasajes = new JPanel();

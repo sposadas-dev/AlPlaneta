@@ -14,7 +14,7 @@ public class LoginDAOSQL implements LoginDAO{
 	private static final String insert = "INSERT INTO login (idLogin, usuario, contrasena,idRol) VALUES (?,?,?,?)";
 	private static final String readall = "SELECT * FROM login";
 	private static final String delete = "DELETE FROM login WHERE idLogin = ?";
-	private static final String update = "UPDATE login SET usuario = ?, constrasena = ? WHERE idLogin = ?";
+	private static final String update = "UPDATE login SET usuario = ?, contrasena = ? WHERE idLogin = ?";
 	private static final String browse = "SELECT * FROM login WHERE idLogin = ?";
 
 	@Override
@@ -66,9 +66,9 @@ public class LoginDAOSQL implements LoginDAO{
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(update);
-			statement.setInt(1, datosNuevos.getIdDatosLogin());
-			statement.setString(2, datosNuevos.getUsuario());
-			statement.setString(3, datosNuevos.getContrasena());
+			statement.setString(1, datosNuevos.getUsuario());
+			statement.setString(2, datosNuevos.getContrasena());
+			statement.setInt(3, datosNuevos.getIdDatosLogin());
 
 			if(statement.executeUpdate() > 0)
 				return true;

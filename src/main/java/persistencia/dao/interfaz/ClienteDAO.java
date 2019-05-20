@@ -3,6 +3,7 @@ package persistencia.dao.interfaz;
 import java.util.List;
 
 import dto.ClienteDTO;
+import dto.TransporteDTO;
 
 public interface ClienteDAO {
 	
@@ -19,5 +20,4 @@ public interface ClienteDAO {
 	public ClienteDTO getByLoginId(int idCliente);
 
 	
-
 }

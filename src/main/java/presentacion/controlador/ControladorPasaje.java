@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 import modelo.Cliente;
 import modelo.EstadoPasaje;
@@ -28,6 +29,7 @@ import dto.PasajeroDTO;
 import dto.ViajeDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.Pasaje_PasajerosDAOSQL;
+import presentacion.reportes.Reporte;
 import presentacion.vista.administrativo.VentanaCargaPasajero;
 import presentacion.vista.administrativo.VentanaPago;
 import presentacion.vista.administrativo.VentanaPasajero;
@@ -85,7 +87,7 @@ public class ControladorPasaje {
 //		this.ventanaPago.getRadioPaga().addActionListener(r->activarBotones(r));
 		this.ventanaPago.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
 //		this.ventanaPago.getBtnPago().addActionListener(p->darDeAltaUnPasaje(p));
-//		totalaPagar = new BigDecimal(0);
+
 		this.administrativoLogueado= administrativoLogueado;
 	}
 
@@ -223,6 +225,18 @@ public class ControladorPasaje {
 		
 	}
 	
+	public Date calcularFechaReserva(Date fecha){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(fecha); 
+		calendar.add(Calendar.DATE, -20);  
+		return convertUtilToSql(calendar.getTime()); 
+	}
+	
+	private java.sql.Date convertUtilToSql(java.util.Date uDate) {
+        java.sql.Date sDate = new java.sql.Date(uDate.getTime());
+        return sDate;
+    }
+		
 	private void darDeAltaUnPasaje() {
 		ViajeDTO viaje = viajeSeleccionado;
 		ClienteDTO cliente = clienteSeleccionado;
@@ -231,15 +245,9 @@ public class ControladorPasaje {
 		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
 	
-		PasajeDTO pasajeDTO = new PasajeDTO();
-		pasajeDTO.setViaje(viaje);
-		pasajeDTO.setAdministrativo(administrativoLogueado);
-		pasajeDTO.setCliente(cliente);
-		pasajeDTO.setFechaVencimiento(null);
-		pasajeDTO.setValorViaje(valorViaje);
-		pasajeDTO.setEstadoDelPasaje(estadoPasaje);
-		pasajeDTO.setPago(pagoDTO);
-		pasajeDTO.setPasajeros(pasajeros);
+		PagoDTO pagoPasaje = pago.getUltimoRegistroPago();
+		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativoLogueado,cliente,calcularFechaReserva(viaje.getFechaSalida()),valorViaje,estadoPasaje,pagoPasaje,
+		pasajeros);
 		pasaje.agregarPasaje(pasajeDTO);
 		
 //		for(PasajeroDTO p : pasajeros_en_reserva) {
@@ -253,7 +261,31 @@ public class ControladorPasaje {
 //		this.llenarTablaPasajes();
 		this.ventanaPago.setVisible(false);
 		
+		generarComprobantes(pasajeDTO,pagoPasaje);
+		
 	}
+	
+	private void generarComprobantes(PasajeDTO pasajeDTO, PagoDTO pagoPasaje) {
+		JOptionPane.showMessageDialog(null, "Generando comprobantes", "Comprobantes", JOptionPane.INFORMATION_MESSAGE);
+		mostrarComprobanteReserva(pasajeDTO);
+		if(pagoPasaje.getMonto()!= new BigDecimal(0)){
+			mostrarComprobantePago(pasajeDTO);
+		}
+		
+	}
+
+	private void mostrarComprobanteReserva(PasajeDTO pasaje){
+		Reporte reporte = new Reporte();
+		reporte.reporteReserva(pasaje);
+		reporte.mostrar();
+	}
+	
+	private void mostrarComprobantePago(PasajeDTO pasaje){
+		Reporte reporte = new Reporte();
+		reporte.reportePago(pasaje);
+		reporte.mostrar();
+	}
+	
 	
 	private void cargarComboBoxFormaDePago(){
 		ventanaPago.getComboBoxFormaPago().removeAllItems();

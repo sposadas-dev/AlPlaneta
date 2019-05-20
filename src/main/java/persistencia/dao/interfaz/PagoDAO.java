@@ -16,4 +16,6 @@ public interface PagoDAO {
 
 	public PagoDTO getPagoById(int idPago);
 
+	public PagoDTO getUltimoRegistroPago();
+
 }

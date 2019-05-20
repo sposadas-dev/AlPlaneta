@@ -50,8 +50,10 @@ public class VistaAdministrativo{
 		frame.setLocationRelativeTo(null);
 		frame.setTitle("Al Planeta Project");
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setBounds(0, 0, 1366, 730);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 		
 		panelCliente = new PanelCliente();
 		panelCliente.getTablaClientes().setSize(1114, 900);
