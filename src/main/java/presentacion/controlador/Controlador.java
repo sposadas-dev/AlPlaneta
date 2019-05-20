@@ -295,10 +295,11 @@ private void agregarPais(ActionEvent agP) {
 /*< ORIGEN-DESTINOS >*/
 	private void llenarComboBoxPaises() {
 		List<PaisDTO> paises = new PaisDAOSQL().readAll();
-		String[] nombresPaises = new String[paises.size()];
+		String[] nombresPaises = new String[paises.size()+1];
+		nombresPaises[0] = "-Seleccione pais-";
 		for(int i=0; i<paises.size();i++){
 			String pais = paises.get(i).getIdPais()+"-"+paises.get(i).getNombre();
-			nombresPaises [i] = pais;
+			nombresPaises [i+1] = pais;
 		}	
 /* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
 		this.ventanaCargarViaje.getComboBoxPaisOrigen().setModel(new DefaultComboBoxModel(nombresPaises));
@@ -308,7 +309,14 @@ private void agregarPais(ActionEvent agP) {
 	private void obtenerProvincias_porPaisOrigen(ActionEvent e) {//MouseEvent evt) {//obtener provinciasOrigen y setEnComboProvincia
 		String pais = ventanaCargarViaje.getComboBoxPaisOrigen().getSelectedItem().toString();
 		ventanaCargarViaje.getComboBoxProvinciaOrigen().setEnabled(true);
-    	llenarComboBoxProvinciasOrigen(Integer.parseInt(obtenerIdDesdeCombo(pais)));
+		if(!this.ventanaCargarViaje.getComboBoxPaisOrigen().getSelectedItem().equals("-Seleccione pais-"))
+			llenarComboBoxProvinciasOrigen(Integer.parseInt(obtenerIdDesdeCombo(pais)));
+		else {
+			this.ventanaCargarViaje.getComboBoxProvinciaOrigen().setEnabled(false);
+			this.ventanaCargarViaje.getComboBoxCiudadOrigen().setEnabled(false);
+			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
+			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
+		}
 	}
 	
 	private String obtenerIdDesdeCombo(String s) {
@@ -338,34 +346,57 @@ private void agregarPais(ActionEvent agP) {
 	private void obtenerProvincias_porPaisDestino(ActionEvent evt) {//obteer provinciasDestino y setEnComboProvincia
 		String pais = ventanaCargarViaje.getComboBoxPaisDestino().getSelectedItem().toString();
 		ventanaCargarViaje.getComboBoxProvinciaDestino().setEnabled(true);
-    	llenarComboBoxProvinciasDestino(Integer.parseInt(obtenerIdDesdeCombo(pais)));
+		if(!this.ventanaCargarViaje.getComboBoxPaisDestino().getSelectedItem().equals("-Seleccione pais-"))
+			llenarComboBoxProvinciasDestino(Integer.parseInt(obtenerIdDesdeCombo(pais)));
+		else {
+			this.ventanaCargarViaje.getComboBoxProvinciaDestino().setEnabled(false);
+			this.ventanaCargarViaje.getComboBoxCiudadDestino().setEnabled(false);
+			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
+			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
+		}
 	}
 	
 	private void obtenerCiudades_porProvinciaOrigen(ActionEvent evt) {
 		String provincia = ventanaCargarViaje.getComboBoxProvinciaOrigen().getSelectedItem().toString();
 		ventanaCargarViaje.getComboBoxCiudadOrigen().setEnabled(true);
-		llenarComboBoxCiudadesOrigen(Integer.parseInt(obtenerIdDesdeCombo(provincia)));
-		origenListo = true;
-		if(origenListo && destinoListo) //Activa boton OK si seleccion destino y origen esta completa
-    		ventanaCargarViaje.getBtnOK().setEnabled(true);
+		if(!this.ventanaCargarViaje.getComboBoxProvinciaOrigen().getSelectedItem().equals("-Seleccione provincia-")) {
+			llenarComboBoxCiudadesOrigen(Integer.parseInt(obtenerIdDesdeCombo(provincia)));
+			origenListo = true;
+			if(origenListo && destinoListo) //Activa boton OK si seleccion destino y origen esta completa
+	    		ventanaCargarViaje.getBtnOK().setEnabled(true);
+		}
+		else {
+			this.ventanaCargarViaje.getComboBoxCiudadOrigen().setEnabled(false);
+			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
+			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
+		}
+		
 	} 
 	
 	private void obtenerCiudades_porProvinciaDestino(ActionEvent evt) {
 		String provincia = ventanaCargarViaje.getComboBoxProvinciaDestino().getSelectedItem().toString();
 		ventanaCargarViaje.getComboBoxCiudadDestino().setEnabled(true);
-    	llenarComboBoxCiudadesDestino(Integer.parseInt(obtenerIdDesdeCombo(provincia)));
-    	destinoListo = true;
-    	if(origenListo && destinoListo) //Activa boton OK si seleccion destino y origen esta completa
-    		ventanaCargarViaje.getBtnOK().setEnabled(true);
+		if(!this.ventanaCargarViaje.getComboBoxProvinciaDestino().getSelectedItem().equals("-Seleccione provincia-")) {
+	    	llenarComboBoxCiudadesDestino(Integer.parseInt(obtenerIdDesdeCombo(provincia)));
+	    	destinoListo = true;
+	    	if(origenListo && destinoListo) //Activa boton OK si seleccion destino y origen esta completa
+	    		ventanaCargarViaje.getBtnOK().setEnabled(true);
+		}
+		else {
+			this.ventanaCargarViaje.getComboBoxCiudadDestino().setEnabled(false);
+			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
+			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
+		}
 	} 
 	
 	private void llenarComboBoxProvinciasOrigen(int idPais) {
 		List<ProvinciaDTO> provincias = null;
 		provincias = modeloProvincia.obtenerProvinciaPorIdPais(idPais);
-		String[] nombresProvincias = new String[provincias.size()];
+		String[] nombresProvincias = new String[provincias.size()+1];
+		nombresProvincias[0] = "-Seleccione provincia-";
 		for(int i=0; i<provincias.size();i++){
 			String provincia = provincias.get(i).getIdProvincia()+"-"+provincias.get(i).getNombre();
-			nombresProvincias [i] = provincia;
+			nombresProvincias [i+1] = provincia;
 		}	
 /* LUEGO VER QUE NO SE PUEDA SELECCIONAR LA MISMA CIUDAD COMO ORIGEN Y DESTINO AL MISMO TIEMPO */
 		this.ventanaCargarViaje.getComboBoxProvinciaOrigen().setModel(new DefaultComboBoxModel(nombresProvincias));
@@ -373,16 +404,12 @@ private void agregarPais(ActionEvent agP) {
 	
 	private void llenarComboBoxProvinciasDestino(int idPais) {
 		List<ProvinciaDTO> provincias = null;
-		try {
-			provincias = modeloProvincia.obtenerProvinciaPorIdPais(idPais);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		String[] nombresProvincias = new String[provincias.size()];
+		provincias = modeloProvincia.obtenerProvinciaPorIdPais(idPais);
+		String[] nombresProvincias = new String[provincias.size()+1];
+		nombresProvincias[0] = "-Seleccione provincia-";
 		for(int i=0; i<provincias.size();i++){
 			String provincia = provincias.get(i).getIdProvincia()+"-"+provincias.get(i).getNombre();
-			nombresProvincias [i] = provincia;
+			nombresProvincias [i+1] = provincia;
 		}	
 		this.ventanaCargarViaje.getComboBoxProvinciaDestino().setModel(new DefaultComboBoxModel(nombresProvincias));
 	}
@@ -390,27 +417,24 @@ private void agregarPais(ActionEvent agP) {
 	private void llenarComboBoxCiudadesOrigen(int idProvincia) {
 		List<CiudadDTO> ciudades = null;
 		ciudades = modeloCiudad.obtenerCiudadPorIdProvincia(idProvincia);
-		String[] nombresCiudades = new String[ciudades.size()];
+		String[] nombresCiudades = new String[ciudades.size()+1];
+		nombresCiudades[0] = "-Seleccione ciudad-";
 		for(int i=0; i<ciudades.size();i++){
 			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
-			nombresCiudades [i] = ciudad;
-		}	
+			nombresCiudades [i+1] = ciudad;
+		}
 		this.ventanaCargarViaje.getComboBoxCiudadOrigen().setModel(new DefaultComboBoxModel(nombresCiudades));
 		
 	}
 	
 	private void llenarComboBoxCiudadesDestino(int idProvincia) {
 		List<CiudadDTO> ciudades = null;
-		try {
-			ciudades = modeloCiudad.obtenerCiudadPorIdProvincia(idProvincia);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String[] nombresCiudades = new String[ciudades.size()];
-		
+		ciudades = modeloCiudad.obtenerCiudadPorIdProvincia(idProvincia);
+		String[] nombresCiudades = new String[ciudades.size()+1];
+		nombresCiudades [0] = "-Seleccione ciudad-";
 		for(int i=0; i<ciudades.size();i++){
 			String ciudad = ciudades.get(i).getIdCiudad()+"-"+ciudades.get(i).getNombre();
-			nombresCiudades [i] = ciudad;
+			nombresCiudades [i+1] = ciudad;
 		}	
 		this.ventanaCargarViaje.getComboBoxCiudadDestino().setModel(new DefaultComboBoxModel(nombresCiudades));
 	}
@@ -440,6 +464,13 @@ private void agregarPais(ActionEvent agP) {
 			this.msjErrorOrigenDestino.add("FECHA DE SALIDA");
 			ret = ret && false;
 		}
+		if (!ret) {
+			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
+		}
+		else {
+
+			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(true);
+		}
 		return ret;
 	}
 
@@ -454,6 +485,8 @@ private void agregarPais(ActionEvent agP) {
 		return false;
 	}
 	private boolean origenDestinoValido() {
+		if(this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().equals("-Seleccione ciudad-") || this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().equals("-Seleccione ciudad-"))
+			return false;
 		if (this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedIndex()==-1 || this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedIndex()==-1)
 			return false;
 		String ciudadOrigenElegida = quitarIdDeCombo(this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString());
@@ -472,11 +505,9 @@ private void agregarPais(ActionEvent agP) {
 		try { date = sdf1.parse(hoy); } catch (ParseException e) { e.printStackTrace();	}
 	    java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());  
 	    
-
-		if(this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate().before(sqlStartDate)) {
+	    if (this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate() == null)
 			return false;
-		}
-		if (this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate() == null)
+		if(this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate().before(sqlStartDate)) 
 			return false;
 		return true;
 	}
@@ -733,18 +764,18 @@ private void agregarPais(ActionEvent agP) {
 													this.precioViaje);
 			System.out.println("VIAJE CREADO: ");
 			System.out.print(
-					this.viajeSeleccionado.getCiudadOrigen().getIdCiudad()+"-"+this.viajeSeleccionado.getCiudadOrigen().getNombre()+", "+
-					this.viajeSeleccionado.getProvinciaOrigen().getIdProvincia()+"-"+this.viajeSeleccionado.getProvinciaOrigen().getNombre()+", "+
-					this.viajeSeleccionado.getPaisOrigen().getIdPais()+"-"+this.viajeSeleccionado.getPaisOrigen().getNombre());
+					this.viajeSeleccionado.getCiudadOrigen().getNombre()+", "+
+					this.viajeSeleccionado.getProvinciaOrigen().getNombre()+", "+
+					this.viajeSeleccionado.getPaisOrigen().getNombre());
 			System.out.print(" a ");
 			System.out.println(
-					this.viajeSeleccionado.getCiudadDestino().getIdCiudad()+"-"+this.viajeSeleccionado.getCiudadDestino().getNombre()+", "+
-					this.viajeSeleccionado.getProvinciaDestino().getIdProvincia()+"-"+this.viajeSeleccionado.getProvinciaDestino().getNombre()+", "+
-					this.viajeSeleccionado.getPaisDestino().getIdPais()+"-"+this.viajeSeleccionado.getPaisDestino().getNombre());
+					this.viajeSeleccionado.getCiudadDestino().getNombre()+", "+
+					this.viajeSeleccionado.getProvinciaDestino().getNombre()+", "+
+					this.viajeSeleccionado.getPaisDestino().getNombre());
 			
 			//Agrego el viaje
 			modeloViaje.agregarViaje(this.viajeSeleccionado);
-			
+			this.ventanaCargarViaje.getContentPane();
 		}
 		else {
 			String mensaje = ("DATOS INVÁLIDOS: ");
@@ -1643,8 +1674,5 @@ private void agregarPais(ActionEvent agP) {
 		Vista vista = new Vista();
 		Controlador controlador = new Controlador(vista);
 		controlador.inicializar();
-		
-		
-
 	}
 }
