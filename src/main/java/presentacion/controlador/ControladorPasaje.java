@@ -304,7 +304,6 @@ public class ControladorPasaje {
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
 		totalaPagar = Valor1;
 		return totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
-
 	}
 		
 	private EstadoPasajeDTO calcularEstadoPasaje() {

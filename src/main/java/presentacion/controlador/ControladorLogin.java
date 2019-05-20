@@ -94,7 +94,7 @@ public class ControladorLogin {
 		System.out.println("Se Loguea Como Administrativo");
 		System.out.println(administrativoLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);
-		ControladorPrueba controladorPrueba = new ControladorPrueba(vistaAdministrativo,administrativoLogueado);
+		ControladorAdministrativo controladorPrueba = new ControladorAdministrativo(vistaAdministrativo,administrativoLogueado);
 		controladorPrueba.inicializar();
 	}
 	
