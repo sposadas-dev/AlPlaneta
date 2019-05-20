@@ -242,7 +242,7 @@
 				<textFieldExpression><![CDATA[$F{viaje}.getTransporte().getNombre()]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="132">
+		<band height="140">
 			<staticText>
 				<reportElement x="10" y="-3" width="280" height="41" uuid="4adfe679-cf78-442a-abb3-2e1225c43733"/>
 				<textElement textAlignment="Center">
@@ -259,7 +259,7 @@
 				<textFieldExpression><![CDATA[$F{fechaVencimiento}.toString()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="50" width="160" height="41" uuid="1ba7b96d-9eda-48d0-8273-7862f70b65f2"/>
+				<reportElement x="10" y="38" width="160" height="41" uuid="1ba7b96d-9eda-48d0-8273-7862f70b65f2"/>
 				<textElement>
 					<font size="15" isBold="true"/>
 					<paragraph lineSpacingSize="1.0"/>
@@ -267,14 +267,14 @@
 				<text><![CDATA[Monto pagado: $]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="134" y="91" width="131" height="41" uuid="26e351d2-d030-41f5-87bd-b977e64d9e63"/>
+				<reportElement x="150" y="80" width="131" height="41" uuid="26e351d2-d030-41f5-87bd-b977e64d9e63"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{valorViaje}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="90" width="124" height="41" uuid="0b6651e1-6e4e-4d02-af1e-6f434e1cd388"/>
+				<reportElement x="10" y="80" width="124" height="41" uuid="0b6651e1-6e4e-4d02-af1e-6f434e1cd388"/>
 				<textElement>
 					<font size="15" isBold="true"/>
 					<paragraph lineSpacingSize="1.0"/>
@@ -282,7 +282,7 @@
 				<text><![CDATA[Monto total: $]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="181" y="50" width="172" height="38" uuid="76f92777-0aca-450d-a5ed-4d14784e9ec6"/>
+				<reportElement x="178" y="39" width="172" height="38" uuid="76f92777-0aca-450d-a5ed-4d14784e9ec6"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
