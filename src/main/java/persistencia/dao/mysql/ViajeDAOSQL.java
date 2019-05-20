@@ -35,7 +35,7 @@ public class ViajeDAOSQL implements ViajeDAO {
 			statement.setDate(3, viaje.getFechaLlegada());
 			statement.setBigDecimal(4, viaje.getPrecio());
 			statement.setInt(5, viaje.getCiudadOrigen().getIdCiudad());
-			statement.setInt(6, viaje.getCiudadOrigen().getIdCiudad());
+			statement.setInt(6, viaje.getCiudadDestino().getIdCiudad());
 			statement.setInt(7, viaje.getProvinciaOrigen().getIdProvincia());
 			statement.setInt(8, viaje.getProvinciaDestino().getIdProvincia());
 			statement.setInt(9, viaje.getPaisOrigen().getIdPais());
