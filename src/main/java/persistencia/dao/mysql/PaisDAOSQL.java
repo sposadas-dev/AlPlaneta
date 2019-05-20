@@ -119,21 +119,21 @@ public class PaisDAOSQL implements PaisDAO {
 	}
 		
 	public static void main(String[] args) {
-		PaisDAOSQL adm = new PaisDAOSQL();
+//		PaisDAOSQL adm = new PaisDAOSQL();
+//		adm.delete(adm.getPaisById(243));
+//		PaisDTO argentina = adm.getPaisById(5);
+//		System.out.println(argentina.getIdPais()+" "+argentina.getNombre());
 		
-		PaisDTO argentina = adm.getPaisById(5);
-		System.out.println(argentina.getIdPais()+" "+argentina.getNombre());
-		
-		argentina.setNombre("Argentina");
-		adm.update(argentina);
-		
-		System.out.println(adm.getPaisById(5).getNombre());
+//		argentina.setNombre("Argentina");
+//		adm.update(argentina);
+//		
+//		System.out.println(adm.getPaisById(5).getNombre());
 //		List<PaisDTO> administratives = adm.readAll();
-		int cont=0;
+//		int cont=0;
 //		for(PaisDTO ad: administratives) {
 //			cont++;
 //			System.out.println(ad.getNombre());			
 //		}
-		System.out.println("cantPaises: "+cont);
+//		System.out.println("cantPaises: "+cont);
 	}
 }

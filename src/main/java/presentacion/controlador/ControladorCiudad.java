@@ -10,8 +10,10 @@ import javax.swing.JOptionPane;
 
 import dto.CiudadDTO;
 import dto.ProvinciaDTO;
+import dto.ViajeDTO;
 import modelo.ModeloCiudad;
 import modelo.ModeloProvincia;
+import modelo.ModeloViaje;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.TableroDeCiudades;
 import presentacion.vista.administrador.VentanaAgregarCiudad;
@@ -24,6 +26,7 @@ public class ControladorCiudad implements ActionListener {
 	private VentanaEditarCiudad ventanaEditarCiudad;
 	private ModeloCiudad modeloCiudad;
 	private ModeloProvincia modeloProvincia;
+	private ModeloViaje modeloViaje;
 	private List<CiudadDTO> ciudades_en_tabla;
 	private int filaSeleccionada;
 	private VentanaPanelGeneral panel;
@@ -51,6 +54,7 @@ public class ControladorCiudad implements ActionListener {
 
 		this.modeloProvincia = new ModeloProvincia(new DAOSQLFactory());
 		this.modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
+		this.modeloViaje = new ModeloViaje(new DAOSQLFactory());
 		this.ciudades_en_tabla = modeloCiudad.obtenerCiudades();
 		this.panel = new VentanaPanelGeneral();
 	}
@@ -74,10 +78,6 @@ public class ControladorCiudad implements ActionListener {
 			nombresProvincias[i] = pais;
 		}
 		this.ventanaAgregarCiudad.getComboBoxProvincias().setModel(new DefaultComboBoxModel<Object>(nombresProvincias));
-	}
-
-	public void editarProvincia() {
-		this.ventanaEditarCiudad.mostrarVentana();
 	}
 
 	public void agregarCiudad(ActionEvent rc) {
@@ -126,6 +126,7 @@ public class ControladorCiudad implements ActionListener {
 		llenarTablaVistaCiudades();
 
 	}
+	
 	public void llenarTablaVistaCiudades(){
 		System.out.println("ControladorPais-LlenarTablaPaises");
 		
@@ -145,18 +146,33 @@ public class ControladorCiudad implements ActionListener {
 		}
 	}
 	
-	public void eliminarProvincia(int filaSeleccionada) {
-		int confirm = JOptionPane.showOptionDialog(null, "¿Estás seguro que quieres eliminar la provincia?",
-				"Eliminar provincia", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
-		if (confirm == 0) {
-			JOptionPane.showMessageDialog(null, "Provincia eliminada", "Provincia", JOptionPane.INFORMATION_MESSAGE);
-			// comentario:
-			// RELACIONAR EL VIAJE CON LA PROVINCIA Y PAIS ADEMAS DE CIUDAD PARA
-			// DARLE DE BAJA
-			// SI ES QUE NO TIENE NINGUN VIAJE RELACIONADO.
-			// this.modeloProvincia.borrarProvincia(provincias_en_tabla.get(filaSeleccionada));
+	public void eliminarCiudad(){
+		CiudadDTO p = ciudades_en_tabla.get(this.tableroDeCiudades.getTablaCiudades().getSelectedRow());
+		int confirm = JOptionPane.showOptionDialog(
+	            null,"¿Estás seguro que quieres eliminar la provincia?", 
+			             "Eliminar provincia", JOptionPane.YES_NO_OPTION,
+			             JOptionPane.WARNING_MESSAGE, null, null, null);
+		if (confirm == 0 && permiteEliminar(p) ){
+			this.modeloCiudad.borrarCiudad(p);
+			JOptionPane.showMessageDialog(null, "Ciudad eliminade","Ciudad", JOptionPane.INFORMATION_MESSAGE);
 		}
+		else{
+			JOptionPane.showMessageDialog(null, "No pudo eliminarse","Ciudad", JOptionPane.ERROR_MESSAGE);
+		}
+		llenarTablaVistaCiudades();
 	}
+	
+
+	private boolean permiteEliminar(CiudadDTO ciudadDTO) {
+		ArrayList<ViajeDTO> viajes = (ArrayList<ViajeDTO>) modeloViaje.obtenerViajes();
+		System.out.println("cantidad de viajes "+viajes.size());
+		for(ViajeDTO v: viajes){
+			if(v.getCiudadOrigen().getIdCiudad() == ciudadDTO.getIdCiudad()||(v.getCiudadDestino().getIdCiudad() == ciudadDTO.getIdCiudad()))
+				return false;
+		}	
+		return true;
+	}
+
 
 	private String obtenerId(String s) {
 		String ret = "";

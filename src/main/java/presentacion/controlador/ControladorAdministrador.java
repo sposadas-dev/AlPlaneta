@@ -61,6 +61,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemPais().addActionListener(p->mostrarVentanaAgregarPais(p));
 		this.vistaAdministrador.getItemProvincia().addActionListener(p->mostrarVentanaAgregarProvincia(p));
 		this.vistaAdministrador.getItemCiudad().addActionListener(p->mostrarVentanaAgregarCiudad(p));
+//ITEM VIAJES
 
 		
 //BTN.LISTENER		
@@ -86,6 +87,7 @@ public class ControladorAdministrador {
 	}
 
 	private void mostrarVentanaAgregarProvincia(ActionEvent p) {
+		System.out.println("se muestran las ventanas");
 		this.controladorProvincia.llenarTablaVistaProvincias();
 		this.controladorProvincia.mostrarVistaProvincia();
 	}

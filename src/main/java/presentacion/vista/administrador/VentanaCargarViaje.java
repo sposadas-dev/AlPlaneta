@@ -399,4 +399,9 @@ public class VentanaCargarViaje extends JFrame {
 			}
 		});
 	}
+
+	public void mostrarVentana() {
+		this.setVisible(true);
+		
+	}
 }
