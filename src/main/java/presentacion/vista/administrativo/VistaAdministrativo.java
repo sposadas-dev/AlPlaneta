@@ -34,6 +34,7 @@ public class VistaAdministrativo{
 	private JMenu menuClientes;
 	private JMenuItem itemRegistrarCliente;
 	private JMenuItem itemVisualizarClientes;
+	private JMenuItem itemCancelarPasaje;
 	
 	private JMenuItem itemVisualizarPasajes;
 	private JMenuItem itemAgregarPasaje;
@@ -50,8 +51,10 @@ public class VistaAdministrativo{
 		frame.setLocationRelativeTo(null);
 		frame.setTitle("Al Planeta Project");
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setBounds(0, 0, 1366, 730);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 		
 		panelCliente = new PanelCliente();
 		panelCliente.getTablaClientes().setSize(1114, 900);
@@ -93,9 +96,9 @@ public class VistaAdministrativo{
 		itemAgregarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPasajes.add(itemAgregarPasaje);
 		
-		JMenuItem mntmCancelarPasaje = new JMenuItem("Cancelar pasaje");
-		mntmCancelarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuPasajes.add(mntmCancelarPasaje);
+		itemCancelarPasaje = new JMenuItem("Cancelar pasaje");
+		itemCancelarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(itemCancelarPasaje);
 		
 		itemVisualizarPasajes = new JMenuItem("Visualizar pasajes");
 		itemVisualizarPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
@@ -121,6 +124,11 @@ public class VistaAdministrativo{
 	public JMenuItem getItemVisualizarPasajes() {
 		return itemVisualizarPasajes;
 	}
+	
+	public JMenuItem getItemCancelarPasaje() {
+		return itemCancelarPasaje;
+	}
+
 	
 	public PanelCliente getPanelCliente() {
 		return panelCliente;

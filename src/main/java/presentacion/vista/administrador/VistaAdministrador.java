@@ -54,7 +54,7 @@ public class VistaAdministrador extends JFrame {
 		super();
 		setTitle("Administrador");
 		setExtendedState(MAXIMIZED_BOTH);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
 	

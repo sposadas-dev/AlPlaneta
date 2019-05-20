@@ -14,26 +14,31 @@ import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.VentanaLogin;
 import presentacion.vista.administrador.VistaAdministrador;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import presentacion.vista.cliente.VistaCliente;
 
 public class ControladorLogin {
 
 	private VentanaLogin ventanaLogin;
+	private VistaAdministrador vistaAdministrador;
 	private VistaAdministrativo vistaAdministrativo;
+	private VistaCliente vistaCliente;
 	private Login login;
 	private LoginDTO usuarioLogueado;
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
-	private VistaAdministrador vistaAdministrador;
+	
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
-		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
 		this.vistaAdministrador = VistaAdministrador.getInstance();
-	
+		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
+		this.vistaCliente = VistaCliente.getInstance();
+		
 		this.login = login;
 		this.usuarioLogueado = null;
 		this.administradorLogueado = null;
+		this.clienteLogueado = null;
 	
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
 	}
@@ -80,6 +85,8 @@ public class ControladorLogin {
 		System.out.println("Se Loguea como Cliente");
 		System.out.println(clienteLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);	
+		ControladorUsuario controladorUsuario = new ControladorUsuario(vistaCliente,clienteLogueado);
+		controladorUsuario.inicializar();
 	}
 
 	/*Mostrar la ventana principal del personal administrativo*/

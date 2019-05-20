@@ -60,7 +60,7 @@ public class VentanaPago extends JFrame {
 		
 		this.comboBoxFormaDePago = new JComboBox<FormaPagoDTO>();
 		comboBoxFormaDePago.setBounds(218, 68, 167, 20);
-		contentPane.add(comboBoxFormaDePago);
+		contentPane.add(comboBoxFormaDePago);		
 		comboBoxFormaDePago.setEnabled(false);
 
 		
@@ -130,6 +130,7 @@ public class VentanaPago extends JFrame {
 	}
 		
 	public JComboBox<FormaPagoDTO> getComboBoxFormaPago() {
+		comboBoxFormaDePago.addItem(new FormaPagoDTO(""));
 		return comboBoxFormaDePago;
 	}
 	public void setComboBoxEstadoPago(JComboBox<FormaPagoDTO> comboBoxEstadoPago) {

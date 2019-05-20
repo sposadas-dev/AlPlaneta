@@ -20,6 +20,10 @@ public class Login {
 		this.login.insert(login);
 	}
 	
+	public void editarLogin(LoginDTO login){
+		this.login.update(login);
+	}
+	
 	public List<LoginDTO> obtenerLogin(){
 		return this.login.readAll();		
 	}

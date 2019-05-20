@@ -18,6 +18,10 @@ public class Pasaje {
 		this.pasaje.insert(nuevoPasaje);
 	}
 	
+	public void borrarPasaje(PasajeDTO pasaje_a_eliminar){
+		this.pasaje.delete(pasaje_a_eliminar);
+	}
+	
 	public List<PasajeDTO> obtenerPasajes(){
 		return this.pasaje.readAll();		
 	}

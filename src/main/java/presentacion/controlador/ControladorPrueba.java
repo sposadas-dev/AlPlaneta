@@ -31,6 +31,7 @@ public class ControladorPrueba implements ActionListener {
 	private List<PasajeDTO> pasajes_en_tabla;
 	private Cliente cliente;
 	private Pasaje pasaje;
+	private ControladorPasaje controladorPasaje;
 	
 	public ControladorPrueba(VistaAdministrativo vista,AdministrativoDTO administrativoLogueado) {
 		this.vista = vista;
@@ -42,20 +43,23 @@ public class ControladorPrueba implements ActionListener {
 		this.vista.getItemRegistrarCliente().addActionListener(ac->mostrarVentanaAgregarCliente(ac));
 		this.vista.getItemAgregarPasaje().addActionListener(ap->mostrarVentanaAgregarPasaje(ap));
 		this.vista.getItemVisualizarPasajes().addActionListener(ap->mostrarPasajes(ap));
-
+		this.vista.getItemCancelarPasaje().addActionListener(cp->cancelarPasaje(cp));
+		
 		this.vista.getPanelCliente().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
 
 		this.administrativoLogueado = administrativoLogueado;
 		this.cliente = new Cliente(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
+		
+		controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
 	}
 
-	private BigDecimal calcularMontoDePasajePagado(int filaSeleccionada) {
-		BigDecimal Valor1 = this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje();
-		BigDecimal totalaPagar = this.pasajes_en_tabla.get(filaSeleccionada).getPago().getMonto();
-		return Valor1.subtract(totalaPagar);
-	}
+//	private BigDecimal calcularMontoDePasajePagado(int filaSeleccionada) {
+//		BigDecimal Valor1 = this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje();
+//		BigDecimal totalaPagar = this.pasajes_en_tabla.get(filaSeleccionada).getPago().getMonto();
+//		return Valor1.subtract(totalaPagar);
+//	}
 	
 	private void verDatosPasaje(ActionEvent vp) {
 		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
@@ -67,7 +71,7 @@ public class ControladorPrueba implements ActionListener {
 			this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadDestino().getNombre());
 			this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
 			this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
-			this.ventanaVisualizarPasaje.getLblRestante().setText(" "+calcularMontoDePasajePagado(filaSeleccionada));
+//			this.ventanaVisualizarPasaje.getLblRestante().setText(" "+calcularMontoDePasajePagado(filaSeleccionada));
 
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
@@ -84,6 +88,7 @@ public class ControladorPrueba implements ActionListener {
 
 	public void inicializar(){
 		this.vista.mostrarVentana();
+		JOptionPane.showMessageDialog(null, "Bienvenido" + " " + administrativoLogueado.getNombre(), "Al Planeta Project", JOptionPane.INFORMATION_MESSAGE);
 		this.llenarTablaPasajes();
 	}
 	
@@ -98,14 +103,26 @@ public class ControladorPrueba implements ActionListener {
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.ventanaVisualizarCliente.mostrarVentana(true);
 		this.llenarTablaPasajes();
-		ControladorPasaje controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
+		
 		controladorPasaje.iniciar();
 	}
 	
+	private void cancelarPasaje(ActionEvent cp) {
+		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
+		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
+		if (filaSeleccionada != -1){
+			controladorPasaje.eliminarPasaje(filaSeleccionada);
+			llenarTablaPasajes();
+		
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 	private void mostrarPasajes(ActionEvent ap) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
 		this.llenarTablaPasajes();
 	}
+	
 	
 	private void mostrarVentanaAgregarCliente(ActionEvent ac)  {
 		this.vista.getPanelCliente().mostrarPanelCliente(true);
