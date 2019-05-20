@@ -47,6 +47,7 @@ public class ControladorPasaje {
 	private List<ClienteDTO> clientes_en_tabla;
 	private List <ViajeDTO> viajes_en_tabla;
 	private List<PasajeroDTO> pasajeros_en_reserva;
+	private List<PasajeDTO> pasajes_en_tabla;
 	
 	private ClienteDTO clienteSeleccionado; //cliente que selecciona en la tabla 
 	private ViajeDTO viajeSeleccionado;
@@ -73,7 +74,7 @@ public class ControladorPasaje {
 		this.pasaje = new Pasaje(new DAOSQLFactory());
 		
 		this.pasajeros_en_reserva = new ArrayList<PasajeroDTO>();
-		
+		this.pasajes_en_tabla = pasaje.obtenerPasajes();
 		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
 		
 		this.ventanaTablaViajes.getBtnAtras().addActionListener(a->volverVentanaCliente(a));
@@ -321,5 +322,16 @@ public class ControladorPasaje {
 			}
 		}
 		return ret;
+	}
+	
+	public void eliminarPasaje(int filaSeleccionada){
+		int confirm = JOptionPane.showOptionDialog(
+		            null,"¿Estás seguro que quieres cancelar el pasaje?", 
+				             "Cancelar pasaje", JOptionPane.YES_NO_OPTION,
+				             JOptionPane.ERROR_MESSAGE, null, null, null);
+	 if (confirm == 0){
+		JOptionPane.showMessageDialog(null, "Pasaje cancelado","Pasaje", JOptionPane.INFORMATION_MESSAGE);
+		this.pasaje.borrarPasaje(pasajes_en_tabla.get(filaSeleccionada));
+	 }
 	}
 }

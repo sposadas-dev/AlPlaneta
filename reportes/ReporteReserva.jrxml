@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="500" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="284e0c88-a4b2-4ff8-98a2-d67b80bcffaf">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="600" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="284e0c88-a4b2-4ff8-98a2-d67b80bcffaf">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<subDataset name="Dataset1" uuid="545bbc50-215a-460b-ab7d-18166a79bb19">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 		<queryString>
@@ -35,6 +26,9 @@
 	</field>
 	<field name="pago" class="dto.PagoDTO">
 		<fieldDescription><![CDATA[pago]]></fieldDescription>
+	</field>
+	<field name="administrativo" class="dto.AdministrativoDTO">
+		<fieldDescription><![CDATA[administrativo]]></fieldDescription>
 	</field>
 	<title>
 		<band height="133" splitType="Stretch">
@@ -66,7 +60,7 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="91">
+		<band height="96">
 			<staticText>
 				<reportElement x="10" y="0" width="90" height="19" uuid="3db32c9b-bb92-4028-b3d7-fc5cf985d5bf"/>
 				<textElement>
@@ -109,6 +103,20 @@
 				</textElement>
 				<text><![CDATA[Nombre y apellido:]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="10" y="50" width="100" height="31" uuid="4045ec6a-d18c-42c2-b49f-84ea859386ca"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atendido por:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="50" width="181" height="31" uuid="ffd9be4b-ef8e-4d8a-a16b-b0565bda9f6e"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{administrativo}.getNombre()]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>
@@ -242,7 +250,7 @@
 				<textFieldExpression><![CDATA[$F{viaje}.getTransporte().getNombre()]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="140">
+		<band height="166">
 			<staticText>
 				<reportElement x="10" y="-3" width="280" height="41" uuid="4adfe679-cf78-442a-abb3-2e1225c43733"/>
 				<textElement textAlignment="Center">
