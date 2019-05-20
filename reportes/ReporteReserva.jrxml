@@ -242,7 +242,7 @@
 				<textFieldExpression><![CDATA[$F{viaje}.getTransporte().getNombre()]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="136">
+		<band height="132">
 			<staticText>
 				<reportElement x="10" y="-3" width="280" height="41" uuid="4adfe679-cf78-442a-abb3-2e1225c43733"/>
 				<textElement textAlignment="Center">

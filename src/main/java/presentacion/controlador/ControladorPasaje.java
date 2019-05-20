@@ -268,7 +268,7 @@ public class ControladorPasaje {
 	private void generarComprobantes(PasajeDTO pasajeDTO, PagoDTO pagoPasaje) {
 		JOptionPane.showMessageDialog(null, "Generando comprobantes", "Comprobantes", JOptionPane.INFORMATION_MESSAGE);
 		mostrarComprobanteReserva(pasajeDTO);
-		if(pagoPasaje.getMonto()!= new BigDecimal(0)){
+		if(pagoPasaje.getMonto().compareTo(new BigDecimal(0))!=0){
 			mostrarComprobantePago(pasajeDTO);
 		}
 		
