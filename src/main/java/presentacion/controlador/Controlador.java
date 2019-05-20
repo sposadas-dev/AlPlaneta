@@ -1389,8 +1389,5 @@ public class Controlador implements ActionListener {
 		Vista vista = new Vista();
 		Controlador controlador = new Controlador(vista);
 		controlador.inicializar();
-		
-		
-
 	}
 }
