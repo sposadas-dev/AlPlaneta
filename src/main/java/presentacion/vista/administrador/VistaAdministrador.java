@@ -3,7 +3,6 @@ package presentacion.vista.administrador;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -36,13 +35,15 @@ public class VistaAdministrador extends JFrame {
 	private JMenuItem itemPais;
 	private JMenuItem itemProvincia;
 	private JMenuItem itemCiudad;
+	
+	private JMenuItem itemAgregarViaje;
 
-	private static VistaAdministrador INSTANCE;
+	
 	private JMenuItem itemEliminarPais;
 	private JMenuItem itemEliminarCiudad;
 	private JMenuItem itemEliminarProvincia;
 	
-
+	private static VistaAdministrador INSTANCE;
 	public static VistaAdministrador getInstance(){
 		if(INSTANCE == null)
 			return new VistaAdministrador();
@@ -80,7 +81,7 @@ public class VistaAdministrador extends JFrame {
 		menuViajes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuViajes);
 		
-		JMenuItem itemAgregarViaje = new JMenuItem("Agregar viaje");
+		itemAgregarViaje = new JMenuItem("Agregar viaje");
 		itemAgregarViaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuViajes.add(itemAgregarViaje);
 		
@@ -295,6 +296,14 @@ public class VistaAdministrador extends JFrame {
 
 	public void setItemCiudad(JMenuItem itemCiudad) {
 		this.itemCiudad = itemCiudad;
+	}
+
+	public JMenuItem getItemAgregarViaje() {
+		return itemAgregarViaje;
+	}
+
+	public void setItemAgregarViaje(JMenuItem itemAgregarViaje) {
+		this.itemAgregarViaje = itemAgregarViaje;
 	}
 
 	public JMenuItem getItemEliminarPais() {

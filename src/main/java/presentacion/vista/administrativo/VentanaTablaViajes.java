@@ -19,8 +19,6 @@ public class VentanaTablaViajes extends JFrame {
 	private JPanel contentPane;
 	private JTable tablaViajes;
 	private DefaultTableModel modelViajes;
-	private JButton btnConfirmar;
-	private JButton btnAtras;
 	private  String[] nombreColumnas = {"Origen","Destino","Fecha de salida","Fecha de llegada","Hora de salida","Horas estimadas","Capacidad","Transporte","Precio"};
 
 	public static VentanaTablaViajes getInstance(){
@@ -41,7 +39,7 @@ public class VentanaTablaViajes extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(10, 42, 928, 334);
+		spPasajeros.setBounds(10, 42, 928, 423);
 		contentPane.add(spPasajeros);
 		
 		modelViajes = new DefaultTableModel(null,nombreColumnas){
@@ -52,18 +50,6 @@ public class VentanaTablaViajes extends JFrame {
 			};
 		tablaViajes = new JTable(modelViajes);
 		spPasajeros.setViewportView(tablaViajes);
-		
-		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnConfirmar.setBounds(416, 415, 109, 37);
-		contentPane.add(btnConfirmar);
-		
-		btnAtras = new JButton("Atrás");
-		btnAtras.setBounds(198, 403, 89, 38);
-		contentPane.add(btnAtras);
 		
 		this.setVisible(false);
 	}
@@ -87,18 +73,6 @@ public class VentanaTablaViajes extends JFrame {
 	public void setModelViajes(DefaultTableModel modelViajes) {
 		this.modelViajes = modelViajes;
 	}
-
-	public JButton getBtnConfirmar() {
-		return btnConfirmar;
-	}
-
-	public void setBtnConfirmar(JButton btnConfirmar) {
-		this.btnConfirmar = btnConfirmar;
-	}
-
-	public JButton getBtnAtras() {
-		return btnAtras;
-	}
 	
 	public String[] getNombreColumnas() {
 		return nombreColumnas;
@@ -107,4 +81,4 @@ public class VentanaTablaViajes extends JFrame {
 	public void setNombreColumnas(String[] nombreColumnas) {
 		this.nombreColumnas = nombreColumnas;
 	}
-}
+}//

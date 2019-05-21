@@ -15,6 +15,7 @@ import dto.LoginDTO;
 import dto.RolDTO;
 import dto.TransporteDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.Vista;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
 import presentacion.vista.administrador.VistaAdministrador;
 
@@ -28,6 +29,7 @@ public class ControladorAdministrador {
 	private FormaPago formapago;
 	private ControladorTransporte controladorTransporte;
 	private ControladorFormaPago controladorFormaPago;
+	private Controlador controlador;
 	
 	private Login login;
 
@@ -63,7 +65,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemCiudad().addActionListener(p->mostrarVentanaAgregarCiudad(p));
 //ITEM VIAJES
 
-		
+		this.vistaAdministrador.getItemAgregarViaje().addActionListener(v->mostrarVentanaViaje(v));
 //BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
 		
@@ -78,7 +80,7 @@ public class ControladorAdministrador {
 		this.controladorPais = ControladorPais.getInstance();
 		this.controladorProvincia = ControladorProvincia.getInstance();
 		this.controladorCiudad = ControladorCiudad.getInstance();
-		
+		this.controlador = Controlador.getInstance();
 	}
 
 	private void mostrarVentanaAgregarCiudad(ActionEvent p) {
@@ -119,6 +121,10 @@ public class ControladorAdministrador {
 
 	}
 	
+	private void mostrarVentanaViaje(ActionEvent ac) { //METODO AGREGADO!!
+		this.controlador.llenarCiudadesEnCargaViajes();
+		this.controlador.mostrarVentanaCargarViaje();
+	}//TERMINA METODO AGREGADO
 	/*Método para agregar a un empleado según el item que selecciona en el comboBox*/
 	private void agregarCuentaEmpleado(ActionEvent ac) {
 		//TODO: VER

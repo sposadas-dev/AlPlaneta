@@ -76,10 +76,7 @@ public class ControladorPasaje {
 		this.pasajeros_en_reserva = new ArrayList<PasajeroDTO>();
 		this.pasajes_en_tabla = pasaje.obtenerPasajes();
 		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
-		
-		this.ventanaTablaViajes.getBtnAtras().addActionListener(a->volverVentanaCliente(a));
-		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(cv->confirmarSeleccionViaje(cv));
-	
+
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(ap->cargarPasajero(ap));
 		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(ap->confirmarPasajeros(ap));
 		this.ventanaCargaPasajero.getBtnAtras().addActionListener(a->volverVentanaViaje(a));
