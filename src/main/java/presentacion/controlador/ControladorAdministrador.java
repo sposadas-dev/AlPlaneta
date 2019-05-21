@@ -90,6 +90,7 @@ public class ControladorAdministrador {
 	private void mostrarVentanaAgregarCiudad(ActionEvent p) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.controladorCiudad.llenarTablaVistaCiudades();
 		this.controladorCiudad.mostrarVistaCiudad();
 	}
@@ -98,6 +99,7 @@ public class ControladorAdministrador {
 		System.out.println("se muestran las ventanas");
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.controladorProvincia.llenarTablaVistaProvincias();
 		this.controladorProvincia.mostrarVistaProvincia();
 	}
@@ -105,6 +107,7 @@ public class ControladorAdministrador {
 	private void mostrarVentanaAgregarPais(ActionEvent p) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.controladorPais.llenarTablaVistaPaises();
 		this.controladorPais.mostrarVistaPais();
 	}
@@ -190,6 +193,7 @@ public class ControladorAdministrador {
 	private void visualizarTransportes(ActionEvent vt) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.llenarTablaTransportes();
 	}
 	
@@ -266,6 +270,7 @@ public class ControladorAdministrador {
 	private void visualizarFormaPago(ActionEvent vfp) {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.llenarTablaFormaPago();
 	}
 	/*Agrega el panel de Forma pago en la vistaPrinciapal del Administrador*/

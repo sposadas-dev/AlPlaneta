@@ -133,7 +133,6 @@ public class ControladorCiudad implements ActionListener {
 			ventanaEditarCiudad.limpiarCampos();
 			ventanaEditarCiudad.dispose();
 			JOptionPane.showMessageDialog(null, "Ciudad editada", "Ciudad", JOptionPane.INFORMATION_MESSAGE);
-
 		}
 		llenarTablaVistaCiudades();
 
