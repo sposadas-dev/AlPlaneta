@@ -106,17 +106,4 @@ public class VentanaLogin extends JFrame {
 	public void setLblError(JLabel lblError) {
 		this.lblError = lblError;
 	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaLogin frame = new VentanaLogin();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 }

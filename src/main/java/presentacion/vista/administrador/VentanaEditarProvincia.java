@@ -47,7 +47,7 @@ public class VentanaEditarProvincia extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(96, 163, 188));
-		panel.setBounds(0, 0, 407, 53);
+		panel.setBounds(0, 0, 417, 53);
 		contentPane.add(panel);
 		
 		JLabel lblAgregarProvincia = new JLabel("Editar provincia");
@@ -57,11 +57,11 @@ public class VentanaEditarProvincia extends JFrame {
 		panel.add(lblAgregarProvincia);
 		
 		JLabel lblNewLabel = new JLabel("Nombre de la provincia:");
-		lblNewLabel.setBounds(47, 111, 131, 14);
+		lblNewLabel.setBounds(47, 111, 164, 14);
 		contentPane.add(lblNewLabel);
 		
 		txtNombreProvincia = new JTextField();
-		txtNombreProvincia.setBounds(181, 108, 170, 20);
+		txtNombreProvincia.setBounds(220, 108, 170, 20);
 		contentPane.add(txtNombreProvincia);
 		txtNombreProvincia.setColumns(10);
 		

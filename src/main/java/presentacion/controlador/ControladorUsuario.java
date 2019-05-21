@@ -136,7 +136,8 @@ public class ControladorUsuario implements ActionListener {
 		for (int i = 0; i < this.pasajes_en_tabla .size(); i++){
 			int idClienteReserva = pasajes_en_tabla.get(i).getCliente().getIdCliente();
 			if (idClienteReserva == cliente.getIdCliente() &&
-					pasajes_en_tabla.get(i).getEstadoDelPasaje().getIdEstadoPasaje()== 2){
+					pasajes_en_tabla.get(i).getEstadoDelPasaje().getIdEstadoPasaje()== 2
+					|| pasajes_en_tabla.get(i).getEstadoDelPasaje().getIdEstadoPasaje()== 3){
 				
 			Object[] fila = {
 					this.pasajes_en_tabla.get(i).getViaje().getPaisOrigen().getNombre()+ ","+ 

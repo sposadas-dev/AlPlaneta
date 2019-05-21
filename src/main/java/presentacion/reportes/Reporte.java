@@ -69,6 +69,5 @@ public class Reporte {
 		this.reporteViewer = new JasperViewer(this.reporteLleno,false);
 		this.reporteViewer.setVisible(true);
 	}
-    
 
 }
