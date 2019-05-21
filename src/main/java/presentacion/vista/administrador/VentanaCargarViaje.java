@@ -65,7 +65,7 @@ public class VentanaCargarViaje extends JFrame {
 	}
 	
 	private VentanaCargarViaje() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//CIERRA SOLO ESA VENTANA
 		setBounds(400, 150, 871, 392);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
