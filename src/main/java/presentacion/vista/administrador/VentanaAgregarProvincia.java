@@ -16,6 +16,7 @@ public class VentanaAgregarProvincia extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtNombreProvincia;
 	private JButton btnAgregar;
+	private JButton btnCancelar;
 	private JComboBox<?> comboBoxPaises;
 	private static VentanaAgregarProvincia INSTANCE;
 
@@ -60,12 +61,12 @@ public class VentanaAgregarProvincia extends JFrame {
 		contentPane.add(txtNombreProvincia);
 		txtNombreProvincia.setColumns(10);
 		
-		JButton button = new JButton("Cancelar");
-		button.setForeground(Color.WHITE);
-		button.setFont(new Font("Tahoma", Font.BOLD, 14));
-		button.setBackground(new Color(192, 57, 43));
-		button.setBounds(206, 177, 131, 42);
-		contentPane.add(button);
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setForeground(Color.WHITE);
+		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnCancelar.setBackground(new Color(192, 57, 43));
+		btnCancelar.setBounds(206, 177, 131, 42);
+		contentPane.add(btnCancelar);
 		
 		btnAgregar = new JButton("Agregar ");
 		btnAgregar.setForeground(Color.WHITE);
@@ -83,6 +84,10 @@ public class VentanaAgregarProvincia extends JFrame {
 		contentPane.add(lblSeleccionePais);
 	}
 	
+	public JButton getBtnCancelar() {
+		return btnCancelar;
+	}
+
 	public void mostrarVentana(){
 		this.setVisible(true);
 	}

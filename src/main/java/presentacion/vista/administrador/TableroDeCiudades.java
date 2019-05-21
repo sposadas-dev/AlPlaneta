@@ -95,15 +95,15 @@ public class TableroDeCiudades{
 		adjustColumnPreferredWidths(tablaCiudad);
 		spPersonas.setViewportView(tablaCiudad);
 		
-		btnAgregar = new JButton("AGREGAR CIUDAD");
+		btnAgregar = new JButton("Agregar ciudad");
 		btnAgregar.setBounds(9, 207, 181, 23);
 		panel.add(btnAgregar);
 		
-		btnEditar = new JButton("EDITAR CIUDAD");
+		btnEditar = new JButton("Editar ciudad");
 		btnEditar.setBounds(200, 207, 181, 23);
 		panel.add(btnEditar);
 		
-		btnBorrar = new JButton("BORRAR CIUDAD");
+		btnBorrar = new JButton("Borrar ciudad");
 		btnBorrar.setBounds(391, 205, 181, 23);
 		panel.add(btnBorrar);
 	}

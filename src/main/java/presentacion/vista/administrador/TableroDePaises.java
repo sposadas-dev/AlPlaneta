@@ -22,7 +22,6 @@ public class TableroDePaises{
 	private JTable tablaPaises;
 	private JButton btnAgregar;
 	private JButton btnBorrar;
-	private JButton btnReporte;
 	private JButton btnEditar ;
 	private DefaultTableModel modelPaises;
 	private JButton btnConexion;
@@ -120,9 +119,6 @@ public class TableroDePaises{
 		return btnBorrar;
 	}
 	
-	public JButton getBtnReporte(){
-		return btnReporte;
-	}
 	
 	public DefaultTableModel getModelPaises() {
 		return modelPaises;
@@ -147,10 +143,5 @@ public class TableroDePaises{
 	public void setBtnBorrar(JButton btnBorrar) {
 		this.btnBorrar = btnBorrar;
 	}
-
-	public JButton getBtnConexion() {
-		return btnConexion;
-	}
-	
 
 }
