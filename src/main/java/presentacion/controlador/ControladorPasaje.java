@@ -89,30 +89,38 @@ public class ControladorPasaje {
 		
 		this.ventanaPasajero.getBtnCargarDatos().addActionListener(cd->cargarDatosPasajero(cd));
 		this.ventanaPago.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
-
+		this.ventanaPago.getBtnAtras().addActionListener(vc->volverVentanaCargaPasajero(vc));
 		this.ventanaVisualizarPasaje.getBtnAceptar().addActionListener(s->salirVentanaVisualizarPasaje(s));
 
 		this.administrativoLogueado= administrativoLogueado;
 	}
+
 
 	public void iniciar(){
 		this.llenarTablaClientes();
 	}
 	
 	private void confirmarSeleccionCliente(ActionEvent c) {
-		this.ventanaVisualizarClientes.mostrarVentana(false);
 		int filaSeleccionada = this.ventanaVisualizarClientes.getTablaClientes().getSelectedRow();
-		clienteSeleccionado = clientes_en_tabla.get(filaSeleccionada);
-		
-		this.ventanaTablaViajes.mostrarVentana(true);
-		llenarTablaViajes();
+		if (filaSeleccionada != -1){
+			this.ventanaVisualizarClientes.mostrarVentana(false);
+			clienteSeleccionado = clientes_en_tabla.get(filaSeleccionada);	
+			this.ventanaTablaViajes.mostrarVentana(true);
+			llenarTablaViajes();
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void confirmarSeleccionViaje(ActionEvent sv){
-		this.ventanaTablaViajes.mostrarVentana(false);
 		int filaSeleccionada = this.ventanaTablaViajes.getTablaViajes().getSelectedRow();
-		viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
-		this.ventanaCargaPasajero.mostrarVentana(true);
+		if (filaSeleccionada != -1){
+			this.ventanaTablaViajes.mostrarVentana(false);
+			viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
+			this.ventanaCargaPasajero.mostrarVentana(true);
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void volverVentanaCliente(ActionEvent a) {
@@ -199,6 +207,7 @@ public class ControladorPasaje {
 	}
 	
 	private void cargarDatosPasajero(ActionEvent cd) {
+		this.ventanaPasajero.limpiarCampos();
 		this.ventanaPasajero.setVisible(false);
 	}
 	
@@ -229,6 +238,11 @@ public class ControladorPasaje {
 		
 	}
 	
+	private void volverVentanaCargaPasajero(ActionEvent vc) {
+		this.ventanaPago.mostrarVentana(false);
+		this.ventanaCargaPasajero.mostrarVentana(true);
+	}
+	
 	public Date calcularFechaReserva(Date fecha){
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(fecha); 
@@ -253,8 +267,7 @@ public class ControladorPasaje {
 		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativoLogueado,cliente,calcularFechaReserva(viaje.getFechaSalida()),valorViaje,estadoPasaje,pagoPasaje,
 		pasajeros);
 		pasaje.agregarPasaje(pasajeDTO);
-		this.ventanaPasajero.limpiarCampos();
-		
+	
 //		for(PasajeroDTO p : pasajeros_en_reserva) {
 //			Pasaje_PasajerosDTO pasaje_pasajero = new Pasaje_PasajerosDTO();
 //			pasaje_pasajero.setIdPasaje(pasajeDTO.getIdPasaje());

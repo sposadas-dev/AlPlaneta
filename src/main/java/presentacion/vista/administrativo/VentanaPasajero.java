@@ -35,6 +35,7 @@ public class VentanaPasajero extends JFrame {
 	private VentanaPasajero() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(500, 200, 561, 418);
+		setResizable(false);
 		setLocationRelativeTo(null); 
 		
 		contentPane = new JPanel();
