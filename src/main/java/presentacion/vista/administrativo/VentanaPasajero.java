@@ -174,4 +174,12 @@ public class VentanaPasajero extends JFrame {
 	public void setBtnCargarDatos(JButton btnCargarDatos) {
 		this.btnCargarDatos = btnCargarDatos;
 	}
+	
+	public void limpiarCampos(){
+		this.txtNombre.setText("");
+		this.txtApellido.setText("");
+		this.txtDni.setText("");
+		this.txtEmail.setText("");
+		this.txtTelefono.setText("");
+	}
 }
