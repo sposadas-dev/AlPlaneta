@@ -84,6 +84,9 @@ public class ControladorPasaje {
 		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(ap->confirmarPasajeros(ap));
 		this.ventanaCargaPasajero.getBtnAtras().addActionListener(a->volverVentanaViaje(a));
 		
+		this.ventanaTablaViajes.getBtnAtras().addActionListener(a->volverVentanaCliente(a));
+		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(cv->confirmarSeleccionViaje(cv));
+
 		this.ventanaPasajero.getBtnCargarDatos().addActionListener(cd->cargarDatosPasajero(cd));
 		this.ventanaPago.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
 		this.ventanaPago.getBtnAtras().addActionListener(vc->volverVentanaCargaPasajero(vc));
@@ -160,7 +163,7 @@ public class ControladorPasaje {
 			
 		for (int i = 0; i < this.viajes_en_tabla.size(); i++){
 			Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
-							this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
+							this.viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
 							this.viajes_en_tabla.get(i).getFechaSalida(),
 							this.viajes_en_tabla.get(i).getFechaLlegada(),
 							this.viajes_en_tabla.get(i).getHoraSalida(),

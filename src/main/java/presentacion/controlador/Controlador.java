@@ -25,6 +25,7 @@ import dto.HorarioReservaDTO;
 import dto.LoginDTO;
 import dto.PagoDTO;
 import dto.PaisDTO;
+import dto.PasajeDTO;
 import dto.PasajeroDTO;
 import dto.ProvinciaDTO;
 import dto.TransporteDTO;
@@ -880,6 +881,8 @@ private void agregarPais(ActionEvent agP) {
 			this.ventanaTablaViajes.getModelViajes().addRow(fila);
 		}
 		this.ventanaTablaViajes.setVisible(true);
+		this.ventanaTablaViajes.getBtnConfirmar().setVisible(false);
+		this.ventanaTablaViajes.getBtnAtras().setVisible(false);
 		
 	}
 	
@@ -1061,7 +1064,10 @@ private void agregarPais(ActionEvent agP) {
 			};
 			this.ventanaTablaViajes.getModelViajes().addRow(fila);
 		}
+		
 		this.ventanaTablaViajes.setVisible(true);
+		this.ventanaTablaViajes.getBtnConfirmar().setVisible(false);
+		this.ventanaTablaViajes.getBtnAtras().setVisible(false);
 	}
 
 	
@@ -1126,101 +1132,23 @@ private void agregarPais(ActionEvent agP) {
 		}
 	}
 	
-	private void modificarViajeDePasaje(PasajeDTO pasaje, Date nuevaHorarioSalida){
-		ViajeDTO nuevoViaje = pasaje.getViaje();
-		nuevoViaje.setFechaSalida((java.sql.Date) nuevaHorarioSalida);
-		pasaje.setViaje(nuevoViaje);
-	}
-	
-	public Controlador(Vista vista, Cliente cliente){
-		this.vista = vista;
-		this.vista.getBtnClientes().addActionListener(this);
-		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
-		this.ventanaCliente.getBtnRegistrar().addActionListener(this);
-		this.cliente = cliente;
-		this.ventanaReserva = VentanaReserva.getInstance();
-	}
-	
-	private void darDeAltaUnPasaje(ActionEvent aP) {
-//		MedioContactoDTO medio = new MedioContactoDTO(1,"44514652","1578966321","contacto@gmail.com");
-//		java.util.Date d = new java.util.Date(); 
-//		java.sql.Date date2 = new java.sql.Date(d.getTime());
-//		ClienteDTO cliente = new ClienteDTO(1,"Pedro","Lopez","17325562",date2, medio);
-//		
-//		ViajeDTO viaje = viajeSeleccionado;
-//		AdministrativoDTO administrativo = new AdministrativoDTO (1,"Andres Gandolfi");
-//		int cantPasajeros = pasajerosEnEstaReserva.size();
-//		TransporteDTO transporte = obtenerTransporteElegidoPorCliente(this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
-//		BigDecimal valorViaje = totalaPagar;
-//		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
-//		List<PasajeroDTO> pasajeros = pasajerosEnEstaReserva;
-//		
-//		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativo,cantPasajeros,cliente,transporte,null,
-//				valorViaje,estadoPasaje,pagoDTO,pasajeros);
-//		
-//		PasajeDAOSQL DAO = new PasajeDAOSQL();
-//		
-//		DAO.insert(pasajeDTO);
-//		this.ventanaReserva.setVisible(false);
-//		this.ventanaFormaDePagos.setVisible(true);
-//		
-//		this.transporteSeleccionado = obtenerTransporteElegidoPorCliente(this.ventanaReserva.getComboBoxTransporte().getSelectedItem().toString());
-//		this.ventanaFormaDePagos.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
-//		
+//	private void modificarViajeDePasaje(PasajeDTO pasaje, Date nuevaHorarioSalida){
+//		ViajeDTO nuevoViaje = pasaje.getViaje();
+//		nuevoViaje.setFechaSalida((java.sql.Date) nuevaHorarioSalida);
+//		pasaje.setViaje(nuevoViaje);
 //	}
 //	
-//	private BigDecimal calcularMontoDePasaje() {
-//		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
-////		BigDecimal Valor2 = this.transporteSeleccionado.getPrecioBase();
-////		Valor2 = Valor2.add(Valor1);
-////		totalaPagar = Valor2;
-//		
-//		return totalaPagar.multiply(new BigDecimal(pasajerosEnEstaReserva.size()));
-//	}
-//
-//
-//	/* - - - -  - - - - - - - - - -  - - OTROS METODOS - - - - - - - - - - - - - - - -  -*/	
-//	
-//	private TransporteDTO obtenerTransporteElegidoPorCliente(String transporteComboBox) {
-//		TransporteDAOSQL tDAO = new TransporteDAOSQL();
-//		TransporteDTO ret = null;
-//		ArrayList<TransporteDTO> transportes = (ArrayList<TransporteDTO>) tDAO.readAll();
-//		for(TransporteDTO t: transportes)
-////			if(t.getNombreTransporte().equals(transporteComboBox))
-//				ret = t;
-//		return ret;
-//	}
-//	
-////	private void generarPasajeTarjeta(ActionEvent rP) {
-////		String importeIngresado = ventanaPagoTarjeta.getTextImporteIngresado().toString();
-////	}
-////	
-//
-//	private void redirigirSegunItemSeleccionado(String itemSeleccionado) {
-//		if(itemSeleccionado.equals("TARJETA")){
-////			ventanaPagoTarjeta.mostrarVentana(true);
-////			ventanaFormaDePagos.mostrarVentana(false);
-//			ventanaFormaDePagos.redimensionar();
-//			}
-//		else if(itemSeleccionado.equals("EFECTIVO")){
-////			ventanaPagoEfectivo.mostrarVentana(true);
-//			ventanaFormaDePagos.mostrarVentana(false);
-//		}
 
-	}
-
-
-	
-	
-
-	@Override
-	public void actionPerformed(ActionEvent evento){
-
-	}
 	
 	public static void main(String[] args) throws Exception {
 		Vista vista = new Vista();
 		//Controlador controlador = new Controlador(vista);
 		//controlador.inicializar();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
