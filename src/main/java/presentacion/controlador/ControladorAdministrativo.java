@@ -20,7 +20,7 @@ import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
 import presentacion.vista.administrativo.VistaAdministrativo;
 
-public class ControladorPrueba implements ActionListener {
+public class ControladorAdministrativo implements ActionListener {
 
 	private VistaAdministrativo vista;
 	private VentanaRegistrarCliente ventanaCliente;
@@ -33,7 +33,7 @@ public class ControladorPrueba implements ActionListener {
 	private Pasaje pasaje;
 	private ControladorPasaje controladorPasaje;
 	
-	public ControladorPrueba(VistaAdministrativo vista,AdministrativoDTO administrativoLogueado) {
+	public ControladorAdministrativo(VistaAdministrativo vista,AdministrativoDTO administrativoLogueado) {
 		this.vista = vista;
 		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaVisualizarCliente = VentanaVisualizarClientes.getInstance();
@@ -41,12 +41,15 @@ public class ControladorPrueba implements ActionListener {
 		
 		this.vista.getItemVisualizarClientes().addActionListener(ac->agregarPanelClientes(ac));
 		this.vista.getItemRegistrarCliente().addActionListener(ac->mostrarVentanaAgregarCliente(ac));
-		this.vista.getItemAgregarPasaje().addActionListener(ap->mostrarVentanaAgregarPasaje(ap));
+	
 		this.vista.getItemVisualizarPasajes().addActionListener(ap->mostrarPasajes(ap));
+		this.vista.getItemAgregarPasaje().addActionListener(ap->mostrarVentanaAgregarPasaje(ap));
+		this.vista.getItemEditarPasaje().addActionListener(ep->mostrarVentanaEditarPasaje(ep));
 		this.vista.getItemCancelarPasaje().addActionListener(cp->cancelarPasaje(cp));
 		
+		
 		this.vista.getPanelCliente().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
-		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
+//		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
 
 		this.administrativoLogueado = administrativoLogueado;
 		this.cliente = new Cliente(new DAOSQLFactory());
@@ -55,13 +58,7 @@ public class ControladorPrueba implements ActionListener {
 		controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
 	}
 
-//	private BigDecimal calcularMontoDePasajePagado(int filaSeleccionada) {
-//		BigDecimal Valor1 = this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje();
-//		BigDecimal totalaPagar = this.pasajes_en_tabla.get(filaSeleccionada).getPago().getMonto();
-//		return Valor1.subtract(totalaPagar);
-//	}
-	
-	private void verDatosPasaje(ActionEvent vp) {
+	private void verDatosDelPasaje() {
 		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
 		if (filaSeleccionada != -1){
 			this.ventanaVisualizarPasaje.setVisible(true);
@@ -78,7 +75,7 @@ public class ControladorPrueba implements ActionListener {
 		}
 	}
 
-	public ControladorPrueba(){
+	public ControladorAdministrativo(){
 		super();
 	}
 	
@@ -107,6 +104,12 @@ public class ControladorPrueba implements ActionListener {
 		controladorPasaje.iniciar();
 	}
 	
+	private void mostrarVentanaEditarPasaje(ActionEvent ep) {
+		this.ventanaVisualizarPasaje.mostrarVentana(true);
+		verDatosDelPasaje();
+		
+	}
+
 	private void cancelarPasaje(ActionEvent cp) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
 		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
@@ -127,11 +130,12 @@ public class ControladorPrueba implements ActionListener {
 	private void mostrarVentanaAgregarCliente(ActionEvent ac)  {
 		this.vista.getPanelCliente().mostrarPanelCliente(true);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
+		this.llenarTablaClientes();
 		this.ventanaCliente.mostrarVentana();
 		ControladorCliente controladorCliente = new ControladorCliente(ventanaCliente,cliente);
-//		this.llenarTablaClientes();
 	}
 
+	
 	private void llenarTablaClientes(){
 		this.vista.getPanelCliente().getModelClientes().setRowCount(0); //Para vaciar la tabla
 		this.vista.getPanelCliente().getModelClientes().setColumnCount(0);

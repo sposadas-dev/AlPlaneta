@@ -2,11 +2,8 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JOptionPane;
-
 import dto.ClienteDTO;
 import dto.LoginDTO;
 import dto.MedioContactoDTO;
@@ -36,9 +33,10 @@ public class ControladorCliente implements ActionListener{
 		this.login = new Login(new DAOSQLFactory());
 		this.panelCliente = new PanelCliente();
 		this.ventanaCliente.getBtnRegistrar().addActionListener(rc->registrarCliente(rc));
-		
+		this.ventanaCliente.getBtnCancelar().addActionListener(cv->cerrarVentanaCliente(cv));
 	}
-
+	
+	
 	public void registrarCliente(ActionEvent rc){
 		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
 		java.util.Date dateFechaNacimiento = ventanaCliente.getDateFechaNacimiento().getDate();
@@ -67,12 +65,12 @@ public class ControladorCliente implements ActionListener{
 			obtenerMedioContactoDTO(),
 			obtenerLoginDTO()
 	);
-//		if(camposCorrectos()){
+		if(camposLlenos()){
 			cliente.agregarCliente(nuevoCliente);
 			this.llenarTablaClientes();
 			this.ventanaCliente.limpiarCampos();
-			this.ventanaCliente.dispose();
-//		}
+			this.ventanaCliente.cerrarVentana();
+		}
 	}
 	
 	private MedioContactoDTO obtenerMedioContactoDTO() {
@@ -99,6 +97,12 @@ public class ControladorCliente implements ActionListener{
 	}
 		return loginDTO;
 	}
+	
+	private void cerrarVentanaCliente(ActionEvent cv) {
+		this.ventanaCliente.limpiarCampos();
+		this.ventanaCliente.cerrarVentana();
+	}
+
 
 	private boolean camposLlenos(){
 		if (ventanaCliente.getTxtNombre().getText().isEmpty() ||

@@ -19,9 +19,9 @@ public class VentanaVisualizarPasaje extends JFrame {
 	private JLabel lblTransporteDelPasaje;
 	private JLabel lblEstadoPasaje;
 	private JLabel lblRestante;
-
+	private JButton btnPagar;
 	private JButton btnAceptar;
-
+	private JButton btnCancelar;
 	private static VentanaVisualizarPasaje INSTANCE;
 	
 	public static VentanaVisualizarPasaje getInstance(){
@@ -52,15 +52,15 @@ public class VentanaVisualizarPasaje extends JFrame {
 		contentPane.add(lblOrigen);
 		
 		JLabel lblDestino = new JLabel("Destino:");
-		lblDestino.setBounds(27, 150, 46, 14);
+		lblDestino.setBounds(27, 136, 46, 14);
 		contentPane.add(lblDestino);
 		
 		JLabel lblTransporte = new JLabel("Transporte:");
-		lblTransporte.setBounds(27, 212, 95, 14);
+		lblTransporte.setBounds(27, 188, 95, 14);
 		contentPane.add(lblTransporte);
 		
 		JLabel lblEstadoDelPasaje = new JLabel("Estado del pasaje:");
-		lblEstadoDelPasaje.setBounds(304, 212, 127, 14);
+		lblEstadoDelPasaje.setBounds(285, 188, 127, 14);
 		contentPane.add(lblEstadoDelPasaje);
 		
 		JLabel lblDni = new JLabel("DNI:");
@@ -68,7 +68,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 		contentPane.add(lblDni);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(210, 303, 151, 47);
+		btnAceptar.setBounds(228, 301, 151, 47);
 		contentPane.add(btnAceptar);
 		
 		
@@ -97,7 +97,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 		contentPane.add(lblEstadoPasaje);
 		
 		JLabel lblMonto = new JLabel("Monto:");
-		lblMonto.setBounds(27, 263, 46, 14);
+		lblMonto.setBounds(27, 237, 95, 14);
 		contentPane.add(lblMonto);
 		
 		JLabel lblMontoDelPasaje = new JLabel("");
@@ -105,12 +105,20 @@ public class VentanaVisualizarPasaje extends JFrame {
 		contentPane.add(lblMontoDelPasaje);
 		
 		JLabel lblMontoAPagar = new JLabel("Importe restante:");
-		lblMontoAPagar.setBounds(315, 263, 46, 14);
+		lblMontoAPagar.setBounds(285, 237, 116, 14);
 		contentPane.add(lblMontoAPagar);
 		
 		lblRestante = new JLabel("");
 		lblRestante.setBounds(382, 263, 143, 14);
 		contentPane.add(lblRestante);
+		
+		btnPagar = new JButton("Pagar");
+		btnPagar.setBounds(23, 299, 150, 51);
+		contentPane.add(btnPagar);
+		
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBounds(426, 301, 148, 47);
+		contentPane.add(btnCancelar);
 	}
 	
 	public JLabel getLblClienteDelPasaje() {
@@ -143,5 +151,18 @@ public class VentanaVisualizarPasaje extends JFrame {
 	
 	public JButton getBtnAceptar() {
 		return btnAceptar;
+	}
+	
+	public JButton getBtnPagar() {
+		return btnPagar;
+	}
+	
+	public JButton getBtnCancelar() {
+		return btnCancelar;
+	}
+
+	
+	public void mostrarVentana(boolean visibilidad){
+		this.setVisible(visibilidad);
 	}
 }

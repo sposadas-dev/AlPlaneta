@@ -1630,41 +1630,9 @@ private void agregarPais(ActionEvent agP) {
 	}
 
 
-	private EstadoPasajeDTO calcularEstadoPasaje() {
-		EstadoPasajeDTO ret;
-		if(totalaPagar.compareTo(pagoDTO.getMonto()) == 0){ //si son iguales
-			ret = new EstadoPasajeDTO(1,"Vendido","El monto abonado es el total a pagar");
-		}
-		else {
-			if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
-				ret = new EstadoPasajeDTO(3,"Pendiente","El monto abonado es 0");
-			}
-			else {
-				ret = new EstadoPasajeDTO(2,"Reservado","El monto abonado es menor al total a pagar");
-			}
-		}
-		return ret;
-	}
 	
 	
 
-	
-//	Validamos que los campos esten completos		
-	private boolean validarCampos(){
-			if (ventanaCliente.getTxtNombre().getText().isEmpty() ||
-				ventanaCliente.getTxtApellido().getText().isEmpty() ||
-				ventanaCliente.getTxtDni().getText().isEmpty() ||
-				ventanaCliente.getDateFechaNacimiento().getDate()== null ||
-				ventanaCliente.getTxtTelefonoFijo().getText().isEmpty() ||
-				ventanaCliente.getTxtTelefonoCelular().getText().isEmpty() ||
-				ventanaCliente.getTxtEmail().getText().isEmpty()
-			){
-				JOptionPane.showMessageDialog(null, "Debe cargar todos los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
-				return false;
-			}
-			return true;
-		}
-		
 	@Override
 	public void actionPerformed(ActionEvent evento){
 
