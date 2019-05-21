@@ -119,6 +119,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelCliente().mostrarPanelCliente(true);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
 		this.llenarTablaClientes();
+		this.ventanaCliente.limpiarCampos();
 		this.ventanaCliente.mostrarVentana();
 		ControladorCliente controladorCliente = new ControladorCliente(ventanaCliente,cliente);
 	}

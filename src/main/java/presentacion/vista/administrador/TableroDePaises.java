@@ -70,7 +70,8 @@ public class TableroDePaises{
 		frmPais.setResizable(false);
 		frmPais.setTitle("Paises");
 		frmPais.setBounds(100, 100, 657, 366);
-		frmPais.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmPais.setLocationRelativeTo(null);
+		frmPais.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmPais.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -94,34 +95,20 @@ public class TableroDePaises{
 		adjustColumnPreferredWidths(tablaPaises);
 		spPersonas.setViewportView(tablaPaises);
 		
-		btnAgregar = new JButton("AGREGAR PAIS");
+		btnAgregar = new JButton("Agregar pais");
 		btnAgregar.setBounds(9, 207, 181, 23);
 		panel.add(btnAgregar);
 		
-		btnEditar = new JButton("EDITAR PAIS");
+		btnEditar = new JButton("Editar pais");
 		btnEditar.setBounds(200, 207, 181, 23);
 		panel.add(btnEditar);
 		
-		btnBorrar = new JButton("BORRAR PAIS");
+		btnBorrar = new JButton("Borrar pais");
 		btnBorrar.setBounds(391, 205, 181, 23);
 		panel.add(btnBorrar);
 	}
 	
 	public void show(){
-		this.frmPais.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.frmPais.addWindowListener(new WindowAdapter(){
-			@Override
-		    public void windowClosing(WindowEvent e) {
-		        int confirm = JOptionPane.showOptionDialog(
-		             null, "Estas seguro que quieres salir de la vista de Paises!?", 
-		             "Confirmacion", JOptionPane.YES_NO_OPTION,
-		             JOptionPane.QUESTION_MESSAGE, null, null, null);
-		        if (confirm == 0) {
-		        	Conexion.getConexion().cerrarConexion();
-		           System.exit(0);
-		        }
-		    }
-		});
 		this.frmPais.setVisible(true);
 	}
 	

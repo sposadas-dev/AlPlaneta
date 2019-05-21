@@ -66,7 +66,8 @@ public class ControladorAdministrador {
 		
 //BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
-		
+		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
+
 		this.transporte = new Transporte(new DAOSQLFactory());
 		this.formapago = new FormaPago(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
@@ -81,18 +82,25 @@ public class ControladorAdministrador {
 		
 	}
 
+	
 	private void mostrarVentanaAgregarCiudad(ActionEvent p) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.controladorCiudad.llenarTablaVistaCiudades();
 		this.controladorCiudad.mostrarVistaCiudad();
 	}
 
 	private void mostrarVentanaAgregarProvincia(ActionEvent p) {
 		System.out.println("se muestran las ventanas");
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.controladorProvincia.llenarTablaVistaProvincias();
 		this.controladorProvincia.mostrarVistaProvincia();
 	}
 
 	private void mostrarVentanaAgregarPais(ActionEvent p) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.controladorPais.llenarTablaVistaPaises();
 		this.controladorPais.mostrarVistaPais();
 	}
@@ -101,7 +109,6 @@ public class ControladorAdministrador {
 	private void agregarPanelPaises(ActionEvent ac) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
 		controladorTransporte.mostrarVentanaAgregarTransporte();
-
 	}
 
 	public void inicializar(){
@@ -113,6 +120,7 @@ public class ControladorAdministrador {
 	/*Mostrar la ventana para agregar un empleado y carga el comboBox de roles*/
 	private void mostrarVentanaAgregarEmpleado(ActionEvent ac) {
 		cargarcomboBoxRoles();
+		this.ventanaAgregarEmpleado.limpiarCampos();
 		this.ventanaAgregarEmpleado.mostrarVentana(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
@@ -164,6 +172,13 @@ public class ControladorAdministrador {
 		}
 		this.ventanaAgregarEmpleado.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
 	}
+	
+	
+	private void cancelarAgregarCuentaEmpleado(ActionEvent c) {
+		this.ventanaAgregarEmpleado.limpiarCampos();
+		this.ventanaAgregarEmpleado.mostrarVentana(false);
+	}
+
 	//----------------------Transportes-----------------------------------
 	private void visualizarTransportes(ActionEvent vt) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);

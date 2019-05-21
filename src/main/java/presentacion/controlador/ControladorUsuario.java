@@ -99,6 +99,7 @@ public class ControladorUsuario implements ActionListener {
 
 	
 	private void mostrarVentanaCambiarContrasenia(ActionEvent c) {
+		this.ventanaCambiarContrasenia.limpiarCampos();
 		this.ventanaCambiarContrasenia.mostrarVentana(true);
 		
 	}

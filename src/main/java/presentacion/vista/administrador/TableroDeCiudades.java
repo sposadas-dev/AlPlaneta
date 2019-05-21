@@ -70,7 +70,8 @@ public class TableroDeCiudades{
 		frmCiudad.setResizable(false);
 		frmCiudad.setTitle("Ciudades");
 		frmCiudad.setBounds(100, 100, 657, 366);
-		frmCiudad.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmCiudad.setLocationRelativeTo(null);
+		frmCiudad.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmCiudad.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -108,20 +109,6 @@ public class TableroDeCiudades{
 	}
 	
 	public void show(){
-		this.frmCiudad.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.frmCiudad.addWindowListener(new WindowAdapter(){
-			@Override
-		    public void windowClosing(WindowEvent e) {
-		        int confirm = JOptionPane.showOptionDialog(
-		             null, "Estas seguro que quieres salir de la vista de ciudad!?", 
-		             "Confirmacion", JOptionPane.YES_NO_OPTION,
-		             JOptionPane.QUESTION_MESSAGE, null, null, null);
-		        if (confirm == 0) {
-		        	Conexion.getConexion().cerrarConexion();
-		           System.exit(0);
-		        }
-		    }
-		});
 		this.frmCiudad.setVisible(true);
 	}
 	
