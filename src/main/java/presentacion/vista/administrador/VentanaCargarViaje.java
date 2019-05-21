@@ -173,7 +173,7 @@ public class VentanaCargarViaje extends JFrame {
 		contentPane.add(comboBoxProvinciaDestino);
 		
 		JLabel lblProvinciaDestino = new JLabel("Provincia Destino");
-		lblProvinciaDestino.setBounds(227, 213, 98, 14);
+		lblProvinciaDestino.setBounds(227, 213, 122, 14);
 		contentPane.add(lblProvinciaDestino);
 		
 		JLabel lblCiudadDestino = new JLabel("Ciudad Destino");
