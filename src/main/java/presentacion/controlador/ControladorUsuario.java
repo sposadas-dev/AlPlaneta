@@ -99,6 +99,7 @@ public class ControladorUsuario implements ActionListener {
 
 	
 	private void mostrarVentanaCambiarContrasenia(ActionEvent c) {
+		this.ventanaCambiarContrasenia.limpiarCampos();
 		this.ventanaCambiarContrasenia.mostrarVentana(true);
 		
 	}
@@ -120,7 +121,8 @@ public class ControladorUsuario implements ActionListener {
 	}
 	
 	private void salirVentanaCambiarContrasenia(ActionEvent c) {
-		this.ventanaCambiarContrasenia.dispose();
+		this.ventanaCambiarContrasenia.limpiarCampos();
+		this.ventanaCambiarContrasenia.mostrarVentana(false);;
 	}
 
 
@@ -134,7 +136,8 @@ public class ControladorUsuario implements ActionListener {
 		for (int i = 0; i < this.pasajes_en_tabla .size(); i++){
 			int idClienteReserva = pasajes_en_tabla.get(i).getCliente().getIdCliente();
 			if (idClienteReserva == cliente.getIdCliente() &&
-					pasajes_en_tabla.get(i).getEstadoDelPasaje().getIdEstadoPasaje()== 2){
+					pasajes_en_tabla.get(i).getEstadoDelPasaje().getIdEstadoPasaje()== 2
+					|| pasajes_en_tabla.get(i).getEstadoDelPasaje().getIdEstadoPasaje()== 3){
 				
 			Object[] fila = {
 					this.pasajes_en_tabla.get(i).getViaje().getPaisOrigen().getNombre()+ ","+ 

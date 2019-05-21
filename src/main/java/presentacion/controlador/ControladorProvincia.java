@@ -44,11 +44,14 @@ public class ControladorProvincia implements ActionListener {
 		this.tableroDeProvincias = TableroDeProvincias.getInstance();
 		
 		this.tableroDeProvincias.getBtnAgregar().addActionListener(a->mostrarVentanaAgregarProvincia(a));
+		
 		this.tableroDeProvincias.getBtnEditar().addActionListener(a->mostrarVentanaEditarProvincia(a));
 		this.tableroDeProvincias.getBtnBorrar().addActionListener(a->eliminarProvincia(a));
 		
 		this.ventanaAgregarProvincia.getBtnAgregar().addActionListener(rc->agregarProvincia(rc));
+		this.ventanaAgregarProvincia.getBtnCancelar().addActionListener(c->cancelarVentanaAgregarProvincia(c));
 		this.ventanaEditarProvincia.getBtnEditar().addActionListener(ac->editarProvincia(ac));
+		this.ventanaEditarProvincia.getBtnCancelar().addActionListener(c->cancelarVentanaEditarProvincia(c));
 		
 		
 		this.modeloViaje = new ModeloViaje(new DAOSQLFactory());
@@ -62,11 +65,13 @@ public class ControladorProvincia implements ActionListener {
 	}
 
 	private void mostrarVentanaEditarProvincia(ActionEvent a) {
+		this.ventanaEditarProvincia.limpiarCampos();
 		this.ventanaEditarProvincia.mostrarVentana();
 	}
 
 	private void mostrarVentanaAgregarProvincia(ActionEvent a) {
 		llenarComboBoxPaises();
+		this.ventanaAgregarProvincia.limpiarCampos();
 		this.ventanaAgregarProvincia.mostrarVentana();
 	}
 
@@ -84,6 +89,7 @@ public class ControladorProvincia implements ActionListener {
 	
 
 	public void editarProvincia() {
+		this.ventanaEditarProvincia.limpiarCampos();
 		this.ventanaEditarProvincia.mostrarVentana();
 	}
 	
@@ -104,10 +110,16 @@ public class ControladorProvincia implements ActionListener {
 	
 			this.ventanaAgregarProvincia.limpiarCampos();
 			this.ventanaAgregarProvincia.cerrarVentana();
-			JOptionPane.showMessageDialog(null, "Transporte agregado","Transporte", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Provincia agregada","Provincia", JOptionPane.INFORMATION_MESSAGE);
 		}
 		llenarTablaVistaProvincias();
 	}
+	
+	private void cancelarVentanaAgregarProvincia(ActionEvent c) {
+		this.ventanaAgregarProvincia.limpiarCampos();
+		this.ventanaAgregarProvincia.cerrarVentana();
+	}
+
 	
 	private boolean permiteAgregarProvincia() {
 		boolean ret = true;
@@ -135,6 +147,11 @@ public class ControladorProvincia implements ActionListener {
 		llenarTablaVistaProvincias();
 	}
 	
+	private void cancelarVentanaEditarProvincia(ActionEvent c) {
+		this.ventanaEditarProvincia.limpiarCampos();
+		this.ventanaEditarProvincia.cerrarVentana();
+	}
+	
 	public void llenarTablaVistaProvincias(){
 		this.tableroDeProvincias.getModelProvincias().setRowCount(0); //Para vaciar la tabla
 		this.tableroDeProvincias.getModelProvincias().setColumnCount(0);
@@ -160,7 +177,7 @@ public class ControladorProvincia implements ActionListener {
 			             JOptionPane.WARNING_MESSAGE, null, null, null);
 		if (confirm == 0 && permiteEliminar(p) ){
 			this.modeloProvincia.borrarProvincia(p);
-			JOptionPane.showMessageDialog(null, "Provincia eliminade","Provincia", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Provincia eliminada","Provincia", JOptionPane.INFORMATION_MESSAGE);
 		}
 		else{
 			JOptionPane.showMessageDialog(null, "No pudo eliminarse","Provincia", JOptionPane.ERROR_MESSAGE);

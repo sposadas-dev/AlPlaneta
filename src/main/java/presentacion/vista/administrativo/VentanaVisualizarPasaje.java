@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.Color;
 
 public class VentanaVisualizarPasaje extends JFrame {
 
@@ -18,10 +20,11 @@ public class VentanaVisualizarPasaje extends JFrame {
 	private JLabel lblDestinoDelPasaje;
 	private JLabel lblTransporteDelPasaje;
 	private JLabel lblEstadoPasaje;
+	private JLabel lblMontoDelPasaje;
 	private JLabel lblRestante;
 	private JButton btnPagar;
 	private JButton btnAceptar;
-	private JButton btnCancelar;
+	
 	private static VentanaVisualizarPasaje INSTANCE;
 	
 	public static VentanaVisualizarPasaje getInstance(){
@@ -36,6 +39,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 		setTitle("Visualizar pasaje");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		
 		contentPane = new JPanel();
@@ -44,81 +48,103 @@ public class VentanaVisualizarPasaje extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblCliente = new JLabel("Cliente:");
-		lblCliente.setBounds(27, 39, 46, 14);
+		lblCliente.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblCliente.setBounds(27, 74, 46, 14);
 		contentPane.add(lblCliente);
 		
 		JLabel lblOrigen = new JLabel("Origen:");
-		lblOrigen.setBounds(27, 89, 46, 14);
+		lblOrigen.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblOrigen.setBounds(27, 122, 46, 14);
 		contentPane.add(lblOrigen);
 		
 		JLabel lblDestino = new JLabel("Destino:");
-		lblDestino.setBounds(27, 136, 46, 14);
+		lblDestino.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblDestino.setBounds(27, 163, 77, 14);
 		contentPane.add(lblDestino);
 		
 		JLabel lblTransporte = new JLabel("Transporte:");
-		lblTransporte.setBounds(27, 188, 95, 14);
+		lblTransporte.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTransporte.setBounds(27, 200, 95, 14);
 		contentPane.add(lblTransporte);
 		
 		JLabel lblEstadoDelPasaje = new JLabel("Estado del pasaje:");
-		lblEstadoDelPasaje.setBounds(285, 188, 127, 14);
+		lblEstadoDelPasaje.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblEstadoDelPasaje.setBounds(310, 200, 127, 14);
 		contentPane.add(lblEstadoDelPasaje);
 		
 		JLabel lblDni = new JLabel("DNI:");
-		lblDni.setBounds(326, 39, 46, 14);
+		lblDni.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblDni.setBounds(310, 74, 46, 14);
 		contentPane.add(lblDni);
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(228, 301, 151, 47);
+		btnAceptar = new JButton("Aceptar");
+		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnAceptar.setBounds(290, 299, 156, 49);
+		btnAceptar.setBackground(new Color(52, 152, 219));
+		btnAceptar.setForeground(Color.WHITE);
 		contentPane.add(btnAceptar);
 		
-		
 		lblClienteDelPasaje = new JLabel("");
-		lblClienteDelPasaje.setBounds(76, 39, 180, 14);
+		lblClienteDelPasaje.setBounds(83, 74, 180, 14);
 		contentPane.add(lblClienteDelPasaje);
 		
 		lblDniDelPasaje = new JLabel("");
-		lblDniDelPasaje.setBounds(382, 39, 143, 14);
+		lblDniDelPasaje.setBounds(366, 74, 143, 14);
 		contentPane.add(lblDniDelPasaje);
 		
 		lblOrigenDelPasaje = new JLabel("");
-		lblOrigenDelPasaje.setBounds(76, 89, 285, 14);
+		lblOrigenDelPasaje.setBounds(86, 122, 285, 14);
 		contentPane.add(lblOrigenDelPasaje);
 		
 		lblDestinoDelPasaje = new JLabel("");
-		lblDestinoDelPasaje.setBounds(83, 150, 208, 14);
+		lblDestinoDelPasaje.setBounds(93, 163, 208, 14);
 		contentPane.add(lblDestinoDelPasaje);
 		
 		lblTransporteDelPasaje = new JLabel("");
-		lblTransporteDelPasaje.setBounds(100, 212, 180, 14);
+		lblTransporteDelPasaje.setBounds(106, 200, 180, 14);
 		contentPane.add(lblTransporteDelPasaje);
 		
 		lblEstadoPasaje = new JLabel("");
-		lblEstadoPasaje.setBounds(426, 212, 127, 14);
+		lblEstadoPasaje.setBounds(425, 200, 127, 14);
 		contentPane.add(lblEstadoPasaje);
 		
-		JLabel lblMonto = new JLabel("Monto:");
-		lblMonto.setBounds(27, 237, 95, 14);
+		JLabel lblMonto = new JLabel("Monto: $");
+		lblMonto.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblMonto.setBounds(27, 248, 95, 14);
 		contentPane.add(lblMonto);
 		
-		JLabel lblMontoDelPasaje = new JLabel("");
-		lblMontoDelPasaje.setBounds(83, 263, 46, 14);
+		lblMontoDelPasaje = new JLabel("");
+		lblMontoDelPasaje.setBounds(93, 248, 97, 14);
 		contentPane.add(lblMontoDelPasaje);
 		
-		JLabel lblMontoAPagar = new JLabel("Importe restante:");
-		lblMontoAPagar.setBounds(285, 237, 116, 14);
+		JLabel lblMontoAPagar = new JLabel("Importe restante: $");
+		lblMontoAPagar.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblMontoAPagar.setBounds(310, 248, 143, 14);
 		contentPane.add(lblMontoAPagar);
 		
 		lblRestante = new JLabel("");
-		lblRestante.setBounds(382, 263, 143, 14);
+		lblRestante.setBounds(441, 248, 143, 14);
 		contentPane.add(lblRestante);
 		
 		btnPagar = new JButton("Pagar");
-		btnPagar.setBounds(23, 299, 150, 51);
+		btnPagar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnPagar.setBounds(121, 299, 150, 51);
+		btnPagar.setBackground(new Color(5, 196, 107));
+		btnPagar.setForeground(Color.WHITE);
+
 		contentPane.add(btnPagar);
 		
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(426, 301, 148, 47);
-		contentPane.add(btnCancelar);
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(new Color(95, 158, 160));
+		panel.setBounds(0, 0, 594, 53);
+		contentPane.add(panel);
+		
+		JLabel lblVisualizarPasaje = new JLabel("Visualizar pasaje");
+		lblVisualizarPasaje.setForeground(Color.WHITE);
+		lblVisualizarPasaje.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lblVisualizarPasaje.setBounds(191, 0, 214, 53);
+		panel.add(lblVisualizarPasaje);
 	}
 	
 	public JLabel getLblClienteDelPasaje() {
@@ -145,6 +171,11 @@ public class VentanaVisualizarPasaje extends JFrame {
 		return lblEstadoPasaje;
 	}
 	
+	public JLabel getLblMontoDelPasaje() {
+		return lblMontoDelPasaje;
+	}
+
+		
 	public JLabel getLblRestante() {
 		return lblRestante;
 	}
@@ -156,11 +187,6 @@ public class VentanaVisualizarPasaje extends JFrame {
 	public JButton getBtnPagar() {
 		return btnPagar;
 	}
-	
-	public JButton getBtnCancelar() {
-		return btnCancelar;
-	}
-
 	
 	public void mostrarVentana(boolean visibilidad){
 		this.setVisible(visibilidad);

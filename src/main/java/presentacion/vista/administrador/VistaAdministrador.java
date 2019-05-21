@@ -21,6 +21,7 @@ public class VistaAdministrador extends JFrame {
 	private PanelTransporte panelTransporte;
 	private VentanaPanelGeneral panelGeneral;
 	private PanelFormaPago panelFormaPago;
+	private PanelEmpleados panelEmpleados;
 	
 	private JMenuItem itemAgregarCuenta;
 	private JMenuItem itemVisualizarTransportes ;
@@ -131,6 +132,13 @@ public class VistaAdministrador extends JFrame {
 		panelTransporte.getBtnRecargarTabla().setVisible(true);
 
 		
+		panelEmpleados = new PanelEmpleados();
+		panelEmpleados.getTablaEmpleados().setSize(1114, 900);
+		panelEmpleados.setSize(1352, 700);
+		panelEmpleados.setLocation(0, 0);
+		getContentPane().add(panelEmpleados);
+		panelEmpleados.setVisible(false);
+		
 	//--------------------FormaPago-----------------------------------//	
 		
 		JMenu menuFormaPago = new JMenu("Formas de pago");
@@ -164,6 +172,10 @@ public class VistaAdministrador extends JFrame {
 		this.setVisible(false);
 	}
 	
+	public PanelEmpleados getPanelEmpleados() {
+		return panelEmpleados;
+	}
+
 	public void setItemAgregarCuenta(JMenuItem itemAgregarCuenta) {
 		this.itemAgregarCuenta = itemAgregarCuenta;
 	}

@@ -54,15 +54,11 @@ public class VentanaTablaViajes extends JFrame {
 		spPasajeros.setViewportView(tablaViajes);
 		
 		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnConfirmar.setBounds(416, 415, 109, 37);
+		btnConfirmar.setBounds(442, 395, 150, 49);
 		contentPane.add(btnConfirmar);
 		
 		btnAtras = new JButton("Atrás");
-		btnAtras.setBounds(198, 403, 89, 38);
+		btnAtras.setBounds(249, 395, 150, 49);
 		contentPane.add(btnAtras);
 		
 		this.setVisible(false);
