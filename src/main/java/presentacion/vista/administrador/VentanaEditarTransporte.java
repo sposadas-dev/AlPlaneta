@@ -18,6 +18,8 @@ public class VentanaEditarTransporte extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtNombreTransporte;
 	private JButton btnEditar;
+	private JButton btnCancelar;
+
 	private static VentanaEditarTransporte INSTANCE;
 
 	public void setTxtNombreTransporte(JTextField txtNombreTransporte) {
@@ -64,12 +66,12 @@ public class VentanaEditarTransporte extends JFrame {
 		contentPane.add(txtNombreTransporte);
 		txtNombreTransporte.setColumns(10);
 		
-		JButton button = new JButton("Cancelar");
-		button.setForeground(Color.WHITE);
-		button.setFont(new Font("Tahoma", Font.BOLD, 14));
-		button.setBackground(new Color(192, 57, 43));
-		button.setBounds(206, 177, 131, 42);
-		contentPane.add(button);
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setForeground(Color.WHITE);
+		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnCancelar.setBackground(new Color(192, 57, 43));
+		btnCancelar.setBounds(206, 177, 131, 42);
+		contentPane.add(btnCancelar);
 		
 		btnEditar = new JButton("Editar");
 		btnEditar.setForeground(Color.WHITE);
@@ -85,6 +87,10 @@ public class VentanaEditarTransporte extends JFrame {
 
 	public void cerrarVentana(){
 		this.setVisible(false);
+	}
+	
+	public JButton getBtnCancelar() {
+		return btnCancelar;
 	}
 	
 	public JButton getBtnEditar() {

@@ -63,7 +63,7 @@ public class VentanaRegistrarCliente extends JFrame {
 		
 		JLabel lblRegistrarCliente = new JLabel("Registrar cliente");
 		lblRegistrarCliente.setForeground(Color.WHITE);
-		lblRegistrarCliente.setBounds(27, 0, 214, 53);
+		lblRegistrarCliente.setBounds(191, 0, 214, 53);
 		panelCliente.add(lblRegistrarCliente);
 		lblRegistrarCliente.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
@@ -111,13 +111,13 @@ public class VentanaRegistrarCliente extends JFrame {
 		txtDni.setColumns(10);
 		
 		dateFechaNacimiento = new JDateChooser();
-		dateFechaNacimiento.setBounds(427, 143, 131, 20);
+		dateFechaNacimiento.setBounds(424, 146, 131, 20);
 		JTextFieldDateEditor editor = (JTextFieldDateEditor) dateFechaNacimiento.getDateEditor();
 		editor.setEditable(false);
 		contentPane.add(dateFechaNacimiento);
 		
 		txtTelefonoCelular = new JTextField();
-		txtTelefonoCelular.setBounds(396, 265, 131, 20);
+		txtTelefonoCelular.setBounds(413, 265, 131, 20);
 		contentPane.add(txtTelefonoCelular);
 		txtTelefonoCelular.setColumns(10);
 		

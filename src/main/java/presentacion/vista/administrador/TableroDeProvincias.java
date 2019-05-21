@@ -22,10 +22,8 @@ public class TableroDeProvincias{
 	private JTable tablaProvincia;
 	private JButton btnAgregar;
 	private JButton btnBorrar;
-	private JButton btnReporte;
 	private JButton btnEditar ;
 	private DefaultTableModel modelProvincia;
-	private JButton btnConexion;
 	private static TableroDeProvincias INSTANCE;
 	private  String[] nombreColumnas = {" Pais"," Provincia"};
 	
@@ -70,7 +68,8 @@ public class TableroDeProvincias{
 		frmProvincia.setResizable(false);
 		frmProvincia.setTitle("Provincias");
 		frmProvincia.setBounds(100, 100, 657, 366);
-		frmProvincia.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmProvincia.setLocationRelativeTo(null);
+		frmProvincia.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmProvincia.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -94,34 +93,20 @@ public class TableroDeProvincias{
 		adjustColumnPreferredWidths(tablaProvincia);
 		spPersonas.setViewportView(tablaProvincia);
 		
-		btnAgregar = new JButton("AGREGAR PROVINCIA");
+		btnAgregar = new JButton("Agregar provincia");
 		btnAgregar.setBounds(9, 207, 181, 23);
 		panel.add(btnAgregar);
 		
-		btnEditar = new JButton("EDITAR PROVINCIA");
+		btnEditar = new JButton("Editar provincia");
 		btnEditar.setBounds(200, 207, 181, 23);
 		panel.add(btnEditar);
 		
-		btnBorrar = new JButton("BORRAR PROVINCIA");
+		btnBorrar = new JButton("Borrar provincia");
 		btnBorrar.setBounds(391, 205, 181, 23);
 		panel.add(btnBorrar);
 	}
 	
 	public void show(){
-		this.frmProvincia.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.frmProvincia.addWindowListener(new WindowAdapter(){
-			@Override
-		    public void windowClosing(WindowEvent e) {
-		        int confirm = JOptionPane.showOptionDialog(
-		             null, "Estas seguro que quieres salir de la vista de provincia!?", 
-		             "Confirmacion", JOptionPane.YES_NO_OPTION,
-		             JOptionPane.QUESTION_MESSAGE, null, null, null);
-		        if (confirm == 0) {
-		        	Conexion.getConexion().cerrarConexion();
-		           System.exit(0);
-		        }
-		    }
-		});
 		this.frmProvincia.setVisible(true);
 	}
 	
@@ -133,9 +118,6 @@ public class TableroDeProvincias{
 		return btnBorrar;
 	}
 	
-	public JButton getBtnReporte(){
-		return btnReporte;
-	}
 	
 	public DefaultTableModel getModelProvincias() {
 		return modelProvincia;
@@ -161,9 +143,6 @@ public class TableroDeProvincias{
 		this.btnBorrar = btnBorrar;
 	}
 
-	public JButton getBtnConexion() {
-		return btnConexion;
-	}
 	
 
 }

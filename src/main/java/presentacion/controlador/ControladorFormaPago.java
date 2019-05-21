@@ -27,17 +27,20 @@ public class ControladorFormaPago implements ActionListener {
 		this.ventanaEditarFormaPago = VentanaEditarFormaPago.getInstance();
 		
 		this.ventanaAgregarFormaPago.getBtnAgregar().addActionListener(rc->agregarFormaPago(rc));
+		this.ventanaAgregarFormaPago.getBtnCancelar().addActionListener(c->cancelarVentanaAgregarFormaPago(c));
 		this.ventanaEditarFormaPago.getBtnEditar().addActionListener(ac->editarFormaPago(ac));
-
+		this.ventanaEditarFormaPago.getBtnCancelar().addActionListener(c->cancelarVentanaEditarFormaPago(c));
 		this.formaPago = new FormaPago(new DAOSQLFactory());
 		this.formas_de_pagos_en_tabla = formaPago.obtenerFormaPago();
 	}
 
 	public void mostrarVentanaAgregarFormaPago() {
+		this.ventanaAgregarFormaPago.limpiarCampos();
 		this.ventanaAgregarFormaPago.mostrarVentana();
 	}
 	
 	public void editarFormaPago() {
+		this.ventanaEditarFormaPago.limpiarCampos();
 		this.ventanaEditarFormaPago.mostrarVentana();
 	}
 	
@@ -54,8 +57,12 @@ public class ControladorFormaPago implements ActionListener {
 			this.ventanaAgregarFormaPago.limpiarCampos();
 			this.ventanaAgregarFormaPago.cerrarVentana();
 			JOptionPane.showMessageDialog(null, "Forma de pago agregado","Forma de pago", JOptionPane.INFORMATION_MESSAGE);
-
 		}
+	}
+	
+	private void cancelarVentanaAgregarFormaPago(ActionEvent c) {
+		this.ventanaAgregarFormaPago.limpiarCampos();
+		this.ventanaAgregarFormaPago.cerrarVentana();
 	}
 	
 	public void editarFormaPago(int filaSeleccionada){
@@ -80,6 +87,12 @@ public class ControladorFormaPago implements ActionListener {
 		}
 		
 	}
+	
+	private void cancelarVentanaEditarFormaPago(ActionEvent c) {
+		this.ventanaEditarFormaPago.limpiarCampos();
+		this.ventanaEditarFormaPago.cerrarVentana();
+	}
+
 	
 	public void eliminarFormaPago(int filaSeleccionada){
 		int confirm = JOptionPane.showOptionDialog(

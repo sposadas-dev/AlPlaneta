@@ -51,6 +51,17 @@ public class VentanaTablaViajes extends JFrame {
 		tablaViajes = new JTable(modelViajes);
 		spPasajeros.setViewportView(tablaViajes);
 		
+<<<<<<< src/main/java/presentacion/vista/administrativo/VentanaTablaViajes.java
+=======
+		btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.setBounds(442, 395, 150, 49);
+		contentPane.add(btnConfirmar);
+		
+		btnAtras = new JButton("Atrás");
+		btnAtras.setBounds(249, 395, 150, 49);
+		contentPane.add(btnAtras);
+		
+>>>>>>> src/main/java/presentacion/vista/administrativo/VentanaTablaViajes.java
 		this.setVisible(false);
 	}
 

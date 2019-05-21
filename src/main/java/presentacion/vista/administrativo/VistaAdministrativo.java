@@ -34,12 +34,12 @@ public class VistaAdministrativo{
 	private JMenu menuClientes;
 	private JMenuItem itemRegistrarCliente;
 	private JMenuItem itemVisualizarClientes;
-	private JMenuItem itemCancelarPasaje;
 	
 	private JMenuItem itemVisualizarPasajes;
 	private JMenuItem itemAgregarPasaje;
+	private JMenuItem itemEditarPasaje ;
+	private JMenuItem itemCancelarPasaje;
 	 
-	
 
 	public VistaAdministrativo() {
 		super();
@@ -92,17 +92,21 @@ public class VistaAdministrativo{
 		menuPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuPasajes);
 		
+		itemVisualizarPasajes = new JMenuItem("Visualizar pasajes");
+		itemVisualizarPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(itemVisualizarPasajes);
+		
 		itemAgregarPasaje = new JMenuItem("Agregar pasaje");
 		itemAgregarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPasajes.add(itemAgregarPasaje);
 		
+		itemEditarPasaje = new JMenuItem("Editar pasaje");
+		itemEditarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(itemEditarPasaje);
+		
 		itemCancelarPasaje = new JMenuItem("Cancelar pasaje");
 		itemCancelarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPasajes.add(itemCancelarPasaje);
-		
-		itemVisualizarPasajes = new JMenuItem("Visualizar pasajes");
-		itemVisualizarPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuPasajes.add(itemVisualizarPasajes);
 	}
 
 	public PanelPasaje getPanelPasaje() {
@@ -125,6 +129,10 @@ public class VistaAdministrativo{
 		return itemVisualizarPasajes;
 	}
 	
+	public JMenuItem getItemEditarPasaje() {
+		return itemEditarPasaje;
+	}
+
 	public JMenuItem getItemCancelarPasaje() {
 		return itemCancelarPasaje;
 	}

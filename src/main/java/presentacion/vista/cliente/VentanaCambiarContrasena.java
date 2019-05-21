@@ -109,4 +109,9 @@ public class VentanaCambiarContrasena extends JFrame {
 	public void mostrarVentana(boolean visibilidad) {
 		this.setVisible(visibilidad);
 	}
+
+	public void limpiarCampos() {
+		this.passActual.setText("");
+		this.passNueva.setText("");
+	}
 }

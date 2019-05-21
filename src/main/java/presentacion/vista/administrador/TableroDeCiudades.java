@@ -70,7 +70,8 @@ public class TableroDeCiudades{
 		frmCiudad.setResizable(false);
 		frmCiudad.setTitle("Ciudades");
 		frmCiudad.setBounds(100, 100, 657, 366);
-		frmCiudad.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmCiudad.setLocationRelativeTo(null);
+		frmCiudad.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmCiudad.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -94,34 +95,20 @@ public class TableroDeCiudades{
 		adjustColumnPreferredWidths(tablaCiudad);
 		spPersonas.setViewportView(tablaCiudad);
 		
-		btnAgregar = new JButton("AGREGAR CIUDAD");
+		btnAgregar = new JButton("Agregar ciudad");
 		btnAgregar.setBounds(9, 207, 181, 23);
 		panel.add(btnAgregar);
 		
-		btnEditar = new JButton("EDITAR CIUDAD");
+		btnEditar = new JButton("Editar ciudad");
 		btnEditar.setBounds(200, 207, 181, 23);
 		panel.add(btnEditar);
 		
-		btnBorrar = new JButton("BORRAR CIUDAD");
+		btnBorrar = new JButton("Borrar ciudad");
 		btnBorrar.setBounds(391, 205, 181, 23);
 		panel.add(btnBorrar);
 	}
 	
 	public void show(){
-		this.frmCiudad.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.frmCiudad.addWindowListener(new WindowAdapter(){
-			@Override
-		    public void windowClosing(WindowEvent e) {
-		        int confirm = JOptionPane.showOptionDialog(
-		             null, "Estas seguro que quieres salir de la vista de ciudad!?", 
-		             "Confirmacion", JOptionPane.YES_NO_OPTION,
-		             JOptionPane.QUESTION_MESSAGE, null, null, null);
-		        if (confirm == 0) {
-		        	Conexion.getConexion().cerrarConexion();
-		           System.exit(0);
-		        }
-		    }
-		});
 		this.frmCiudad.setVisible(true);
 	}
 	

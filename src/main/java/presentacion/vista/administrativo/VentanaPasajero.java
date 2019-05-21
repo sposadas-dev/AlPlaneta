@@ -35,6 +35,7 @@ public class VentanaPasajero extends JFrame {
 	private VentanaPasajero() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(500, 200, 561, 418);
+		setResizable(false);
 		setLocationRelativeTo(null); 
 		
 		contentPane = new JPanel();
@@ -173,5 +174,13 @@ public class VentanaPasajero extends JFrame {
 
 	public void setBtnCargarDatos(JButton btnCargarDatos) {
 		this.btnCargarDatos = btnCargarDatos;
+	}
+	
+	public void limpiarCampos(){
+		this.txtNombre.setText("");
+		this.txtApellido.setText("");
+		this.txtDni.setText("");
+		this.txtEmail.setText("");
+		this.txtTelefono.setText("");
 	}
 }

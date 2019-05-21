@@ -26,17 +26,23 @@ public class ControladorTransporte implements ActionListener {
 		this.ventanaEditarTransporte = VentanaEditarTransporte.getInstance();
 		
 		this.ventanaAgregarTransporte.getBtnAgregar().addActionListener(rc->agregarTransporte(rc));
+		this.ventanaAgregarTransporte.getBtnCancelar().addActionListener(c->cancelarVentanaAgregarTransporte(c));
 		this.ventanaEditarTransporte.getBtnEditar().addActionListener(ac->editarTransporte(ac));
+		this.ventanaEditarTransporte.getBtnCancelar().addActionListener(c->cancelarVentanaEditarTransporte(c));
 
 		this.transporte = new Transporte(new DAOSQLFactory());
 		transportes_en_tabla = transporte.obtenerTransportes();
 	}
 
+
+
 	public void mostrarVentanaAgregarTransporte() {
+		this.ventanaAgregarTransporte.limpiarCampos();
 		this.ventanaAgregarTransporte.mostrarVentana();
 	}
 	
 	public void editarTransporte() {
+		this.ventanaEditarTransporte.limpiarCampos();
 		this.ventanaEditarTransporte.mostrarVentana();
 	}
 	
@@ -56,7 +62,12 @@ public class ControladorTransporte implements ActionListener {
 
 		}
 	}
-	
+
+
+	private void cancelarVentanaAgregarTransporte(ActionEvent c) {
+		this.ventanaAgregarTransporte.limpiarCampos();
+		this.ventanaAgregarTransporte.cerrarVentana();
+	}
 	public void editarTransporte(int filaSeleccionada){
 		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarTransporte.mostrarVentana();
@@ -78,6 +89,10 @@ public class ControladorTransporte implements ActionListener {
 
 		}
 		
+	}
+	private void cancelarVentanaEditarTransporte(ActionEvent c) {
+		this.ventanaEditarTransporte.limpiarCampos();
+		this.ventanaEditarTransporte.cerrarVentana();
 	}
 	
 	public void eliminarTransporte(int filaSeleccionada){

@@ -131,4 +131,6 @@ public class VentanaCargaPasajero extends JFrame {
 	public JButton getBtnAtras() {
 		return btnAtras;
 	}
+	
+	
 }
