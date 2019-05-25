@@ -67,7 +67,6 @@ public class ControladorAdministrativo implements ActionListener {
 
 	public void inicializar(){
 		this.vista.mostrarVentana();
-		JOptionPane.showMessageDialog(null, "Bienvenido" + " " + administrativoLogueado.getNombre(), "Al Planeta Project", JOptionPane.INFORMATION_MESSAGE);
 		this.llenarTablaPasajes();
 	}
 	
