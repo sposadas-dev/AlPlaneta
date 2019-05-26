@@ -374,9 +374,6 @@ public class ControladorPasaje {
 //	}
 //	
 	
-	
-
-	
 	public void eliminarPasaje(int filaSeleccionada){
 		int confirm = JOptionPane.showOptionDialog(
 		            null,"¿Estás seguro que quieres cancelar el pasaje?", 
