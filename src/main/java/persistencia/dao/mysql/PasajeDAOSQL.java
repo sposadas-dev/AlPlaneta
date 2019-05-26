@@ -6,8 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import modelo.Pasaje;
+import modelo.Transporte;
 import dto.PasajeDTO;
 import dto.PasajeroDTO;
+import dto.TransporteDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PasajeDAO;
 
@@ -74,8 +77,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
 		EstadoPasajeDAOSQL estadoPasajeDAOSQL = new EstadoPasajeDAOSQL();
 		PagoDAOSQL pagoDAOSQL = new PagoDAOSQL();
-		ArrayList<PasajeroDTO> pasajeros = new ArrayList<PasajeroDTO>();
-		Pasaje_PasajerosDAOSQL pasaje_pasajeros = new Pasaje_PasajerosDAOSQL();
+		Pasaje_PasajerosDAOSQL pasajeros = new Pasaje_PasajerosDAOSQL();
 
 		Conexion conexion = Conexion.getConexion();
 		try {
@@ -93,8 +95,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 						resultSet.getBigDecimal("valorViaje"),
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 						pagoDAOSQL.getPagoById(resultSet.getInt("idPago")),
-						pasajeros
-						)
+						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")))
 						);							
 			}
 		} catch (SQLException e) {
@@ -129,6 +130,4 @@ public class PasajeDAOSQL implements PasajeDAO {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-
 }

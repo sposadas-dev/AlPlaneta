@@ -2,17 +2,21 @@ package presentacion.vista.administrativo;
 
 import java.awt.EventQueue;
 import java.awt.SystemColor;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 
 public class VentanaPasajero extends JFrame {
 
@@ -20,10 +24,12 @@ public class VentanaPasajero extends JFrame {
 	private JTextField txtNombre;
 	private JTextField txtDni;
 	private JTextField txtApellido;
-	private static VentanaPasajero INSTANCE;
-	private JButton btnCargarDatos;
 	private JTextField txtTelefono;
+	private JDateChooser dateFechaNacimiento;
 	private JTextField txtEmail;
+	private JButton btnCargarDatos;
+	private static VentanaPasajero INSTANCE;
+	
 
 	public static VentanaPasajero getInstance(){
 		if(INSTANCE == null)
@@ -46,7 +52,7 @@ public class VentanaPasajero extends JFrame {
 		
 		JPanel panelCargarPasajeros = new JPanel();
 		panelCargarPasajeros.setBackground(new Color(9, 132, 227));
-		panelCargarPasajeros.setBounds(0, 0, 545, 53);
+		panelCargarPasajeros.setBounds(0, 0, 555, 53);
 		contentPane.add(panelCargarPasajeros);
 		panelCargarPasajeros.setLayout(null);
 		
@@ -116,8 +122,10 @@ public class VentanaPasajero extends JFrame {
 		lblFechaNacimiento.setBounds(274, 153, 123, 14);
 		contentPane.add(lblFechaNacimiento);
 		
-		JDateChooser dateFechaNacimiento = new JDateChooser();
+		dateFechaNacimiento = new JDateChooser();
 		dateFechaNacimiento.setBounds(400, 147, 135, 20);
+		JTextFieldDateEditor editor = (JTextFieldDateEditor) dateFechaNacimiento.getDateEditor();
+		editor.setEditable(false);
 		contentPane.add(dateFechaNacimiento);
 	}
 	
@@ -146,6 +154,10 @@ public class VentanaPasajero extends JFrame {
 		return txtApellido;
 	}
 
+
+	public JDateChooser getDateFechaNacimiento() {
+		return dateFechaNacimiento;
+	}
 
 	public void setTxtApellido(JTextField txtApellido) {
 		this.txtApellido = txtApellido;
@@ -180,7 +192,8 @@ public class VentanaPasajero extends JFrame {
 		this.txtNombre.setText("");
 		this.txtApellido.setText("");
 		this.txtDni.setText("");
-		this.txtEmail.setText("");
+		this.dateFechaNacimiento.setDate(null);
 		this.txtTelefono.setText("");
+		this.txtEmail.setText("");
 	}
 }

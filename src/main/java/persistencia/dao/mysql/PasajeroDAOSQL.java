@@ -131,8 +131,7 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 						  );
 				return pasajero;
 			}
-		} 
-		catch (SQLException e) {
+		}catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -140,21 +139,21 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 	
 	public static void main(String[] args) {
 		
-//		PasajeroDAOSQL daoSQL = new PasajeroDAOSQL();
+		PasajeroDAOSQL daoSQL = new PasajeroDAOSQL();
 //
 //	/*Probamos El Insert en la tabla, luego verificar de forma manual que este registrado en la tabla*/	
-//		PasajeroDTO DTO = new PasajeroDTO(0,"LizzAdministrativa","Moreno","36584266");
+		PasajeroDTO DTO = new PasajeroDTO(0,"LizzAdministrativa","Moreno","36584266",null,"asd","asda");
 //		PasajeroDTO DTO2 = new PasajeroDTO(0,"MicaAdministrativa","Perez","32125322");
 //		PasajeroDTO DTO3 = new PasajeroDTO(0,"SolAdministrativa","Hoyos","25652544");
-//		
-//		daoSQL.insert(DTO);
+		
+		daoSQL.insert(DTO);
 //		daoSQL.insert(DTO2);
 //		daoSQL.insert(DTO3);
 //		
 //	/*Probamos el ReadALL*/	
-//		ArrayList<PasajeroDTO> array = (ArrayList<PasajeroDTO>) daoSQL.readAll();
+		ArrayList<PasajeroDTO> array = (ArrayList<PasajeroDTO>) daoSQL.readAll();
 //		
-//		for(PasajeroDTO ad: array)
-//			System.out.println(ad.getNombre());
+		for(PasajeroDTO ad: array)
+			System.out.println(ad.getNombre());
 		}
 }
