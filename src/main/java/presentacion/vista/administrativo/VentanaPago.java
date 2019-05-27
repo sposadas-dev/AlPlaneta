@@ -65,9 +65,7 @@ public class VentanaPago extends JFrame {
 		contentPane.add(comboBoxFormaDePago);		
 		comboBoxFormaDePago.setEnabled(false);
 
-		
-		
-		btnPago = new JButton("Realizar pago");
+		btnPago = new JButton("Confirmar pago");
 		btnPago.setBounds(218, 179, 121, 42); 	
 		contentPane.add(btnPago);
 		

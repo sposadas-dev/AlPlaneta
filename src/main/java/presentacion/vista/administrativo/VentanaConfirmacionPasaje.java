@@ -25,6 +25,8 @@ public class VentanaConfirmacionPasaje extends JFrame {
 	private JTextField txtFormaPago;
 	private JTextField txtPagado;
 	private JTextField txtTotal;
+	private JButton btnGenerarPasaje;
+	private JButton btnAtras;
 	private static VentanaConfirmacionPasaje INSTANCE;
 	
 
@@ -57,10 +59,10 @@ public class VentanaConfirmacionPasaje extends JFrame {
 		panel.setBounds(0, 0, 651, 53);
 		contentPane.add(panel);
 		
-		JLabel lblConfirmacionPasaje = new JLabel("Confirmación de pasaje");
+		JLabel lblConfirmacionPasaje = new JLabel("Confirmación de compra de pasaje");
 		lblConfirmacionPasaje.setForeground(Color.WHITE);
 		lblConfirmacionPasaje.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblConfirmacionPasaje.setBounds(178, 0, 318, 53);
+		lblConfirmacionPasaje.setBounds(88, 0, 511, 53);
 		panel.add(lblConfirmacionPasaje);
 		
 		JLabel lblDestino = new JLabel("Destino:");
@@ -91,11 +93,11 @@ public class VentanaConfirmacionPasaje extends JFrame {
 		lblImportePagado.setBounds(374, 405, 116, 14);
 		contentPane.add(lblImportePagado);
 		
-		JButton btnAtras = new JButton("Atrás");
+		btnAtras = new JButton("Atrás");
 		btnAtras.setBounds(137, 524, 152, 47);
 		contentPane.add(btnAtras);
 		
-		JButton btnGenerarPasaje = new JButton("Generar pasaje");
+		btnGenerarPasaje = new JButton("Generar pasaje");
 		btnGenerarPasaje.setBounds(332, 525, 158, 45);
 		contentPane.add(btnGenerarPasaje);
 		
@@ -104,42 +106,49 @@ public class VentanaConfirmacionPasaje extends JFrame {
 		contentPane.add(table);
 		
 		txtCliente = new JTextField();
+		txtCliente.setBackground(Color.WHITE);
 		txtCliente.setEditable(false);
 		txtCliente.setBounds(97, 83, 244, 20);
 		contentPane.add(txtCliente);
 		txtCliente.setColumns(10);
 		
 		txtDni = new JTextField();
+		txtDni.setBackground(Color.WHITE);
 		txtDni.setEditable(false);
 		txtDni.setBounds(404, 83, 197, 20);
 		contentPane.add(txtDni);
 		txtDni.setColumns(10);
 		
 		txtOrigen = new JTextField();
+		txtOrigen.setBackground(Color.WHITE);
 		txtOrigen.setEditable(false);
 		txtOrigen.setBounds(96, 140, 505, 20);
 		contentPane.add(txtOrigen);
 		txtOrigen.setColumns(10);
 		
 		txtDestino = new JTextField();
+		txtDestino.setBackground(Color.WHITE);
 		txtDestino.setEditable(false);
 		txtDestino.setBounds(96, 191, 505, 20);
 		contentPane.add(txtDestino);
 		txtDestino.setColumns(10);
 		
 		txtFormaPago = new JTextField();
+		txtFormaPago.setBackground(Color.WHITE);
 		txtFormaPago.setEditable(false);
 		txtFormaPago.setBounds(133, 402, 186, 20);
 		contentPane.add(txtFormaPago);
 		txtFormaPago.setColumns(10);
 		
 		txtPagado = new JTextField();
+		txtPagado.setBackground(Color.WHITE);
 		txtPagado.setEditable(false);
 		txtPagado.setBounds(495, 402, 123, 20);
 		contentPane.add(txtPagado);
 		txtPagado.setColumns(10);
 		
 		txtTotal = new JTextField();
+		txtTotal.setBackground(Color.WHITE);
 		txtTotal.setEditable(false);
 		txtTotal.setBounds(495, 447, 123, 20);
 		contentPane.add(txtTotal);
@@ -172,5 +181,17 @@ public class VentanaConfirmacionPasaje extends JFrame {
 
 	public JTextField getTxtTotal() {
 		return txtTotal;
+	}
+	
+	public JButton getBtnGenerarPasaje() {
+		return btnGenerarPasaje;
+	}
+	
+	public JButton getBtnAtras() {
+		return btnAtras;
+	}
+
+	public void mostrarVentana(boolean visibilidad) {
+		this.setVisible(visibilidad);
 	}
 }
