@@ -103,7 +103,7 @@ public class ControladorCiudad implements ActionListener {
 
 			this.ventanaAgregarCiudad.limpiarCampos();
 			this.ventanaAgregarCiudad.cerrarVentana();
-			JOptionPane.showMessageDialog(null, "Ciudad agregada", "Ciudad", JOptionPane.INFORMATION_MESSAGE);
+			
 
 		}
 		llenarTablaVistaCiudades();
@@ -170,7 +170,7 @@ public class ControladorCiudad implements ActionListener {
 			             JOptionPane.WARNING_MESSAGE, null, null, null);
 		if (confirm == 0 && permiteEliminar(p) ){
 			this.modeloCiudad.borrarCiudad(p);
-			JOptionPane.showMessageDialog(null, "Ciudad eliminada","Ciudad", JOptionPane.INFORMATION_MESSAGE);
+			
 		}
 		else{
 			JOptionPane.showMessageDialog(null, "No pudo eliminarse","Ciudad", JOptionPane.ERROR_MESSAGE);

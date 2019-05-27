@@ -56,7 +56,7 @@ public class ControladorFormaPago implements ActionListener {
 	
 			this.ventanaAgregarFormaPago.limpiarCampos();
 			this.ventanaAgregarFormaPago.cerrarVentana();
-			JOptionPane.showMessageDialog(null, "Forma de pago agregado","Forma de pago", JOptionPane.INFORMATION_MESSAGE);
+			
 		}
 	}
 	
@@ -82,7 +82,7 @@ public class ControladorFormaPago implements ActionListener {
 			this.formaPago.editarFormaPago(new FormaPagoDTO(formas_de_pagos_en_tabla.get(this.filaSeleccionada).getIdFormaPago(),tipo));
 			ventanaEditarFormaPago.limpiarCampos();
 			ventanaEditarFormaPago.dispose();
-			JOptionPane.showMessageDialog(null, "Forma de pago editado","Forma de pago", JOptionPane.INFORMATION_MESSAGE);
+			
 
 		}
 		
@@ -100,7 +100,6 @@ public class ControladorFormaPago implements ActionListener {
 				             "Eliminar FormaPago", JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE, null, null, null);
 	 if (confirm == 0){
-		JOptionPane.showMessageDialog(null, "Forma de pago eliminado","Forma de pago", JOptionPane.INFORMATION_MESSAGE);
 		this.formaPago.borrarFormaPago(formas_de_pagos_en_tabla.get(filaSeleccionada));
 	 }
 	}

@@ -85,7 +85,7 @@ public class ControladorPais implements ActionListener {
 	
 			this.ventanaAgregarPais.limpiarCampos();
 			this.ventanaAgregarPais.cerrarVentana();
-			JOptionPane.showMessageDialog(null, "Pais agregado","Pais", JOptionPane.INFORMATION_MESSAGE);
+			
 		}
 		llenarTablaVistaPaises();
 	}
@@ -106,7 +106,7 @@ public class ControladorPais implements ActionListener {
 			System.out.println("se edito el pais");
 			ventanaEditarPais.limpiarCampos();
 			ventanaEditarPais.cerrarVentana();
-			JOptionPane.showMessageDialog(null, "Pais editado","Pais", JOptionPane.INFORMATION_MESSAGE);
+			
 		}
 		llenarTablaVistaPaises();
 	}
@@ -125,7 +125,7 @@ public class ControladorPais implements ActionListener {
 			             JOptionPane.WARNING_MESSAGE, null, null, null);
 		if (confirm == 0 && permiteEliminar(p) ){
 			this.modeloPais.borrarPais(p);
-			JOptionPane.showMessageDialog(null, "Pais eliminado","Pais", JOptionPane.INFORMATION_MESSAGE);
+			
 		}
 		else{
 			JOptionPane.showMessageDialog(null, "No pudo eliminarse","Pais", JOptionPane.ERROR_MESSAGE);

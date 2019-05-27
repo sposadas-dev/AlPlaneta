@@ -59,7 +59,7 @@ public class ControladorUsuario implements ActionListener {
 
 	public void inicializar(){
 		this.vistaCliente.mostrarVentana();
-		JOptionPane.showMessageDialog(null, "Bienvenido al sistema de la empresa de turismo Al Planeta", "Bienvenido"+ " "+cliente.getNombre(), JOptionPane.INFORMATION_MESSAGE);
+		
 	}
 	
 	private void mostrarVentanaReservas(ActionEvent vr) {
