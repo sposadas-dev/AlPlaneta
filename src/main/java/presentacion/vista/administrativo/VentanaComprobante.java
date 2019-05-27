@@ -84,7 +84,7 @@ public class VentanaComprobante extends JFrame {
 
 		btnPdfPago = new JButton("");
 		btnPdfPago.setBounds(375, 340, 86, 81);
-		Image imgPdfPago = new ImageIcon(this.getClass().getResource("/iconos/pdf.png")).getImage();
+		Image imgPdfPago = new ImageIcon(this.getClass().getResource("/img/pdf.png")).getImage();
 		btnPdfPago.setIcon(new ImageIcon(imgPdfPago.getScaledInstance(75, 72, 85)));
 		contentPane.add(btnPdfPago);
 		
@@ -100,7 +100,7 @@ public class VentanaComprobante extends JFrame {
 		
 		btnPdfReserva = new JButton("");
 		btnPdfReserva.setBounds(122, 340, 86, 81);
-		Image imgPdfReserva = new ImageIcon(this.getClass().getResource("/iconos/pdf.png")).getImage();
+		Image imgPdfReserva = new ImageIcon(this.getClass().getResource("/img/pdf.png")).getImage();
 		btnPdfReserva.setIcon(new ImageIcon(imgPdfReserva.getScaledInstance(75, 72, 85)));
 		contentPane.add(btnPdfReserva);
 		
