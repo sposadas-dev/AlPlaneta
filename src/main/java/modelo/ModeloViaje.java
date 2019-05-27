@@ -19,6 +19,10 @@ public class ModeloViaje {
 		this.viaje.insert(nuevoViaje);
 	}
 	
+	public void editarViaje(ViajeDTO viaje_editar){
+		this.viaje.update(viaje_editar);
+	}
+	
 	public void borrarViaje(ViajeDTO viaje_a_eliminar){
 		this.viaje.delete(viaje_a_eliminar);
 	}

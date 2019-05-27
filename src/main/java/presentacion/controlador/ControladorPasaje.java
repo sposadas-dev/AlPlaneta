@@ -355,18 +355,24 @@ public class ControladorPasaje {
 	
 	
 	private void darAltaDeUnPasaje(ActionEvent dp) {
-		ViajeDTO viaje = viajeSeleccionado;
+		ViajeDTO viajeDTO = viajeSeleccionado;
 		ClienteDTO cliente = clienteSeleccionado;
 		BigDecimal valorViaje = totalaPagar;
 		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
+		
+		
+		viajeDTO.setCapacidad(viajeSeleccionado.getCapacidad()-pasajeros.size()); //Restamos la capacidad del viaje segun la cantidad de pasajeros
+		//Modelo viaje
+		viaje.editarViaje(viajeDTO);
+		
 		
 		//Agrego el pago
 		pago.agregarPago(pagoDTO);
 		PagoDTO pagoPasaje = pago.getUltimoRegistroPago();
 		
 		//Agrego el pasaje
-		pasajeDTO = new PasajeDTO(0,viaje,administrativoLogueado,cliente,calcularFechaReserva(viaje.getFechaSalida()),valorViaje,estadoPasaje,pagoPasaje,
+		pasajeDTO = new PasajeDTO(0,viajeDTO,administrativoLogueado,cliente,calcularFechaReserva(viajeDTO.getFechaSalida()),valorViaje,estadoPasaje,pagoPasaje,
 		pasajeros);
 		pasaje.agregarPasaje(pasajeDTO);
 	
