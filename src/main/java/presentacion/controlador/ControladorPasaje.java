@@ -214,16 +214,44 @@ public class ControladorPasaje {
 		pagoDTO.setIdFormaPago(formaPago);
 		pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));
 		pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
-		
 		pago.agregarPago(pagoDTO);
-	
+		
+		obtenerPagoConID();
 		
 		darDeAltaUnPasaje();
 		this.ventanaPago.setVisible(false);
 		
 	}
+
+	private void obtenerPagoConID() {
+		ArrayList<PagoDTO> pagos = (ArrayList<PagoDTO>) pago.obtenerPagos();
+		System.out.println("obtenemos todos los pagos:"+pagos.size());
+		
+		System.out.println("dto:"+pagoDTO.getFechaPago());
+		System.out.println("dto:"+pagoDTO.getMonto());
+		System.out.println("dto:"+pagoDTO.getIdFormaPago().getIdFormaPago());
+		
+		for(PagoDTO pag: pagos){
+//			System.out.println("db:"+pag.getFechaPago());
+//			System.out.println("db:"+pag.getMonto());
+//			System.out.println("db:"+pag.getIdFormaPago().getIdFormaPago());
+			
+			if(pag.getFechaPago().compareTo(pagoDTO.getFechaPago())==0){
+				System.out.println("Fechas Iguales");
+				if(pag.getIdFormaPago().getIdFormaPago()== pagoDTO.getIdFormaPago().getIdFormaPago()){
+					System.out.println("IdPago iguales");
+					if(pag.getMonto()==(pagoDTO.getMonto())){
+						System.out.println("Monto Iguales");
+						pagoDTO = pag;
+					}
+				}
+				
+			}
+		}		
+	}
 	
 	private void darDeAltaUnPasaje() {
+		System.out.println("ID:" + pagoDTO.getIdPago());
 		ViajeDTO viaje = viajeSeleccionado;
 		ClienteDTO cliente = clienteSeleccionado;
 		BigDecimal valorViaje = totalaPagar;

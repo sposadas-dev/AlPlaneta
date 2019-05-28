@@ -18,6 +18,8 @@ public interface ClienteDAO {
 	
 	public ClienteDTO getByLoginId(int idCliente);
 
+	public ClienteDTO getByIdContacto(int idContacto);
+
 	
 
 }

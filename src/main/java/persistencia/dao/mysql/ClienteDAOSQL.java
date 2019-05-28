@@ -20,6 +20,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ? WHERE idCliente=? ;";
 	private static final String browse = "SELECT * FROM cliente WHERE idCliente = ?";
 	private static final String browseLogin = "SELECT * FROM cliente WHERE idLogin = ?";
+	private static final String browseByMail = "SELECT * FROM cliente WHERE idMedioContacto = ?";
 	
 	@Override
 	public boolean insert(ClienteDTO cliente) {
@@ -129,7 +130,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 	}
 	
 	@Override
-	public ClienteDTO getByLoginId(int id) {
+	public ClienteDTO getByIdContacto(int idContacto) {
 			PreparedStatement statement;
 			ResultSet resultSet;
 			Conexion conexion = Conexion.getConexion();
@@ -138,8 +139,8 @@ public class ClienteDAOSQL implements ClienteDAO {
 			LoginDAOSQL loginDAO = new LoginDAOSQL();
 			
 			try{
-				statement = conexion.getSQLConexion().prepareStatement(browseLogin);
-				statement.setInt(1, id);
+				statement = conexion.getSQLConexion().prepareStatement(browseByMail);
+				statement.setInt(1, idContacto);
 				resultSet = statement.executeQuery();
 				
 				if(resultSet.next()){
@@ -160,17 +161,50 @@ public class ClienteDAOSQL implements ClienteDAO {
 			return null;
 		}
 	
+	public ClienteDTO getByLoginId(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		ClienteDTO dto = null;
+		MedioContactoDAOSQL medioDAO = new MedioContactoDAOSQL();
+		LoginDAOSQL loginDAO = new LoginDAOSQL();
+		
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browseLogin);
+			statement.setInt(1, id);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				dto = new ClienteDTO(
+						resultSet.getInt("idCliente"),
+						resultSet.getString("nombre"),
+						resultSet.getString("apellido"),
+						resultSet.getString("dni"),
+						resultSet.getDate("fechaNacimiento"),
+						medioDAO.getMedioContactoById(resultSet.getInt("idMedioContacto")),
+						loginDAO.getById(resultSet.getInt("idLogin")));
+				return dto;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		ClienteDAOSQL dao = new ClienteDAOSQL();
 		
-		List<ClienteDTO> list = dao.readAll();
+//		List<ClienteDTO> list = dao.readAll();
 		
-		for(ClienteDTO elem: list){
-			System.out.println(elem.getNombre());
-		}
+//		for(ClienteDTO elem: list){
+//			System.out.println(elem.getNombre());
+//		}
+//		
+//		System.out.println(dao.getByLoginId(5).getLogin().getUsuario());
+//		System.out.println(dao.getByLoginId(5).getMedioContacto().getTelefonoCelular());
 		
-		System.out.println(dao.getByLoginId(5).getLogin().getUsuario());
-		System.out.println(dao.getByLoginId(5).getMedioContacto().getTelefonoCelular());
+		System.out.println(dao.getByIdContacto(1).getLogin().getUsuario());
 	}
 	
 	

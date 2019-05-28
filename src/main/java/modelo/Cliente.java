@@ -28,4 +28,12 @@ public class Cliente {
 	public ClienteDTO getByLoginId(int idCliente){
 		return this.cliente.getByLoginId(idCliente);
 	}
+	
+	public ClienteDTO getByIdContacto(int idContacto){
+		return this.cliente.getByIdContacto(idContacto);
+	}
+	
+	public void actualizar(ClienteDTO cliente){
+		this.cliente.update(cliente);
+	}
 }
