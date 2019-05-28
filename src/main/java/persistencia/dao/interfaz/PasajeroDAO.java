@@ -16,4 +16,6 @@ public interface PasajeroDAO {
 
 	public PasajeroDTO browse(int idPasajero);
 
+	public PasajeroDTO getPasajeroByDni(String dniPasajero);
+
 }

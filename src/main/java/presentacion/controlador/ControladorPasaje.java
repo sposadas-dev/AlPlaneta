@@ -101,6 +101,7 @@ public class ControladorPasaje {
 		this.ventanaCargaPasajero.getBtnAtras().addActionListener(a->volverVentanaViaje(a));
 	
 		this.ventanaPasajero.getBtnCargarDatos().addActionListener(cd->cargarDatosPasajero(cd));
+		this.ventanaPasajero.getBtnAplicarBusqueda().addActionListener(af->aplicarFiltro(af));
 		
 		this.ventanaPago.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
 		this.ventanaPago.getBtnAtras().addActionListener(vc->volverVentanaCargaPasajero(vc));
@@ -112,12 +113,24 @@ public class ControladorPasaje {
 		this.ventanaComprobante.getBtnPdfPago().addActionListener(cp->mostrarComprobantePago(cp));
 	
 		//Ventana Edición de Pasaje
-//		this.ventanaVisualizarPasaje.getBtnAceptar().addActionListener(s->salirVentanaVisualizarPasaje(s));
+		this.ventanaVisualizarPasaje.getBtnAceptar().addActionListener(s->salirVentanaVisualizarPasaje(s));
 
 		this.administrativoLogueado = administrativoLogueado;
 	}
 
 	
+	private void aplicarFiltro(ActionEvent af) {
+		String dni = ventanaPasajero.getTxtFiltroDni().getText();
+		PasajeroDTO pasajeroDTO = pasajero.llenarCamposPasajeroPorDni(dni);
+		this.ventanaPasajero.getTxtNombre().setText(pasajeroDTO.getNombre());
+		this.ventanaPasajero.getTxtApellido().setText(pasajeroDTO.getApellido());
+		this.ventanaPasajero.getTxtDni().setText(pasajeroDTO.getDni());
+		this.ventanaPasajero.getDateFechaNacimiento().setDate(pasajeroDTO.getFechaNacimiento());
+		this.ventanaPasajero.getTxtTelefono().setText(pasajeroDTO.getTelefono());
+		this.ventanaPasajero.getTxtEmail().setText(pasajeroDTO.getEmail());
+	}
+
+
 	public void iniciar(){
 		this.llenarTablaClientes();
 	}
@@ -448,56 +461,55 @@ public class ControladorPasaje {
 				             "Cancelar pasaje", JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE, null, null, null);
 	 if (confirm == 0){
-		JOptionPane.showMessageDialog(null, "Pasaje cancelado","Pasaje", JOptionPane.INFORMATION_MESSAGE);
-		this.pasaje.borrarPasaje(pasajes_en_tabla.get(filaSeleccionada));
+		 this.pasaje.borrarPasaje(pasajes_en_tabla.get(filaSeleccionada));
 	 }
 	}
 	
-//	public void editarPasaje(int filaSeleccionada){
-//		verDatosDelPasaje(filaSeleccionada);
-//	}
+	public void editarPasaje(int filaSeleccionada){
+		verDatosDelPasaje(filaSeleccionada);
+	}
 	
-//	private void verDatosDelPasaje(int filaSeleccionada) {
-//		if (filaSeleccionada != -1){
-//			if(this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getIdEstadoPasaje()==1){
-//				this.ventanaVisualizarPasaje.setVisible(true);
-//				this.ventanaVisualizarPasaje.getBtnPagar().setVisible(false);
-//				this.ventanaVisualizarPasaje.getLblClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
-//				this.ventanaVisualizarPasaje.getLblDniDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getDni());
-//				this.ventanaVisualizarPasaje.getLblOrigenDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadOrigen().getNombre());
-//				this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadDestino().getNombre());
-//				this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
-//				this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
-//				this.ventanaVisualizarPasaje.getLblMontoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje());
-//				this.ventanaVisualizarPasaje.getLblRestante().setText(" "+ calcularMontoQueSeDebeDelPasaje(filaSeleccionada));
-//
-//			}else{
-//				this.ventanaVisualizarPasaje.setVisible(true);
-//				this.ventanaVisualizarPasaje.getBtnPagar().setVisible(true);
-//				this.ventanaVisualizarPasaje.getLblClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
-//				this.ventanaVisualizarPasaje.getLblDniDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getDni());
-//				this.ventanaVisualizarPasaje.getLblOrigenDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadOrigen().getNombre());
-//				this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadDestino().getNombre());
-//				this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
-//				this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
-//				this.ventanaVisualizarPasaje.getLblMontoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje());
-//				this.ventanaVisualizarPasaje.getLblRestante().setText(" "+ calcularMontoQueSeDebeDelPasaje(filaSeleccionada));
-//			
-//			}
-//		}else{
-//			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
-//		}
-//	}
+	private void verDatosDelPasaje(int filaSeleccionada) {
+		if (filaSeleccionada != -1){
+			if(this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getIdEstadoPasaje()==1){
+				this.ventanaVisualizarPasaje.setVisible(true);
+				this.ventanaVisualizarPasaje.getBtnPagar().setVisible(false);
+				this.ventanaVisualizarPasaje.getLblClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
+				this.ventanaVisualizarPasaje.getLblDniDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getDni());
+				this.ventanaVisualizarPasaje.getLblOrigenDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadOrigen().getNombre());
+				this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadDestino().getNombre());
+				this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
+				this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
+				this.ventanaVisualizarPasaje.getLblMontoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje());
+				this.ventanaVisualizarPasaje.getLblRestante().setText(" "+ calcularMontoQueSeDebeDelPasaje(filaSeleccionada));
 
-//	private BigDecimal calcularMontoQueSeDebeDelPasaje(int filaSeleccionada) {
-//		BigDecimal Valor1 = this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje();
-//		BigDecimal Valor2 = this.pasajes_en_tabla.get(filaSeleccionada).getPago().getMonto();
-//		totalaPagar = Valor1.subtract(Valor2);
-//		return totalaPagar;
-//	}
-//		
-//	private void salirVentanaVisualizarPasaje(ActionEvent s) {
-//		this.ventanaVisualizarPasaje.mostrarVentana(false);
-//	}
+			}else{
+				this.ventanaVisualizarPasaje.setVisible(true);
+				this.ventanaVisualizarPasaje.getBtnPagar().setVisible(true);
+				this.ventanaVisualizarPasaje.getLblClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
+				this.ventanaVisualizarPasaje.getLblDniDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getDni());
+				this.ventanaVisualizarPasaje.getLblOrigenDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadOrigen().getNombre());
+				this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadDestino().getNombre());
+				this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
+				this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
+				this.ventanaVisualizarPasaje.getLblMontoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje());
+				this.ventanaVisualizarPasaje.getLblRestante().setText(" "+ calcularMontoQueSeDebeDelPasaje(filaSeleccionada));
+			
+			}
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private BigDecimal calcularMontoQueSeDebeDelPasaje(int filaSeleccionada) {
+		BigDecimal Valor1 = this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje();
+		BigDecimal Valor2 = this.pasajes_en_tabla.get(filaSeleccionada).getPago().getMonto();
+		totalaPagar = Valor1.subtract(Valor2);
+		return totalaPagar;
+	}
+		
+	private void salirVentanaVisualizarPasaje(ActionEvent s) {
+		this.ventanaVisualizarPasaje.mostrarVentana(false);
+	}
 	
 }

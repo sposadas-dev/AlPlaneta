@@ -29,4 +29,8 @@ public class Pasajero {
 	public void editarPasajero(PasajeroDTO pasajeroUpdate) {
 		this.pasajero.update(pasajeroUpdate);
 	}
+	
+	public PasajeroDTO llenarCamposPasajeroPorDni(String dniPasajero){
+		return this.pasajero.getPasajeroByDni(dniPasajero);
+	}
 }

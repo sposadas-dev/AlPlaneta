@@ -44,7 +44,7 @@ public class ControladorAdministrativo implements ActionListener {
 	
 		this.vista.getItemVisualizarPasajes().addActionListener(ap->mostrarPasajes(ap));
 		this.vista.getItemAgregarPasaje().addActionListener(ap->mostrarVentanaAgregarPasaje(ap));
-//		this.vista.getItemEditarPasaje().addActionListener(ep->mostrarVentanaEditarPasaje(ep));
+		this.vista.getItemEditarPasaje().addActionListener(ep->mostrarVentanaEditarPasaje(ep));
 		this.vista.getItemCancelarPasaje().addActionListener(cp->cancelarPasaje(cp));
 		
 		this.vista.getPanelCliente().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
@@ -86,16 +86,16 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorPasaje.iniciar();
 	}
 	
-//	private void mostrarVentanaEditarPasaje(ActionEvent ep) {
-//		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
-//		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
-//		if (filaSeleccionada != -1){
-//			controladorPasaje.editarPasaje(filaSeleccionada);
-//			llenarTablaPasajes();
-//		}else{
-//			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
-//		}	
-//	}
+	private void mostrarVentanaEditarPasaje(ActionEvent ep) {
+		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
+		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
+		if (filaSeleccionada != -1){
+			controladorPasaje.editarPasaje(filaSeleccionada);
+			llenarTablaPasajes();
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}	
+	}
 
 	private void cancelarPasaje(ActionEvent cp) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);

@@ -18,7 +18,9 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 	private static final String readall = "SELECT * FROM pasajero";
 	private static final String update = "UPDATE pasajero SET nombre=?, apellido=?, dni=?, fechaNacimiento=?, telefono=?, email=? WHERE idPasajero=?;";
 	private static final String browse = "SELECT * FROM pasajero WHERE idPasajero=?";
-
+	
+	private static final String browseByDni = "SELECT * FROM pasajero WHERE dni=?";
+	
 	@Override
 	public boolean insert(PasajeroDTO pasajeroInsert) {
 		PreparedStatement statement;
@@ -137,6 +139,36 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 		return null;
 	}
 	
+	
+	@Override
+	public PasajeroDTO getPasajeroByDni(String dniPasajero) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		PasajeroDTO pasajero;
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(browseByDni);
+			
+			statement.setString(1, dniPasajero);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()){
+				pasajero = new PasajeroDTO(resultSet.getInt("idPasajero"), 
+										   resultSet.getString("nombre"),
+										   resultSet.getString("apellido"), 
+										   resultSet.getString("dni"),
+										   resultSet.getDate("fechaNacimiento"),
+										   resultSet.getString("telefono"),
+										   resultSet.getString("email")
+						  );
+				return pasajero;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	public static void main(String[] args) {
 		
 		PasajeroDAOSQL daoSQL = new PasajeroDAOSQL();
@@ -146,14 +178,17 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 //		PasajeroDTO DTO2 = new PasajeroDTO(0,"MicaAdministrativa","Perez","32125322");
 //		PasajeroDTO DTO3 = new PasajeroDTO(0,"SolAdministrativa","Hoyos","25652544");
 		
-		daoSQL.insert(DTO);
+//		daoSQL.insert(DTO);
 //		daoSQL.insert(DTO2);
 //		daoSQL.insert(DTO3);
-//		
+		System.out.println(daoSQL.getPasajeroByDni("36584266").getNombre());
 //	/*Probamos el ReadALL*/	
-		ArrayList<PasajeroDTO> array = (ArrayList<PasajeroDTO>) daoSQL.readAll();
-//		
-		for(PasajeroDTO ad: array)
-			System.out.println(ad.getNombre());
+//		ArrayList<PasajeroDTO> array = (ArrayList<PasajeroDTO>) daoSQL.readAll();
+////		
+//		for(PasajeroDTO ad: array)
+//			System.out.println(ad.getNombre());
 		}
+	
+
+
 }
