@@ -82,17 +82,23 @@ public class ControladorLogin {
 		this.ventanaLogin.mostrarVentana(true);
 	}
 	
-// CONTROLAR QUE EL SERVICIO DE MAIL FUNCIONE CORRECTAMENTE??????
+	private void pedirMail(){
+		this.ventanaClaveOlvidada.setVisible(true);
+		this.ventanaLogin.mostrarVentana(false);
+	}
 	
+// CONTROLAR QUE EL SERVICIO DE MAIL FUNCIONE CORRECTAMENTE??????
 	private void realizarCambioContraseña(ActionEvent e){
 		if(mailEsValido()){
 		enviarContrasenaViaMail();
 		guardarNuevaContraseñaEnDB();
+// VOLVER A PAGINA DE INICIO ?
 		}
 	}
 	
 	private boolean mailEsValido() {
 		this.mailDeRecuperacion = this.ventanaClaveOlvidada.getTextUsuario().getText();
+		this.contrasenaProvisoria = obtenerContrasenaProvisoria();
 		this.idMedioContactoBuscado = obtenerIdContacto(mailDeRecuperacion,contrasenaProvisoria);
 		return idMedioContactoBuscado!=null;
 	}
@@ -108,31 +114,20 @@ public class ControladorLogin {
 	}
 
 	private void enviarContrasenaViaMail() {
-		this.contrasenaProvisoria = obtenerContrasenaProvisoria();
 		this.envioDeCorreo.enviarCorreo(mailDeRecuperacion, contrasenaProvisoria);
 		this.ventanaClaveOlvidada.setVisible(false);
 	}
 	
 	private void guardarNuevaContraseñaEnDB() {
-		ClienteDTO clienteBuscado = buscarMedioContactoEnClientes(idMedioContactoBuscado);
+		ClienteDTO clienteBuscado = this.modeloCliente.getByIdContacto(idMedioContactoBuscado);
 		if(clienteBuscado!=null){
-			System.out.println("CLIENTE ENCONTRADO, PROCEDO A CAMBIAR LA CONTRASENA");
 			clienteBuscado.getLogin().setContrasena(contrasenaProvisoria);
 			modeloCliente.actualizar(clienteBuscado);
 		}
 	}
 	
-	private ClienteDTO buscarMedioContactoEnClientes(int idContacto){
-		return this.modeloCliente.getByIdContacto(idContacto);
-	}
-
 	private String obtenerContrasenaProvisoria() {
 		return UUID.randomUUID().toString().toUpperCase().substring(0, 8);
-	}
-	
-	private void pedirMail(){
-		this.ventanaClaveOlvidada.setVisible(true);
-		this.ventanaLogin.mostrarVentana(false);
 	}
 	
 	private void loguearse(ActionEvent log) {
