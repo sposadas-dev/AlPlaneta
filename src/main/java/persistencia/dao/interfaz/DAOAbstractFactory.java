@@ -1,5 +1,7 @@
 package persistencia.dao.interfaz;
 
+import modelo.ModeloEstadoEvento;
+
 public interface DAOAbstractFactory {
 	
 	public ClienteDAO createClienteDAO();
@@ -35,6 +37,10 @@ public interface DAOAbstractFactory {
 	public Pasaje_PasajerosDAO createPasaje_PasajerosDAO();
 
 	public EstadoPasajeDAO createEstadoPasajeDAO();
+
+	public EstadoEventoDAO createEstadoEventoDAO();
+	
+	public EventoDAO createEventoDAO();
 	
 //	public CoordinadorDAO createCoordinadorDAO();
 
