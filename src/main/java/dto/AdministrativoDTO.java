@@ -4,12 +4,14 @@ public class AdministrativoDTO {
 	private int idAdministrativo;
 	private String nombre;
 	private LoginDTO datosLogin;
+	private String mail;
 
-	public AdministrativoDTO(int idAdministrativo, String nombre, LoginDTO datosLogin) {
+	public AdministrativoDTO(int idAdministrativo, String nombre, LoginDTO datosLogin, String mail) {
 		super();
 		this.idAdministrativo = idAdministrativo;
 		this.nombre = nombre;
 		this.datosLogin = datosLogin;
+		this.mail = mail;
 	}
 	
 	public AdministrativoDTO() {
@@ -39,4 +41,14 @@ public class AdministrativoDTO {
 	public void setDatosLogin(LoginDTO datosLogin) {
 		this.datosLogin = datosLogin;
 	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	
 }

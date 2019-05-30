@@ -1,11 +1,8 @@
 package main;
-
 import modelo.Login;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.controlador.ControladorAdministrador;
 import presentacion.controlador.ControladorLogin;
 import presentacion.vista.VentanaLogin;
-import presentacion.vista.administrador.VistaAdministrador;
 
 public class Main {
 	

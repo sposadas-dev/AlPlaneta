@@ -27,4 +27,8 @@ private AdministradorDAO administrador;
 	public AdministradorDTO getByLoginId(int idLogin) {
 		return this.administrador.getByLoginId(idLogin);
 	}
+
+	public AdministradorDTO buscarPorEmail(String mailDeRecuperacion) {
+		return this.administrador.getByMail(mailDeRecuperacion);
+	}
 }

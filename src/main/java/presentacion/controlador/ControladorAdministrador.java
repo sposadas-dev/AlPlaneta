@@ -132,7 +132,8 @@ public class ControladorAdministrador {
 			
 			AdministrativoDTO nuevoAdministrativo = new AdministrativoDTO(0,
 					ventanaAgregarEmpleado.getTxtNombre().getText(),
-					obtenerLoginDTO());
+					obtenerLoginDTO(),
+					ventanaAgregarEmpleado.getTextMail().getText());
 			
 			Administrativo administrativo = new Administrativo(new DAOSQLFactory());
 			administrativo.agregarAdministrativo(nuevoAdministrativo);

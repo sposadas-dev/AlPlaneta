@@ -32,6 +32,7 @@ public class ControladorLogin {
 	private Login login;
 	private LoginDTO usuarioLogueado;
 	private Cliente modeloCliente;
+	private Administrador modeloAdministrador;
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
@@ -39,6 +40,7 @@ public class ControladorLogin {
 	private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
 	private MedioContacto modeloMedioContacto;
+	private Administrativo modeloAdministrativo;
 	private Integer idMedioContactoBuscado;
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
@@ -47,7 +49,9 @@ public class ControladorLogin {
 		this.vistaAdministrador = VistaAdministrador.getInstance();
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
 		this.modeloMedioContacto = new MedioContacto(new DAOSQLFactory());
+		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
 		this.modeloCliente = new Cliente(new DAOSQLFactory());
+		this.modeloAdministrador = new Administrador(new DAOSQLFactory());
 	
 		this.login = login;
 		this.usuarioLogueado = null;
@@ -89,29 +93,59 @@ public class ControladorLogin {
 	
 // CONTROLAR QUE EL SERVICIO DE MAIL FUNCIONE CORRECTAMENTE??????
 	private void realizarCambioContraseña(ActionEvent e){
-		if(mailEsValido()){
+		obtenerDatosRecuperacionDeContrasena();
 		enviarContrasenaViaMail();
 		guardarNuevaContraseñaEnDB();
 // VOLVER A PAGINA DE INICIO ?
-		}
 	}
 	
-	private boolean mailEsValido() {
+	private void obtenerDatosRecuperacionDeContrasena() {
 		this.mailDeRecuperacion = this.ventanaClaveOlvidada.getTextUsuario().getText();
 		this.contrasenaProvisoria = obtenerContrasenaProvisoria();
-		this.idMedioContactoBuscado = obtenerIdContacto(mailDeRecuperacion,contrasenaProvisoria);
-		return idMedioContactoBuscado!=null;
+	}
+	public boolean buscarPersonalAsociadoAlEmail(){
+		AdministrativoDTO administrativo = modeloAdministrativo.buscarPorEmail(mailDeRecuperacion);
+		if(administrativo!=null){
+			administrativo.getDatosLogin().setContrasena(contrasenaProvisoria);
+			//TODO: modeloAdministrativo.actualizar(administrativo)
+			return true;
+		}
+	
+		AdministradorDTO administrador = modeloAdministrador.buscarPorEmail(mailDeRecuperacion);
+		if(administrador!=null){
+			administrador.getDatosLogin().setContrasena(contrasenaProvisoria);
+			//TODO: modeloAdministrador.actualizar(administrador)
+			return true;
+		}
+		
+		ClienteDTO cliente = modeloCliente.buscarPorEmail(mailDeRecuperacion);
+		if(cliente!=null){
+			cliente.getLogin().setContrasena(contrasenaProvisoria);
+			//TODO: modeloCliente.actualizar(cliente)
+			return true;
+		}
+		
+		/*TODO:
+		CoordinadirDTO coordinador = modeloCoordinador.buscarPorEmail(mailDeRecuperacion);
+		if(coordinador!=null){
+			coordinador.getLogin().setContrasena(contrasenaProvisoria);
+			//TODO: modeloCoordinador.actualizar(coordinador)
+			return true;
+		}
+		*/
+		
+		return false;
 	}
 	
-	private int obtenerIdContacto(String mailDeRecuperacion2, String contrasenaProvisoria2) {
-		Integer idContacto = null;
-		ArrayList<MedioContactoDTO> medios = (ArrayList<MedioContactoDTO>) this.modeloMedioContacto.obtenerMediosContacto();
-		for(MedioContactoDTO m: medios){
-			if(m.getEmail().equals(mailDeRecuperacion2))
-				idContacto = m.getIdMedioContacto();
-		}
-		return idContacto;
-	}
+//	private int obtenerIdContacto(String mailDeRecuperacion2, String contrasenaProvisoria2) {
+//		Integer idContacto = null;
+//		ArrayList<MedioContactoDTO> medios = (ArrayList<MedioContactoDTO>) this.modeloMedioContacto.obtenerMediosContacto();
+//		for(MedioContactoDTO m: medios){
+//			if(m.getEmail().equals(mailDeRecuperacion2))
+//				idContacto = m.getIdMedioContacto();
+//		}
+//		return idContacto;
+//	}
 
 	private void enviarContrasenaViaMail() {
 		this.envioDeCorreo.enviarCorreo(mailDeRecuperacion, contrasenaProvisoria);

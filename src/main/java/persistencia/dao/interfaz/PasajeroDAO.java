@@ -2,6 +2,7 @@ package persistencia.dao.interfaz;
 
 import java.util.List;
 
+import dto.AdministrativoDTO;
 import dto.PasajeroDTO;
 
 public interface PasajeroDAO {
@@ -15,5 +16,7 @@ public interface PasajeroDAO {
 	public boolean update(PasajeroDTO pasajeroUpdate) ;
 
 	public PasajeroDTO browse(int idPasajero);
+	
+	public PasajeroDTO getByMail(String email);
 
 }

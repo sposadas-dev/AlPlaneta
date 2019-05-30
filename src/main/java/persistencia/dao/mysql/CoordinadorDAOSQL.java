@@ -25,4 +25,10 @@ public class CoordinadorDAOSQL implements CoordinadorDAO {
 		return false;
 	}
 
+	@Override
+	public CoordinadorDTO getByMail(String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

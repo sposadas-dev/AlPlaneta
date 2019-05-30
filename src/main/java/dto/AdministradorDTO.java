@@ -4,14 +4,24 @@ public class AdministradorDTO {
 	private int idAdministrador;
 	private String nombre;
 	private LoginDTO datosLogin;
+	private String mail;
 
-	public AdministradorDTO(int idAdministrador, String nombre, LoginDTO datosLogin) {
+	public AdministradorDTO(int idAdministrador, String nombre, LoginDTO datosLogin, String mail) {
 		super();
 		this.idAdministrador = idAdministrador;
 		this.nombre = nombre;
 		this.datosLogin = datosLogin;
+		this.mail = mail;
 	}
 	
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
 	public int getIdAdministrador() {
 		return idAdministrador;
 	}
