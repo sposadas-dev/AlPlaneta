@@ -10,6 +10,8 @@ public interface EventoDAO {
 	public List<EventoDTO> readAll();
 
 	public boolean update(EventoDTO evento);
+	
+	public boolean updateVisto(EventoDTO evento);
 
 	public EventoDTO getEventoById(int id);
 }

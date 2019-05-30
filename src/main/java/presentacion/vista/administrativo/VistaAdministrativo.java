@@ -23,6 +23,10 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class VistaAdministrativo{
 	
@@ -136,6 +140,11 @@ public class VistaAdministrativo{
 		itemVisualizarEvento = new JMenuItem("Visualizar eventos");
 		itemVisualizarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuEventos.add(itemVisualizarEvento);
+	}
+	
+
+	public JFrame getFrame() {
+		return frame;
 	}
 
 	public PanelPasaje getPanelPasaje() {

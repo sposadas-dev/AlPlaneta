@@ -27,6 +27,7 @@ public class VentanaRegistrarEvento extends JFrame {
 	private JButton btnAgregarCliente;
 
 	private static VentanaRegistrarEvento ventanaCliente;
+	private JTextField txtDni;
 	
 	
 	public static VentanaRegistrarEvento getInstance(){
@@ -40,7 +41,7 @@ public class VentanaRegistrarEvento extends JFrame {
 	
 	public VentanaRegistrarEvento() {
 		setResizable(false);
-		setTitle("Registrar cliente");
+		setTitle("Registrar evento");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(400, 150, 597, 449);
 		setLocationRelativeTo(null); // centrado en pantalla
@@ -121,8 +122,18 @@ public class VentanaRegistrarEvento extends JFrame {
 		btnAgregarCliente.setForeground(Color.WHITE);
 		btnAgregarCliente.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnAgregarCliente.setBackground(Color.PINK);
-		btnAgregarCliente.setBounds(234, 261, 131, 42);
+		btnAgregarCliente.setBounds(35, 244, 111, 31);
 		contentPane.add(btnAgregarCliente);
+		
+		txtDni = new JTextField();
+		txtDni.setEditable(false);
+		txtDni.setColumns(10);
+		txtDni.setBounds(195, 250, 116, 20);
+		contentPane.add(txtDni);
+		
+		JLabel lblDni = new JLabel("DNI:");
+		lblDni.setBounds(160, 245, 72, 31);
+		contentPane.add(lblDni);
 	}
 	
 	public void mostrarVentana(){
@@ -134,6 +145,10 @@ public class VentanaRegistrarEvento extends JFrame {
 	
 	public JTextField getTxtDescripcion() {
 		return txtDescripcion;
+	}
+	
+	public JTextField getTxtDni() {
+		return txtDni;
 	}
 
 	public JComboBox<?> getComboEstadoEvento() {

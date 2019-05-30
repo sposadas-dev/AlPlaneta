@@ -2,21 +2,22 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
-import dto.EstadoEventoDTO;
 import dto.EventoDTO;
 import dto.PasajeDTO;
 import modelo.Cliente;
 import modelo.ModeloEvento;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
-import persistencia.dao.mysql.EstadoEventoDAOSQL;
+import presentacion.vista.administrativo.VentanaEditarEvento;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
@@ -28,6 +29,7 @@ public class ControladorAdministrativo implements ActionListener {
 	private VistaAdministrativo vista;
 	private VentanaRegistrarCliente ventanaCliente;
 	private VentanaRegistrarEvento ventanaEvento;
+	private VentanaEditarEvento ventanaEditarEvento;
 	private VentanaVisualizarClientes ventanaVisualizarCliente;
 	private VentanaVisualizarPasaje ventanaVisualizarPasaje;
 	private AdministrativoDTO administrativoLogueado;
@@ -44,6 +46,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista = vista;
 		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaEvento = VentanaRegistrarEvento.getInstance(); 
+		this.ventanaEditarEvento = VentanaEditarEvento.getInstance();
 		this.ventanaVisualizarCliente = VentanaVisualizarClientes.getInstance();
 		this.ventanaVisualizarPasaje = VentanaVisualizarPasaje.getInstance();
 		
@@ -60,6 +63,7 @@ public class ControladorAdministrativo implements ActionListener {
 
 		this.vista.getItemAgregarEvento().addActionListener(ac->mostrarVentanaAgregarEvento(ac));
 		this.vista.getItemVisualizarEventos().addActionListener(ac->mostrarEventos(ac));
+		this.vista.getItemEditarEvento().addActionListener(ac->mostrarVentanaEditarEvento(ac));
 		
 		this.administrativoLogueado = administrativoLogueado;
 		this.cliente = new Cliente(new DAOSQLFactory());
@@ -67,12 +71,15 @@ public class ControladorAdministrativo implements ActionListener {
 		this.evento = new ModeloEvento(new DAOSQLFactory());
 		
 		controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
-		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado);
+		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado, this.eventos_en_tabla);
+		
 	}
 
 	public ControladorAdministrativo(){
 		super();
 	}
+	
+	
 	
 	private void recargarTabla(ActionEvent r) {
 		this.llenarTablaClientes();
@@ -81,6 +88,8 @@ public class ControladorAdministrativo implements ActionListener {
 	public void inicializar(){
 		this.vista.mostrarVentana();
 		this.llenarTablaPasajes();
+		controladorEvento.controlarNotificacionesInicioSesion();
+		controladorEvento.controlarNotificacionesContinuo();
 	}
 	
 	private void agregarPanelClientes(ActionEvent ac) {
@@ -107,6 +116,36 @@ public class ControladorAdministrativo implements ActionListener {
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}	
+	}
+	
+	private void mostrarVentanaEditarEvento(ActionEvent ep) {
+		this.vista.getPanelEvento().mostrarPanelEvento(true);
+		int filaSeleccionada = this.vista.getPanelEvento().getTablaEventos().getSelectedRow();
+		if (filaSeleccionada != -1){
+			verDatosDelEvento(filaSeleccionada);
+			llenarTablaEventos();
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}	
+	}
+	
+	private void verDatosDelEvento(int filaSeleccionada) {
+		controladorEvento.llenarComboEstados();
+		controladorEvento.llenarComboHoraEvento();
+		controladorEvento.setEventoSeleccionado(this.eventos_en_tabla.get(filaSeleccionada));
+		System.out.println(this.eventos_en_tabla.get(filaSeleccionada).getMotivoReprogramacion()+"DATO VIEJO");
+		if (filaSeleccionada != -1){
+			ventanaEditarEvento.mostrarVentana(true);
+			ventanaEditarEvento.getComboHoraEvento().setSelectedItem(this.eventos_en_tabla.get(filaSeleccionada).getHoraEvento().toString());
+			ventanaEditarEvento.getTxtDescripcion().setText(this.eventos_en_tabla.get(filaSeleccionada).getDescripcion());
+			ventanaEditarEvento.getComboEstadoEvento().setSelectedItem(this.eventos_en_tabla.get(filaSeleccionada).getEstadoEvento().toString());
+			ventanaEditarEvento.getTxtDni().setText(this.eventos_en_tabla.get(filaSeleccionada).getCliente().getDni());
+			ventanaEditarEvento.getTxtApellido().setText(this.eventos_en_tabla.get(filaSeleccionada).getCliente().getApellido());
+			ventanaEditarEvento.getTxtNombre().setText(this.eventos_en_tabla.get(filaSeleccionada).getCliente().getNombre());
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void cancelarPasaje(ActionEvent cp) {
@@ -153,24 +192,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaEvento.limpiarCampos();
 		this.ventanaEvento.mostrarVentana();
 	}
-	
-	public void llenarComboEstados() {
-		List<EstadoEventoDTO> estados = new EstadoEventoDAOSQL().readAll();
-		String[] nombresEstados = new String[estados.size()];
-		for(int i=0; i<estados.size();i++){
-			String e = estados.get(i).getNombre();
-			System.out.println(estados.get(i).getNombre());
-			nombresEstados [i] = e;
-		}	
-		this.ventanaEvento.getComboEstadoEvento().setModel(new DefaultComboBoxModel(nombresEstados));
-	}
 		
-	private void llenarComboHoraEvento() {
-		String [] horarios = {"8:00", "8:30", "9:00", "9:30", "10:00","10:30","11:00","11:30","12:30",
-				"13:00","13:30","14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"};
-		this.ventanaEvento.getComboHoraEvento().setModel(new DefaultComboBoxModel(horarios));
-	}
-	
 	private void llenarTablaClientes(){
 		this.vista.getPanelCliente().getModelClientes().setRowCount(0); //Para vaciar la tabla
 		this.vista.getPanelCliente().getModelClientes().setColumnCount(0);
@@ -236,11 +258,14 @@ public class ControladorAdministrativo implements ActionListener {
 							this.eventos_en_tabla.get(i).getCliente().getApellido(),
 							this.eventos_en_tabla.get(i).getCliente().getNombre(),
 							this.eventos_en_tabla.get(i).getAdministrativo().getNombre(),
-							this.eventos_en_tabla.get(i).getEstadoEvento().getNombre()
+							this.eventos_en_tabla.get(i).getEstadoEvento().getNombre(),
+							this.eventos_en_tabla.get(i).getMotivoReprogramacion()
 			};
 							this.vista.getPanelEvento().getModelEventos().addRow(fila);
 		}		
 	}
+	
+
 
 	
 	@Override

@@ -19,9 +19,10 @@ import persistencia.dao.interfaz.EventoDAO;
 
 public class EventoDAOSQL implements EventoDAO {
 
-	private static final String insert = "INSERT INTO evento (idEvento, fechaIngreso, fechaEvento, horaEvento, descripcion, idCliente, idAdministrativo, idEstadoEvento) VALUES (?,?,?,?,?,?,?,?)";
+	private static final String insert = "INSERT INTO evento (idEvento, fechaIngreso, fechaEvento, horaEvento, descripcion, idCliente, idAdministrativo, idEstadoEvento, motivoReprogramacion,visto) VALUES (?,?,?,?,?,?,?,?,?,?)";
 	private static final String readall = "SELECT * FROM evento";
-	private static final String update = "UPDATE evento SET fechaEvento =?,  horaEvento=? WHERE idEvento= ?";//VER
+	private static final String update = "UPDATE evento SET fechaEvento=?, horaEvento=?, idEstadoEvento=?, motivoReprogramacion=?, visto=? WHERE idEvento= ?";//VER
+	private static final String updateVisto = "UPDATE evento SET visto=? WHERE idEvento= ?";//VER
 	private static final String browse = "SELECT * FROM evento WHERE idEvento = ?";
 
 	@Override
@@ -38,6 +39,8 @@ public class EventoDAOSQL implements EventoDAO {
 			statement.setInt(6, evento.getCliente().getIdCliente());
 			statement.setInt(7, evento.getAdministrativo().getIdAdministrativo());
 			statement.setInt(8, evento.getEstadoEvento().getIdEstadoEvento());
+			statement.setString(9, evento.getMotivoReprogramacion());
+			statement.setInt(10, evento.getVisto());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -71,7 +74,9 @@ public class EventoDAOSQL implements EventoDAO {
 				resultSet.getString("descripcion"),
 				cliente.getClienteById(resultSet.getInt("idCliente")),
 				administrativo.getById(resultSet.getInt("idAdministrativo")),
-				estadoEvento.getEstadoEventoById(resultSet.getInt("idEstadoEvento")))
+				estadoEvento.getEstadoEventoById(resultSet.getInt("idEstadoEvento")),
+				resultSet.getString("motivoReprogramacion"),
+						resultSet.getInt("visto"))
 				);
 			}
 		} 
@@ -91,6 +96,10 @@ public class EventoDAOSQL implements EventoDAO {
 			
 			statement.setDate(1, evento.getFechaEvento());
 			statement.setTime(2, evento.getHoraEvento());
+			statement.setInt(3, evento.getEstadoEvento().getIdEstadoEvento());
+			statement.setString(4, evento.getMotivoReprogramacion());
+			statement.setInt(5, evento.getVisto());
+			statement.setInt(6, evento.getIdEvento());
 		
 			chequeoUpdate = statement.executeUpdate();
 			if(chequeoUpdate > 0) //Si se ejecutó devuelvo true
@@ -102,6 +111,26 @@ public class EventoDAOSQL implements EventoDAO {
 		return false;
 	}
 	
+	@Override
+	public boolean updateVisto(EventoDTO evento) {
+		PreparedStatement statement;
+		int chequeoUpdate = 0;
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(updateVisto);
+			
+			statement.setInt(1, evento.getVisto());
+			statement.setInt(2, evento.getIdEvento());
+		
+			chequeoUpdate = statement.executeUpdate();
+			if(chequeoUpdate > 0) //Si se ejecutó devuelvo true
+				return true;
+		} 
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	@Override
 	public EventoDTO getEventoById(int id ){
@@ -127,7 +156,9 @@ public class EventoDAOSQL implements EventoDAO {
 						resultSet.getString("descripcion"),
 						cliente.getClienteById(resultSet.getInt("idCliente")),
 						administrativo.getById(resultSet.getInt("idAdministrativo")),
-						estadoEvento.getEstadoEventoById(resultSet.getInt("idEstadoEvento")));
+						estadoEvento.getEstadoEventoById(resultSet.getInt("idEstadoEvento")),
+						resultSet.getString("motivoReprogramacion"),
+						resultSet.getInt("visto"));
 				return ret;
 			}
 			
@@ -157,7 +188,7 @@ public class EventoDAOSQL implements EventoDAO {
 		
 		EstadoEventoDTO estado = new EstadoEventoDTO(1,"pendiente","el evento aún no se realizó");
 		
-		EventoDTO nuevoEvento = new EventoDTO(0,fechaIngreso,fechaEvento,horaEvento,descripcion,cliente,administrativo,estado);
+		EventoDTO nuevoEvento = new EventoDTO(0,fechaIngreso,fechaEvento,horaEvento,descripcion,cliente,administrativo,estado,"",0);
 				
 		eventoDAOSQL.insert(nuevoEvento);
 		List<EventoDTO> EVENTOS = eventoDAOSQL.readAll();

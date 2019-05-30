@@ -13,7 +13,7 @@ public class PanelEvento extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel modelEventos;
-	private String[] nombreColumnasEventos = {"ID Evento","Fecha de Ingreso", "Fecha del Evento", "Hora del Evento", "Descripción" , "Apellido Cliente","Nombre Cliente", "Administrativo", "Estado del Evento"};
+	private String[] nombreColumnasEventos = {"ID Evento","Fecha de Ingreso", "Fecha del Evento", "Hora del Evento", "Descripción" , "Apellido Cliente","Nombre Cliente", "Administrativo", "Estado del Evento","Motivo de Reprogramación"};
 	private JTable tablaEventos;
 
 	public PanelEvento() {

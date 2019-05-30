@@ -1,14 +1,15 @@
 package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
-import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -16,112 +17,88 @@ import javax.swing.JOptionPane;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EstadoEventoDTO;
-import dto.EstadoPasajeDTO;
 import dto.EventoDTO;
-import dto.FormaPagoDTO;
-import dto.LoginDTO;
-import dto.MedioContactoDTO;
-import dto.PagoDTO;
-import dto.PasajeDTO;
-import dto.PasajeroDTO;
-import dto.RolDTO;
-import dto.ViajeDTO;
+import dto.TransporteDTO;
 import modelo.Cliente;
-import modelo.EstadoPasaje;
-import modelo.FormaPago;
 import modelo.ModeloEstadoEvento;
 import modelo.ModeloEvento;
-import modelo.ModeloViaje;
-import modelo.Pago;
 import modelo.Pasaje;
-import modelo.Pasajero;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.EstadoEventoDAOSQL;
-import presentacion.reportes.Reporte;
 import presentacion.vista.administrativo.PanelEvento;
-import presentacion.vista.administrativo.VentanaCargaPasajero;
-import presentacion.vista.administrativo.VentanaPago;
-import presentacion.vista.administrativo.VentanaPasajero;
+import presentacion.vista.administrativo.VentanaEditarEvento;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
-import presentacion.vista.administrativo.VentanaTablaViajes;
-import presentacion.vista.administrativo.VentanaVisualizarClientes;
-import presentacion.vista.administrativo.VentanaVisualizarPasaje;
+import presentacion.vista.administrativo.VentanaTablaClientes;
 
 public class ControladorEvento {
 
-	private VentanaVisualizarClientes ventanaVisualizarClientes;
-	private VentanaTablaViajes ventanaTablaViajes;
-	private VentanaCargaPasajero ventanaCargaPasajero;
-	private VentanaPasajero ventanaPasajero;
-	private VentanaPago ventanaPago;
-	private VentanaVisualizarPasaje ventanaVisualizarPasaje;
+	private VentanaTablaClientes ventanaTablaClientes;
+	private EventoDTO eventoSeleccionado;
 	
 	private List<ClienteDTO> clientes_en_tabla;
-	private List <ViajeDTO> viajes_en_tabla;
-	private List<PasajeroDTO> pasajeros_en_reserva;
-	private List<PasajeDTO> pasajes_en_tabla;
 	private List<EventoDTO> eventos_en_tabla;
+	
 	private ModeloEvento evento;
 	private ModeloEstadoEvento estadoEvento;
 	private VentanaRegistrarEvento ventanaEvento;
-	private ClienteDTO clienteSeleccionado; //cliente que selecciona en la tabla 
-	private ViajeDTO viajeSeleccionado;
+	private VentanaEditarEvento ventanaEditarEvento;
 	private Cliente cliente;
-	private Pasajero pasajero;
-	private ModeloViaje viaje;
-	private Pago pago;
 	private Pasaje pasaje;
-	private BigDecimal totalaPagar;
-	private AdministrativoDTO administrativoLogueado;
-	private PagoDTO pagoDTO;
 	private PanelEvento panelEvento;
+	
+	//DATOS EVENTO:
+	private java.sql.Date fechaIngreso; 
+	private java.sql.Date fechaEvento; 
+	private java.sql.Time horaEvento;
+	private String descripcion;
+	private ClienteDTO clienteSeleccionado; //cliente que selecciona en la tabla 		
+	private AdministrativoDTO administrativoLogueado;
+	private EstadoEventoDTO estado; 	
+	private String motivoReprogramacion;
+	private EventoDTO eventoRegistrado;
 
-	public ControladorEvento(VentanaRegistrarEvento ventanaEvento, ModeloEvento evento, AdministrativoDTO administrativoLogueado){
+	public ControladorEvento(VentanaRegistrarEvento ventanaEvento, ModeloEvento evento, AdministrativoDTO administrativoLogueado, List<EventoDTO> eventos_en_tabla){
+		//DATOS EVENTO:
+		java.util.Date fecha = new java.util.Date(); 
+		this.fechaIngreso = new java.sql.Date(fecha.getTime());	
+		this.fechaEvento = null;
+		this.horaEvento = null;
+		this.descripcion = null;
+		this.clienteSeleccionado = null; //cliente que selecciona en la tabla 		
+		this.administrativoLogueado = administrativoLogueado;
+		this.estado = null;
+		this.motivoReprogramacion=" - ";
+		this.eventoRegistrado = null;
+		this.eventos_en_tabla = eventos_en_tabla;
+		
 		this.ventanaEvento = ventanaEvento;
-		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();
-		this.ventanaCargaPasajero = VentanaCargaPasajero.getInstance();
-		this.ventanaPasajero = VentanaPasajero.getInstance();
-		this.ventanaPago = VentanaPago.getInstance();
-		this.ventanaVisualizarPasaje = VentanaVisualizarPasaje.getInstance();
+		this.ventanaEditarEvento = VentanaEditarEvento.getInstance();
+		this.ventanaTablaClientes = VentanaTablaClientes.getInstance();
 		
-		this.cliente = cliente;
-		this.viaje = new ModeloViaje(new DAOSQLFactory());
-		this.pasajero = new Pasajero (new DAOSQLFactory());
-		this.pago = new Pago(new DAOSQLFactory());
-		this.pasaje = new Pasaje(new DAOSQLFactory());
+		this.cliente = new Cliente(new DAOSQLFactory());
+		this.setPasaje(new Pasaje(new DAOSQLFactory()));
 		
-		this.panelEvento = new PanelEvento();
+		this.setPanelEvento(new PanelEvento());
 		this.estadoEvento = new ModeloEstadoEvento(new DAOSQLFactory());
-		this.evento = evento;
-		
-		this.pasajeros_en_reserva = new ArrayList<PasajeroDTO>();
-		this.pasajes_en_tabla = pasaje.obtenerPasajes();
-//		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
-
-//		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(ap->cargarPasajero(ap));
-//		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(ap->confirmarPasajeros(ap));
-//		this.ventanaCargaPasajero.getBtnAtras().addActionListener(a->volverVentanaViaje(a));
-//		
-//		this.ventanaTablaViajes.getBtnAtras().addActionListener(a->volverVentanaCliente(a));
-//		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(cv->confirmarSeleccionViaje(cv));
-
-//		this.ventanaPasajero.getBtnCargarDatos().addActionListener(cd->cargarDatosPasajero(cd));
-//		this.ventanaPago.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
-//		this.ventanaPago.getBtnAtras().addActionListener(vc->volverVentanaCargaPasajero(vc));
-//		this.ventanaVisualizarPasaje.getBtnAceptar().addActionListener(s->salirVentanaVisualizarPasaje(s));
+		this.evento = new ModeloEvento(new DAOSQLFactory());
 
 		this.ventanaEvento.getBtnRegistrar().addActionListener(rc->registrarEvento(rc));
 		this.ventanaEvento.getBtnAgregarCliente().addActionListener(r->mostrarClientes(r));
 		this.ventanaEvento.getBtnCancelar().addActionListener(cv->cerrarVentanaEvento(cv));
+		
+		this.ventanaEditarEvento.getBtnEditar().addActionListener(rc->editarEvento(rc));
+		this.ventanaEditarEvento.getBtnCancelar().addActionListener(rc->cancelarEditarEvento(rc));
 
+		this.ventanaTablaClientes.getBtnAtras().addActionListener(vc->volverVentanaAgregarEvento(vc));
+		this.ventanaTablaClientes.getBtnConfirmar().addActionListener(ce->agregarClienteToEvento(ce));
+		
 		this.administrativoLogueado= administrativoLogueado;
 	}
 
 
 	public void iniciar(){
-		System.out.println("ENTRA A INICIAR");
-		this.llenarComboEstados();
-		this.llenarComboHoraEvento();
+		llenarComboEstados();
+		llenarComboHoraEvento();
 	}
 	
 	public void llenarComboEstados() {
@@ -132,31 +109,26 @@ public class ControladorEvento {
 			nombresEstados [i] = e;
 		}	
 		this.ventanaEvento.getComboEstadoEvento().setModel(new DefaultComboBoxModel(nombresEstados));
+		this.ventanaEditarEvento.getComboEstadoEvento().setModel(new DefaultComboBoxModel(nombresEstados));
 	}
 	
-	private void llenarComboHoraEvento() {
-		String [] horarios = {"8:00", "8:30", "9:00", "9:30", "10:00","10:30","11:00","11:30","12:30",
-				"13:00","13:30","14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"};
+	public void llenarComboHoraEvento() {
+		String [] horarios = {"08:00:00", "08:30:00", "09:00:00", "09:30:00", "10:00:00","10:30:00","11:00:00","11:30:00","12:30:00",
+				"13:00:00","13:30:00","14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00", "16:30:00", "17:00:00", "17:30:00","18:00:00"};
 		this.ventanaEvento.getComboHoraEvento().setModel(new DefaultComboBoxModel(horarios));
+		this.ventanaEditarEvento.getComboHoraEvento().setModel(new DefaultComboBoxModel(horarios));
 	}
+
 	
 	
 	public void registrarEvento(ActionEvent rc){
-		if(camposLlenos()){
-			java.util.Date fecha = new java.util.Date(); java.sql.Date fechaIngreso = new java.sql.Date(fecha.getTime());	
-			java.sql.Date fechaEvento = convertUtilToSql(this.ventanaEvento.getDateFechaEvento().getDate());
-			java.sql.Time horaEvento = obtenerHora(this.ventanaEvento.getComboHoraEvento().getSelectedItem().toString());
-			String descripcion = this.ventanaEvento.getTxtDescripcion().getText();
+		if(camposLlenosRegistrarEvento()){
+			this.fechaEvento = convertUtilToSql(this.ventanaEvento.getDateFechaEvento().getDate());
+			this.horaEvento = obtenerHora(this.ventanaEvento.getComboHoraEvento().getSelectedItem().toString());
+			this.descripcion = this.ventanaEvento.getTxtDescripcion().getText();
+			this.estado = obtenerEstadoEventoPorNombre(this.ventanaEvento.getComboEstadoEvento().getSelectedItem().toString());
 			
-			MedioContactoDTO medioContacto = new MedioContactoDTO(0,"44510021","1545899865","juan.perez@gmail.com");
-			RolDTO rol = new RolDTO(5,"cliente");
-			LoginDTO login = new LoginDTO (1,"usuariojuan","juan123",rol);
-			ClienteDTO cliente = new ClienteDTO(2,"Nico","Avila","32125322",fechaIngreso,medioContacto,login);
-			
-			AdministrativoDTO administrativo = this.administrativoLogueado;
-			EstadoEventoDTO estado = obtenerEstadoEventoPorNombre(this.ventanaEvento.getComboEstadoEvento().getSelectedItem().toString());
-			
-			EventoDTO eventoRegistrado = new EventoDTO(0,fechaIngreso,fechaEvento,horaEvento,descripcion,cliente,administrativo,estado);
+			this.eventoRegistrado = new EventoDTO(0,fechaIngreso,fechaEvento,horaEvento,descripcion,clienteSeleccionado,administrativoLogueado,estado,motivoReprogramacion,0);
 		
 			evento.agregarEvento(eventoRegistrado);
 			this.ventanaEvento.limpiarCampos();
@@ -164,12 +136,51 @@ public class ControladorEvento {
 		}
 	}
 	
+	public void editarEvento(ActionEvent rc){
+		if(camposLlenosEditarEvento()){		
+			Date fechaEvento = convertUtilToSql(this.ventanaEditarEvento.getDateFechaEvento().getDate());
+			Time horaEvento = obtenerHora(this.ventanaEditarEvento.getComboHoraEvento().getSelectedItem().toString());
+			String motivoReprogramacion = this.ventanaEditarEvento.getTxtReprogramacion().getText();	
+			EstadoEventoDTO estado = obtenerEstadoEventoPorNombre(this.ventanaEditarEvento.getComboEstadoEvento().getSelectedItem().toString());
+			
+			EventoDTO nuevoEvento = new EventoDTO(eventoSeleccionado.getIdEvento(),fechaIngreso,fechaEvento,horaEvento,descripcion,eventoSeleccionado.getCliente(),administrativoLogueado,estado,motivoReprogramacion,0);
+			evento.editarEvento(nuevoEvento);
+			
+			this.ventanaEditarEvento.limpiarCampos();
+			this.ventanaEditarEvento.cerrarVentana();
+		}
+	}
+	
 	private void mostrarClientes(ActionEvent r) {
+		ventanaEvento.setVisible(false);
+		ventanaTablaClientes.setVisible(true);
+		llenarTablaClientes();
+	}
+	
+	private void llenarTablaClientes(){
+		this.ventanaTablaClientes.getModelClientes().setRowCount(0); //Para vaciar la tabla
+		this.ventanaTablaClientes.getModelClientes().setColumnCount(0);
+		this.ventanaTablaClientes.getModelClientes().setColumnIdentifiers(this.ventanaTablaClientes.getNombreColumnas());
+			
+		this.clientes_en_tabla = cliente.obtenerClientes();
 		
+		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
+
+			Object[] fila = {
+							this.clientes_en_tabla.get(i).getNombre(),
+							this.clientes_en_tabla.get(i).getApellido(),
+							this.clientes_en_tabla.get(i).getDni(),
+							this.clientes_en_tabla.get(i).getFechaNacimiento(),
+							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
+							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
+							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()
+			};
+			this.ventanaTablaClientes.getModelClientes().addRow(fila);
+		}		
 	}
 	
 	private Time obtenerHora(String miHora) {
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		long ms = 0;
 		try { ms = sdf.parse(miHora).getTime();
 		} catch (ParseException e) { e.printStackTrace();}
@@ -178,8 +189,16 @@ public class ControladorEvento {
 		return t;
 	}
 	
-	private boolean camposLlenos(){
-		if (ventanaEvento.getDateFechaEvento().getDate() == null || ventanaEvento.getTxtDescripcion().getText().isEmpty()){
+	private boolean camposLlenosRegistrarEvento(){
+		if (ventanaEvento.getDateFechaEvento().getDate() == null || ventanaEvento.getTxtDescripcion().getText().isEmpty() || ventanaEvento.getTxtDni().getText().isEmpty()){
+				JOptionPane.showMessageDialog(null, "Debe cargar todos los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+				return false;
+		}
+			return true;
+	}
+
+	private boolean camposLlenosEditarEvento(){
+		if (ventanaEditarEvento.getDateFechaEvento().getDate() == null || ventanaEditarEvento.getTxtReprogramacion().getText().isEmpty()){
 				JOptionPane.showMessageDialog(null, "Debe cargar todos los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
 				return false;
 		}
@@ -198,39 +217,52 @@ public class ControladorEvento {
 		this.ventanaEvento.cerrarVentana();
 	}
 	
-	private void confirmarSeleccionCliente(ActionEvent c) {
-		int filaSeleccionada = this.ventanaVisualizarClientes.getTablaClientes().getSelectedRow();
-		if (filaSeleccionada != -1){
-			this.ventanaVisualizarClientes.mostrarVentana(false);
-			clienteSeleccionado = clientes_en_tabla.get(filaSeleccionada);	
-			this.ventanaTablaViajes.mostrarVentana(true);
-			llenarTablaViajes();
-		}else{
-			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+	public void controlarNotificacionesContinuo(){
+		TimerTask timerTask = new TimerTask() {
+		    public void run() {
+		    	java.util.Date fecha = new java.util.Date(); 
+				Date fechaActual = new java.sql.Date(fecha.getTime());
+				java.sql.Time horarioActual = new java.sql.Time(System.currentTimeMillis());
+				
+				String[] horarioStringActual = horarioActual.toString().split(":");
+				String horaActual = horarioStringActual[0];
+				String minutosActual = horarioStringActual[1];
+				String segundosActual = horarioStringActual[2];
+				System.out.println("HORA ACTUAL: "+horarioActual.toString());
+				if(minutosActual.equals("54") || minutosActual.equals("00")) {
+					for(EventoDTO e : evento.obtenerEvento()) {
+						String[] horarioParticular = e.getHoraEvento().toString().split(":");
+						String horaParticular = horarioParticular[0];
+						String minutosParticular = horarioParticular[1];
+						String segundosParticular = horarioParticular[2];
+						
+						if(horaParticular.equals(horaActual) && minutosParticular.equals(minutosActual) && segundosActual.equals(segundosParticular)) {	
+							if(fechaActual.equals(e.getFechaEvento())) {
+								//SIGNIFICA QUE HAY UN EVENTO EN ESTE DIA Y HORARIO
+								e.setVisto(1);
+								evento.editarVistoEvento(e);
+								JOptionPane.showMessageDialog(null, "Tienes un nuevo evento", "Evento!", JOptionPane.INFORMATION_MESSAGE);							
+							}
+							
+						}
+					}
+				}
+		    }
+		};
+
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(timerTask, 0, 1000);//1000=3segundos
+	}
+	
+	public void controlarNotificacionesInicioSesion() {
+		boolean vistos = false;
+		for(EventoDTO e : evento.obtenerEvento()) { //hay eventos sin ver
+			if(e.getVisto()==0) //hay un evento no visto
+				vistos = vistos || true;
 		}
+		if(vistos)
+			JOptionPane.showMessageDialog(null, "Hay evento(s) sin ver", "Evento(s)", JOptionPane.INFORMATION_MESSAGE);
 	}
-	
-	private void confirmarSeleccionViaje(ActionEvent sv){
-		int filaSeleccionada = this.ventanaTablaViajes.getTablaViajes().getSelectedRow();
-		if (filaSeleccionada != -1){
-			this.ventanaTablaViajes.mostrarVentana(false);
-			viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
-			this.ventanaCargaPasajero.mostrarVentana(true);
-		}else{
-			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
-		}
-	}
-	
-	private void volverVentanaCliente(ActionEvent a) {
-		this.ventanaTablaViajes.mostrarVentana(false);
-		this.ventanaVisualizarClientes.mostrarVentana(true);
-	}
-	
-	private void volverVentanaViaje(ActionEvent a) {
-		//this.ventanaAgregarEvento.mostrarVentana(false);
-		this.ventanaTablaViajes.mostrarVentana(true);
-	}
-	
 	/*private void llenarTablaEventos(){
 		System.out.println("ENTRA A TABLA EVENTO EN CONTROLADOREVENTO");
 		this.panelEvento.getModelEventos().setRowCount(0); //Para vaciar la tabla
@@ -255,74 +287,26 @@ public class ControladorEvento {
 							this.panelEvento.getModelEventos().addRow(fila);
 		}		
 	}*/
-	private void llenarTablaViajes(){
-		this.ventanaTablaViajes.getModelViajes().setRowCount(0); //Para vaciar la tabla
-		this.ventanaTablaViajes.getModelViajes().setColumnCount(0);
-		this.ventanaTablaViajes.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
-			
-		this.viajes_en_tabla = viaje.obtenerViajes();
-			
-		for (int i = 0; i < this.viajes_en_tabla.size(); i++){
-			Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
-							this.viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
-							this.viajes_en_tabla.get(i).getFechaSalida(),
-							this.viajes_en_tabla.get(i).getFechaLlegada(),
-							this.viajes_en_tabla.get(i).getHoraSalida(),
-							this.viajes_en_tabla.get(i).getHorasEstimadas(),
-							this.viajes_en_tabla.get(i).getCapacidad(),
-							this.viajes_en_tabla.get(i).getTransporte().getNombre(),
-							this.viajes_en_tabla.get(i).getPrecio()					
-			};
-		this.ventanaTablaViajes.getModelViajes().addRow(fila);
-		}		
+
+	private void volverVentanaAgregarEvento(ActionEvent vc) {
+		this.ventanaTablaClientes.mostrarVentana(false);
+		this.ventanaEvento.mostrarVentana();
 	}
 	
-	private void cargarPasajero(ActionEvent ap) {
-		this.ventanaPasajero.setVisible(true);
-		PasajeroDTO nuevoPasajero = new PasajeroDTO();
-		nuevoPasajero.setNombre(ventanaPasajero.getTxtNombre().getText());
-		nuevoPasajero.setApellido(ventanaPasajero.getTxtApellido().getText());
-		nuevoPasajero.setDni(ventanaPasajero.getTxtDni().getText());
-		nuevoPasajero.setTelefono(ventanaPasajero.getTxtTelefono().getText());
-		nuevoPasajero.setEmail(ventanaPasajero.getTxtEmail().getText());
-		
-		pasajero.agregarPasajero(nuevoPasajero);
-		pasajeros_en_reserva.add(nuevoPasajero); 
-	
-		llenarTablaDePasajeros();
+	private void cancelarEditarEvento(ActionEvent vc) {
+		this.ventanaEditarEvento.mostrarVentana(false);
 	}
 	
-	private void llenarTablaDePasajeros(){
-		this.ventanaCargaPasajero.getModelPasajeros().setRowCount(0);
-		this.ventanaCargaPasajero.getModelPasajeros().setColumnCount(0);
-		this.ventanaCargaPasajero.getModelPasajeros().setColumnIdentifiers(this.ventanaCargaPasajero.getNombreColumnas());
-		for(int i=0; i<pasajeros_en_reserva.size();i++){
-			Object[] fila = { 
-					pasajeros_en_reserva.get(i).getNombre(),
-					pasajeros_en_reserva.get(i).getApellido(),
-					pasajeros_en_reserva.get(i).getDni()
-			};
-			this.ventanaCargaPasajero.getModelPasajeros().addRow(fila);
+	private void agregarClienteToEvento(ActionEvent ce) {
+		int filaSeleccionada = this.ventanaTablaClientes.getTablaClientes().getSelectedRow();
+		if (filaSeleccionada != -1){
+			this.ventanaTablaClientes.mostrarVentana(false);
+			clienteSeleccionado = clientes_en_tabla.get(filaSeleccionada);
+			this.ventanaEvento.mostrarVentana();
+			this.ventanaEvento.getTxtDni().setText(clienteSeleccionado.getDni());
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-//		this.ventanaReserva.getLblCantidadDePasajeros().setText(pasajerosEnEstaReserva.size()+" Pasajeros fueron cargados");
-	}
-	
-	private void cargarDatosPasajero(ActionEvent cd) {
-		this.ventanaPasajero.limpiarCampos();
-		this.ventanaPasajero.setVisible(false);
-	}
-	
-	private void confirmarPasajeros(ActionEvent ap) {
-		this.ventanaCargaPasajero.setVisible(false);
-		cargarComboBoxFormaDePago();
-		this.ventanaPago.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
-		this.ventanaPago.setVisible(true);
-	}
-	
-	
-	private void volverVentanaCargaPasajero(ActionEvent vc) {
-		this.ventanaPago.mostrarVentana(false);
-		this.ventanaCargaPasajero.mostrarVentana(true);
 	}
 	
 	public Date calcularFechaReserva(Date fecha){
@@ -336,110 +320,40 @@ public class ControladorEvento {
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
         return sDate;
     }
-		
-	private void darDeAltaUnPasaje() {
-		ViajeDTO viaje = viajeSeleccionado;
-		ClienteDTO cliente = clienteSeleccionado;
-		BigDecimal valorViaje = totalaPagar;
-	
-		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
-		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
-	
-		PagoDTO pagoPasaje = pago.getUltimoRegistroPago();
-		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativoLogueado,cliente,calcularFechaReserva(viaje.getFechaSalida()),valorViaje,estadoPasaje,pagoPasaje,
-		pasajeros);
-		pasaje.agregarPasaje(pasajeDTO);
-	
-//		for(PasajeroDTO p : pasajeros_en_reserva) {
-//			Pasaje_PasajerosDTO pasaje_pasajero = new Pasaje_PasajerosDTO();
-//			pasaje_pasajero.setIdPasaje(pasajeDTO.getIdPasaje());
-//			pasaje_pasajero.setIdPasajero(p.getIdPasajero());
-//
-//			Pasaje_Pasajeros pasaje_pasajeros = new Pasaje_Pasajeros(new DAOSQLFactory());
-//			pasaje_pasajeros.agregarPasajePasajero(pasaje_pasajero);
-//		}
-//		this.llenarTablaPasajes();
-		this.ventanaPago.setVisible(false);
-		
-		generarComprobantes(pasajeDTO,pagoPasaje);
-		
-	}
-	
-	private void generarComprobantes(PasajeDTO pasajeDTO, PagoDTO pagoPasaje) {
-		JOptionPane.showMessageDialog(null, "Generando comprobantes", "Comprobantes", JOptionPane.INFORMATION_MESSAGE);
-		mostrarComprobanteReserva(pasajeDTO);
-		if(pagoPasaje.getMonto().compareTo(new BigDecimal(0))!=0){
-			mostrarComprobantePago(pasajeDTO);
-		}
-		
+
+
+	public Pasaje getPasaje() {
+		return pasaje;
 	}
 
-	private void mostrarComprobanteReserva(PasajeDTO pasaje){
-		Reporte reporte = new Reporte();
-		reporte.reporteReserva(pasaje);
-		reporte.mostrar();
+	public void setPasaje(Pasaje pasaje) {
+		this.pasaje = pasaje;
+	}
+
+	public PanelEvento getPanelEvento() {
+		return panelEvento;
+	}
+
+	public void setPanelEvento(PanelEvento panelEvento) {
+		this.panelEvento = panelEvento;
 	}
 	
-	private void mostrarComprobantePago(PasajeDTO pasaje){
-		Reporte reporte = new Reporte();
-		reporte.reportePago(pasaje);
-		reporte.mostrar();
+	public void setEventoSeleccionado(EventoDTO evento) {
+		this.eventoSeleccionado=evento;
 	}
 	
-	
-	private void cargarComboBoxFormaDePago(){
-		ventanaPago.getComboBoxFormaPago().removeAllItems();
-		FormaPago formaPago = new FormaPago(new DAOSQLFactory());
-		List<FormaPagoDTO> formasPagosDTO = formaPago.obtenerFormaPago();
-		String[] formasPagos = new String[formasPagosDTO.size()]; 
-		for(int i=0; i < formasPagosDTO.size();i++){
-			String rango = formasPagosDTO.get(i).getTipo();
-			formasPagos [i] = rango;
-		}
-		this.ventanaPago.getComboBoxFormaPago().setModel(new DefaultComboBoxModel(formasPagos));
+	/*public void editarEvento(int filaSeleccionada){
+		llenarComboEstados();
+		llenarComboHoraEvento();
+		verDatosDelEvento(filaSeleccionada);
 	}
-	
-	private BigDecimal calcularMontoDePasaje() {
-		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
-		totalaPagar = Valor1;
-		return totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
-	}
-		
-	private EstadoPasajeDTO calcularEstadoPasaje() {
-		EstadoPasaje estado = new EstadoPasaje(new DAOSQLFactory());
-		EstadoPasajeDTO ret;
-		if(totalaPagar.compareTo(pagoDTO.getMonto())==0){ 
-			ret = estado.getFormaPagoByName("vendido");
-		}
-		else {
-			if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
-				ret = estado.getFormaPagoByName("pendiente");
-			}
-			else {
-				ret = estado.getFormaPagoByName("reservado");
-			}
-		}
-		return ret;
-	}
-	
-	public void eliminarPasaje(int filaSeleccionada){
-		int confirm = JOptionPane.showOptionDialog(
-		            null,"¿Estás seguro que quieres cancelar el pasaje?", 
-				             "Cancelar pasaje", JOptionPane.YES_NO_OPTION,
-				             JOptionPane.ERROR_MESSAGE, null, null, null);
-	 if (confirm == 0){
-		JOptionPane.showMessageDialog(null, "Pasaje cancelado","Pasaje", JOptionPane.INFORMATION_MESSAGE);
-		this.pasaje.borrarPasaje(pasajes_en_tabla.get(filaSeleccionada));
-	 }
-	}
-	
-	public void editarPasaje(int filaSeleccionada){
-		verDatosDelPasaje(filaSeleccionada);
-	}
-	
-	private void verDatosDelPasaje(int filaSeleccionada) {
+	private void verDatosDelEvento(int filaSeleccionada) {
 		if (filaSeleccionada != -1){
-			if(this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getIdEstadoPasaje()==1){
+			ventanaEditarEvento.mostrarVentana(true);
+			System.out.println(eventos_en_tabla.get(filaSeleccionada)+"fila seleccionada");
+			System.out.println((eventos_en_tabla.get(filaSeleccionada).getHoraEvento().toString())+"MOSTRAR");
+			ventanaEditarEvento.getComboHoraEvento().setSelectedItem(this.eventos_en_tabla.get(filaSeleccionada).getHoraEvento().toString());
+			if(this.eventos_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getIdEstadoPasaje()==1){
 				this.ventanaVisualizarPasaje.setVisible(true);
 				this.ventanaVisualizarPasaje.getBtnPagar().setVisible(false);
 				this.ventanaVisualizarPasaje.getLblClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
@@ -464,20 +378,21 @@ public class ControladorEvento {
 				this.ventanaVisualizarPasaje.getLblRestante().setText(" "+ calcularMontoQueSeDebeDelPasaje(filaSeleccionada));
 			
 			}
-		}else{
+		}
+		else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-	}
-
+	}*/
+/*
 	private BigDecimal calcularMontoQueSeDebeDelPasaje(int filaSeleccionada) {
 		BigDecimal Valor1 = this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje();
 		BigDecimal Valor2 = this.pasajes_en_tabla.get(filaSeleccionada).getPago().getMonto();
 		totalaPagar = Valor1.subtract(Valor2);
 		return totalaPagar;
-	}
-		
+	}*/
+		/*
 	private void salirVentanaVisualizarPasaje(ActionEvent s) {
 		this.ventanaVisualizarPasaje.mostrarVentana(false);
-	}
+	}*/
 	
 }

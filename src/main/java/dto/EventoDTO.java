@@ -12,8 +12,10 @@ public class EventoDTO {
 	private ClienteDTO cliente;
 	private AdministrativoDTO administrativo;
 	private EstadoEventoDTO estado;
+	private String motivoReprogramacion;
+	private int visto;
 
-	public EventoDTO(int idEvento, Date fechaIngreso, Date fechaEvento, Time horaEvento, String descripcion, ClienteDTO cliente, AdministrativoDTO administrativo, EstadoEventoDTO estado) {
+	public EventoDTO(int idEvento, Date fechaIngreso, Date fechaEvento, Time horaEvento, String descripcion, ClienteDTO cliente, AdministrativoDTO administrativo, EstadoEventoDTO estado, String motivoReprogramacion, int visto) {
 		super();
 		this.idEvento=idEvento;
 		this.fechaIngreso=fechaIngreso;
@@ -23,6 +25,8 @@ public class EventoDTO {
 		this.cliente=cliente;
 		this.administrativo=administrativo;
 		this.estado=estado;
+		this.motivoReprogramacion = motivoReprogramacion;
+		this.visto=visto;
 	}
 
 	public EventoDTO() {
@@ -60,6 +64,14 @@ public class EventoDTO {
 	public EstadoEventoDTO getEstadoEvento() {
 		return estado;
 	}
+	
+	public String getMotivoReprogramacion() {
+		return motivoReprogramacion;
+	}
+	
+	public int getVisto() {
+		return visto;
+	}
 
 	public void setIdEvento(int idEvento) {
 		this.idEvento = idEvento;
@@ -91,6 +103,14 @@ public class EventoDTO {
 
 	public void setEstadoEvento(EstadoEventoDTO estado) {
 		this.estado = estado;
+	}
+	
+	public void setMotivoReprogramacion(String motivoReprogramacion) {
+		this.motivoReprogramacion = motivoReprogramacion;
+	}
+	
+	public void setVisto(int b) {
+		this.visto=b;
 	}
 	
 	
