@@ -2,7 +2,9 @@ package modelo;
 
 import java.util.List;
 
+import dto.PagoDTO;
 import dto.PasajeDTO;
+import dto.TransporteDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.PasajeDAO;
 
@@ -24,5 +26,13 @@ public class Pasaje {
 	
 	public List<PasajeDTO> obtenerPasajes(){
 		return this.pasaje.readAll();		
+	}
+	
+//	public PasajeDTO getPasajeById(int idPasaje){
+//		return this.pasaje.getPasajeById(idPasaje);
+//	}
+	
+	public PasajeDTO getUltimoRegistroPasaje() {
+		return this.pasaje.getUltimoRegistroPasaje();
 	}
 }

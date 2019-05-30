@@ -35,8 +35,9 @@ public interface DAOAbstractFactory {
 	public Pasaje_PasajerosDAO createPasaje_PasajerosDAO();
 
 	public EstadoPasajeDAO createEstadoPasajeDAO();
+
+	public Pagos_PasajeDAO createPagos_PasajeDAO();
 	
 //	public CoordinadorDAO createCoordinadorDAO();
-
 
 }

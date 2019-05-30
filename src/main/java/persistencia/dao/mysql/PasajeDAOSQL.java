@@ -8,6 +8,7 @@ import java.util.List;
 
 import modelo.Pasaje;
 import modelo.Transporte;
+import dto.PagoDTO;
 import dto.PasajeDTO;
 import dto.PasajeroDTO;
 import dto.TransporteDTO;
@@ -16,15 +17,13 @@ import persistencia.dao.interfaz.PasajeDAO;
 
 public class PasajeDAOSQL implements PasajeDAO {
 	
-	private static final String insert = "INSERT INTO pasaje(idPasaje,fechaVencimiento, valorViaje, idCliente, idViaje, idAdministrativo, idEstadoPasaje, idPago) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
-	
+	private static final String insert = "INSERT INTO pasaje(idPasaje, fechaVencimiento, valorViaje, idCliente, idViaje, idAdministrativo, idEstadoPasaje) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String delete = "DELETE FROM pasaje  WHERE idPasaje = ?";
-	
 	private static final String readall = "SELECT * FROM pasaje";
-	
 	private static final String update = "UPDATE pasaje SET viaje.fechaSalida= ? WHERE idPasaje = ?;";
+	private static final String browse = "SELECT * FROM pasaje WHERE idPasaje=?";
+	private static final String ultimoRegistro = "SELECT * FROM pasaje ORDER BY idPasaje desc limit 1";
 	
-
 	@Override
 	public boolean insert(PasajeDTO pasaje) {
 
@@ -39,7 +38,6 @@ public class PasajeDAOSQL implements PasajeDAO {
 			statement.setInt(5, pasaje.getViaje().getIdViaje());
 			statement.setInt(6, pasaje.getAdministrativo().getIdAdministrativo());
 			statement.setInt(7, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());
-			statement.setInt(8, pasaje.getPago().getIdPago());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -94,7 +92,6 @@ public class PasajeDAOSQL implements PasajeDAO {
 						resultSet.getDate("fechaVencimiento"),
 						resultSet.getBigDecimal("valorViaje"),
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
-						pagoDAOSQL.getPagoById(resultSet.getInt("idPago")),
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")))
 						);							
 			}
@@ -126,8 +123,72 @@ public class PasajeDAOSQL implements PasajeDAO {
 
 	}
 	@Override
-	public boolean getById(PasajeDAO pasajeDTO) {
-		// TODO Auto-generated method stub
-		return false;
+	public PasajeDTO getPasajeById(int idPasaje ){
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		PasajeDTO pasaje;
+		ClienteDAOSQL clienteDAOSQL = new ClienteDAOSQL();
+		ViajeDAOSQL viajeDAOSQL = new ViajeDAOSQL();
+		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
+		EstadoPasajeDAOSQL estadoPasajeDAOSQL = new EstadoPasajeDAOSQL();
+		Pasaje_PasajerosDAOSQL pasajeros = new Pasaje_PasajerosDAOSQL();
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browse);
+			statement.setInt(1, idPasaje);
+			resultSet = statement.executeQuery();
+				
+				if(resultSet.next()){
+					pasaje = new PasajeDTO(resultSet.getInt("idPasaje"),
+							viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
+							administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
+							clienteDAOSQL.getClienteById(resultSet.getInt("idCliente")),
+							resultSet.getDate("fechaVencimiento"),
+							resultSet.getBigDecimal("valorViaje"),
+							estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
+							pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje"))
+							);
+					
+				return pasaje;
+				}
+				
+			}catch (SQLException e){
+				 e.printStackTrace();
+			}
+			return null;
+		}
+	@Override
+	public PasajeDTO getUltimoRegistroPasaje() {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		PasajeDTO pasaje;
+		ClienteDAOSQL clienteDAOSQL = new ClienteDAOSQL();
+		ViajeDAOSQL viajeDAOSQL = new ViajeDAOSQL();
+		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
+		EstadoPasajeDAOSQL estadoPasajeDAOSQL = new EstadoPasajeDAOSQL();
+		Pasaje_PasajerosDAOSQL pasajeros = new Pasaje_PasajerosDAOSQL();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(ultimoRegistro);
+			resultSet = statement.executeQuery();
+				
+			if (resultSet.next()){
+				pasaje = new PasajeDTO(resultSet.getInt("idPasaje"),
+						viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
+						administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
+						clienteDAOSQL.getClienteById(resultSet.getInt("idCliente")),
+						resultSet.getDate("fechaVencimiento"),
+						resultSet.getBigDecimal("valorViaje"),
+						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
+						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje"))
+						);
+				
+			return pasaje;
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

@@ -5,19 +5,24 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 
 import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
 public class VentanaConfirmacionPasaje extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
+	private DefaultTableModel modelPasajeros;
+	private  String[] nombreColumnas = {"Nombre" , "Apellido", "DNI"};
+	
+	private JTable tablaPasajeros;
 	private JTextField txtCliente;
 	private JTextField txtDni;
 	private JTextField txtOrigen;
@@ -82,7 +87,7 @@ public class VentanaConfirmacionPasaje extends JFrame {
 		contentPane.add(lblImporteTotal);
 		
 		JLabel lblPasajeros = new JLabel("Pasajeros:");
-		lblPasajeros.setBounds(35, 251, 133, 14);
+		lblPasajeros.setBounds(35, 233, 133, 14);
 		contentPane.add(lblPasajeros);
 		
 		JLabel lblFormaPago = new JLabel("Forma de pago:");
@@ -93,6 +98,18 @@ public class VentanaConfirmacionPasaje extends JFrame {
 		lblImportePagado.setBounds(374, 405, 116, 14);
 		contentPane.add(lblImportePagado);
 		
+		JScrollPane spPasajeros = new JScrollPane();
+		spPasajeros.setBounds(10, 258, 631, 128);
+		contentPane.add(spPasajeros);
+		modelPasajeros = new DefaultTableModel(null,nombreColumnas){
+			@Override
+				public boolean isCellEditable(int row, int column){
+				return false;
+				}
+			};
+		tablaPasajeros = new JTable(modelPasajeros);
+		spPasajeros.setViewportView(tablaPasajeros);
+		
 		btnAtras = new JButton("Atrás");
 		btnAtras.setBounds(137, 524, 152, 47);
 		contentPane.add(btnAtras);
@@ -101,9 +118,9 @@ public class VentanaConfirmacionPasaje extends JFrame {
 		btnGenerarPasaje.setBounds(332, 525, 158, 45);
 		contentPane.add(btnGenerarPasaje);
 		
-		table = new JTable();
-		table.setBounds(35, 276, 583, 113);
-		contentPane.add(table);
+		tablaPasajeros = new JTable();
+		tablaPasajeros.setBounds(20, 282, 621, 107);
+		contentPane.add(tablaPasajeros);
 		
 		txtCliente = new JTextField();
 		txtCliente.setBackground(Color.WHITE);
@@ -153,6 +170,18 @@ public class VentanaConfirmacionPasaje extends JFrame {
 		txtTotal.setBounds(495, 447, 123, 20);
 		contentPane.add(txtTotal);
 		txtTotal.setColumns(10);
+	}
+
+	public DefaultTableModel getModelPasajeros() {
+		return modelPasajeros;
+	}
+
+	public String[] getNombreColumnas() {
+		return nombreColumnas;
+	}
+
+	public JTable getTablaPasajeros() {
+		return tablaPasajeros;
 	}
 
 	public JTextField getTxtCliente() {

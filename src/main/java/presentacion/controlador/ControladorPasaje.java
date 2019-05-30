@@ -15,6 +15,7 @@ import modelo.EstadoPasaje;
 import modelo.FormaPago;
 import modelo.ModeloViaje;
 import modelo.Pago;
+import modelo.Pagos_Pasaje;
 import modelo.Pasaje;
 import modelo.Pasaje_Pasajeros;
 import modelo.Pasajero;
@@ -23,6 +24,7 @@ import dto.ClienteDTO;
 import dto.EstadoPasajeDTO;
 import dto.FormaPagoDTO;
 import dto.PagoDTO;
+import dto.Pagos_PasajeDTO;
 import dto.PasajeDTO;
 import dto.Pasaje_PasajerosDTO;
 import dto.PasajeroDTO;
@@ -34,6 +36,7 @@ import presentacion.vista.administrativo.VentanaComprobante;
 import presentacion.vista.administrativo.VentanaConfirmacionPasaje;
 import presentacion.vista.administrativo.VentanaPago;
 import presentacion.vista.administrativo.VentanaPasajero;
+import presentacion.vista.administrativo.VentanaTablaPagos;
 import presentacion.vista.administrativo.VentanaTablaViajes;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
@@ -48,6 +51,7 @@ public class ControladorPasaje {
 	private VentanaVisualizarPasaje ventanaVisualizarPasaje;
 	private VentanaConfirmacionPasaje ventanaConfirmacionPasaje;
 	private VentanaComprobante ventanaComprobante;
+	private VentanaTablaPagos ventanaTablaPagos;
 	
 	private List<ClienteDTO> clientes_en_tabla;
 	private List <ViajeDTO> viajes_en_tabla;
@@ -63,6 +67,7 @@ public class ControladorPasaje {
 	private ModeloViaje viaje;
 	private Pago pago;
 	private Pasaje pasaje;
+	private Pagos_Pasaje pagos_pasaje;
 	private Pasaje_Pasajeros pasajes_pasajeros;
 	/*Fin de modelos*/
 	
@@ -79,12 +84,14 @@ public class ControladorPasaje {
 		this.ventanaVisualizarPasaje = VentanaVisualizarPasaje.getInstance();
 		this.ventanaConfirmacionPasaje = VentanaConfirmacionPasaje.getInstance();
 		this.ventanaComprobante = VentanaComprobante.getInstance();
+		this.ventanaTablaPagos = VentanaTablaPagos.getInstance();
 		
 		this.cliente = cliente;
 		this.viaje = new ModeloViaje(new DAOSQLFactory());
 		this.pasajero = new Pasajero(new DAOSQLFactory());
 		this.pago = new Pago(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
+		this.pagos_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
 		this.pasajes_pasajeros = new Pasaje_Pasajeros(new DAOSQLFactory());
 		
 		this.pasajeros_en_reserva = new ArrayList<PasajeroDTO>();
@@ -114,11 +121,11 @@ public class ControladorPasaje {
 	
 		//Ventana Edición de Pasaje
 		this.ventanaVisualizarPasaje.getBtnAceptar().addActionListener(s->salirVentanaVisualizarPasaje(s));
+		this.ventanaVisualizarPasaje.getBtnVerPagos().addActionListener(vp->verTablaPagos(vp));
 
 		this.administrativoLogueado = administrativoLogueado;
 	}
 
-	
 	private void aplicarFiltro(ActionEvent af) {
 		String dni = ventanaPasajero.getTxtFiltroDni().getText();
 		PasajeroDTO pasajeroDTO = pasajero.llenarCamposPasajeroPorDni(dni);
@@ -270,6 +277,40 @@ public class ControladorPasaje {
 		}
 		this.ventanaCargaPasajero.getLblPasajerosCargados().setText(pasajeros_en_reserva.size()+" pasajeros fueron cargados");
 	}
+	
+	private void llenarTablaDePasajerosConfirmarPasaje(){
+		this.ventanaConfirmacionPasaje.getModelPasajeros().setRowCount(0);
+		this.ventanaConfirmacionPasaje.getModelPasajeros().setColumnCount(0);
+		this.ventanaConfirmacionPasaje.getModelPasajeros().setColumnIdentifiers(this.ventanaConfirmacionPasaje.getNombreColumnas());
+		for(int i=0; i<pasajeros_en_reserva.size();i++){
+			Object[] fila = { 
+					pasajeros_en_reserva.get(i).getNombre(),
+					pasajeros_en_reserva.get(i).getApellido(),
+					pasajeros_en_reserva.get(i).getDni(),
+			};
+			this.ventanaConfirmacionPasaje.getModelPasajeros().addRow(fila);
+		}
+	}
+	
+	private void llenarTablaPagos(int idPasaje){
+		this.ventanaTablaPagos.getModelPagos().setRowCount(0);
+		this.ventanaTablaPagos.getModelPagos().setColumnCount(0);
+		this.ventanaTablaPagos.getModelPagos().setColumnIdentifiers(this.ventanaTablaPagos.getNombreColumnas());
+		Pagos_Pasaje pago_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
+		List<Pagos_PasajeDTO> pagos = pago_pasaje.obtenerPagosPasaje();
+		for(int i=0; i < pagos.size();i++){
+			if(pagos.get(i).getPasaje().getIdPasaje() == idPasaje){
+				Object[] fila = { 
+						pagos.get(i).getPago().getFechaPago(),
+						pagos.get(i).getPago().getMonto(),
+						pagos.get(i).getPago().getIdFormaPago().getTipo(),
+						pagos.get(i).getPago().getAdministrativo().getNombre() 
+				
+			};
+			this.ventanaTablaPagos.getModelPagos().addRow(fila);
+			}
+		}
+	}
 	/*Fin de Llenar tablas*/
 	
 	private void mostrarVentanaAgregarPasajero(ActionEvent ap) {
@@ -354,6 +395,7 @@ public class ControladorPasaje {
 		this.ventanaConfirmacionPasaje.getTxtFormaPago().setText(""+pagoDTO.getIdFormaPago().getTipo());
 		this.ventanaConfirmacionPasaje.getTxtPagado().setText(""+pagoDTO.getMonto());
 		this.ventanaConfirmacionPasaje.getTxtTotal().setText(""+totalaPagar);
+		llenarTablaDePasajerosConfirmarPasaje();
 	}
 		
 	private void mostrarVentanaComprobante(){
@@ -379,27 +421,39 @@ public class ControladorPasaje {
 		//Modelo viaje
 		viaje.editarViaje(viajeDTO);
 		
-		
 		//Agrego el pago
+		pagoDTO.setAdministrativo(administrativoLogueado);
 		pago.agregarPago(pagoDTO);
+		
 		PagoDTO pagoPasaje = pago.getUltimoRegistroPago();
 		
 		//Agrego el pasaje
-		pasajeDTO = new PasajeDTO(0,viajeDTO,administrativoLogueado,cliente,calcularFechaReserva(viajeDTO.getFechaSalida()),valorViaje,estadoPasaje,pagoPasaje,
-		pasajeros);
+		pasajeDTO = new PasajeDTO(0,viajeDTO,administrativoLogueado,cliente,calcularFechaReserva(viajeDTO.getFechaSalida()),valorViaje,estadoPasaje,
+				pasajeros);
+		
 		pasaje.agregarPasaje(pasajeDTO);
-	
-		//Vinculamos el pasaje con los pasajeros
-		Pasaje_PasajerosDTO pasaje_pasajeros = new Pasaje_PasajerosDTO();
 		
-		//Agregamos los pasajeros 
-		for(PasajeroDTO pasajeroDTO : pasajeros_en_reserva) {
-			pasajero.agregarPasajero(pasajeroDTO);
-			pasaje_pasajeros.setIdPasaje(pasajeDTO.getIdPasaje());
-			pasaje_pasajeros.setIdPasajero(pasajeroDTO.getIdPasajero());
+		PasajeDTO pDTO = pasaje.getUltimoRegistroPasaje();
 		
-		pasajes_pasajeros.agregarPasajePasajero(pasaje_pasajeros);
-		}
+		Pagos_PasajeDTO pagos_pasajeDTO = new Pagos_PasajeDTO();
+		pagos_pasajeDTO.setPago(pagoPasaje);
+		pagos_pasajeDTO.setPasaje(pDTO);
+		
+		pagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
+		
+//		pago.agregarPago(pagoDTO);
+//		pasaje.agregarPasaje(pasajeDTO);
+//		//Vinculamos el pasaje con los pasajeros
+//		Pasaje_PasajerosDTO pasaje_pasajeros = new Pasaje_PasajerosDTO();
+//		
+//		//Agregamos los pasajeros 
+//		for(PasajeroDTO pasajeroDTO : pasajeros_en_reserva) {
+//			pasajero.agregarPasajero(pasajeroDTO);
+//			pasaje_pasajeros.setIdPasaje(pasajeDTO.getIdPasaje());
+//			pasaje_pasajeros.setIdPasajero(pasajeroDTO.getIdPasajero());
+//		
+//		pasajes_pasajeros.agregarPasajePasajero(pasaje_pasajeros);
+//		}
 		this.ventanaConfirmacionPasaje.setVisible(false);
 		mostrarVentanaComprobante();
 	}
@@ -407,7 +461,7 @@ public class ControladorPasaje {
 	public Date calcularFechaReserva(Date fechaSalida){
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(fechaSalida); 
-		calendar.add(Calendar.DATE, -20);  //La fecha de reserva son 20 días a la fecha de salida del viaje
+		calendar.add(Calendar.DATE, -20);  //La fecha de reserva son 20 días antes a la fecha de salida del viaje
 		return convertUtilToSql(calendar.getTime()); 
 	}
 	
@@ -471,42 +525,39 @@ public class ControladorPasaje {
 	
 	private void verDatosDelPasaje(int filaSeleccionada) {
 		if (filaSeleccionada != -1){
+			this.ventanaVisualizarPasaje.getBtnPagar().setVisible(true);
+			this.ventanaVisualizarPasaje.getLblClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
+			this.ventanaVisualizarPasaje.getLblDniDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getDni());
+			this.ventanaVisualizarPasaje.getLblOrigenDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadOrigen().getNombre());
+			this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadDestino().getNombre());
+			this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
+			this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
+			this.ventanaVisualizarPasaje.getLblMontoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje());
+//			this.ventanaVisualizarPasaje.getLblRestante().setText(" "+ calcularMontoQueSeDebeDelPasaje(filaSeleccionada));
+			
+			llenarTablaPagos(pasajes_en_tabla.get(filaSeleccionada).getIdPasaje());
+			
 			if(this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getIdEstadoPasaje()==1){
 				this.ventanaVisualizarPasaje.setVisible(true);
 				this.ventanaVisualizarPasaje.getBtnPagar().setVisible(false);
-				this.ventanaVisualizarPasaje.getLblClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
-				this.ventanaVisualizarPasaje.getLblDniDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getDni());
-				this.ventanaVisualizarPasaje.getLblOrigenDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadOrigen().getNombre());
-				this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadDestino().getNombre());
-				this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
-				this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
-				this.ventanaVisualizarPasaje.getLblMontoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje());
-				this.ventanaVisualizarPasaje.getLblRestante().setText(" "+ calcularMontoQueSeDebeDelPasaje(filaSeleccionada));
-
 			}else{
 				this.ventanaVisualizarPasaje.setVisible(true);
-				this.ventanaVisualizarPasaje.getBtnPagar().setVisible(true);
-				this.ventanaVisualizarPasaje.getLblClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
-				this.ventanaVisualizarPasaje.getLblDniDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getDni());
-				this.ventanaVisualizarPasaje.getLblOrigenDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadOrigen().getNombre());
-				this.ventanaVisualizarPasaje.getLblDestinoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getCiudadDestino().getNombre());
-				this.ventanaVisualizarPasaje.getLblTransporteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getViaje().getTransporte().getNombre());
-				this.ventanaVisualizarPasaje.getLblEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
-				this.ventanaVisualizarPasaje.getLblMontoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje());
-				this.ventanaVisualizarPasaje.getLblRestante().setText(" "+ calcularMontoQueSeDebeDelPasaje(filaSeleccionada));
-			
 			}
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
-	private BigDecimal calcularMontoQueSeDebeDelPasaje(int filaSeleccionada) {
-		BigDecimal Valor1 = this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje();
-		BigDecimal Valor2 = this.pasajes_en_tabla.get(filaSeleccionada).getPago().getMonto();
-		totalaPagar = Valor1.subtract(Valor2);
-		return totalaPagar;
+	private void verTablaPagos(ActionEvent vp) {
+		this.ventanaTablaPagos.mostrarVentana(true);
 	}
+
+//	private BigDecimal calcularMontoQueSeDebeDelPasaje(int filaSeleccionada) {
+//		BigDecimal Valor1 = this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje();
+//		BigDecimal Valor2 = this.pasajes_en_tabla.get(filaSeleccionada).getPago().getMonto();
+//		totalaPagar = Valor1.subtract(Valor2);
+//		return totalaPagar;
+//	}
 		
 	private void salirVentanaVisualizarPasaje(ActionEvent s) {
 		this.ventanaVisualizarPasaje.mostrarVentana(false);

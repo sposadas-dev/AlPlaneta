@@ -24,6 +24,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 	private JLabel lblRestante;
 	private JButton btnPagar;
 	private JButton btnAceptar;
+	private JButton btnVerPagos;
 	
 	private static VentanaVisualizarPasaje INSTANCE;
 	
@@ -79,7 +80,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 		
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAceptar.setBounds(290, 299, 156, 49);
+		btnAceptar.setBounds(213, 299, 143, 49);
 		btnAceptar.setBackground(new Color(52, 152, 219));
 		btnAceptar.setForeground(Color.WHITE);
 		contentPane.add(btnAceptar);
@@ -128,7 +129,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 		
 		btnPagar = new JButton("Pagar");
 		btnPagar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnPagar.setBounds(121, 299, 150, 51);
+		btnPagar.setBounds(383, 298, 150, 51);
 		btnPagar.setBackground(new Color(5, 196, 107));
 		btnPagar.setForeground(Color.WHITE);
 
@@ -145,6 +146,13 @@ public class VentanaVisualizarPasaje extends JFrame {
 		lblVisualizarPasaje.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblVisualizarPasaje.setBounds(191, 0, 214, 53);
 		panel.add(lblVisualizarPasaje);
+		
+		btnVerPagos = new JButton("Ver pagos");
+		btnVerPagos.setForeground(Color.WHITE);
+		btnVerPagos.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnVerPagos.setBackground(new Color(192, 192, 192));
+		btnVerPagos.setBounds(27, 298, 150, 51);
+		contentPane.add(btnVerPagos);
 	}
 	
 	public JLabel getLblClienteDelPasaje() {
@@ -187,6 +195,11 @@ public class VentanaVisualizarPasaje extends JFrame {
 	public JButton getBtnPagar() {
 		return btnPagar;
 	}
+	
+	public JButton getBtnVerPagos() {
+		return btnVerPagos;
+	}
+
 	
 	public void mostrarVentana(boolean visibilidad){
 		this.setVisible(visibilidad);

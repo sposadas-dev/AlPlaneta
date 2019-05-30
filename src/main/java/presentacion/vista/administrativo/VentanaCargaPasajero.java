@@ -25,7 +25,7 @@ public class VentanaCargaPasajero extends JFrame {
 	private JLabel lblPasajerosCargados;
 	private JButton btnConfirmar;
 	private JButton btnAtras;
-	private  String[] nombreColumnas = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento","Teléfono","Email"};
+	private String[] nombreColumnas = {"Nombre","Apellido","DNI","Fecha de nacimiento","Teléfono","Email"};
 
 	public static VentanaCargaPasajero getInstance(){
 		if(INSTANCE == null)
