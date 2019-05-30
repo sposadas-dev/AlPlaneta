@@ -21,17 +21,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import java.io.*; 
 
-/**
- * Example of using the iText library to work with PDF documents on Java, 
- * lets you create, analyze, modify and maintain documents in this format.
- * Ejemplo de uso de la librerÃ­a iText para trabajar con documentos PDF en Java, 
- * nos permite crear, analizar, modificar y mantener documentos en este formato.
- *
- * @author xules You can follow me on my website http://www.codigoxules.org/en
- * Puedes seguirme en mi web http://www.codigoxules.org
- */
+
 public class GeneratePDFFileIText {
-    // Fonts definitions (DefiniciÃ³n de fuentes).
+   
     private static final Font chapterFont = FontFactory.getFont(FontFactory.HELVETICA, 26, Font.BOLDITALIC);
     private static final Font paragraphFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Font.NORMAL);
         
@@ -64,7 +56,7 @@ public class GeneratePDFFileIText {
             
             Chunk chunk = new Chunk(" Voucher Al Planeta ", chapterFont);
 //            chunk.setBackground(BaseColor.GRAY);
-            // Let's create de first Chapter (Creemos el primer capÃ­tulo)
+            // Let's create de first Chapter (Creemos el primer capitulo)
             Chapter chapter = new Chapter(new Paragraph(chunk), 1);
             chapter.setNumberDepth(0);
             chapter.add(new Paragraph("Este Voucher corresponde a \n"
@@ -83,12 +75,11 @@ public class GeneratePDFFileIText {
             }
             document.add(chapter);
             
-            // Second page - some elements
-            // Segunda pÃ¡gina - Algunos elementos
+            // Segunda - Pagina
+            
             Chapter chapSecond = new Chapter(new Paragraph(new Anchor("Datos correspondiente al voucher ...")), 1);
             Paragraph paragraphS = new Paragraph("Datos correspondiente al voucher ...", subcategoryFont);
             
-            // Underline a paragraph by iText (subrayando un pÃ¡rrafo por iText)
             Paragraph paragraphE = new Paragraph("aqui nose que poner pero se podria agregar algunas cosas \n");
             DottedLineSeparator dottedline = new DottedLineSeparator();
             dottedline.setOffset(-2);
