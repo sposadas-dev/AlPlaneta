@@ -2,13 +2,8 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javax.swing.JOptionPane;
-
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EventoDTO;
@@ -17,6 +12,7 @@ import modelo.Cliente;
 import modelo.ModeloEvento;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.administrativo.NotificacionEmergente;
 import presentacion.vista.administrativo.VentanaEditarEvento;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
@@ -170,6 +166,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
 		this.llenarTablaEventos();
+		this.controladorEvento.actualizarEventosVistos();
 	}
 	
 	

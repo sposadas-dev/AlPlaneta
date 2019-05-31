@@ -61,7 +61,7 @@ public class VentanaEditarEvento extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panelCliente = new JPanel();
-		panelCliente.setBackground(Color.PINK);
+		panelCliente.setBackground(new Color(66, 99, 145));
 		panelCliente.setBounds(0, 0, 591, 53);
 		contentPane.add(panelCliente);
 		panelCliente.setLayout(null);

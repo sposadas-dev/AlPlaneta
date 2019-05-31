@@ -3,7 +3,6 @@ package presentacion.controlador;
 import java.awt.event.ActionEvent;
 import java.sql.Date;
 import java.sql.Time;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,22 +17,25 @@ import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EstadoEventoDTO;
 import dto.EventoDTO;
-import dto.TransporteDTO;
 import modelo.Cliente;
 import modelo.ModeloEstadoEvento;
 import modelo.ModeloEvento;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
 import persistencia.dao.mysql.EstadoEventoDAOSQL;
+import presentacion.vista.administrativo.NotificacionEmergente;
 import presentacion.vista.administrativo.PanelEvento;
 import presentacion.vista.administrativo.VentanaEditarEvento;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
 import presentacion.vista.administrativo.VentanaTablaClientes;
+import presentacion.vista.administrativo.VistaNotificacionDeEvento;
 
 public class ControladorEvento {
 
 	private VentanaTablaClientes ventanaTablaClientes;
 	private EventoDTO eventoSeleccionado;
+	private NotificacionEmergente notificacion;
+	private VistaNotificacionDeEvento vistaNotificacion;
 	
 	private List<ClienteDTO> clientes_en_tabla;
 	private List<EventoDTO> eventos_en_tabla;
@@ -56,6 +58,9 @@ public class ControladorEvento {
 	private EstadoEventoDTO estado; 	
 	private String motivoReprogramacion;
 	private EventoDTO eventoRegistrado;
+	
+
+	private EventoDTO eventoAsociado;
 
 	public ControladorEvento(VentanaRegistrarEvento ventanaEvento, ModeloEvento evento, AdministrativoDTO administrativoLogueado, List<EventoDTO> eventos_en_tabla){
 		//DATOS EVENTO:
@@ -71,9 +76,12 @@ public class ControladorEvento {
 		this.eventoRegistrado = null;
 		this.eventos_en_tabla = eventos_en_tabla;
 		
+		
 		this.ventanaEvento = ventanaEvento;
 		this.ventanaEditarEvento = VentanaEditarEvento.getInstance();
 		this.ventanaTablaClientes = VentanaTablaClientes.getInstance();
+		this.notificacion = NotificacionEmergente.getInstance();
+		this.vistaNotificacion = VistaNotificacionDeEvento.getInstance();
 		
 		this.cliente = new Cliente(new DAOSQLFactory());
 		this.setPasaje(new Pasaje(new DAOSQLFactory()));
@@ -91,6 +99,8 @@ public class ControladorEvento {
 
 		this.ventanaTablaClientes.getBtnAtras().addActionListener(vc->volverVentanaAgregarEvento(vc));
 		this.ventanaTablaClientes.getBtnConfirmar().addActionListener(ce->agregarClienteToEvento(ce));
+		
+		this.notificacion.getBtnVerNotificacion().addActionListener(v->mostrarEvento(v));
 		
 		this.administrativoLogueado= administrativoLogueado;
 	}
@@ -114,7 +124,8 @@ public class ControladorEvento {
 	
 	public void llenarComboHoraEvento() {
 		String [] horarios = {"08:00:00", "08:30:00", "09:00:00", "09:30:00", "10:00:00","10:30:00","11:00:00","11:30:00","12:30:00",
-				"13:00:00","13:30:00","14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00", "16:30:00", "17:00:00", "17:30:00","18:00:00"};
+				"13:00:00","13:30:00","14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00", "16:30:00", "17:00:00", 
+				"17:30:00","18:00:00","01:20:00"};
 		this.ventanaEvento.getComboHoraEvento().setModel(new DefaultComboBoxModel(horarios));
 		this.ventanaEditarEvento.getComboHoraEvento().setModel(new DefaultComboBoxModel(horarios));
 	}
@@ -228,40 +239,164 @@ public class ControladorEvento {
 				String horaActual = horarioStringActual[0];
 				String minutosActual = horarioStringActual[1];
 				String segundosActual = horarioStringActual[2];
-				System.out.println("HORA ACTUAL: "+horarioActual.toString());
-				if(minutosActual.equals("54") || minutosActual.equals("00")) {
+				
+				String[] fechaStringActual = fechaActual.toString().split("-");
+				String diaActual = fechaStringActual[2];
+				String mesActual = fechaStringActual[1];
+				String añoActual = fechaStringActual[0];
+				System.out.println("HORA ACTUAL: "+horaActual+":"+minutosActual+":"+segundosActual);
+				if(minutosActual.equals("20") || minutosActual.equals("00")) {
 					for(EventoDTO e : evento.obtenerEvento()) {
+						
 						String[] horarioParticular = e.getHoraEvento().toString().split(":");
 						String horaParticular = horarioParticular[0];
 						String minutosParticular = horarioParticular[1];
 						String segundosParticular = horarioParticular[2];
 						
+						String[] fechaStringParticular = e.getFechaEvento().toString().split("-");
+						String diaParticular = fechaStringParticular[2];
+						String mesParticular = fechaStringParticular[1];
+						String añoParticular = fechaStringParticular[0];
+
 						if(horaParticular.equals(horaActual) && minutosParticular.equals(minutosActual) && segundosActual.equals(segundosParticular)) {	
-							if(fechaActual.equals(e.getFechaEvento())) {
-								//SIGNIFICA QUE HAY UN EVENTO EN ESTE DIA Y HORARIO
-								e.setVisto(1);
-								evento.editarVistoEvento(e);
-								JOptionPane.showMessageDialog(null, "Tienes un nuevo evento", "Evento!", JOptionPane.INFORMATION_MESSAGE);							
+							if(añoParticular.equals(añoActual) && mesParticular.equals(mesActual) && diaActual.equals(diaParticular)) {	
+								eventoAsociado = e;
+								notificacion.mostrarBtnVerNotificacion();
+					    		notificacion.setLblMensajeEventoNuevo("Tienes un evento nuevo!");
+								notificacion.mostrarVentana(true);							
+								esperarYcerrarVentana();
 							}
-							
 						}
 					}
 				}
 		    }
 		};
-
 		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(timerTask, 0, 1000);//1000=3segundos
+		timer.scheduleAtFixedRate(timerTask, 0, 1000);//1000=1 segundo
 	}
 	
-	public void controlarNotificacionesInicioSesion() {
+	public void mostrarEvento(ActionEvent e) {
+		vistaNotificacion.getLblDatoDescripcion().setText(eventoAsociado.getDescripcion());
+		vistaNotificacion.getLblDatoEstado().setText(eventoAsociado.getEstadoEvento().getNombre());
+		vistaNotificacion.getLblDatoApellido().setText(eventoAsociado.getCliente().getApellido());
+		vistaNotificacion.getLblDatoCelular().setText(eventoAsociado.getCliente().getMedioContacto().getTelefonoCelular());
+		vistaNotificacion.getLblDatoDni().setText(eventoAsociado.getCliente().getDni());
+		
+		vistaNotificacion.mostrarVentana(true);
+		notificacion.mostrarVentana(false);
+		
+		eventoAsociado.setVisto(1);
+		evento.editarVistoEvento(eventoAsociado);
+	}
+	
+	public void controlarNotificacionesInicioSesion() {		
 		boolean vistos = false;
-		for(EventoDTO e : evento.obtenerEvento()) { //hay eventos sin ver
-			if(e.getVisto()==0) //hay un evento no visto
-				vistos = vistos || true;
+		for(EventoDTO e : evento.obtenerEvento()) { //hay eventos sin ver			
+			if(e.getVisto()==0)
+				if(esEventoPasado(e)) //hay un evento que pasó, no visto
+					vistos = vistos || true;
 		}
 		if(vistos)
-			JOptionPane.showMessageDialog(null, "Hay evento(s) sin ver", "Evento(s)", JOptionPane.INFORMATION_MESSAGE);
+			notificacion.setLblMensajeEventoNuevo("Tienes evento(s) sin ver!");
+			notificacion.mostrarVentana(true);		
+			
+			esperarYcerrarVentana();
+	}
+
+	private void esperarYcerrarVentana() {
+		TimerTask timerTask = new TimerTask() {
+			int espera=0;
+		    public void run() {
+		    	espera++;
+		    	if (espera>5) {
+		    		notificacion.mostrarVentana(false);
+		    		this.cancel();
+		    	}
+		    }
+		};
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(timerTask, 0, 1000);
+	}
+	
+	private boolean esEventoPasado(EventoDTO e) {
+		if(this.fechaIngreso.before(e.getFechaEvento())) { //es un evento futuro
+			System.out.println("-ES UN EVENTO FUTURO.");
+			return false;
+		}
+		else {// es un evento del dia de hoy o de un evento anterior
+			if(fechasIguales(this.fechaIngreso,e.getFechaEvento())) {//IF ES EVENTO DE HOY { //SUPER CHEQUEAR ESTO
+				System.out.println("-ES EVENTO DE HOY:");
+				if(!esHorarioPasado(e.getHoraEvento())) {//chequear si el horario todavia no ocurrio
+					System.out.println(" Es un evento futuro de hoy");
+					return false;
+				}
+				else { // el horario ya paso
+					System.out.println(" Es un evento pasado de hoy");
+					return true; 
+				}
+			}
+			else{//ELSE{ //ES UN EVENTO PASADO
+				System.out.println("-ES UN EVENTO PASADO.");
+				return true; 
+			}
+		}
+	}
+	
+	private boolean fechasIguales(Date a, Date b) {
+		String[] fechaA = a.toString().split("-");
+		String diaA = fechaA[2];
+		String mesA = fechaA[1];
+		String añoA = fechaA[0];
+		
+		String[] fechaB = b.toString().split("-");
+		String diaB = fechaB[2];
+		String mesB = fechaB[1];
+		String añoB = fechaB[0];
+		
+		if(diaA.equals(diaB) && mesA.equals(mesB) && añoA.equals(añoB))
+			return true;
+		return false;
+	}
+	
+	private boolean esHorarioPasado(Time t) {		
+		String[] horarioActual = new java.sql.Time(System.currentTimeMillis()).toString().split(":");
+		String horaActual = horarioActual[0];
+		String minutosActual = horarioActual[1];
+		
+		String[] horarioParticular = t.toString().split(":");
+		String horaParticular = horarioParticular[0];
+		String minutosParticular = horarioParticular[1];
+		
+		if(Integer.compare((Integer.parseInt(horaActual)),(Integer.parseInt(horaParticular)))==0) {//IF la hora actual es igual que la del evento
+			if(Integer.compare((Integer.parseInt(minutosActual)),(Integer.parseInt(minutosParticular)))>=0) {//IF minutos acutal es mayor O IGUAL a los minutos del evento
+				//System.out.println("Es evento pasado");
+				return true;
+			}
+			else{//ELSE, minutos actual es menor los minutos del evento
+				//System.out.println("Es evento futuro");
+				return false;
+			}
+		}
+		else {
+			if(Integer.compare((Integer.parseInt(horaActual)),(Integer.parseInt(horaParticular)))>0) {// 0 si son iguales, -1 si a<b, 1 si a>b
+				//System.out.println("Es evento pasado");
+				return true;
+			}
+			else {// la hora actual es menor que la del evento //if(Integer.compare((Integer.parseInt(horaActual)),(Integer.parseInt(horaParticular)))<0)
+				//System.out.println("Es evento futuro");
+				return false;
+			}
+		}
+		
+	}
+	
+	public void actualizarEventosVistos() {
+		for(EventoDTO e : evento.obtenerEvento()) { //hay eventos sin ver			
+			if(e.getVisto()==0)
+				if(esEventoPasado(e)) //hay un evento que pasó, no visto
+					e.setVisto(1);
+					evento.editarVistoEvento(e);
+		}
 	}
 	/*private void llenarTablaEventos(){
 		System.out.println("ENTRA A TABLA EVENTO EN CONTROLADOREVENTO");

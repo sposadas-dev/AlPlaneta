@@ -54,7 +54,7 @@ public class VentanaRegistrarEvento extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panelCliente = new JPanel();
-		panelCliente.setBackground(Color.PINK);
+		panelCliente.setBackground(new Color(66, 99, 145));
 		panelCliente.setBounds(0, 0, 591, 53);
 		contentPane.add(panelCliente);
 		panelCliente.setLayout(null);
@@ -119,9 +119,9 @@ public class VentanaRegistrarEvento extends JFrame {
 		contentPane.add(comboEstado);
 		
 		btnAgregarCliente = new JButton("Cliente");
-		btnAgregarCliente.setForeground(Color.WHITE);
+		//btnAgregarCliente.setForeground(Color.BLACK);
 		btnAgregarCliente.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAgregarCliente.setBackground(Color.PINK);
+		//btnAgregarCliente.setBackground(Color.PINK);
 		btnAgregarCliente.setBounds(35, 244, 111, 31);
 		contentPane.add(btnAgregarCliente);
 		

@@ -33,7 +33,7 @@ public class PanelEvento extends JPanel {
 		spPasajeros.setViewportView(tablaEventos);
 		
 		JPanel panelEventos = new JPanel();
-		panelEventos.setBackground(Color.PINK);
+		panelEventos.setBackground(new Color(66, 99, 145));
 		panelEventos.setBounds(10, 11, 1342, 69);
 		add(panelEventos);
 		panelEventos.setLayout(null);
