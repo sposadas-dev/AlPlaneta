@@ -3,7 +3,9 @@ package presentacion.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+
 import javax.swing.JOptionPane;
+
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EventoDTO;
@@ -12,7 +14,6 @@ import modelo.Cliente;
 import modelo.ModeloEvento;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.administrativo.NotificacionEmergente;
 import presentacion.vista.administrativo.VentanaEditarEvento;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
@@ -115,7 +116,7 @@ public class ControladorAdministrativo implements ActionListener {
 	}
 	
 	private void mostrarVentanaEditarEvento(ActionEvent ep) {
-		this.vista.getPanelEvento().mostrarPanelEvento(true);
+		this.llenarTablaEventos();
 		int filaSeleccionada = this.vista.getPanelEvento().getTablaEventos().getSelectedRow();
 		if (filaSeleccionada != -1){
 			verDatosDelEvento(filaSeleccionada);
@@ -127,12 +128,13 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	private void verDatosDelEvento(int filaSeleccionada) {
 		controladorEvento.llenarComboEstados();
-		controladorEvento.llenarComboHoraEvento();
+		controladorEvento.llenarComboHora();
+		controladorEvento.llenarComboMinutos();
 		controladorEvento.setEventoSeleccionado(this.eventos_en_tabla.get(filaSeleccionada));
 		System.out.println(this.eventos_en_tabla.get(filaSeleccionada).getMotivoReprogramacion()+"DATO VIEJO");
 		if (filaSeleccionada != -1){
 			ventanaEditarEvento.mostrarVentana(true);
-			ventanaEditarEvento.getComboHoraEvento().setSelectedItem(this.eventos_en_tabla.get(filaSeleccionada).getHoraEvento().toString());
+			//ventanaEditarEvento.getComboHoraEvento().setSelectedItem(this.eventos_en_tabla.get(filaSeleccionada).getHoraEvento().toString());
 			ventanaEditarEvento.getTxtDescripcion().setText(this.eventos_en_tabla.get(filaSeleccionada).getDescripcion());
 			ventanaEditarEvento.getComboEstadoEvento().setSelectedItem(this.eventos_en_tabla.get(filaSeleccionada).getEstadoEvento().toString());
 			ventanaEditarEvento.getTxtDni().setText(this.eventos_en_tabla.get(filaSeleccionada).getCliente().getDni());
@@ -182,10 +184,10 @@ public class ControladorAdministrativo implements ActionListener {
 	private void mostrarVentanaAgregarEvento(ActionEvent ac)  {
 
 		controladorEvento.iniciar();
-		this.vista.getPanelEvento().mostrarPanelEvento(true);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
-		this.llenarTablaEventos();
+		//this.llenarTablaEventos();
 		this.ventanaEvento.limpiarCampos();
 		this.ventanaEvento.mostrarVentana();
 	}

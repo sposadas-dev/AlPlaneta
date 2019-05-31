@@ -5,9 +5,6 @@ import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-import java.sql.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,10 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import dto.EventoDTO;
-
 public class NotificacionEmergente extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel panel;
 	private JButton btnVerNotificacion;
@@ -58,7 +54,6 @@ public class NotificacionEmergente extends JFrame {
 		lblMensajeEventoNuevo.setForeground(Color.WHITE);
 		lblMensajeEventoNuevo.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblMensajeEventoNuevo.setBounds(0, 0, 361, 83);
-		lblMensajeEventoNuevo.setText("No hay eventos nuevos");
 		panel.add(lblMensajeEventoNuevo);
 		
 		btnVerNotificacion = new JButton("Ver");

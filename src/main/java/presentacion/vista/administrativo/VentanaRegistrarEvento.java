@@ -1,34 +1,37 @@
 package presentacion.vista.administrativo;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
-import java.awt.Color;
-import java.awt.SystemColor;
-import javax.swing.JSeparator;
-import javax.swing.JComboBox;
 
 public class VentanaRegistrarEvento extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JDateChooser dateFechaEvento;
-	private JComboBox comboHoraEvento;
-	private JComboBox comboEstado;
+	private JComboBox<String> comboHora;
+	private JComboBox<String> comboEstado;
+	private JComboBox<String> comboMinutos;
 	private JTextField txtDescripcion;
+	private JTextField txtDni;
 	private JButton btnRegistrar;
 	private JButton btnCancelar;
 	private JButton btnAgregarCliente;
+	private JLabel label;
 
 	private static VentanaRegistrarEvento ventanaCliente;
-	private JTextField txtDni;
-	
 	
 	public static VentanaRegistrarEvento getInstance(){
 		if(ventanaCliente == null){	
@@ -110,18 +113,40 @@ public class VentanaRegistrarEvento extends JFrame {
 		lblContrasenia.setBounds(35, 215, 123, 14);
 		contentPane.add(lblContrasenia);
 		
-		comboHoraEvento = new JComboBox();
-		comboHoraEvento.setBounds(120, 128, 131, 22);
-		contentPane.add(comboHoraEvento);
+		comboHora = new JComboBox<String>();
+		comboHora.setBounds(120, 128, 40, 22);
+		contentPane.add(comboHora);
+		comboHora.addMouseWheelListener(new MouseWheelListener() {
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if(e.getWheelRotation()>0)
+					if(comboHora.getSelectedIndex() < comboHora.getItemCount()-1) 
+						comboHora.setSelectedIndex(comboHora.getSelectedIndex()+1);
+				if(e.getWheelRotation()<0)
+					if(comboHora.getSelectedIndex() > 0)
+						comboHora.setSelectedIndex(comboHora.getSelectedIndex()-1);
+			}
+		});
 		
-		comboEstado = new JComboBox();
+		comboMinutos = new JComboBox<String>();
+		comboMinutos.setBounds(172, 128, 40, 22);
+		contentPane.add(comboMinutos);
+		comboMinutos.addMouseWheelListener(new MouseWheelListener() {
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if(e.getWheelRotation()>0)
+					if(comboMinutos.getSelectedIndex() < comboMinutos.getItemCount()-1) 
+						comboMinutos.setSelectedIndex(comboMinutos.getSelectedIndex()+1);
+				if(e.getWheelRotation()<0)
+					if(comboMinutos.getSelectedIndex() > 0)
+						comboMinutos.setSelectedIndex(comboMinutos.getSelectedIndex()-1);
+			}
+		});
+		
+		comboEstado = new JComboBox<String>();
 		comboEstado.setBounds(150, 209, 131, 22);
 		contentPane.add(comboEstado);
 		
 		btnAgregarCliente = new JButton("Cliente");
-		//btnAgregarCliente.setForeground(Color.BLACK);
 		btnAgregarCliente.setFont(new Font("Tahoma", Font.BOLD, 14));
-		//btnAgregarCliente.setBackground(Color.PINK);
 		btnAgregarCliente.setBounds(35, 244, 111, 31);
 		contentPane.add(btnAgregarCliente);
 		
@@ -134,7 +159,16 @@ public class VentanaRegistrarEvento extends JFrame {
 		JLabel lblDni = new JLabel("DNI:");
 		lblDni.setBounds(160, 245, 72, 31);
 		contentPane.add(lblDni);
+		
+		label = new JLabel(":");
+		label.setBounds(164, 132, 10, 14);
+		contentPane.add(label);
 	}
+	
+	public void seleccionarElementodeAbajo(){
+		comboHora.setSelectedIndex(comboHora.getSelectedIndex()+1);
+	}
+	
 	
 	public void mostrarVentana(){
 		this.setVisible(true);
@@ -151,12 +185,16 @@ public class VentanaRegistrarEvento extends JFrame {
 		return txtDni;
 	}
 
-	public JComboBox<?> getComboEstadoEvento() {
+	public JComboBox<String> getComboEstadoEvento() {
 		return comboEstado;
 	}
 	
-	public JComboBox<?> getComboHoraEvento() {
-		return comboHoraEvento;
+	public JComboBox<String> getComboHora() {
+		return comboHora;
+	}
+	
+	public JComboBox<String> getComboMinutos() {
+		return comboMinutos;
 	}
 	
 	public JButton getBtnRegistrar() {
@@ -176,7 +214,7 @@ public class VentanaRegistrarEvento extends JFrame {
 	}
 	
 	public void limpiarCampos(){
-		this.comboHoraEvento.setSelectedIndex(0);
+		this.comboHora.setSelectedIndex(0);
 		this.comboEstado.setSelectedIndex(0);
 		this.dateFechaEvento.setDate(null);
 		this.txtDescripcion.setText(null);

@@ -14,28 +14,26 @@ import java.awt.SystemColor;
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseWheelEvent;
 
 public class VentanaEditarEvento extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JDateChooser dateFechaEvento;
-	private JComboBox comboHoraEvento;
-	private JComboBox comboEstado;
-	private JTextField txtDescripcion;
+	private JComboBox<String> comboHora;
+	private JComboBox<String> comboMinutos;
+	private JComboBox<String> comboEstado;
 	private JButton btnEditar;
 	private JButton btnCancelar;
+	private JTextField txtDescripcion;
+	private JTextField txtReprogramacion;
+	private JTextField txtDni;
+	private JTextField txtApellido;
+	private JTextField txtNombre;	
 
 	private static VentanaEditarEvento ventanaCliente;
-	private JTextField txtDni;
-	private JLabel lblMotivoDeReprogramacion;
-	private JTextField txtReprogramacion;
-	private JLabel lblDatosCliente;
-	private JLabel lblApellido;
-	private JTextField txtApellido;
-	private JLabel lblNombre;
-	private JTextField txtNombre;
-	
 	
 	public static VentanaEditarEvento getInstance(){
 		if(ventanaCliente == null){	
@@ -119,12 +117,36 @@ public class VentanaEditarEvento extends JFrame {
 		lblContrasenia.setBounds(35, 155, 123, 14);
 		contentPane.add(lblContrasenia);
 		
-		comboHoraEvento = new JComboBox();
-		comboHoraEvento.setBounds(423, 84, 131, 22);
-		contentPane.add(comboHoraEvento);
+		comboHora = new JComboBox<String>();
+		comboHora.setBounds(416, 83, 40, 22);
+		contentPane.add(comboHora);
+		comboHora.addMouseWheelListener(new MouseWheelListener() {
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if(e.getWheelRotation()>0)
+					if(comboHora.getSelectedIndex() < comboHora.getItemCount()-1) 
+						comboHora.setSelectedIndex(comboHora.getSelectedIndex()+1);
+				if(e.getWheelRotation()<0)
+					if(comboHora.getSelectedIndex() > 0)
+						comboHora.setSelectedIndex(comboHora.getSelectedIndex()-1);
+			}
+		});
 		
-		comboEstado = new JComboBox();
-		comboEstado.setBounds(150, 149, 131, 22);
+		comboMinutos = new JComboBox<String>();
+		comboMinutos.setBounds(468, 83, 40, 22);
+		contentPane.add(comboMinutos);
+		comboMinutos.addMouseWheelListener(new MouseWheelListener() {
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if(e.getWheelRotation()>0)
+					if(comboMinutos.getSelectedIndex() < comboMinutos.getItemCount()-1) 
+						comboMinutos.setSelectedIndex(comboMinutos.getSelectedIndex()+1);
+				if(e.getWheelRotation()<0)
+					if(comboMinutos.getSelectedIndex() > 0)
+						comboMinutos.setSelectedIndex(comboMinutos.getSelectedIndex()-1);
+			}
+		});
+		
+		comboEstado = new JComboBox<String>();
+		comboEstado.setBounds(145, 150, 131, 22);
 		contentPane.add(comboEstado);
 		
 		txtDni = new JTextField();
@@ -137,7 +159,7 @@ public class VentanaEditarEvento extends JFrame {
 		lblDni.setBounds(35, 283, 72, 31);
 		contentPane.add(lblDni);
 		
-		lblMotivoDeReprogramacion = new JLabel("Motivo de reprogramación:");
+		JLabel lblMotivoDeReprogramacion = new JLabel("Motivo de reprogramación:");
 		lblMotivoDeReprogramacion.setBounds(35, 203, 164, 31);
 		contentPane.add(lblMotivoDeReprogramacion);
 		
@@ -146,7 +168,7 @@ public class VentanaEditarEvento extends JFrame {
 		txtReprogramacion.setBounds(195, 208, 359, 20);
 		contentPane.add(txtReprogramacion);
 		
-		lblDatosCliente = new JLabel("Datos cliente");
+		JLabel lblDatosCliente = new JLabel("Datos cliente");
 		lblDatosCliente.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblDatosCliente.setBounds(35, 257, 98, 31);
 		contentPane.add(lblDatosCliente);
@@ -155,7 +177,7 @@ public class VentanaEditarEvento extends JFrame {
 		separator.setBounds(35, 247, 519, 8);
 		contentPane.add(separator);
 		
-		lblApellido = new JLabel("Apellido:");
+		JLabel lblApellido = new JLabel("Apellido:");
 		lblApellido.setBounds(198, 283, 72, 31);
 		contentPane.add(lblApellido);
 		
@@ -165,7 +187,7 @@ public class VentanaEditarEvento extends JFrame {
 		txtApellido.setBounds(250, 288, 116, 20);
 		contentPane.add(txtApellido);
 		
-		lblNombre = new JLabel("Nombre:");
+		JLabel lblNombre = new JLabel("Nombre:");
 		lblNombre.setBounds(385, 283, 72, 31);
 		contentPane.add(lblNombre);
 		
@@ -174,6 +196,10 @@ public class VentanaEditarEvento extends JFrame {
 		txtNombre.setColumns(10);
 		txtNombre.setBounds(438, 287, 116, 20);
 		contentPane.add(txtNombre);
+		
+		JLabel label = new JLabel(":");
+		label.setBounds(459, 90, 79, 14);
+		contentPane.add(label);
 	}
 	
 	public void mostrarVentana(boolean b){
@@ -191,12 +217,16 @@ public class VentanaEditarEvento extends JFrame {
 		return txtDni;
 	}
 
-	public JComboBox<?> getComboEstadoEvento() {
+	public JComboBox<String> getComboEstadoEvento() {
 		return comboEstado;
 	}
 	
-	public JComboBox<?> getComboHoraEvento() {
-		return comboHoraEvento;
+	public JComboBox<String> getComboHora() {
+		return comboHora;
+	}
+	
+	public JComboBox<String> getComboMinutos() {
+		return comboMinutos;
 	}
 	
 	public JButton getBtnEditar() {
@@ -211,28 +241,12 @@ public class VentanaEditarEvento extends JFrame {
 		return ventanaCliente;
 	}
 
-	public JLabel getLblMotivoDeReprogramacion() {
-		return lblMotivoDeReprogramacion;
-	}
-
 	public JTextField getTxtReprogramacion() {
 		return txtReprogramacion;
 	}
 
-	public JLabel getLblDatosCliente() {
-		return lblDatosCliente;
-	}
-
-	public JLabel getLblApellido() {
-		return lblApellido;
-	}
-
 	public JTextField getTxtApellido() {
 		return txtApellido;
-	}
-
-	public JLabel getLblNombre() {
-		return lblNombre;
 	}
 
 	public JTextField getTxtNombre() {

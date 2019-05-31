@@ -1,13 +1,13 @@
 package presentacion.vista.administrativo;
 
-import javax.swing.JButton;
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Color;
-import javax.swing.JLabel;
-import java.awt.Font;
 
 public class PanelEvento extends JPanel {
 
@@ -19,6 +19,8 @@ public class PanelEvento extends JPanel {
 	public PanelEvento() {
 		
 		modelEventos = new DefaultTableModel(null,nombreColumnasEventos){
+		private static final long serialVersionUID = 1L;
+
 		@Override
 			public boolean isCellEditable(int row, int column){
 				return false;

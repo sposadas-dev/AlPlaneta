@@ -36,10 +36,7 @@ public class ControladorEvento {
 	private EventoDTO eventoSeleccionado;
 	private NotificacionEmergente notificacion;
 	private VistaNotificacionDeEvento vistaNotificacion;
-	
 	private List<ClienteDTO> clientes_en_tabla;
-	private List<EventoDTO> eventos_en_tabla;
-	
 	private ModeloEvento evento;
 	private ModeloEstadoEvento estadoEvento;
 	private VentanaRegistrarEvento ventanaEvento;
@@ -74,7 +71,6 @@ public class ControladorEvento {
 		this.estado = null;
 		this.motivoReprogramacion=" - ";
 		this.eventoRegistrado = null;
-		this.eventos_en_tabla = eventos_en_tabla;
 		
 		
 		this.ventanaEvento = ventanaEvento;
@@ -108,7 +104,8 @@ public class ControladorEvento {
 
 	public void iniciar(){
 		llenarComboEstados();
-		llenarComboHoraEvento();
+		llenarComboHora();
+		llenarComboMinutos();
 	}
 	
 	public void llenarComboEstados() {
@@ -118,24 +115,32 @@ public class ControladorEvento {
 			String e = estados.get(i).getNombre();
 			nombresEstados [i] = e;
 		}	
-		this.ventanaEvento.getComboEstadoEvento().setModel(new DefaultComboBoxModel(nombresEstados));
-		this.ventanaEditarEvento.getComboEstadoEvento().setModel(new DefaultComboBoxModel(nombresEstados));
+		this.ventanaEvento.getComboEstadoEvento().setModel(new DefaultComboBoxModel<String>(nombresEstados));
+		this.ventanaEditarEvento.getComboEstadoEvento().setModel(new DefaultComboBoxModel<String>(nombresEstados));
 	}
 	
-	public void llenarComboHoraEvento() {
-		String [] horarios = {"08:00:00", "08:30:00", "09:00:00", "09:30:00", "10:00:00","10:30:00","11:00:00","11:30:00","12:30:00",
-				"13:00:00","13:30:00","14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00", "16:30:00", "17:00:00", 
-				"17:30:00","18:00:00","01:20:00"};
-		this.ventanaEvento.getComboHoraEvento().setModel(new DefaultComboBoxModel(horarios));
-		this.ventanaEditarEvento.getComboHoraEvento().setModel(new DefaultComboBoxModel(horarios));
+	public void llenarComboHora() {
+		String [] horas = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"};
+		this.ventanaEvento.getComboHora().setModel(new DefaultComboBoxModel<String>(horas));
+		this.ventanaEditarEvento.getComboHora().setModel(new DefaultComboBoxModel<String>(horas));
 	}
-
 	
+	public void llenarComboMinutos() {
+		String [] minutos = new String [60];
+		for(int i=0; i<=59; i++) {
+			if(i<10) 
+				minutos[i] = "0"+i+"";
+			else
+				minutos[i] = i+"";
+		}
+		this.ventanaEvento.getComboMinutos().setModel(new DefaultComboBoxModel<String>(minutos));
+		this.ventanaEditarEvento.getComboMinutos().setModel(new DefaultComboBoxModel<String>(minutos));
+	}
 	
 	public void registrarEvento(ActionEvent rc){
 		if(camposLlenosRegistrarEvento()){
 			this.fechaEvento = convertUtilToSql(this.ventanaEvento.getDateFechaEvento().getDate());
-			this.horaEvento = obtenerHora(this.ventanaEvento.getComboHoraEvento().getSelectedItem().toString());
+			this.horaEvento = obtenerHora(this.ventanaEvento.getComboHora().getSelectedItem().toString(),this.ventanaEvento.getComboMinutos().getSelectedItem().toString());
 			this.descripcion = this.ventanaEvento.getTxtDescripcion().getText();
 			this.estado = obtenerEstadoEventoPorNombre(this.ventanaEvento.getComboEstadoEvento().getSelectedItem().toString());
 			
@@ -150,7 +155,7 @@ public class ControladorEvento {
 	public void editarEvento(ActionEvent rc){
 		if(camposLlenosEditarEvento()){		
 			Date fechaEvento = convertUtilToSql(this.ventanaEditarEvento.getDateFechaEvento().getDate());
-			Time horaEvento = obtenerHora(this.ventanaEditarEvento.getComboHoraEvento().getSelectedItem().toString());
+			Time horaEvento = obtenerHora(this.ventanaEditarEvento.getComboHora().getSelectedItem().toString(),this.ventanaEditarEvento.getComboMinutos().getSelectedItem().toString());
 			String motivoReprogramacion = this.ventanaEditarEvento.getTxtReprogramacion().getText();	
 			EstadoEventoDTO estado = obtenerEstadoEventoPorNombre(this.ventanaEditarEvento.getComboEstadoEvento().getSelectedItem().toString());
 			
@@ -190,7 +195,8 @@ public class ControladorEvento {
 		}		
 	}
 	
-	private Time obtenerHora(String miHora) {
+	private Time obtenerHora(String hora, String minutos) {
+		String miHora = hora+":"+minutos+":"+"00";
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		long ms = 0;
 		try { ms = sdf.parse(miHora).getTime();
@@ -244,32 +250,30 @@ public class ControladorEvento {
 				String diaActual = fechaStringActual[2];
 				String mesActual = fechaStringActual[1];
 				String añoActual = fechaStringActual[0];
-				System.out.println("HORA ACTUAL: "+horaActual+":"+minutosActual+":"+segundosActual);
-				if(minutosActual.equals("20") || minutosActual.equals("00")) {
-					for(EventoDTO e : evento.obtenerEvento()) {
-						
-						String[] horarioParticular = e.getHoraEvento().toString().split(":");
-						String horaParticular = horarioParticular[0];
-						String minutosParticular = horarioParticular[1];
-						String segundosParticular = horarioParticular[2];
-						
-						String[] fechaStringParticular = e.getFechaEvento().toString().split("-");
-						String diaParticular = fechaStringParticular[2];
-						String mesParticular = fechaStringParticular[1];
-						String añoParticular = fechaStringParticular[0];
+				//System.out.println("HORA ACTUAL: "+horaActual+":"+minutosActual+":"+segundosActual);
+				for(EventoDTO e : evento.obtenerEvento()) {
+					
+					String[] horarioParticular = e.getHoraEvento().toString().split(":");
+					String horaParticular = horarioParticular[0];
+					String minutosParticular = horarioParticular[1];
+					String segundosParticular = horarioParticular[2];
+					
+					String[] fechaStringParticular = e.getFechaEvento().toString().split("-");
+					String diaParticular = fechaStringParticular[2];
+					String mesParticular = fechaStringParticular[1];
+					String añoParticular = fechaStringParticular[0];
 
-						if(horaParticular.equals(horaActual) && minutosParticular.equals(minutosActual) && segundosActual.equals(segundosParticular)) {	
-							if(añoParticular.equals(añoActual) && mesParticular.equals(mesActual) && diaActual.equals(diaParticular)) {	
-								eventoAsociado = e;
-								notificacion.mostrarBtnVerNotificacion();
-					    		notificacion.setLblMensajeEventoNuevo("Tienes un evento nuevo!");
-								notificacion.mostrarVentana(true);							
-								esperarYcerrarVentana();
-							}
+					if(horaParticular.equals(horaActual) && minutosParticular.equals(minutosActual) && segundosActual.equals(segundosParticular)) {	
+						if(añoParticular.equals(añoActual) && mesParticular.equals(mesActual) && diaActual.equals(diaParticular)) {	
+							eventoAsociado = e;
+							notificacion.mostrarBtnVerNotificacion();
+				    		notificacion.setLblMensajeEventoNuevo("Tienes un evento nuevo!");
+							notificacion.mostrarVentana(true);							
+							esperarYcerrarVentana();
 						}
 					}
 				}
-		    }
+			}
 		};
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(timerTask, 0, 1000);//1000=1 segundo
@@ -296,11 +300,12 @@ public class ControladorEvento {
 				if(esEventoPasado(e)) //hay un evento que pasó, no visto
 					vistos = vistos || true;
 		}
-		if(vistos)
+		if(vistos) {
 			notificacion.setLblMensajeEventoNuevo("Tienes evento(s) sin ver!");
 			notificacion.mostrarVentana(true);		
-			
 			esperarYcerrarVentana();
+		}
+			
 	}
 
 	private void esperarYcerrarVentana() {
@@ -319,27 +324,16 @@ public class ControladorEvento {
 	}
 	
 	private boolean esEventoPasado(EventoDTO e) {
-		if(this.fechaIngreso.before(e.getFechaEvento())) { //es un evento futuro
-			System.out.println("-ES UN EVENTO FUTURO.");
+		if(this.fechaIngreso.before(e.getFechaEvento()))//es un evento futuro
 			return false;
-		}
-		else {// es un evento del dia de hoy o de un evento anterior
-			if(fechasIguales(this.fechaIngreso,e.getFechaEvento())) {//IF ES EVENTO DE HOY { //SUPER CHEQUEAR ESTO
-				System.out.println("-ES EVENTO DE HOY:");
-				if(!esHorarioPasado(e.getHoraEvento())) {//chequear si el horario todavia no ocurrio
-					System.out.println(" Es un evento futuro de hoy");
+		else // es un evento del dia de hoy o de un evento anterior
+			if(fechasIguales(this.fechaIngreso,e.getFechaEvento())) //es un evento de HOY 
+				if(!esHorarioPasado(e.getHoraEvento())) 
 					return false;
-				}
-				else { // el horario ya paso
-					System.out.println(" Es un evento pasado de hoy");
+				else //el horario ya paso
 					return true; 
-				}
-			}
-			else{//ELSE{ //ES UN EVENTO PASADO
-				System.out.println("-ES UN EVENTO PASADO.");
+			else //es un evento pasado
 				return true; 
-			}
-		}
 	}
 	
 	private boolean fechasIguales(Date a, Date b) {
@@ -367,26 +361,16 @@ public class ControladorEvento {
 		String horaParticular = horarioParticular[0];
 		String minutosParticular = horarioParticular[1];
 		
-		if(Integer.compare((Integer.parseInt(horaActual)),(Integer.parseInt(horaParticular)))==0) {//IF la hora actual es igual que la del evento
-			if(Integer.compare((Integer.parseInt(minutosActual)),(Integer.parseInt(minutosParticular)))>=0) {//IF minutos acutal es mayor O IGUAL a los minutos del evento
-				//System.out.println("Es evento pasado");
+		if(Integer.compare((Integer.parseInt(horaActual)),(Integer.parseInt(horaParticular)))==0) //IF la hora actual es igual que la del evento
+			if(Integer.compare((Integer.parseInt(minutosActual)),(Integer.parseInt(minutosParticular)))>=0) //IF minutos acutal es mayor O IGUAL a los minutos del evento
 				return true;
-			}
-			else{//ELSE, minutos actual es menor los minutos del evento
-				//System.out.println("Es evento futuro");
+			else//ELSE, minutos actual es menor los minutos del evento
 				return false;
-			}
-		}
-		else {
-			if(Integer.compare((Integer.parseInt(horaActual)),(Integer.parseInt(horaParticular)))>0) {// 0 si son iguales, -1 si a<b, 1 si a>b
-				//System.out.println("Es evento pasado");
+		else 
+			if(Integer.compare((Integer.parseInt(horaActual)),(Integer.parseInt(horaParticular)))>0) // 0 si son iguales, -1 si a<b, 1 si a>b
 				return true;
-			}
-			else {// la hora actual es menor que la del evento //if(Integer.compare((Integer.parseInt(horaActual)),(Integer.parseInt(horaParticular)))<0)
-				//System.out.println("Es evento futuro");
+			else // la hora actual es menor que la del evento 
 				return false;
-			}
-		}
 		
 	}
 	
