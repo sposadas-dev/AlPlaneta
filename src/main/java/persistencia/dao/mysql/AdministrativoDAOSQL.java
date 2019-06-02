@@ -13,14 +13,17 @@ import persistencia.dao.interfaz.AdministrativoDAO;
 
 public class AdministrativoDAOSQL implements AdministrativoDAO {
 
-	private static final String insert = "INSERT INTO administrativo(idAdministrativo, nombre, idLogin)" + " VALUES (?, ?, ?)";
+	private static final String insert = "INSERT INTO administrativo(idAdministrativo, nombre, idLogin, mail)" + " VALUES (?, ?, ?, ?)";
 
 	private static final String readall = "SELECT * FROM administrativo";
 
 	private static final String update = "UPDATE administrativo SET nombre = ? WHERE idAdministrativo = ?";
 	
 	private static final String browse = "SELECT * FROM administrativo WHERE idAdministrativo = ?";
+	
 	private static final String browseLogin = "SELECT * FROM administrativo WHERE idLogin = ?";
+	
+	private static final String browseByMail = "SELECT * FROM administrativo WHERE mail = ?";
 
 	@Override
 	public boolean insert(AdministrativoDTO administrativo) {
@@ -31,6 +34,7 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 			statement.setInt(1, administrativo.getIdAdministrativo());
 			statement.setString(2, administrativo.getNombre());
 			statement.setInt(3, administrativo.getDatosLogin().getIdDatosLogin());
+			statement.setString(4, administrativo.getMail());
 
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -60,7 +64,8 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 						new AdministrativoDTO(
 								resultSet.getInt("idAdministrativo"),
 								resultSet.getString("nombre"),
-								dao.getById(resultSet.getInt("idLogin"))));
+								dao.getById(resultSet.getInt("idLogin")),
+								resultSet.getString("mail")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -114,7 +119,8 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 				dto = new AdministrativoDTO(
 						resultSet.getInt("idAdministrativo"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")));
+						dao.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"));
 				return dto;
 			}
 			
@@ -141,7 +147,35 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 				dto = new AdministrativoDTO(
 						resultSet.getInt("idAdministrativo"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")));
+						dao.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"));
+				return dto;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
+
+	public AdministrativoDTO getByMail(String mail){
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		AdministrativoDTO dto;
+		
+		LoginDAOSQL dao = new LoginDAOSQL();
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browseByMail);
+			statement.setString(1, mail);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				dto = new AdministrativoDTO(
+						resultSet.getInt("idAdministrativo"),
+						resultSet.getString("nombre"),
+						dao.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"));
 				return dto;
 			}
 			
@@ -151,16 +185,24 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		return null;
 	}
 	
+	
+	
 	public static void main(String[] args) {
 		AdministrativoDAOSQL dao = new AdministrativoDAOSQL();
+		AdministrativoDTO adm = dao.getByMail("ssol@gmail.com");
+		if(adm!=null)
+			System.out.println(adm.getNombre());
+		else
+			System.out.println("no existe");
+//		
+//		List<AdministrativoDTO> list = dao.readAll();
+//			
+//		for(AdministrativoDTO elem: list){
+//			System.out.println(elem.getNom@bre());
+//		}
 		
-		List<AdministrativoDTO> list = dao.readAll();
-		
-		for(AdministrativoDTO elem: list){
-			System.out.println(elem.getNombre());
-		}
-		
-		System.out.println(dao.getByLoginId(3).getNombre());
+//		System.out.println(dao.getByLoginId(3).getNombre());
+//		System.out.println(dao.getByMail("sol@gmail.com").getNombre());
 	}
 	
 }

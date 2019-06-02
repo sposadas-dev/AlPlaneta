@@ -25,4 +25,9 @@ public class Administrativo {
 	public AdministrativoDTO getByLoginId(int idLogin) {
 		return this.administrativo.getByLoginId(idLogin);
 	}
+	
+	public AdministrativoDTO buscarPorEmail(String email) {
+		return this.administrativo.getByMail(email);
+	}
+	
 }

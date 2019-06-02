@@ -69,7 +69,6 @@
 		    <version>6.0.0</version>
 		</dependency>
 
-
 	    <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
 		<dependency>
 		    <groupId>commons-logging</groupId>
@@ -87,13 +86,26 @@
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.fifesoft/autocomplete -->
-<dependency>
-    <groupId>com.fifesoft</groupId>
-    <artifactId>autocomplete</artifactId>
-    <version>2.5.8</version>
-</dependency>
-		
+	<dependency>
+    	<groupId>com.fifesoft</groupId>
+    	<artifactId>autocomplete</artifactId>
+    	<version>2.5.8</version>
+	</dependency>
 
+<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+	<dependency>
+	    <groupId>javax.mail</groupId>
+	    <artifactId>mail</artifactId>
+	    <version>1.4</version>
+	</dependency>
+	
+	<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>itextpdf</artifactId>
+    <version>5.3.4</version>
+</dependency>
+	
+	
     </dependencies>
     
  	<build>

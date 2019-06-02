@@ -157,4 +157,10 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 //		for(PasajeroDTO ad: array)
 //			System.out.println(ad.getNombre());
 		}
+
+	@Override
+	public PasajeroDTO getByMail(String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

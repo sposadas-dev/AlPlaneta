@@ -1,16 +1,24 @@
 package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.UUID;
 
+import correo.CorreoTexto;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.LoginDTO;
+import dto.MedioContactoDTO;
 import modelo.Administrador;
 import modelo.Administrativo;
 import modelo.Cliente;
 import modelo.Login;
+import modelo.MedioContacto;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.VentanaClaveOlvidada;
 import presentacion.vista.VentanaLogin;
 import presentacion.vista.administrador.VistaAdministrador;
 import presentacion.vista.administrativo.VistaAdministrativo;
@@ -19,19 +27,52 @@ import presentacion.vista.cliente.VistaCliente;
 public class ControladorLogin {
 
 	private VentanaLogin ventanaLogin;
+<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
+	private VentanaClaveOlvidada ventanaClaveOlvidada;
+	private VistaAdministrativo vistaAdministrativo;
+	private CorreoTexto envioDeCorreo;
+=======
 	private VistaAdministrador vistaAdministrador;
 	private VistaAdministrativo vistaAdministrativo;
 	private VistaCliente vistaCliente;
+>>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 	private Login login;
 	private LoginDTO usuarioLogueado;
+	private Cliente modeloCliente;
+	private Administrador modeloAdministrador;
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
+<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
+	private VistaAdministrador vistaAdministrador;
+	private String mailDeRecuperacion;
+	private String contrasenaProvisoria;
+	private MedioContacto modeloMedioContacto;
+	private Administrativo modeloAdministrativo;
+	private Integer idMedioContactoBuscado;
+=======
 	
+>>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
 		this.vistaAdministrador = VistaAdministrador.getInstance();
+<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
+		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
+		this.modeloMedioContacto = new MedioContacto(new DAOSQLFactory());
+		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
+		this.modeloCliente = new Cliente(new DAOSQLFactory());
+		this.modeloAdministrador = new Administrador(new DAOSQLFactory());
+	
+		this.login = login;
+		this.usuarioLogueado = null;
+		this.administradorLogueado = null;
+		this.mailDeRecuperacion = null;
+		this.contrasenaProvisoria = null;
+		this.idMedioContactoBuscado = null;
+		this.envioDeCorreo = new CorreoTexto();
+		
+=======
 		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
 		this.vistaCliente = VistaCliente.getInstance();
 		
@@ -40,11 +81,108 @@ public class ControladorLogin {
 		this.administradorLogueado = null;
 		this.clienteLogueado = null;
 	
+>>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
+		this.ventanaClaveOlvidada.getBtnRecuperarContraseña().addActionListener(e->realizarCambioContraseña(e));;
+		
+		
+		
+		this.ventanaLogin.getLblClaveOlvidada().addMouseListener(new MouseListener(){
+			public void mouseClicked(MouseEvent e) {
+				pedirMail();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+		});		
+		
 	}
 	
 	public void iniciar(){
 		this.ventanaLogin.mostrarVentana(true);
+	}
+	
+	private void pedirMail(){
+		this.ventanaClaveOlvidada.setVisible(true);
+		this.ventanaLogin.mostrarVentana(false);
+	}
+	
+// CONTROLAR QUE EL SERVICIO DE MAIL FUNCIONE CORRECTAMENTE??????
+	private void realizarCambioContraseña(ActionEvent e){
+		obtenerDatosRecuperacionDeContrasena();
+		enviarContrasenaViaMail();
+		guardarNuevaContraseñaEnDB();
+// VOLVER A PAGINA DE INICIO ?
+	}
+	
+	private void obtenerDatosRecuperacionDeContrasena() {
+		this.mailDeRecuperacion = this.ventanaClaveOlvidada.getTextUsuario().getText();
+		this.contrasenaProvisoria = obtenerContrasenaProvisoria();
+	}
+	public boolean buscarPersonalAsociadoAlEmail(){
+		AdministrativoDTO administrativo = modeloAdministrativo.buscarPorEmail(mailDeRecuperacion);
+		if(administrativo!=null){
+			administrativo.getDatosLogin().setContrasena(contrasenaProvisoria);
+			//TODO: modeloAdministrativo.actualizar(administrativo)
+			return true;
+		}
+	
+		AdministradorDTO administrador = modeloAdministrador.buscarPorEmail(mailDeRecuperacion);
+		if(administrador!=null){
+			administrador.getDatosLogin().setContrasena(contrasenaProvisoria);
+			//TODO: modeloAdministrador.actualizar(administrador)
+			return true;
+		}
+		
+		ClienteDTO cliente = modeloCliente.buscarPorEmail(mailDeRecuperacion);
+		if(cliente!=null){
+			cliente.getLogin().setContrasena(contrasenaProvisoria);
+			//TODO: modeloCliente.actualizar(cliente)
+			return true;
+		}
+		
+		/*TODO:
+		CoordinadirDTO coordinador = modeloCoordinador.buscarPorEmail(mailDeRecuperacion);
+		if(coordinador!=null){
+			coordinador.getLogin().setContrasena(contrasenaProvisoria);
+			//TODO: modeloCoordinador.actualizar(coordinador)
+			return true;
+		}
+		*/
+		
+		return false;
+	}
+	
+//	private int obtenerIdContacto(String mailDeRecuperacion2, String contrasenaProvisoria2) {
+//		Integer idContacto = null;
+//		ArrayList<MedioContactoDTO> medios = (ArrayList<MedioContactoDTO>) this.modeloMedioContacto.obtenerMediosContacto();
+//		for(MedioContactoDTO m: medios){
+//			if(m.getEmail().equals(mailDeRecuperacion2))
+//				idContacto = m.getIdMedioContacto();
+//		}
+//		return idContacto;
+//	}
+
+	private void enviarContrasenaViaMail() {
+		this.envioDeCorreo.enviarCorreo(mailDeRecuperacion, contrasenaProvisoria);
+		this.ventanaClaveOlvidada.setVisible(false);
+	}
+	
+	private void guardarNuevaContraseñaEnDB() {
+		ClienteDTO clienteBuscado = this.modeloCliente.getByIdContacto(idMedioContactoBuscado);
+		if(clienteBuscado!=null){
+			clienteBuscado.getLogin().setContrasena(contrasenaProvisoria);
+			modeloCliente.actualizar(clienteBuscado);
+		}
+	}
+	
+	private String obtenerContrasenaProvisoria() {
+		return UUID.randomUUID().toString().toUpperCase().substring(0, 8);
 	}
 	
 	private void loguearse(ActionEvent log) {
