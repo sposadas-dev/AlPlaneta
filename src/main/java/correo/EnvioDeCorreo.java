@@ -22,7 +22,7 @@ import generatePDF.GeneratePDF;
 public class EnvioDeCorreo {
 	GeneratePDF pdf;
  
- public void enviarNuevaContraseña(String correoDestino, String nuevaContraseña) {
+ public void enviarNuevaContrasena(String correoDestino, String nuevaContraseña) {
   // El correo gmail de envío
   String correoEnvia = "AlPlanetaProject";
   String claveCorreo = "alplaneta123";
