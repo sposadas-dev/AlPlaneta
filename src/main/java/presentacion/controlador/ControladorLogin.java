@@ -42,7 +42,7 @@ public class ControladorLogin {
 	
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
 	}
-	
+
 	public void iniciar(){
 		this.ventanaLogin.mostrarVentana(true);
 	}

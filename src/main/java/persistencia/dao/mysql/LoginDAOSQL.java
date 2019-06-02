@@ -63,7 +63,6 @@ public class LoginDAOSQL implements LoginDAO{
 		}
 		return datosLogin;
 	}
-
 	@Override
 	public boolean update(LoginDTO datosNuevos) {
 		PreparedStatement statement;

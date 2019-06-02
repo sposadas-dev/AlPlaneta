@@ -1,6 +1,7 @@
 package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -34,6 +35,7 @@ public class ControladorAdministrador {
 	private List<FormaPagoDTO> fpago_en_tabla;
 //	private List<AdministrativoDTO> administrativos_en_tabla;
 	private List<LoginDTO> logins_en_tabla;
+	private List<LoginDTO> logins_aux;
 	
 	private Administrador administrador;
 	private Administrativo administrativo;
@@ -378,23 +380,24 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setColumnCount(0);
 		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setColumnIdentifiers(this.vistaAdministrador.getPanelEmpleados().getNombreColumnasEmpleados());
 		
-		this.logins_en_tabla = login.obtenerLogin();
+		this.logins_en_tabla = new ArrayList<LoginDTO>();
+		this.logins_aux = login.obtenerLogin();
 		
-		for(int i = 0; i < this.logins_en_tabla.size(); i++) {
-			if ( logins_en_tabla.get(i).getRol().getIdRol() == 5 ) {
-				logins_en_tabla.remove(i);
+		for (LoginDTO login : this.logins_aux) {
+			if(login.getRol().getIdRol() != 5) {
+				this.logins_en_tabla.add(login);
 			}
 		}
-		for (int i = 0; i < this.logins_en_tabla.size(); i++) {
-			Object[] fila = {
-					this.logins_en_tabla.get(i).getUsuario(),
-					this.logins_en_tabla.get(i).getContrasena(),
-					this.logins_en_tabla.get(i).getRol().getNombre(),
-					this.logins_en_tabla.get(i).getEstado()
-			};
-			this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().addRow(fila);
-		}
 		
+		for (int i = 0; i < this.logins_en_tabla.size(); i++) {
+				Object[] fila = {
+						this.logins_en_tabla.get(i).getUsuario(),
+						this.logins_en_tabla.get(i).getContrasena(),
+						this.logins_en_tabla.get(i).getRol().getNombre(),
+						this.logins_en_tabla.get(i).getEstado()
+				};
+				this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().addRow(fila);
+		}
 	}
 	
 	//------------------------------FormaPago-------------------------------------------------

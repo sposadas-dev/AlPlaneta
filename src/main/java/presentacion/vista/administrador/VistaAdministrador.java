@@ -191,7 +191,7 @@ public class VistaAdministrador extends JFrame {
 	public PanelEmpleados getPanelEmpleados() {
 		return panelEmpleados;
 	}
-
+	
 	public void setItemAgregarCuenta(JMenuItem itemAgregarCuenta) {
 		this.itemAgregarCuenta = itemAgregarCuenta;
 	}
