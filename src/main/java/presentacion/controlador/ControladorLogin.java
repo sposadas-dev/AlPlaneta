@@ -27,15 +27,12 @@ import presentacion.vista.cliente.VistaCliente;
 public class ControladorLogin {
 
 	private VentanaLogin ventanaLogin;
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 	private VentanaClaveOlvidada ventanaClaveOlvidada;
-	private VistaAdministrativo vistaAdministrativo;
+
 	private CorreoTexto envioDeCorreo;
-=======
 	private VistaAdministrador vistaAdministrador;
 	private VistaAdministrativo vistaAdministrativo;
 	private VistaCliente vistaCliente;
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 	private Login login;
 	private LoginDTO usuarioLogueado;
 	private Cliente modeloCliente;
@@ -43,21 +40,15 @@ public class ControladorLogin {
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
-	private VistaAdministrador vistaAdministrador;
-	private String mailDeRecuperacion;
+		private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
 	private MedioContacto modeloMedioContacto;
 	private Administrativo modeloAdministrativo;
 	private Integer idMedioContactoBuscado;
-=======
-	
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
 		this.vistaAdministrador = VistaAdministrador.getInstance();
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
 		this.modeloMedioContacto = new MedioContacto(new DAOSQLFactory());
 		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
@@ -72,16 +63,6 @@ public class ControladorLogin {
 		this.idMedioContactoBuscado = null;
 		this.envioDeCorreo = new CorreoTexto();
 		
-=======
-		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
-		this.vistaCliente = VistaCliente.getInstance();
-		
-		this.login = login;
-		this.usuarioLogueado = null;
-		this.administradorLogueado = null;
-		this.clienteLogueado = null;
-	
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
 		this.ventanaClaveOlvidada.getBtnRecuperarContraseña().addActionListener(e->realizarCambioContraseña(e));;
 		
