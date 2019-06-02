@@ -3,7 +3,6 @@ package presentacion.vista.administrador;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -21,6 +20,7 @@ public class VistaAdministrador extends JFrame {
 	private PanelTransporte panelTransporte;
 	private VentanaPanelGeneral panelGeneral;
 	private PanelFormaPago panelFormaPago;
+	private PanelEmpleados panelEmpleados;
 	
 	private JMenuItem itemAgregarCuenta;
 	private JMenuItem itemVisualizarTransportes ;
@@ -36,13 +36,15 @@ public class VistaAdministrador extends JFrame {
 	private JMenuItem itemPais;
 	private JMenuItem itemProvincia;
 	private JMenuItem itemCiudad;
+	
+	private JMenuItem itemAgregarViaje;
 
-	private static VistaAdministrador INSTANCE;
+	
 	private JMenuItem itemEliminarPais;
 	private JMenuItem itemEliminarCiudad;
 	private JMenuItem itemEliminarProvincia;
 	
-
+	private static VistaAdministrador INSTANCE;
 	public static VistaAdministrador getInstance(){
 		if(INSTANCE == null)
 			return new VistaAdministrador();
@@ -54,7 +56,7 @@ public class VistaAdministrador extends JFrame {
 		super();
 		setTitle("Administrador");
 		setExtendedState(MAXIMIZED_BOTH);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
 	
@@ -80,7 +82,7 @@ public class VistaAdministrador extends JFrame {
 		menuViajes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuViajes);
 		
-		JMenuItem itemAgregarViaje = new JMenuItem("Agregar viaje");
+		itemAgregarViaje = new JMenuItem("Agregar viaje");
 		itemAgregarViaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuViajes.add(itemAgregarViaje);
 		
@@ -131,6 +133,13 @@ public class VistaAdministrador extends JFrame {
 		panelTransporte.getBtnRecargarTabla().setVisible(true);
 
 		
+		panelEmpleados = new PanelEmpleados();
+		panelEmpleados.getTablaEmpleados().setSize(1114, 900);
+		panelEmpleados.setSize(1352, 700);
+		panelEmpleados.setLocation(0, 0);
+		getContentPane().add(panelEmpleados);
+		panelEmpleados.setVisible(false);
+		
 	//--------------------FormaPago-----------------------------------//	
 		
 		JMenu menuFormaPago = new JMenu("Formas de pago");
@@ -164,6 +173,10 @@ public class VistaAdministrador extends JFrame {
 		this.setVisible(false);
 	}
 	
+	public PanelEmpleados getPanelEmpleados() {
+		return panelEmpleados;
+	}
+
 	public void setItemAgregarCuenta(JMenuItem itemAgregarCuenta) {
 		this.itemAgregarCuenta = itemAgregarCuenta;
 	}
@@ -295,6 +308,14 @@ public class VistaAdministrador extends JFrame {
 
 	public void setItemCiudad(JMenuItem itemCiudad) {
 		this.itemCiudad = itemCiudad;
+	}
+
+	public JMenuItem getItemAgregarViaje() {
+		return itemAgregarViaje;
+	}
+
+	public void setItemAgregarViaje(JMenuItem itemAgregarViaje) {
+		this.itemAgregarViaje = itemAgregarViaje;
 	}
 
 	public JMenuItem getItemEliminarPais() {

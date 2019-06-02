@@ -115,6 +115,7 @@ public class VentanaLogin extends JFrame {
 	public void setLblError(JLabel lblError) {
 		this.lblError = lblError;
 	}
+<<<<<<< src/main/java/presentacion/vista/VentanaLogin.java
 	
 	public JLabel getLblClaveOlvidada() {
 		return lblClaveOlvidada;
@@ -137,3 +138,6 @@ public class VentanaLogin extends JFrame {
 		});
 	}
 }
+=======
+}
+>>>>>>> src/main/java/presentacion/vista/VentanaLogin.java

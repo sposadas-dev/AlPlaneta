@@ -22,13 +22,20 @@ import presentacion.vista.VentanaClaveOlvidada;
 import presentacion.vista.VentanaLogin;
 import presentacion.vista.administrador.VistaAdministrador;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import presentacion.vista.cliente.VistaCliente;
 
 public class ControladorLogin {
 
 	private VentanaLogin ventanaLogin;
+<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 	private VentanaClaveOlvidada ventanaClaveOlvidada;
 	private VistaAdministrativo vistaAdministrativo;
 	private CorreoTexto envioDeCorreo;
+=======
+	private VistaAdministrador vistaAdministrador;
+	private VistaAdministrativo vistaAdministrativo;
+	private VistaCliente vistaCliente;
+>>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 	private Login login;
 	private LoginDTO usuarioLogueado;
 	private Cliente modeloCliente;
@@ -36,17 +43,21 @@ public class ControladorLogin {
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
+<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 	private VistaAdministrador vistaAdministrador;
 	private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
 	private MedioContacto modeloMedioContacto;
 	private Administrativo modeloAdministrativo;
 	private Integer idMedioContactoBuscado;
+=======
+	
+>>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
-		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
 		this.vistaAdministrador = VistaAdministrador.getInstance();
+<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
 		this.modeloMedioContacto = new MedioContacto(new DAOSQLFactory());
 		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
@@ -61,6 +72,16 @@ public class ControladorLogin {
 		this.idMedioContactoBuscado = null;
 		this.envioDeCorreo = new CorreoTexto();
 		
+=======
+		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
+		this.vistaCliente = VistaCliente.getInstance();
+		
+		this.login = login;
+		this.usuarioLogueado = null;
+		this.administradorLogueado = null;
+		this.clienteLogueado = null;
+	
+>>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
 		this.ventanaClaveOlvidada.getBtnRecuperarContraseña().addActionListener(e->realizarCambioContraseña(e));;
 		
@@ -202,6 +223,8 @@ public class ControladorLogin {
 		System.out.println("Se Loguea como Cliente");
 		System.out.println(clienteLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);	
+		ControladorUsuario controladorUsuario = new ControladorUsuario(vistaCliente,clienteLogueado);
+		controladorUsuario.inicializar();
 	}
 
 	/*Mostrar la ventana principal del personal administrativo*/
@@ -209,7 +232,7 @@ public class ControladorLogin {
 		System.out.println("Se Loguea Como Administrativo");
 		System.out.println(administrativoLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);
-		ControladorPrueba controladorPrueba = new ControladorPrueba(vistaAdministrativo,administrativoLogueado);
+		ControladorAdministrativo controladorPrueba = new ControladorAdministrativo(vistaAdministrativo,administrativoLogueado);
 		controladorPrueba.inicializar();
 	}
 	

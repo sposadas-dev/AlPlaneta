@@ -4,6 +4,7 @@ import java.util.List;
 
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
+import dto.TransporteDTO;
 import persistencia.dao.interfaz.ClienteDAO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 
@@ -17,6 +18,10 @@ public class Cliente {
 	
 	public void agregarCliente(ClienteDTO nuevoCliente){
 		this.cliente.insert(nuevoCliente);
+	}
+	
+	public void editarCliente(ClienteDTO cliente_a_editar){
+		this.cliente.update(cliente_a_editar);
 	}
 	
 	public List<ClienteDTO> obtenerClientes(){

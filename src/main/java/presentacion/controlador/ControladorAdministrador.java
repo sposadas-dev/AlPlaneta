@@ -15,6 +15,7 @@ import dto.LoginDTO;
 import dto.RolDTO;
 import dto.TransporteDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.Vista;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
 import presentacion.vista.administrador.VistaAdministrador;
 
@@ -24,10 +25,14 @@ public class ControladorAdministrador {
 	private VentanaAgregarEmpleado ventanaAgregarEmpleado;
 	private List<TransporteDTO> transportes_en_tabla;
 	private List<FormaPagoDTO> fpago_en_tabla;
+	private List<AdministrativoDTO> administrativos_en_tabla;
+	
+	private Administrativo administrativo;
 	private Transporte transporte;
 	private FormaPago formapago;
 	private ControladorTransporte controladorTransporte;
 	private ControladorFormaPago controladorFormaPago;
+	private Controlador controlador;
 	
 	private Login login;
 
@@ -63,10 +68,12 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemCiudad().addActionListener(p->mostrarVentanaAgregarCiudad(p));
 //ITEM VIAJES
 
-		
+		this.vistaAdministrador.getItemAgregarViaje().addActionListener(v->mostrarVentanaViaje(v));
 //BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
-		
+		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
+
+		this.administrativo = new Administrativo(new DAOSQLFactory());
 		this.transporte = new Transporte(new DAOSQLFactory());
 		this.formapago = new FormaPago(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
@@ -78,21 +85,31 @@ public class ControladorAdministrador {
 		this.controladorPais = ControladorPais.getInstance();
 		this.controladorProvincia = ControladorProvincia.getInstance();
 		this.controladorCiudad = ControladorCiudad.getInstance();
-		
+		this.controlador = Controlador.getInstance();
 	}
 
+	
 	private void mostrarVentanaAgregarCiudad(ActionEvent p) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.controladorCiudad.llenarTablaVistaCiudades();
 		this.controladorCiudad.mostrarVistaCiudad();
 	}
 
 	private void mostrarVentanaAgregarProvincia(ActionEvent p) {
 		System.out.println("se muestran las ventanas");
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.controladorProvincia.llenarTablaVistaProvincias();
 		this.controladorProvincia.mostrarVistaProvincia();
 	}
 
 	private void mostrarVentanaAgregarPais(ActionEvent p) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.controladorPais.llenarTablaVistaPaises();
 		this.controladorPais.mostrarVistaPais();
 	}
@@ -101,24 +118,30 @@ public class ControladorAdministrador {
 	private void agregarPanelPaises(ActionEvent ac) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
 		controladorTransporte.mostrarVentanaAgregarTransporte();
-
 	}
 
 	public void inicializar(){
 		this.vistaAdministrador.mostrarVentana();
 		this.llenarTablaTransportes();
 		this.llenarTablaFormaPago();
+		this.llenarTablaEmpleados();
 	}
 	
 	/*Mostrar la ventana para agregar un empleado y carga el comboBox de roles*/
 	private void mostrarVentanaAgregarEmpleado(ActionEvent ac) {
+		this.vistaAdministrador.getPanelEmpleados().setVisible(true);
 		cargarcomboBoxRoles();
+		this.ventanaAgregarEmpleado.limpiarCampos();
 		this.ventanaAgregarEmpleado.mostrarVentana(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 
 	}
 	
+	private void mostrarVentanaViaje(ActionEvent ac) { //METODO AGREGADO!!
+		this.controlador.llenarCiudadesEnCargaViajes();
+		this.controlador.mostrarVentanaCargarViaje();
+	}//TERMINA METODO AGREGADO
 	/*Método para agregar a un empleado según el item que selecciona en el comboBox*/
 	private void agregarCuentaEmpleado(ActionEvent ac) {
 		//TODO: VER
@@ -137,6 +160,7 @@ public class ControladorAdministrador {
 			
 			Administrativo administrativo = new Administrativo(new DAOSQLFactory());
 			administrativo.agregarAdministrativo(nuevoAdministrativo);
+			llenarTablaEmpleados();
 			this.ventanaAgregarEmpleado.mostrarVentana(false);
 		}
 	}
@@ -165,10 +189,18 @@ public class ControladorAdministrador {
 		}
 		this.ventanaAgregarEmpleado.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
 	}
+	
+	
+	private void cancelarAgregarCuentaEmpleado(ActionEvent c) {
+		this.ventanaAgregarEmpleado.limpiarCampos();
+		this.ventanaAgregarEmpleado.mostrarVentana(false);
+	}
+
 	//----------------------Transportes-----------------------------------
 	private void visualizarTransportes(ActionEvent vt) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.llenarTablaTransportes();
 	}
 	
@@ -221,11 +253,31 @@ public class ControladorAdministrador {
 		}		
 	}
 	
+	
+	public void llenarTablaEmpleados(){
+		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setColumnCount(0);
+		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setColumnIdentifiers(this.vistaAdministrador.getPanelEmpleados().getNombreColumnasEmpleados());
+			
+		this.administrativos_en_tabla = administrativo.obtenerAdministrativos();
+			
+		for (int i = 0; i < this.administrativos_en_tabla.size(); i++){
+			Object[] fila = {
+					this.administrativos_en_tabla.get(i).getNombre(),
+					this.administrativos_en_tabla.get(i).getDatosLogin().getUsuario(),
+					this.administrativos_en_tabla.get(i).getDatosLogin().getContrasena(),
+					this.administrativos_en_tabla.get(i).getDatosLogin().getRol().getNombre()
+			};
+			this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().addRow(fila);
+		}		
+	}
+	
 	//------------------------------FormaPago-------------------------------------------------
 	
 	private void visualizarFormaPago(ActionEvent vfp) {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.llenarTablaFormaPago();
 	}
 	/*Agrega el panel de Forma pago en la vistaPrinciapal del Administrador*/

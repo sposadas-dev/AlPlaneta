@@ -18,7 +18,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 
 	private static final String insert = "INSERT INTO cliente(idCliente, nombre, apellido, dni, fechaNacimiento, idMedioContacto, idLogin) VALUES(?, ?, ?, ?, ?, ?, ?)";
 	private static final String readall = "SELECT * FROM cliente";
-	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ? WHERE idCliente=? ;";
+	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ?, idLogin= ? WHERE idCliente=? ;";
 	private static final String browse = "SELECT * FROM cliente WHERE idCliente = ?";
 	private static final String browseLogin = "SELECT * FROM cliente WHERE idLogin = ?";
 	private static final String browseByMailx = "SELECT * FROM cliente WHERE idMedioContacto = ?";

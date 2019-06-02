@@ -65,7 +65,7 @@ public class VentanaCargarViaje extends JFrame {
 	}
 	
 	private VentanaCargarViaje() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//CIERRA SOLO ESA VENTANA
 		setBounds(400, 150, 871, 392);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -173,7 +173,7 @@ public class VentanaCargarViaje extends JFrame {
 		contentPane.add(comboBoxProvinciaDestino);
 		
 		JLabel lblProvinciaDestino = new JLabel("Provincia Destino");
-		lblProvinciaDestino.setBounds(227, 213, 98, 14);
+		lblProvinciaDestino.setBounds(227, 213, 122, 14);
 		contentPane.add(lblProvinciaDestino);
 		
 		JLabel lblCiudadDestino = new JLabel("Ciudad Destino");

@@ -35,6 +35,7 @@ public class VentanaCargaPasajero extends JFrame {
 	private VentanaCargaPasajero() {
 		setTitle("Carga de pasajeros");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setResizable(false);
 		setBounds(100, 100, 545, 406);
 		setLocationRelativeTo(null); 
 		
@@ -65,7 +66,7 @@ public class VentanaCargaPasajero extends JFrame {
 		contentPane.add(btnEliminar);
 		
 		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.setBounds(278, 319, 109, 37);
+		btnConfirmar.setBounds(272, 319, 115, 37);
 		contentPane.add(btnConfirmar);
 		
 		btnAtras = new JButton("Atrás");
@@ -130,4 +131,6 @@ public class VentanaCargaPasajero extends JFrame {
 	public JButton getBtnAtras() {
 		return btnAtras;
 	}
+	
+	
 }

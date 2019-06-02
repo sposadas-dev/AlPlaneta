@@ -26,17 +26,23 @@ public class ControladorTransporte implements ActionListener {
 		this.ventanaEditarTransporte = VentanaEditarTransporte.getInstance();
 		
 		this.ventanaAgregarTransporte.getBtnAgregar().addActionListener(rc->agregarTransporte(rc));
+		this.ventanaAgregarTransporte.getBtnCancelar().addActionListener(c->cancelarVentanaAgregarTransporte(c));
 		this.ventanaEditarTransporte.getBtnEditar().addActionListener(ac->editarTransporte(ac));
+		this.ventanaEditarTransporte.getBtnCancelar().addActionListener(c->cancelarVentanaEditarTransporte(c));
 
 		this.transporte = new Transporte(new DAOSQLFactory());
 		transportes_en_tabla = transporte.obtenerTransportes();
 	}
 
+
+
 	public void mostrarVentanaAgregarTransporte() {
+		this.ventanaAgregarTransporte.limpiarCampos();
 		this.ventanaAgregarTransporte.mostrarVentana();
 	}
 	
 	public void editarTransporte() {
+		this.ventanaEditarTransporte.limpiarCampos();
 		this.ventanaEditarTransporte.mostrarVentana();
 	}
 	
@@ -52,11 +58,16 @@ public class ControladorTransporte implements ActionListener {
 	
 			this.ventanaAgregarTransporte.limpiarCampos();
 			this.ventanaAgregarTransporte.cerrarVentana();
-			JOptionPane.showMessageDialog(null, "Transporte agregado","Transporte", JOptionPane.INFORMATION_MESSAGE);
+			
 
 		}
 	}
-	
+
+
+	private void cancelarVentanaAgregarTransporte(ActionEvent c) {
+		this.ventanaAgregarTransporte.limpiarCampos();
+		this.ventanaAgregarTransporte.cerrarVentana();
+	}
 	public void editarTransporte(int filaSeleccionada){
 		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarTransporte.mostrarVentana();
@@ -74,10 +85,14 @@ public class ControladorTransporte implements ActionListener {
 			this.transporte.editarTransporte(new TransporteDTO(transportes_en_tabla.get(this.filaSeleccionada).getIdTransporte(),nombreTransporte));
 			ventanaEditarTransporte.limpiarCampos();
 			ventanaEditarTransporte.dispose();
-			JOptionPane.showMessageDialog(null, "Transporte editado","Transporte", JOptionPane.INFORMATION_MESSAGE);
+			
 
 		}
 		
+	}
+	private void cancelarVentanaEditarTransporte(ActionEvent c) {
+		this.ventanaEditarTransporte.limpiarCampos();
+		this.ventanaEditarTransporte.cerrarVentana();
 	}
 	
 	public void eliminarTransporte(int filaSeleccionada){
@@ -86,7 +101,6 @@ public class ControladorTransporte implements ActionListener {
 				             "Eliminar transporte", JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE, null, null, null);
 	 if (confirm == 0){
-		JOptionPane.showMessageDialog(null, "Transporte eliminado","Transporte", JOptionPane.INFORMATION_MESSAGE);
 		this.transporte.borrarTransporte(transportes_en_tabla.get(filaSeleccionada));
 	 }
 	}

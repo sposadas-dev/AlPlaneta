@@ -36,6 +36,8 @@ public class VentanaPago extends JFrame {
 	private JTextField textImporteTotal;
 	private JLabel lblMontoaPagar;
 	private JButton btnPago;
+	private JButton btnAtras;
+
 	private static VentanaPago INSTANCE;
 	
 	public static VentanaPago getInstance(){
@@ -60,7 +62,7 @@ public class VentanaPago extends JFrame {
 		
 		this.comboBoxFormaDePago = new JComboBox<FormaPagoDTO>();
 		comboBoxFormaDePago.setBounds(218, 68, 167, 20);
-		contentPane.add(comboBoxFormaDePago);
+		contentPane.add(comboBoxFormaDePago);		
 		comboBoxFormaDePago.setEnabled(false);
 
 		
@@ -91,7 +93,7 @@ public class VentanaPago extends JFrame {
 		lblMontoaPagar.setBounds(218, 98, 167, 14);
 		contentPane.add(lblMontoaPagar);
 		
-		JButton btnAtras = new JButton("Atrás");
+		btnAtras = new JButton("Atrás");
 		btnAtras.setBounds(46, 179, 121, 42);
 		contentPane.add(btnAtras);
 		
@@ -129,7 +131,13 @@ public class VentanaPago extends JFrame {
 		this.setVisible(false);
 	}
 		
+	public JButton getBtnAtras() {
+		return btnAtras;
+	}
+
+
 	public JComboBox<FormaPagoDTO> getComboBoxFormaPago() {
+		comboBoxFormaDePago.addItem(new FormaPagoDTO(""));
 		return comboBoxFormaDePago;
 	}
 	public void setComboBoxEstadoPago(JComboBox<FormaPagoDTO> comboBoxEstadoPago) {
@@ -146,19 +154,6 @@ public class VentanaPago extends JFrame {
 
 	public void setBtnPago(JButton btnPago) {
 		this.btnPago = btnPago;
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPago frame = new VentanaPago();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 
 	public JTextField getTextImporteTotal() {

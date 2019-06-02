@@ -16,6 +16,7 @@ public class VentanaAgregarProvincia extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtNombreProvincia;
 	private JButton btnAgregar;
+	private JButton btnCancelar;
 	private JComboBox<?> comboBoxPaises;
 	private static VentanaAgregarProvincia INSTANCE;
 
@@ -31,7 +32,7 @@ public class VentanaAgregarProvincia extends JFrame {
 		setTitle("Agregar Provincia");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 423, 303);
+		setBounds(100, 100, 457, 303);
 		setLocationRelativeTo(null);
 		
 		contentPane = new JPanel();
@@ -42,7 +43,7 @@ public class VentanaAgregarProvincia extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(96, 163, 188));
-		panel.setBounds(0, 0, 417, 53);
+		panel.setBounds(0, 0, 451, 53);
 		contentPane.add(panel);
 		
 		JLabel lblAgregarProvincia = new JLabel("Agregar Provincia");
@@ -52,30 +53,30 @@ public class VentanaAgregarProvincia extends JFrame {
 		panel.add(lblAgregarProvincia);
 		
 		JLabel lblNewLabel = new JLabel("Nombre de la Provincia:");
-		lblNewLabel.setBounds(47, 111, 131, 14);
+		lblNewLabel.setBounds(47, 126, 131, 14);
 		contentPane.add(lblNewLabel);
 		
 		txtNombreProvincia = new JTextField();
-		txtNombreProvincia.setBounds(193, 108, 170, 20);
+		txtNombreProvincia.setBounds(220, 123, 170, 20);
 		contentPane.add(txtNombreProvincia);
 		txtNombreProvincia.setColumns(10);
 		
-		JButton button = new JButton("Cancelar");
-		button.setForeground(Color.WHITE);
-		button.setFont(new Font("Tahoma", Font.BOLD, 14));
-		button.setBackground(new Color(192, 57, 43));
-		button.setBounds(206, 177, 131, 42);
-		contentPane.add(button);
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setForeground(Color.WHITE);
+		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnCancelar.setBackground(new Color(192, 57, 43));
+		btnCancelar.setBounds(242, 177, 131, 42);
+		contentPane.add(btnCancelar);
 		
 		btnAgregar = new JButton("Agregar ");
 		btnAgregar.setForeground(Color.WHITE);
 		btnAgregar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnAgregar.setBackground(new Color(5, 196, 107));
-		btnAgregar.setBounds(47, 177, 131, 42);
+		btnAgregar.setBounds(64, 177, 131, 42);
 		contentPane.add(btnAgregar);
 		
 		comboBoxPaises = new JComboBox();
-		comboBoxPaises.setBounds(193, 77, 170, 20);
+		comboBoxPaises.setBounds(220, 77, 170, 20);
 		contentPane.add(comboBoxPaises);
 		
 		JLabel lblSeleccionePais = new JLabel("Seleccione Pais:");
@@ -83,6 +84,10 @@ public class VentanaAgregarProvincia extends JFrame {
 		contentPane.add(lblSeleccionePais);
 	}
 	
+	public JButton getBtnCancelar() {
+		return btnCancelar;
+	}
+
 	public void mostrarVentana(){
 		this.setVisible(true);
 	}

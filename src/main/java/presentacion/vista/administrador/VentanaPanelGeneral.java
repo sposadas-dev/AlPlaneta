@@ -15,7 +15,7 @@ public class VentanaPanelGeneral extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JButton btnRecargarTabla;
 	private DefaultTableModel model;
-	private String[] nombreColumnas = {"Nombre del xxxxx"};
+	private String[] nombreColumnas = {"Nombre"};
 	private JTable tabla;
 	private JButton btnConfirmar;
 	private JLabel lbl;

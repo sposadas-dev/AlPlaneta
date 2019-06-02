@@ -25,6 +25,11 @@ public class VentanaAgregarEmpleado extends JFrame {
 	private JTextField txtContrasenia;
 	private JComboBox<RolDTO> comboBoxRoles;
 	private JButton btnRegistrar;
+	private JButton btnCancelar;
+	public JButton getBtnCancelar() {
+		return btnCancelar;
+	}
+
 	private static VentanaAgregarEmpleado INSTANCE;
 	private JTextField textMail;
 	
@@ -46,6 +51,7 @@ public class VentanaAgregarEmpleado extends JFrame {
 	public VentanaAgregarEmpleado() {
 		setTitle("Registrar empleado");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setResizable(false);
 		setBounds(100, 100, 420, 460);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
@@ -104,17 +110,26 @@ public class VentanaAgregarEmpleado extends JFrame {
 		btnRegistrar.setBounds(59, 335, 131, 42);
 		contentPane.add(btnRegistrar);
 		
+<<<<<<< src/main/java/presentacion/vista/administrador/VentanaAgregarEmpleado.java
 		JButton button_1 = new JButton("Cancelar");
 		button_1.setForeground(Color.WHITE);
 		button_1.setFont(new Font("Tahoma", Font.BOLD, 14));
 		button_1.setBackground(new Color(192, 57, 43));
 		button_1.setBounds(216, 333, 131, 42);
 		contentPane.add(button_1);
+=======
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setForeground(Color.WHITE);
+		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnCancelar.setBackground(new Color(192, 57, 43));
+		btnCancelar.setBounds(216, 321, 131, 42);
+		contentPane.add(btnCancelar);
+>>>>>>> src/main/java/presentacion/vista/administrador/VentanaAgregarEmpleado.java
 		
 		JPanel panelRegistrarEmpleado = new JPanel();
 		panelRegistrarEmpleado.setLayout(null);
 		panelRegistrarEmpleado.setBackground(new Color(87, 95, 207));
-		panelRegistrarEmpleado.setBounds(0, 0, 404, 53);
+		panelRegistrarEmpleado.setBounds(0, 0, 414, 53);
 		contentPane.add(panelRegistrarEmpleado);
 		
 		JLabel lblRegistrarEmpleado = new JLabel("Registrar empleado");
@@ -159,5 +174,12 @@ public class VentanaAgregarEmpleado extends JFrame {
 
 	public void mostrarVentana(boolean visibilidad){
 		this.setVisible(visibilidad);
+	}
+
+	public void limpiarCampos() {
+		this.txtNombre.setText("");
+		this.txtApellido.setText("");
+		this.txtUsuario.setText("");
+		this.txtContrasenia.setText("");
 	}
 }

@@ -70,7 +70,8 @@ public class TableroDeViajes{
 		frmViaje.setResizable(false);
 		frmViaje.setTitle("Viajes");
 		frmViaje.setBounds(100, 100, 657, 366);
-		frmViaje.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmViaje.setLocationRelativeTo(null);
+		frmViaje.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmViaje.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -94,34 +95,20 @@ public class TableroDeViajes{
 		adjustColumnPreferredWidths(tablaViajes);
 		spPersonas.setViewportView(tablaViajes);
 		
-		btnAgregar = new JButton("AGREGAR VIAJE");
+		btnAgregar = new JButton("Agregar viaje");
 		btnAgregar.setBounds(9, 207, 181, 23);
 		panel.add(btnAgregar);
 		
-		btnEditar = new JButton("EDITAR VIAJE");
+		btnEditar = new JButton("Editar viaje");
 		btnEditar.setBounds(200, 207, 181, 23);
 		panel.add(btnEditar);
 		
-		btnBorrar = new JButton("BORRAR VIAJE");
+		btnBorrar = new JButton("Borrar viaje");
 		btnBorrar.setBounds(391, 205, 181, 23);
 		panel.add(btnBorrar);
 	}
 	
 	public void show(){
-		this.frmViaje.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.frmViaje.addWindowListener(new WindowAdapter(){
-			@Override
-		    public void windowClosing(WindowEvent e) {
-		        int confirm = JOptionPane.showOptionDialog(
-		             null, "Estas seguro que quieres salir de la vista de Viajes!?", 
-		             "Confirmacion", JOptionPane.YES_NO_OPTION,
-		             JOptionPane.QUESTION_MESSAGE, null, null, null);
-		        if (confirm == 0) {
-		        	Conexion.getConexion().cerrarConexion();
-		           System.exit(0);
-		        }
-		    }
-		});
 		this.frmViaje.setVisible(true);
 	}
 	

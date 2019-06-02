@@ -13,7 +13,7 @@ import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.CiudadDAO;
 
 public class CiudadDAOSQL implements CiudadDAO {
-	private static final String insert = "INSERT INTO ciudad" + "(idCiudad, ciudadNombre, idProvincia)" + "VALUE(?,?,?)";
+	private static final String insert = "INSERT INTO ciudad" + "(idCiudad, ciudadNombre, idProvincia)" + "VALUES(?,?,?)";
 	private static final String readall = "SELECT * FROM ciudad";
 	private static final String delete = "DELETE FROM ciudad WHERE idCiudad = ?";
 	private static final String update = "UPDATE ciudad SET ciudadNombre = ? WHERE idCiudad = ?";

@@ -37,8 +37,9 @@ public class VistaAdministrativo{
 	
 	private JMenuItem itemVisualizarPasajes;
 	private JMenuItem itemAgregarPasaje;
+	private JMenuItem itemEditarPasaje ;
+	private JMenuItem itemCancelarPasaje;
 	 
-	
 
 	public VistaAdministrativo() {
 		super();
@@ -50,8 +51,10 @@ public class VistaAdministrativo{
 		frame.setLocationRelativeTo(null);
 		frame.setTitle("Al Planeta Project");
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setBounds(0, 0, 1366, 730);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 		
 		panelCliente = new PanelCliente();
 		panelCliente.getTablaClientes().setSize(1114, 900);
@@ -89,17 +92,21 @@ public class VistaAdministrativo{
 		menuPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuPasajes);
 		
+		itemVisualizarPasajes = new JMenuItem("Visualizar pasajes");
+		itemVisualizarPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(itemVisualizarPasajes);
+		
 		itemAgregarPasaje = new JMenuItem("Agregar pasaje");
 		itemAgregarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPasajes.add(itemAgregarPasaje);
 		
-		JMenuItem mntmCancelarPasaje = new JMenuItem("Cancelar pasaje");
-		mntmCancelarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuPasajes.add(mntmCancelarPasaje);
+		itemEditarPasaje = new JMenuItem("Editar pasaje");
+		itemEditarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(itemEditarPasaje);
 		
-		itemVisualizarPasajes = new JMenuItem("Visualizar pasajes");
-		itemVisualizarPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuPasajes.add(itemVisualizarPasajes);
+		itemCancelarPasaje = new JMenuItem("Cancelar pasaje");
+		itemCancelarPasaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPasajes.add(itemCancelarPasaje);
 	}
 
 	public PanelPasaje getPanelPasaje() {
@@ -121,6 +128,15 @@ public class VistaAdministrativo{
 	public JMenuItem getItemVisualizarPasajes() {
 		return itemVisualizarPasajes;
 	}
+	
+	public JMenuItem getItemEditarPasaje() {
+		return itemEditarPasaje;
+	}
+
+	public JMenuItem getItemCancelarPasaje() {
+		return itemCancelarPasaje;
+	}
+
 	
 	public PanelCliente getPanelCliente() {
 		return panelCliente;

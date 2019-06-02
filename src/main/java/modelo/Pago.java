@@ -30,7 +30,11 @@ public class Pago {
 		this.pago.update(pagoUpdate);
 	}
 	
-	public void getPagoById(int idPago) {
-		this.pago.getPagoById(idPago);
+	public PagoDTO getPagoById(int idPago) {
+		return this.pago.getPagoById(idPago);
+	}
+	
+	public PagoDTO getUltimoRegistroPago() {
+		return this.pago.getUltimoRegistroPago();
 	}
 }

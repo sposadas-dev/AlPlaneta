@@ -15,7 +15,6 @@ public class PanelPasaje extends JPanel {
 	private DefaultTableModel modelReservas;
 	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor unitario", "Transporte","Estado"};
 	private JTable tablaReservas;
-	private JButton btnVisualizarPasaje;
 
 	public PanelPasaje() {
 		
@@ -28,14 +27,10 @@ public class PanelPasaje extends JPanel {
 		setLayout(null);
 			
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(10, 81, 1342, 399);
+		spPasajeros.setBounds(10, 81, 1342, 529);
 		add(spPasajeros);
 		tablaReservas = new JTable(modelReservas);
 		spPasajeros.setViewportView(tablaReservas);
-		
-		btnVisualizarPasaje = new JButton("Visualizar pasaje");
-		btnVisualizarPasaje.setBounds(710, 513, 133, 50);
-		add(btnVisualizarPasaje);
 		
 		JPanel panelPasajes = new JPanel();
 		panelPasajes.setBackground(new Color(230, 126, 34));
@@ -76,14 +71,6 @@ public class PanelPasaje extends JPanel {
 
 	public void setTablaReservas(JTable tablaReservas) {
 		this.tablaReservas = tablaReservas;
-	}
-
-	public JButton getBtnVisualizarPasaje() {
-		return btnVisualizarPasaje;
-	}
-
-	public void setBtnVisualizarPasaje(JButton btnVisualizarPasaje) {
-		this.btnVisualizarPasaje = btnVisualizarPasaje;
 	}
 
 }

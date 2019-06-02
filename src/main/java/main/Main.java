@@ -8,14 +8,6 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 
-//		VistaPrueba vista = new VistaPrueba();
-//		ControladorPrueba controlador = new ControladorPrueba(vista);
-//		controlador.inicializar();		
-//
-//		VistaAdministrador administrador = new VistaAdministrador();
-//		ControladorAdministrador controlador = new ControladorAdministrador(administrador);
-//		controlador.inicializar();
-		
 		Login login = new Login(new DAOSQLFactory());
 		VentanaLogin ventanaLogin = new VentanaLogin();
 		ControladorLogin controladorLogin = new ControladorLogin(ventanaLogin, login);

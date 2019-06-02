@@ -34,6 +34,7 @@ public class VentanaTablaViajes extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Carga de viaje");
 		setBounds(250, 200, 975, 525);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -54,15 +55,11 @@ public class VentanaTablaViajes extends JFrame {
 		spPasajeros.setViewportView(tablaViajes);
 		
 		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnConfirmar.setBounds(416, 415, 109, 37);
+		btnConfirmar.setBounds(442, 395, 150, 49);
 		contentPane.add(btnConfirmar);
 		
 		btnAtras = new JButton("Atrás");
-		btnAtras.setBounds(198, 403, 89, 38);
+		btnAtras.setBounds(249, 395, 150, 49);
 		contentPane.add(btnAtras);
 		
 		this.setVisible(false);
