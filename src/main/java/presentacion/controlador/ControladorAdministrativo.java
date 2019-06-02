@@ -3,9 +3,7 @@ package presentacion.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
 import javax.swing.JOptionPane;
-
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EventoDTO;
@@ -263,9 +261,6 @@ public class ControladorAdministrativo implements ActionListener {
 							this.vista.getPanelEvento().getModelEventos().addRow(fila);
 		}		
 	}
-	
-
-
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
