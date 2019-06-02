@@ -20,4 +20,6 @@ public interface AdministradorDAO {
 	public AdministradorDTO getByLoginId(int id);
 	
 	public AdministradorDTO getByMail(String email);
+
+	public boolean updateMail(AdministradorDTO administrador2);
 }

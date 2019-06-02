@@ -18,16 +18,23 @@ public class Administrativo {
 		this.administrativo.insert(nuevoAdministrativo);
 	}
 	
+	public void editarAdministrativo(AdministrativoDTO editarAdministrativo) {
+		this.administrativo.update(editarAdministrativo);
+	}
+	
 	public List<AdministrativoDTO> obtenerAdministrativos(){
 		return this.administrativo.readAll();		
+	}
+	
+	public boolean actualizar(AdministrativoDTO editarAdministrativo){
+		return this.administrativo.updateContrasena(editarAdministrativo);
 	}
 
 	public AdministrativoDTO getByLoginId(int idLogin) {
 		return this.administrativo.getByLoginId(idLogin);
 	}
-	
+
 	public AdministrativoDTO buscarPorEmail(String email) {
 		return this.administrativo.getByMail(email);
 	}
-	
 }

@@ -19,6 +19,8 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 
 	private static final String update = "UPDATE administrativo SET nombre = ? WHERE idAdministrativo = ?";
 	
+	private static final String updateConstrasena = "UPDATE administrativo SET Login = ? WHERE idAdministrativo = ?";
+
 	private static final String browse = "SELECT * FROM administrativo WHERE idAdministrativo = ?";
 	
 	private static final String browseLogin = "SELECT * FROM administrativo WHERE idLogin = ?";
@@ -92,6 +94,27 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean updateContrasena(AdministrativoDTO administrativo) {
+		PreparedStatement statement;
+		int chequeoUpdate = 0;
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(updateConstrasena);
+
+			statement.setString(1, administrativo.getMail());
+			statement.setInt(2, administrativo.getIdAdministrativo()); // deberia
+
+			chequeoUpdate = statement.executeUpdate();
+			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	
 	@Override
 	public AdministrativoDTO getByDatosLogin(String usuario, String constrasena) {
