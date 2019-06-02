@@ -72,7 +72,7 @@ public class VentanaClaveOlvidada extends JFrame {
 		this.textUsuario = textUsuario;
 	}
 
-	public JButton getBtnRecuperarContrasena() {
+	public JButton getBtnRecuperarContraseña() {
 		return btnRecuperarContraseña;
 	}
 	

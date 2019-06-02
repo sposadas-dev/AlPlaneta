@@ -10,24 +10,25 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
-import correo.EnvioDeCorreo;
-import dto.AdministrativoDTO;
-import dto.ClienteDTO;
-import dto.EstadoPasajeDTO;
-import dto.FormaPagoDTO;
-import dto.PagoDTO;
-import dto.PasajeDTO;
-import dto.PasajeroDTO;
-import dto.ViajeDTO;
-import generatePDF.GeneratePDF;
 import modelo.Cliente;
 import modelo.EstadoPasaje;
 import modelo.FormaPago;
 import modelo.ModeloViaje;
 import modelo.Pago;
 import modelo.Pasaje;
+import modelo.Pasaje_Pasajeros;
 import modelo.Pasajero;
+import dto.AdministrativoDTO;
+import dto.ClienteDTO;
+import dto.EstadoPasajeDTO;
+import dto.FormaPagoDTO;
+import dto.PagoDTO;
+import dto.PasajeDTO;
+import dto.Pasaje_PasajerosDTO;
+import dto.PasajeroDTO;
+import dto.ViajeDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
+import persistencia.dao.mysql.Pasaje_PasajerosDAOSQL;
 import presentacion.reportes.Reporte;
 import presentacion.vista.administrativo.VentanaCargaPasajero;
 import presentacion.vista.administrativo.VentanaPago;
@@ -37,9 +38,7 @@ import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
 
 public class ControladorPasaje {
-	private EnvioDeCorreo envioCorreo;
-	private GeneratePDF pdf;
-	
+
 	private VentanaVisualizarClientes ventanaVisualizarClientes;
 	private VentanaTablaViajes ventanaTablaViajes;
 	private VentanaCargaPasajero ventanaCargaPasajero;
@@ -76,8 +75,6 @@ public class ControladorPasaje {
 		this.pasajero = new Pasajero (new DAOSQLFactory());
 		this.pago = new Pago(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
-		this.pdf = new GeneratePDF();
-		this.envioCorreo = new EnvioDeCorreo();
 		
 		this.pasajeros_en_reserva = new ArrayList<PasajeroDTO>();
 		this.pasajes_en_tabla = pasaje.obtenerPasajes();
@@ -311,13 +308,7 @@ public class ControladorPasaje {
 		this.ventanaPago.setVisible(false);
 		
 		generarComprobantes(pasajeDTO,pagoPasaje);
-		generarVoucherMail(pasajeDTO,cliente);
 		
-	}
-	private void generarVoucherMail(PasajeDTO pasaje,ClienteDTO cliente){
-		this.pdf.createPDF(pasaje, cliente);//(pasaje,cliente); // se crea el pdf en resource
-	//	TODO: this.envioCorreo.enviarAdjunto(cliente.getMail());
-	//	this.envioCorreo.enviarAdjunto("av.m.nico@gmail.com");
 	}
 	
 	private void generarComprobantes(PasajeDTO pasajeDTO, PagoDTO pagoPasaje) {
