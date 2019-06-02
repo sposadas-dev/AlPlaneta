@@ -13,5 +13,6 @@ public class Main {
 		VentanaLogin ventanaLogin = new VentanaLogin();
 		ControladorLogin controladorLogin = new ControladorLogin(ventanaLogin, login);
 		controladorLogin.iniciar();
+	
 	}
 }

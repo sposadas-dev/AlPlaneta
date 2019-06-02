@@ -20,6 +20,10 @@ public class Pasaje {
 		this.pasaje.insert(nuevoPasaje);
 	}
 	
+	public void editarPasaje(PasajeDTO pasaje_a_editar){
+		this.pasaje.update(pasaje_a_editar);
+	}
+	
 	public void borrarPasaje(PasajeDTO pasaje_a_eliminar){
 		this.pasaje.delete(pasaje_a_eliminar);
 	}

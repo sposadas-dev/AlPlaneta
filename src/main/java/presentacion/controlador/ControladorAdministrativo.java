@@ -108,6 +108,7 @@ public class ControladorAdministrativo implements ActionListener {
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
 	private void mostrarPasajes(ActionEvent ap) {
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
@@ -158,13 +159,13 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getCliente().getDni(),
 							this.pasajes_en_tabla.get(i).getCliente().getNombre(),
 							this.pasajes_en_tabla.get(i).getCliente().getApellido(),
-							this.pasajes_en_tabla.get(i).getIdPasaje(),
+							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
 							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
-							this.pasajes_en_tabla.get(i).getViaje().getPrecio(),
+							this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
 							this.pasajes_en_tabla.get(i).getEstadoDelPasaje().getNombre()
 			};

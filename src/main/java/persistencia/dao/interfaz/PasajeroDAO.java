@@ -18,4 +18,6 @@ public interface PasajeroDAO {
 
 	public PasajeroDTO getPasajeroByDni(String dniPasajero);
 
+	public PasajeroDTO getUltimoRegistroPasajero();
+
 }

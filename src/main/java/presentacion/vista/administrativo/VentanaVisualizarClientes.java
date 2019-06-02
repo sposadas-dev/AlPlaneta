@@ -88,17 +88,17 @@ public class VentanaVisualizarClientes extends JFrame {
 			
 			comboBoxFiltro = new JComboBox<String>();
 			comboBoxFiltro.setBounds(291, 114, 210, 20);
-			comboBoxFiltro.addItem("");
+			comboBoxFiltro.addItem("Seleccione");
 			comboBoxFiltro.addItem("DNI");
 			getContentPane().add(comboBoxFiltro);
 			
 			txtFiltro = new JTextField();
-			txtFiltro.setBounds(523, 114, 216, 20);
+			txtFiltro.setBounds(523, 114, 238, 20);
 			getContentPane().add(txtFiltro);
 			txtFiltro.setColumns(10);
 			
 			btnAplicarFiltro = new JButton("Aplicar filtro");
-			btnAplicarFiltro.setBounds(771, 113, 158, 23);
+			btnAplicarFiltro.setBounds(811, 113, 158, 23);
 			getContentPane().add(btnAplicarFiltro);
 
 	}

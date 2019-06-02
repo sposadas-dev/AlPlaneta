@@ -5,9 +5,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.Color;
+
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
+import javax.swing.JComboBox;
 
 public class PanelPasaje extends JPanel {
 
@@ -15,6 +20,7 @@ public class PanelPasaje extends JPanel {
 	private DefaultTableModel modelReservas;
 	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor unitario", "Transporte","Estado"};
 	private JTable tablaReservas;
+	private JComboBox<String>comboBoxFiltros;
 
 	public PanelPasaje() {
 		
@@ -27,7 +33,7 @@ public class PanelPasaje extends JPanel {
 		setLayout(null);
 			
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(10, 81, 1342, 529);
+		spPasajeros.setBounds(10, 140, 1342, 470);
 		add(spPasajeros);
 		tablaReservas = new JTable(modelReservas);
 		spPasajeros.setViewportView(tablaReservas);
@@ -43,6 +49,24 @@ public class PanelPasaje extends JPanel {
 		lblPasajes.setFont(new Font("Tahoma", Font.BOLD, 36));
 		lblPasajes.setBounds(589, 0, 219, 65);
 		panelPasajes.add(lblPasajes);
+		
+		JLabel lblFiltro = new JLabel("Filtrar por:");
+		lblFiltro.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblFiltro.setBounds(389, 105, 100, 14);
+		add(lblFiltro);
+		
+		JButton btnBuscar = new JButton("Aplicar búsqueda");
+		btnBuscar.setBounds(760, 101, 216, 23);
+		add(btnBuscar);
+		
+		comboBoxFiltros = new JComboBox<String>();
+		comboBoxFiltros.setBounds(509, 102, 216, 20);
+		comboBoxFiltros.addItem("Seleccione");
+		comboBoxFiltros.addItem("Cancelado");
+		comboBoxFiltros.addItem("Pendiente");
+		comboBoxFiltros.addItem("Reservado");
+		comboBoxFiltros.addItem("Vendido");
+		add(comboBoxFiltros);
 	}
 	
 	public void mostrarPanelPasaje(boolean visibilidad){
@@ -72,5 +96,4 @@ public class PanelPasaje extends JPanel {
 	public void setTablaReservas(JTable tablaReservas) {
 		this.tablaReservas = tablaReservas;
 	}
-
 }

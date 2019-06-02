@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.AdministrativoDTO;
+import dto.PasajeDTO;
 import dto.PasajeroDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PasajeroDAO;
@@ -18,6 +19,7 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 	private static final String readall = "SELECT * FROM pasajero";
 	private static final String update = "UPDATE pasajero SET nombre=?, apellido=?, dni=?, fechaNacimiento=?, telefono=?, email=? WHERE idPasajero=?;";
 	private static final String browse = "SELECT * FROM pasajero WHERE idPasajero=?";
+	private static final String ultimoRegistro = "SELECT * FROM pasajero ORDER BY idPasajero desc limit 1";
 	
 	private static final String browseByDni = "SELECT * FROM pasajero WHERE dni=?";
 	
@@ -167,6 +169,34 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 		}
 		return null;
 	}
+
+	@Override
+	public PasajeroDTO getUltimoRegistroPasajero() {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		PasajeroDTO pasajero;
+
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(ultimoRegistro);
+			resultSet = statement.executeQuery();
+				
+			if (resultSet.next()){
+				pasajero = new PasajeroDTO(resultSet.getInt("idPasajero"), 
+						   resultSet.getString("nombre"),
+						   resultSet.getString("apellido"), 
+						   resultSet.getString("dni"),
+						   resultSet.getDate("fechaNacimiento"),
+						   resultSet.getString("telefono"),
+						   resultSet.getString("email")
+		  );
+				return pasajero;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	
 	public static void main(String[] args) {
@@ -188,7 +218,4 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 //		for(PasajeroDTO ad: array)
 //			System.out.println(ad.getNombre());
 		}
-	
-
-
 }

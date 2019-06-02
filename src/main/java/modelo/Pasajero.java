@@ -30,7 +30,11 @@ public class Pasajero {
 		this.pasajero.update(pasajeroUpdate);
 	}
 	
-	public PasajeroDTO llenarCamposPasajeroPorDni(String dniPasajero){
+	public PasajeroDTO getPasajeroByDni(String dniPasajero){
 		return this.pasajero.getPasajeroByDni(dniPasajero);
+	}
+
+	public PasajeroDTO getUltimoRegistroPasajero() {
+		return this.pasajero.getUltimoRegistroPasajero();
 	}
 }

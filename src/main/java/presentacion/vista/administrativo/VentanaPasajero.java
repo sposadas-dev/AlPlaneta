@@ -29,8 +29,6 @@ public class VentanaPasajero extends JFrame {
 	private JDateChooser dateFechaNacimiento;
 	private JTextField txtEmail;
 	private JButton btnCargarDatos;
-	
-	private JComboBox<String> comboBoxFiltro;
 	private JTextField txtFiltroDni;
 	private JButton btnAplicarBusqueda;
 	private static VentanaPasajero INSTANCE;
@@ -62,7 +60,7 @@ public class VentanaPasajero extends JFrame {
 		panelCargarPasajeros.setLayout(null);
 		
 		JLabel lblCargarPasajero = new JLabel("Cargar pasajero");
-		lblCargarPasajero.setBounds(162, 0, 210, 53);
+		lblCargarPasajero.setBounds(162, 0, 228, 53);
 		panelCargarPasajeros.add(lblCargarPasajero);
 		lblCargarPasajero.setForeground(Color.WHITE);
 		lblCargarPasajero.setFont(new Font("Tahoma", Font.BOLD, 24));
@@ -129,23 +127,19 @@ public class VentanaPasajero extends JFrame {
 		editor.setEditable(false);
 		contentPane.add(dateFechaNacimiento);
 		
-		JLabel lblFIltro = new JLabel("Filtrar:");
+		JLabel lblFIltro = new JLabel("Ingrese DNI:");
 		lblFIltro.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblFIltro.setBounds(39, 89, 68, 14);
+		lblFIltro.setBounds(79, 89, 103, 14);
 		contentPane.add(lblFIltro);
 		
 		txtFiltroDni = new JTextField();
-		txtFiltroDni.setBounds(246, 86, 123, 20);
+		txtFiltroDni.setBounds(192, 86, 123, 20);
 		contentPane.add(txtFiltroDni);
 		txtFiltroDni.setColumns(10);
 		
 		btnAplicarBusqueda = new JButton("Aplicar");
-		btnAplicarBusqueda.setBounds(389, 85, 89, 23);
+		btnAplicarBusqueda.setBounds(338, 85, 89, 23);
 		contentPane.add(btnAplicarBusqueda);
-		
-		comboBoxFiltro = new JComboBox<String>();
-		comboBoxFiltro.setBounds(95, 86, 131, 20);
-		contentPane.add(comboBoxFiltro);
 	}
 	
 	
@@ -207,10 +201,6 @@ public class VentanaPasajero extends JFrame {
 		this.btnCargarDatos = btnCargarDatos;
 	}
 	
-	public JComboBox<String> getComboBoxFiltro() {
-		return comboBoxFiltro;
-	}
-
 	public JTextField getTxtFiltroDni() {
 		return txtFiltroDni;
 	}

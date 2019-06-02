@@ -19,5 +19,7 @@ public interface ClienteDAO {
 	
 	public ClienteDTO getByLoginId(int idCliente);
 
+	public ClienteDTO getClienteByDni(String dniCliente);
+
 	
 }

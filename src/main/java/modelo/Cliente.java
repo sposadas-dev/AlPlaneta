@@ -34,4 +34,8 @@ public class Cliente {
 	public ClienteDTO getByLoginId(int idCliente){
 		return this.cliente.getByLoginId(idCliente);
 	}
+	
+	public ClienteDTO getClienteByDni(String dniCliente){
+		return this.cliente.getClienteByDni(dniCliente);
+	}
 }

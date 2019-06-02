@@ -10,6 +10,7 @@ import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.LoginDTO;
 import dto.MedioContactoDTO;
+import dto.PasajeroDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.ClienteDAO;
 
@@ -20,6 +21,8 @@ public class ClienteDAOSQL implements ClienteDAO {
 	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ?, idLogin= ? WHERE idCliente=? ;";
 	private static final String browse = "SELECT * FROM cliente WHERE idCliente = ?";
 	private static final String browseLogin = "SELECT * FROM cliente WHERE idLogin = ?";
+	
+	private static final String browseByDni = "SELECT * FROM cliente WHERE dni=?";
 	
 	@Override
 	public boolean insert(ClienteDTO cliente) {
@@ -159,6 +162,37 @@ public class ClienteDAOSQL implements ClienteDAO {
 			}
 			return null;
 		}
+	
+	@Override
+	public ClienteDTO getClienteByDni(String dniCliente) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		ClienteDTO cliente;
+		MedioContactoDAOSQL medioContactoDAOSQL = new MedioContactoDAOSQL();
+		LoginDAOSQL loginDAOSQL = new LoginDAOSQL();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(browseByDni);
+			
+			statement.setString(1, dniCliente);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()){
+				cliente = new ClienteDTO(resultSet.getInt("idCliente"),
+						resultSet.getString("nombre"), 
+						resultSet.getString("apellido"), 
+						resultSet.getString("dni"), 
+						resultSet.getDate("fechaNacimiento"),
+						medioContactoDAOSQL.getMedioContactoById(resultSet.getInt("idMedioContacto")),
+						loginDAOSQL.getById(resultSet.getInt("idLogin"))
+						);
+				return cliente;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public static void main(String[] args) {
 		ClienteDAOSQL dao = new ClienteDAOSQL();

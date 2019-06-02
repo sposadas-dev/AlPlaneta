@@ -36,6 +36,7 @@ public class VentanaTablaPagos extends JFrame {
 	}
 	
 	public VentanaTablaPagos() {
+		setTitle("Pagos");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setBounds(100, 100, 700, 420);
