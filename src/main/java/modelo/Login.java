@@ -24,6 +24,10 @@ public class Login {
 		this.login.update(login);
 	}
 	
+	public void editarEstado(String estado, int idLogin) {
+		this.login.updateEstado(estado, idLogin);
+	}
+	
 	public List<LoginDTO> obtenerLogin(){
 		return this.login.readAll();		
 	}

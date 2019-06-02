@@ -18,6 +18,10 @@ public class Administrativo {
 		this.administrativo.insert(nuevoAdministrativo);
 	}
 	
+	public void editarAdministrativo(AdministrativoDTO editarAdministrativo) {
+		this.administrativo.update(editarAdministrativo);
+	}
+	
 	public List<AdministrativoDTO> obtenerAdministrativos(){
 		return this.administrativo.readAll();		
 	}

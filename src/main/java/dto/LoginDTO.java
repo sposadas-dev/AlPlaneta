@@ -5,13 +5,16 @@ public class LoginDTO {
 	private String usuario;
 	private String contrasena;
 	private RolDTO rol;
+	private String estado;
 
-	public LoginDTO(int idDatosLogin, String usuario, String contrasena, RolDTO rol) {
+	public LoginDTO(int idDatosLogin, String usuario, String contrasena, RolDTO rol, String estado) {
 		super();
 		this.idDatosLogin = idDatosLogin;
 		this.usuario = usuario;
 		this.contrasena = contrasena;
 		this.rol = rol;
+		this.estado = estado;
+		
 	}
 
 	public LoginDTO() {
@@ -47,6 +50,14 @@ public class LoginDTO {
 
 	public void setRol(RolDTO rol) {
 		this.rol = rol;
+	}
+	
+	public String getEstado() {
+		return estado;
+	}
+	
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 }

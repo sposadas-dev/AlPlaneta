@@ -23,7 +23,11 @@ public class VistaAdministrador extends JFrame {
 	private PanelEmpleados panelEmpleados;
 	
 	private JMenuItem itemAgregarCuenta;
-	private JMenuItem itemVisualizarTransportes ;
+	private JMenuItem itemEditarCuenta;
+	private JMenuItem itemEliminarCuenta;
+	private JMenuItem itemActivarCuenta;
+	
+	private JMenuItem itemVisualizarTransportes;
 	private JMenuItem itemAgregarTransporte;
 	private JMenuItem itemEditarTransporte;
 	private JMenuItem itemEliminarTransporte;
@@ -39,7 +43,6 @@ public class VistaAdministrador extends JFrame {
 	
 	private JMenuItem itemAgregarViaje;
 
-	
 	private JMenuItem itemEliminarPais;
 	private JMenuItem itemEliminarCiudad;
 	private JMenuItem itemEliminarProvincia;
@@ -77,6 +80,18 @@ public class VistaAdministrador extends JFrame {
 		itemAgregarCuenta = new JMenuItem("Agregar cuenta");
 		itemAgregarCuenta.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuCuentas.add(itemAgregarCuenta);
+		
+		itemEditarCuenta = new JMenuItem("Editar Cuenta");
+		itemEditarCuenta.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuCuentas.add(itemEditarCuenta);
+
+		itemActivarCuenta = new JMenuItem("Activar Cuenta");
+		itemActivarCuenta.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuCuentas.add(itemActivarCuenta);
+
+		itemEliminarCuenta = new JMenuItem("Desactivar Cuenta");
+		itemEliminarCuenta.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuCuentas.add(itemEliminarCuenta);
 		
 		JMenu menuViajes = new JMenu("Viajes");
 		menuViajes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -267,24 +282,6 @@ public class VistaAdministrador extends JFrame {
 	public void mostrarVentana(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}
-
-	public void mostrarVentana(){
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter(){
-			@Override
-		    public void windowClosing(WindowEvent e) {
-		        int confirm = JOptionPane.showOptionDialog(
-		             null, "¿Estás seguro que quieres salir del programa?", 
-		             "Salir", JOptionPane.YES_NO_OPTION,
-		             JOptionPane.QUESTION_MESSAGE, null, null, null);
-		        if (confirm == 0) {
-		        	Conexion.getConexion().cerrarConexion();
-		           System.exit(0);
-		        }
-		    }
-		});
-		setVisible(true);
-	}
 	
 	public JMenuItem getItemPais() {
 		return itemPais;
@@ -348,6 +345,48 @@ public class VistaAdministrador extends JFrame {
 
 	public void setPanelGeneral(VentanaPanelGeneral panelGeneral) {
 		this.panelGeneral = panelGeneral;
+	}
+
+	public JMenuItem getItemEditarCuenta() {
+		return itemEditarCuenta;
+	}
+
+	public void setItemEditarCuenta(JMenuItem itemEditarCuenta) {
+		this.itemEditarCuenta = itemEditarCuenta;
+	}
+
+	public JMenuItem getItemEliminarCuenta() {
+		return itemEliminarCuenta;
+	}
+
+	public void setItemEliminarCuenta(JMenuItem itemEliminarCuenta) {
+		this.itemEliminarCuenta = itemEliminarCuenta;
+	}
+	
+	public JMenuItem getItemActivarCuenta() {
+		return itemActivarCuenta;
+	}
+	
+	public void setItemActivarCuenta(JMenuItem itemActivarCuenta) {
+		this.itemActivarCuenta = itemActivarCuenta;
+	}
+	
+	public void mostrarVentana(){
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter(){
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int confirm = JOptionPane.showOptionDialog(
+						null, "¿Estás seguro que quieres salir del programa?", 
+						"Salir", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, null, null);
+				if (confirm == 0) {
+					Conexion.getConexion().cerrarConexion();
+					System.exit(0);
+				}
+			}
+		});
+		setVisible(true);
 	}
 	
 }

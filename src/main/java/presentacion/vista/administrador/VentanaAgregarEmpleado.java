@@ -50,10 +50,10 @@ public class VentanaAgregarEmpleado extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblApellido = new JLabel("Apellido:");
-		lblApellido.setBounds(90, 134, 74, 14);
-		contentPane.add(lblApellido);
-		
+//		JLabel lblApellido = new JLabel("Apellido:");
+//		lblApellido.setBounds(90, 134, 74, 14);
+//		contentPane.add(lblApellido);
+//		
 		JLabel lblNombre = new JLabel("Nombre:");
 		lblNombre.setBounds(92, 92, 87, 14);
 		contentPane.add(lblNombre);
@@ -79,10 +79,10 @@ public class VentanaAgregarEmpleado extends JFrame {
 		comboBoxRoles.setBounds(189, 258, 122, 20);
 		contentPane.add(comboBoxRoles);
 		
-		txtApellido = new JTextField();
-		txtApellido.setBounds(189, 131, 122, 20);
-		contentPane.add(txtApellido);
-		txtApellido.setColumns(10);
+//		txtApellido = new JTextField();
+//		txtApellido.setBounds(189, 131, 122, 20);
+//		contentPane.add(txtApellido);
+//		txtApellido.setColumns(10);
 		
 		txtUsuario = new JTextField();
 		txtUsuario.setBounds(189, 175, 122, 20);
@@ -151,7 +151,7 @@ public class VentanaAgregarEmpleado extends JFrame {
 
 	public void limpiarCampos() {
 		this.txtNombre.setText("");
-		this.txtApellido.setText("");
+//		this.txtApellido.setText("");
 		this.txtUsuario.setText("");
 		this.txtContrasenia.setText("");
 	}

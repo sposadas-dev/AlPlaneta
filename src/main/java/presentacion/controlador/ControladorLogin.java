@@ -32,7 +32,7 @@ public class ControladorLogin {
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
 		this.vistaAdministrador = VistaAdministrador.getInstance();
-		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
+		this.vistaAdministrativo = VistaAdministrativo.getInstance();
 		this.vistaCliente = VistaCliente.getInstance();
 		
 		this.login = login;
@@ -55,28 +55,33 @@ public class ControladorLogin {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		if(usuarioLogueado==null){
-			this.ventanaLogin.getLblError().setVisible(true);
-			System.out.println("EL USUARIO O CONTRASENA ES INCORRECTO");
-		}else{
-			System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogueado.getUsuario()+usuarioLogueado.getContrasena());
-			if(usuarioLogueado.getRol().getIdRol()==2){
-				 administrativoLogueado = obtenerAdministrativo(usuarioLogueado);
-				 mostrarVentanaAdministrativo();
-
-			}else{
-				if(usuarioLogueado.getRol().getIdRol()==5){
-					 clienteLogueado = obtenerCliente(usuarioLogueado);
-					 mostrarVentanaCliente();
-				}
-				else{
-					if(usuarioLogueado.getRol().getIdRol()==1){
-						 administradorLogueado = obtenerAdministrador(usuarioLogueado);
-						 mostrarVentanaAdministrador();
+		if(usuarioLogueado != null) {
+			if( usuarioLogueado.getEstado().equals("Activo") ) {
+				System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogueado.getUsuario()+usuarioLogueado.getContrasena());
+				if(usuarioLogueado.getRol().getIdRol()==2){
+					 administrativoLogueado = obtenerAdministrativo(usuarioLogueado);
+					 mostrarVentanaAdministrativo();
+	
+				}else{
+					if(usuarioLogueado.getRol().getIdRol()==5){
+						 clienteLogueado = obtenerCliente(usuarioLogueado);
+						 mostrarVentanaCliente();
+					}
+					else{
+						if(usuarioLogueado.getRol().getIdRol()==1){
+							 administradorLogueado = obtenerAdministrador(usuarioLogueado);
+							 mostrarVentanaAdministrador();
+						}
 					}
 				}
 			}
+			else{
+				this.ventanaLogin.getLblErrorInactividad().setVisible(true);
+				System.out.println("EL USUARIO ESTA INACTIVO");
+			}
+		}else{
+			this.ventanaLogin.getLblError().setVisible(true);
+			System.out.println("EL USUARIO O CONTRASENA ES INCORRECTO");
 		}
 	}
 	
@@ -100,7 +105,7 @@ public class ControladorLogin {
 	
 	private void mostrarVentanaAdministrador() {
 		System.out.println("Se Loguea Como Administrador");
-		System.out.println(administradorLogueado.getNombre());
+//		System.out.println(administradorLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);
 		ControladorAdministrador controladorAdministrador = new ControladorAdministrador(vistaAdministrador);
 		controladorAdministrador.inicializar();

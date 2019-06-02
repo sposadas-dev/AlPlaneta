@@ -27,6 +27,7 @@ public class VentanaLogin extends JFrame {
 	private JButton btnLogin;
 	private JPasswordField passwordField;
 	private JLabel lblError;
+	private JLabel lblErrorInactividad;
 	
 	public static VentanaLogin getInstance(){
 		if(INSTANCE == null)
@@ -72,6 +73,14 @@ public class VentanaLogin extends JFrame {
 		contentPane.add(lblError);
 		lblError.setVisible(false);
 		this.setVisible(false);
+
+		lblErrorInactividad = new JLabel("El usuario está inactivo");
+		lblErrorInactividad.setFont(new Font("Source Code Pro Semibold", Font.PLAIN, 9));
+		lblErrorInactividad.setForeground(Color.RED);
+		lblErrorInactividad.setBounds(30, 184, 189, 14);
+		contentPane.add(lblErrorInactividad);
+		lblErrorInactividad.setVisible(false);
+		this.setVisible(false);
 	}
 	
 	
@@ -105,5 +114,13 @@ public class VentanaLogin extends JFrame {
 
 	public void setLblError(JLabel lblError) {
 		this.lblError = lblError;
+	}
+
+	public JLabel getLblErrorInactividad() {
+		return lblErrorInactividad;
+	}
+	
+	public void setLblErrorInactividad(JLabel lblErrorInactividad) {
+		this.lblErrorInactividad = lblErrorInactividad;
 	}
 }

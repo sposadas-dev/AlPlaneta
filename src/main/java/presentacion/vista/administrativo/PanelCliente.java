@@ -23,7 +23,7 @@ public class PanelCliente extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JButton btnRecargarTabla;
 	private DefaultTableModel modelClientes;
-	private String[] nombreColumnasClientes = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento", "Teléfono Fijo","Teléfono Celular","Email"};
+	private String[] nombreColumnasClientes = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento", "Teléfono Fijo","Teléfono Celular","Email", "Estado"};
 	private JTable tablaClientes;
 	private JButton btnConfirmar;
 	private JLabel lblClientes;
@@ -45,9 +45,9 @@ public class PanelCliente extends JPanel {
 		tablaClientes = new JTable(modelClientes);
 		spPasajeros.setViewportView(tablaClientes);
 		
-		btnRecargarTabla = new JButton("Recargar");
-		btnRecargarTabla.setBounds(421, 495, 165, 54);
-		add(btnRecargarTabla);
+//		btnRecargarTabla = new JButton("Recargar");
+//		btnRecargarTabla.setBounds(421, 495, 165, 54);
+//		add(btnRecargarTabla);
 		
 		btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(661, 495, 136, 54);
@@ -66,16 +66,16 @@ public class PanelCliente extends JPanel {
 		panelClientes.add(lblClientes);
 	
 		btnConfirmar.setVisible(false);
-		btnRecargarTabla.setVisible(false);
+//		btnRecargarTabla.setVisible(false);
 	}
 
 	public void mostrarPanelCliente(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}
 	
-	public JButton getBtnRecargarTabla() {
-		return btnRecargarTabla;
-	}
+//	public JButton getBtnRecargarTabla() {
+//		return btnRecargarTabla;
+//	}
 
 	public DefaultTableModel getModelClientes() {
 		return modelClientes;
