@@ -28,8 +28,9 @@ public class ControladorLogin {
 
 	private VentanaLogin ventanaLogin;
 	private VentanaClaveOlvidada ventanaClaveOlvidada;
-	private VistaAdministrativo vistaAdministrativo;
 	private EnvioDeCorreo envioDeCorreo;
+	private VistaAdministrador vistaAdministrador;
+	private VistaAdministrativo vistaAdministrativo;
 	private VistaCliente vistaCliente;
 	private Login login;
 	private LoginDTO usuarioLogueado;
@@ -38,7 +39,6 @@ public class ControladorLogin {
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
-	private VistaAdministrador vistaAdministrador;
 	private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
 	private MedioContacto modeloMedioContacto;
