@@ -22,7 +22,7 @@ import generatePDF.GeneratePDF;
 public class EnvioDeCorreo {
 	GeneratePDF pdf;
  
- public void enviarNuevaContrasena(String correoDestino, String nuevaContraseña) {
+ public void enviarNuevaContrasena(String correoDestino, String nuevaContrasena) {
   // El correo gmail de envío
   String correoEnvia = "AlPlanetaProject";
   String claveCorreo = "alplaneta123";
@@ -55,11 +55,11 @@ public class EnvioDeCorreo {
      internetAddresses);
  
    // Agregar el asunto al correo
-   mimeMessage.setSubject("Recuperacion de contraseña");
+   mimeMessage.setSubject("Recuperacion de contrasena");
  
    // Creo la parte del mensaje
    MimeBodyPart mimeBodyPart = new MimeBodyPart();
-   mimeBodyPart.setText("Se ha solicitado la recuperacion de la contraseña, utilize: "+nuevaContraseña+" como nueva contraseña");
+   mimeBodyPart.setText("Se ha solicitado la recuperacion de la contrasena, utilize: "+nuevaContrasena+" como nueva contrasena");
  
    // Crear el multipart para agregar la parte del mensaje anterior
    Multipart multipart = new MimeMultipart();
@@ -141,7 +141,7 @@ public class EnvioDeCorreo {
  
  public static void main(String[] args) {
   EnvioDeCorreo correoTexto = new EnvioDeCorreo();
-//  correoTexto.enviarNuevaContraseña("av.m.nico@gmail.com", "1234");
+//  correoTexto.enviarNuevaContrasena("av.m.nico@gmail.com", "1234");
   correoTexto.enviarAdjunto("av.m.nico@gmail.com");
   
  }
