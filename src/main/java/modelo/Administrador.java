@@ -31,4 +31,8 @@ private AdministradorDAO administrador;
 	public AdministradorDTO buscarPorEmail(String mailDeRecuperacion) {
 		return this.administrador.getByMail(mailDeRecuperacion);
 	}
+
+	public boolean actualizar(AdministradorDTO administrador2) {
+		return this.administrador.updateMail(administrador2);
+	}
 }

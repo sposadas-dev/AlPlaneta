@@ -109,25 +109,25 @@ public class GeneratePDF {
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
             
-            text ="Fecha y Hora de Salida: ";//+ pasaje.getViaje().getFechaSalida()+" - Horario: "+pasaje.getViaje().getHoraSalida()+"hs";// "Fecha y Hora de Salida: 15-5-2019, 20:00 hs  \n ";
+            text ="Fecha y Hora de Salida: "+ pasaje.getViaje().getFechaSalida()+" - Horario: "+pasaje.getViaje().getHoraSalida()+"hs";// "Fecha y Hora de Salida: 15-5-2019, 20:00 hs  \n ";
             item = new ListItem(text);
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
            
-            text = "Fecha de Llegada: ";// + String.valueOf(pasaje.getViaje().getFechaLlegada());//"Hora de Llegada: 13:30 hs \n";
+            text = "Fecha de Llegada: " + String.valueOf(pasaje.getViaje().getFechaLlegada());//"Hora de Llegada: 13:30 hs \n";
             item = new ListItem(text);
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
             
             
-            text = "Origen del viaje: ";// + pasaje.getViaje().getPaisOrigen().getNombre()+" - "+pasaje.getViaje().getProvinciaOrigen().getNombre()+
-            		//" - " + pasaje.getViaje().getCiudadOrigen().getNombre();//"Origen y Destino: Argentina.Buenos Aires  - Argentina.Mendoza \n ";
+            text = "Origen del viaje: " + pasaje.getViaje().getPaisOrigen().getNombre()+" - "+pasaje.getViaje().getProvinciaOrigen().getNombre()+
+            		" - " + pasaje.getViaje().getCiudadOrigen().getNombre();//"Origen y Destino: Argentina.Buenos Aires  - Argentina.Mendoza \n ";
             item = new ListItem(text);
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
             
-            text = "Destino del viaje: ";//  + pasaje.getViaje().getPaisDestino().getNombre()+" - "+pasaje.getViaje().getProvinciaDestino().getNombre()+
-            		 //" - " + pasaje.getViaje().getCiudadDestino().getNombre();//"Origen y Destino: Argentina.Buenos Aires  - Argentina.Mendoza \n ";
+            text = "Destino del viaje: "  + pasaje.getViaje().getPaisDestino().getNombre()+" - "+pasaje.getViaje().getProvinciaDestino().getNombre()+
+            		 " - " + pasaje.getViaje().getCiudadDestino().getNombre();//"Origen y Destino: Argentina.Buenos Aires  - Argentina.Mendoza \n ";
             item = new ListItem(text);
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
@@ -146,8 +146,6 @@ public class GeneratePDF {
     	urlPDFaux = urlPDFaux.substring(0, urlPDFaux.length()-16)+"PDF.pdf";
     	return urlPDFaux;
 	}
-
-
 
 	public static void main(String args[]) {
         GeneratePDF generatePDFFileIText = new GeneratePDF();

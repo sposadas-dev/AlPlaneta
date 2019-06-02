@@ -141,8 +141,8 @@ public class EnvioDeCorreo {
  
  public static void main(String[] args) {
   EnvioDeCorreo correoTexto = new EnvioDeCorreo();
-//  correoTexto.enviarNuevaContrasena("av.m.nico@gmail.com", "1234");
-  correoTexto.enviarAdjunto("av.m.nico@gmail.com");
+//  correoTexto.enviarNuevaContrasena("AlPlanetaProject@gmail.com", "1234");
+  correoTexto.enviarAdjunto("AlPlanetaProject@gmail.com");
   
  }
 }

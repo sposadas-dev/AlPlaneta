@@ -16,6 +16,7 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 	private static final String insert = "INSERT INTO administrador(idAdministrador, nombre, idLogin, mail)" + " VALUES (?, ?, ?, ?)";
 	private static final String readall = "SELECT * FROM administrador";
 	private static final String update = "UPDATE administrador SET nombre = ? WHERE idAdministrador = ?";
+	private static final String updateMail = "UPDATE administrador SET mail = ? WHERE idAdministrador = ?";
 	private static final String browse = "SELECT * FROM administrador WHERE idAdministrador = ?";
 	private static final String browseLogin = "SELECT * FROM administrador WHERE idLogin = ?";
 	private static final String browseByMail = "SELECT * FROM administrador WHERE mail = ?";
@@ -80,6 +81,26 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 			statement.setInt(2, administrador.getIdAdministrador()); // deberia
 			statement.setInt(3, administrador.getDatosLogin().getIdDatosLogin());
 			statement.setString(4, administrador.getMail());
+
+			chequeoUpdate = statement.executeUpdate();
+			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean updateMail(AdministradorDTO administrador) {
+		PreparedStatement statement;
+		int chequeoUpdate = 0;
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(updateMail);
+
+			statement.setString(1, administrador.getMail());
+			statement.setInt(2, administrador.getIdAdministrador()); // deberia
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true

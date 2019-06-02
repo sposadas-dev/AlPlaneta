@@ -3,15 +3,15 @@ package presentacion.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.UUID;
+
+import javax.swing.JOptionPane;
 
 import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.LoginDTO;
-import dto.MedioContactoDTO;
 import modelo.Administrador;
 import modelo.Administrativo;
 import modelo.Cliente;
@@ -32,7 +32,7 @@ public class ControladorLogin {
 	private VistaAdministrador vistaAdministrador;
 	private VistaAdministrativo vistaAdministrativo;
 	private VistaCliente vistaCliente;
-	private Login login;
+	private Login modeloLogin;
 	private LoginDTO usuarioLogueado;
 	private Cliente modeloCliente;
 	private Administrador modeloAdministrador;
@@ -54,7 +54,7 @@ public class ControladorLogin {
 		this.modeloCliente = new Cliente(new DAOSQLFactory());
 		this.modeloAdministrador = new Administrador(new DAOSQLFactory());
 	
-		this.login = login;
+		this.modeloLogin = login;
 		this.usuarioLogueado = null;
 		this.administradorLogueado = null;
 		this.mailDeRecuperacion = null;
@@ -65,7 +65,7 @@ public class ControladorLogin {
 		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
 		this.vistaCliente = VistaCliente.getInstance();
 		
-		this.login = login;
+		this.modeloLogin = login;
 		this.usuarioLogueado = null;
 		this.administradorLogueado = null;
 		this.clienteLogueado = null;
@@ -102,35 +102,43 @@ public class ControladorLogin {
 	
 // CONTROLAR QUE EL SERVICIO DE MAIL FUNCIONE CORRECTAMENTE??????
 	private void realizarCambioContrasena(ActionEvent e){
-		obtenerDatosRecuperacionDeContrasena();
-		enviarContrasenaViaMail();
-		guardarNuevaContrasenaEnDB();
-// VOLVER A PAGINA DE INICIO ?
+		obtenerDatosDeRecuperacion();
+		if(cambioDeContrasena()){
+			System.out.println("Se cambio la contrasena");
+			enviarContrasenaViaMail();
+			JOptionPane.showMessageDialog(null, "Se le ha enviado la nueva contrasena al mail", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+			this.ventanaLogin.setVisible(false);
+		}
 	}
 	
-	private void obtenerDatosRecuperacionDeContrasena() {
+	private void obtenerDatosDeRecuperacion() {
 		this.mailDeRecuperacion = this.ventanaClaveOlvidada.getTextUsuario().getText();
 		this.contrasenaProvisoria = obtenerContrasenaProvisoria();
 	}
-	public boolean buscarPersonalAsociadoAlEmail(){
+	
+	public boolean cambioDeContrasena(){
+		
 		AdministrativoDTO administrativo = modeloAdministrativo.buscarPorEmail(mailDeRecuperacion);
 		if(administrativo!=null){
+			System.out.println("Usuario es:" + administrativo.getNombre());
 			administrativo.getDatosLogin().setContrasena(contrasenaProvisoria);
-			//TODO: modeloAdministrativo.actualizar(administrativo)
+			modeloLogin.editarLogin(administrativo.getDatosLogin());
 			return true;
 		}
 	
 		AdministradorDTO administrador = modeloAdministrador.buscarPorEmail(mailDeRecuperacion);
 		if(administrador!=null){
+			System.out.println("Usuario es:" + administrador);
 			administrador.getDatosLogin().setContrasena(contrasenaProvisoria);
-			//TODO: modeloAdministrador.actualizar(administrador)
+			modeloLogin.editarLogin(administrador.getDatosLogin());
 			return true;
 		}
 		
 		ClienteDTO cliente = modeloCliente.buscarPorEmail(mailDeRecuperacion);
-		if(cliente!=null){
+		if(cliente!=null){ 	
+			System.out.println("Usuario es:" + cliente);
 			cliente.getLogin().setContrasena(contrasenaProvisoria);
-			//TODO: modeloCliente.actualizar(cliente)
+			modeloLogin.editarLogin(cliente.getLogin());
 			return true;
 		}
 		
@@ -146,27 +154,9 @@ public class ControladorLogin {
 		return false;
 	}
 	
-//	private int obtenerIdContacto(String mailDeRecuperacion2, String contrasenaProvisoria2) {
-//		Integer idContacto = null;
-//		ArrayList<MedioContactoDTO> medios = (ArrayList<MedioContactoDTO>) this.modeloMedioContacto.obtenerMediosContacto();
-//		for(MedioContactoDTO m: medios){
-//			if(m.getEmail().equals(mailDeRecuperacion2))
-//				idContacto = m.getIdMedioContacto();
-//		}
-//		return idContacto;
-//	}
-
 	private void enviarContrasenaViaMail() {
 		this.envioDeCorreo.enviarNuevaContrasena(mailDeRecuperacion, contrasenaProvisoria);
 		this.ventanaClaveOlvidada.setVisible(false);
-	}
-	
-	private void guardarNuevaContrasenaEnDB() {
-		ClienteDTO clienteBuscado = this.modeloCliente.getByIdContacto(idMedioContactoBuscado);
-		if(clienteBuscado!=null){
-			clienteBuscado.getLogin().setContrasena(contrasenaProvisoria);
-			modeloCliente.actualizar(clienteBuscado);
-		}
 	}
 	
 	private String obtenerContrasenaProvisoria() {
@@ -177,7 +167,7 @@ public class ControladorLogin {
 		String usuario = ventanaLogin.getTextUsuario().getText();
 		String password = new String(ventanaLogin.getPasswordField().getPassword());
 		try {
-			usuarioLogueado = login.getLoginByDatos(usuario, password);
+			usuarioLogueado = modeloLogin.getLoginByDatos(usuario, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
