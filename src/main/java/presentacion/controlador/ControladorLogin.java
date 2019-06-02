@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import correo.CorreoTexto;
+import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
@@ -27,15 +27,10 @@ import presentacion.vista.cliente.VistaCliente;
 public class ControladorLogin {
 
 	private VentanaLogin ventanaLogin;
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 	private VentanaClaveOlvidada ventanaClaveOlvidada;
 	private VistaAdministrativo vistaAdministrativo;
-	private CorreoTexto envioDeCorreo;
-=======
-	private VistaAdministrador vistaAdministrador;
-	private VistaAdministrativo vistaAdministrativo;
+	private EnvioDeCorreo envioDeCorreo;
 	private VistaCliente vistaCliente;
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 	private Login login;
 	private LoginDTO usuarioLogueado;
 	private Cliente modeloCliente;
@@ -43,21 +38,16 @@ public class ControladorLogin {
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 	private VistaAdministrador vistaAdministrador;
 	private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
 	private MedioContacto modeloMedioContacto;
 	private Administrativo modeloAdministrativo;
 	private Integer idMedioContactoBuscado;
-=======
-	
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
 		this.vistaAdministrador = VistaAdministrador.getInstance();
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
 		this.modeloMedioContacto = new MedioContacto(new DAOSQLFactory());
 		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
@@ -70,9 +60,8 @@ public class ControladorLogin {
 		this.mailDeRecuperacion = null;
 		this.contrasenaProvisoria = null;
 		this.idMedioContactoBuscado = null;
-		this.envioDeCorreo = new CorreoTexto();
+		this.envioDeCorreo = new EnvioDeCorreo();
 		
-=======
 		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
 		this.vistaCliente = VistaCliente.getInstance();
 		
@@ -81,7 +70,6 @@ public class ControladorLogin {
 		this.administradorLogueado = null;
 		this.clienteLogueado = null;
 	
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
 		this.ventanaClaveOlvidada.getBtnRecuperarContraseña().addActionListener(e->realizarCambioContraseña(e));;
 		
@@ -169,7 +157,7 @@ public class ControladorLogin {
 //	}
 
 	private void enviarContrasenaViaMail() {
-		this.envioDeCorreo.enviarCorreo(mailDeRecuperacion, contrasenaProvisoria);
+		this.envioDeCorreo.enviarNuevaContraseña(mailDeRecuperacion, contrasenaProvisoria);
 		this.ventanaClaveOlvidada.setVisible(false);
 	}
 	

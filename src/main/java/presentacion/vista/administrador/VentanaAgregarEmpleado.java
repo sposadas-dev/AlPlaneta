@@ -109,22 +109,12 @@ public class VentanaAgregarEmpleado extends JFrame {
 		btnRegistrar.setBackground(new Color(5, 196, 107));
 		btnRegistrar.setBounds(59, 335, 131, 42);
 		contentPane.add(btnRegistrar);
-		
-<<<<<<< src/main/java/presentacion/vista/administrador/VentanaAgregarEmpleado.java
-		JButton button_1 = new JButton("Cancelar");
-		button_1.setForeground(Color.WHITE);
-		button_1.setFont(new Font("Tahoma", Font.BOLD, 14));
-		button_1.setBackground(new Color(192, 57, 43));
-		button_1.setBounds(216, 333, 131, 42);
-		contentPane.add(button_1);
-=======
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnCancelar.setBackground(new Color(192, 57, 43));
 		btnCancelar.setBounds(216, 321, 131, 42);
 		contentPane.add(btnCancelar);
->>>>>>> src/main/java/presentacion/vista/administrador/VentanaAgregarEmpleado.java
 		
 		JPanel panelRegistrarEmpleado = new JPanel();
 		panelRegistrarEmpleado.setLayout(null);

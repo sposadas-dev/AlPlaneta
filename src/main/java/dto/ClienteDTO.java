@@ -25,6 +25,9 @@ public class ClienteDTO {
 		this.mail = medioContacto.getEmail();
 	}
 
+	public ClienteDTO() {
+	}
+
 	public int getIdCliente() {
 		return idCliente;
 	}
