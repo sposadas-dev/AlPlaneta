@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import correo.CorreoTexto;
+import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
@@ -28,8 +28,7 @@ public class ControladorLogin {
 
 	private VentanaLogin ventanaLogin;
 	private VentanaClaveOlvidada ventanaClaveOlvidada;
-
-	private CorreoTexto envioDeCorreo;
+	private EnvioDeCorreo envioDeCorreo;
 	private VistaAdministrador vistaAdministrador;
 	private VistaAdministrativo vistaAdministrativo;
 	private VistaCliente vistaCliente;
@@ -40,7 +39,7 @@ public class ControladorLogin {
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
-		private String mailDeRecuperacion;
+	private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
 	private MedioContacto modeloMedioContacto;
 	private Administrativo modeloAdministrativo;
@@ -61,10 +60,18 @@ public class ControladorLogin {
 		this.mailDeRecuperacion = null;
 		this.contrasenaProvisoria = null;
 		this.idMedioContactoBuscado = null;
-		this.envioDeCorreo = new CorreoTexto();
+		this.envioDeCorreo = new EnvioDeCorreo();
 		
+		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
+		this.vistaCliente = VistaCliente.getInstance();
+		
+		this.login = login;
+		this.usuarioLogueado = null;
+		this.administradorLogueado = null;
+		this.clienteLogueado = null;
+	
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
-		this.ventanaClaveOlvidada.getBtnRecuperarContraseña().addActionListener(e->realizarCambioContraseña(e));;
+		this.ventanaClaveOlvidada.getBtnRecuperarContrasena().addActionListener(e->realizarCambioContrasena(e));;
 		
 		
 		
@@ -94,10 +101,10 @@ public class ControladorLogin {
 	}
 	
 // CONTROLAR QUE EL SERVICIO DE MAIL FUNCIONE CORRECTAMENTE??????
-	private void realizarCambioContraseña(ActionEvent e){
+	private void realizarCambioContrasena(ActionEvent e){
 		obtenerDatosRecuperacionDeContrasena();
 		enviarContrasenaViaMail();
-		guardarNuevaContraseñaEnDB();
+		guardarNuevaContrasenaEnDB();
 // VOLVER A PAGINA DE INICIO ?
 	}
 	
@@ -150,11 +157,11 @@ public class ControladorLogin {
 //	}
 
 	private void enviarContrasenaViaMail() {
-		this.envioDeCorreo.enviarCorreo(mailDeRecuperacion, contrasenaProvisoria);
+		this.envioDeCorreo.enviarNuevaContrasena(mailDeRecuperacion, contrasenaProvisoria);
 		this.ventanaClaveOlvidada.setVisible(false);
 	}
 	
-	private void guardarNuevaContraseñaEnDB() {
+	private void guardarNuevaContrasenaEnDB() {
 		ClienteDTO clienteBuscado = this.modeloCliente.getByIdContacto(idMedioContactoBuscado);
 		if(clienteBuscado!=null){
 			clienteBuscado.getLogin().setContrasena(contrasenaProvisoria);
