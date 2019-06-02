@@ -315,10 +315,9 @@ public class ControladorPasaje {
 		
 	}
 	private void generarVoucherMail(PasajeDTO pasaje,ClienteDTO cliente){
-		this.pdf.createPDF(pasaje, cliente);//(pasaje,cliente);
+		this.pdf.createPDF(pasaje, cliente);//(pasaje,cliente); // se crea el pdf en resource
 	//	TODO: this.envioCorreo.enviarAdjunto(cliente.getMail());
-		
-		this.envioCorreo.enviarAdjunto("av.m.nico@gmail.com");
+	//	this.envioCorreo.enviarAdjunto("av.m.nico@gmail.com");
 	}
 	
 	private void generarComprobantes(PasajeDTO pasajeDTO, PagoDTO pagoPasaje) {
