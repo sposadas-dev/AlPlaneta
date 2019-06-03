@@ -12,4 +12,8 @@ public interface CoordinadorDAO {
 
 	public boolean update(CoordinadorDTO coordinador);
 
+	public CoordinadorDTO getByLoginId(int idLogin);
+	
+	public CoordinadorDTO getById(int id );
+
 }

@@ -36,7 +36,9 @@ public interface DAOAbstractFactory {
 
 	public EstadoPasajeDAO createEstadoPasajeDAO();
 	
-//	public CoordinadorDAO createCoordinadorDAO();
+	public CoordinadorDAO createCoordinadorDAO();
+	
+	public PuntoDAO createPuntoDAO();
 
 
 }

@@ -263,7 +263,7 @@ public class ControladorPasaje {
 		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
 	
-		PagoDTO pagoPasaje = pago.getUltimoRegistroPago();
+	    PagoDTO pagoPasaje = pago.getUltimoRegistroPago();
 		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativoLogueado,cliente,calcularFechaReserva(viaje.getFechaSalida()),valorViaje,estadoPasaje,pagoPasaje,
 		pasajeros);
 		pasaje.agregarPasaje(pasajeDTO);
