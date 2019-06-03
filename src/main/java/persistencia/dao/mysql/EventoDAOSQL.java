@@ -179,11 +179,11 @@ public class EventoDAOSQL implements EventoDAO {
 		
 		MedioContactoDTO medioContacto = new MedioContactoDTO(0,"44510021","1545899865","juan.perez@gmail.com");
 		RolDTO rol = new RolDTO(5,"cliente");
-		LoginDTO login = new LoginDTO (1,"usuariojuan","juan123",rol);
+		LoginDTO login = new LoginDTO (1,"usuariojuan","juan123",rol,"activo");
 		ClienteDTO cliente = new ClienteDTO(2,"Nico","Avila","32125322",fechaIngreso,medioContacto,login);
 		
 		RolDTO rol2 = new RolDTO(2,"administrativo");
-		LoginDTO login2 = new LoginDTO (1,"sol","sol123",rol2);
+		LoginDTO login2 = new LoginDTO (1,"sol","sol123",rol2,"activo");
 		AdministrativoDTO administrativo = new AdministrativoDTO(1,"soladministrativa",login2,"sol@gmail.com");
 		
 		EstadoEventoDTO estado = new EstadoEventoDTO(1,"pendiente","el evento aún no se realizó");

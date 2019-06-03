@@ -29,11 +29,9 @@ public class VentanaLogin extends JFrame {
 	private JButton btnLogin;
 	private JPasswordField passwordField;
 	private JLabel lblError;
-<<<<<<< src/main/java/presentacion/vista/VentanaLogin.java
 	private JLabel lblErrorInactividad;
-=======
 	private JLabel lblClaveOlvidada;
->>>>>>> src/main/java/presentacion/vista/VentanaLogin.java
+
 	
 	public static VentanaLogin getInstance(){
 		if(INSTANCE == null)
@@ -127,7 +125,7 @@ public class VentanaLogin extends JFrame {
 	public void setLblError(JLabel lblError) {
 		this.lblError = lblError;
 	}
-<<<<<<< src/main/java/presentacion/vista/VentanaLogin.java
+
 
 	public JLabel getLblErrorInactividad() {
 		return lblErrorInactividad;
@@ -136,9 +134,7 @@ public class VentanaLogin extends JFrame {
 	public void setLblErrorInactividad(JLabel lblErrorInactividad) {
 		this.lblErrorInactividad = lblErrorInactividad;
 	}
-}
-=======
-	
+
 	public JLabel getLblClaveOlvidada() {
 		return lblClaveOlvidada;
 	}
@@ -159,5 +155,4 @@ public class VentanaLogin extends JFrame {
 			}
 		});
 	}
-}
->>>>>>> src/main/java/presentacion/vista/VentanaLogin.java
+}

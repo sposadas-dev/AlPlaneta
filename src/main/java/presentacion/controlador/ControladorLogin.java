@@ -56,9 +56,8 @@ public class ControladorLogin {
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
 		this.vistaAdministrador = VistaAdministrador.getInstance();
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 		this.vistaAdministrativo = VistaAdministrativo.getInstance();
-=======
+
 		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance()
 		this.vistaCoordinador = VistaCoordinador.getInstance();
 		
@@ -77,7 +76,7 @@ public class ControladorLogin {
 		this.envioDeCorreo = new EnvioDeCorreo();
 		
 		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
+
 		this.vistaCliente = VistaCliente.getInstance();
 		
 		this.modeloLogin = login;
@@ -185,25 +184,6 @@ public class ControladorLogin {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
-		if(usuarioLogueado != null) {
-			if( usuarioLogueado.getEstado().equals("Activo") ) {
-				System.out.println("SE LOGEO CORRECTAMENTE CON:"+ usuarioLogueado.getUsuario()+usuarioLogueado.getContrasena());
-				if(usuarioLogueado.getRol().getIdRol()==2){
-					 administrativoLogueado = obtenerAdministrativo(usuarioLogueado);
-					 mostrarVentanaAdministrativo();
-	
-				}else{
-					if(usuarioLogueado.getRol().getIdRol()==5){
-						 clienteLogueado = obtenerCliente(usuarioLogueado);
-						 mostrarVentanaCliente();
-					}
-					else{
-						if(usuarioLogueado.getRol().getIdRol()==1){
-							 administradorLogueado = obtenerAdministrador(usuarioLogueado);
-							 mostrarVentanaAdministrador();
-						}
-=======
 		
 		if(usuarioLogueado==null){
 			this.ventanaLogin.getLblError().setVisible(true);
@@ -213,32 +193,25 @@ public class ControladorLogin {
 			if(usuarioLogueado.getRol().getIdRol()==2){
 				 administrativoLogueado = obtenerAdministrativo(usuarioLogueado);
 				 mostrarVentanaAdministrativo();
-			}else 
-				if(usuarioLogueado.getRol().getIdRol()==3) {
-					coordinadorLogueado = obtenerCoordinador(usuarioLogueado);
-					 mostrarVentanaCoordinador();
+
 			}else{
 				if(usuarioLogueado.getRol().getIdRol()==5){
 					 clienteLogueado = obtenerCliente(usuarioLogueado);
 					 mostrarVentanaCliente();
 				}
-				else
+				else{
 					if(usuarioLogueado.getRol().getIdRol()==1){
 						 administradorLogueado = obtenerAdministrador(usuarioLogueado);
 						 mostrarVentanaAdministrador();
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
-					}
+					}	else
+						if(usuarioLogueado.getRol().getIdRol()==3){
+							 coordinadorLogueado = obtenerCoordinador(usuarioLogueado);
+							 mostrarVentanaCoordinador();
+						}
+				}
 			}
-			else{
-				this.ventanaLogin.getLblErrorInactividad().setVisible(true);
-				System.out.println("EL USUARIO ESTA INACTIVO");
-			}
-		}else{
-			this.ventanaLogin.getLblError().setVisible(true);
-			System.out.println("EL USUARIO O CONTRASENA ES INCORRECTO");
 		}
 	}
-	
 	/*Mostrar la ventana principal del cliente*/
 	private void mostrarVentanaCliente() {
 		System.out.println("Se Loguea como Cliente");
