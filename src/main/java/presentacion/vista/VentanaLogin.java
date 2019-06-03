@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class VentanaLogin extends JFrame {
 
@@ -27,6 +29,7 @@ public class VentanaLogin extends JFrame {
 	private JButton btnLogin;
 	private JPasswordField passwordField;
 	private JLabel lblError;
+	private JLabel lblClaveOlvidada;
 	
 	public static VentanaLogin getInstance(){
 		if(INSTANCE == null)
@@ -68,8 +71,14 @@ public class VentanaLogin extends JFrame {
 		lblError = new JLabel("El usuario o contraseña es incorrecto");
 		lblError.setFont(new Font("Source Code Pro Semibold", Font.PLAIN, 9));
 		lblError.setForeground(Color.RED);
-		lblError.setBounds(30, 184, 189, 14);
+		lblError.setBounds(30, 179, 189, 14);
 		contentPane.add(lblError);
+		
+		lblClaveOlvidada = new JLabel("He olvidado mi contraseña");
+		lblClaveOlvidada.setBounds(34, 199, 173, 20);
+		lblClaveOlvidada.setFont(new Font("Source Code Pro Semibold", Font.PLAIN, 9));
+		lblClaveOlvidada.setForeground(Color.BLUE);
+		contentPane.add(lblClaveOlvidada);
 		lblError.setVisible(false);
 		this.setVisible(false);
 	}
@@ -105,5 +114,26 @@ public class VentanaLogin extends JFrame {
 
 	public void setLblError(JLabel lblError) {
 		this.lblError = lblError;
+	}
+	
+	public JLabel getLblClaveOlvidada() {
+		return lblClaveOlvidada;
+	}
+
+	public void setLblClaveOlvidada(JLabel lblClaveOlvidada) {
+		this.lblClaveOlvidada = lblClaveOlvidada;
+	}
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaLogin frame = new VentanaLogin();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }

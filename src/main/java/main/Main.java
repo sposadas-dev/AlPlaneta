@@ -1,5 +1,4 @@
 package main;
-
 import modelo.Login;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.controlador.ControladorLogin;

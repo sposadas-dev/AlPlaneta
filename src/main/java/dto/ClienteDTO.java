@@ -11,6 +11,7 @@ public class ClienteDTO {
 	private Date fechaNacimiento;
 	private MedioContactoDTO medioContacto;
 	private LoginDTO login;
+	private String mail;
 
 	public ClienteDTO(int idCliente, String nombre, String apellido, String dni, Date fechaNacimiento, MedioContactoDTO medioContacto, LoginDTO login){
 		super();
@@ -21,6 +22,10 @@ public class ClienteDTO {
 		this.fechaNacimiento = fechaNacimiento;
 		this.medioContacto = medioContacto;
 		this.login = login;
+		this.mail = medioContacto.getEmail();
+	}
+
+	public ClienteDTO() {
 	}
 
 	public int getIdCliente() {
@@ -78,4 +83,9 @@ public class ClienteDTO {
 	public void setLogin(LoginDTO login) {
 		this.login = login;
 	}
+
+	public String getMail() {
+		return mail;
+	}
+	
 }
