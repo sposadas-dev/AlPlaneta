@@ -229,8 +229,6 @@ INSERT INTO provincia VALUES (1,3,'Azerbaijan'),(2,3,'Nargorni Karabakh'),(3,3,'
 
 INSERT INTO ciudad VALUES (1,1834,'Cafayate'),(2,1818,'Buenos Aires'),(3,1818,'La Plata'),(4,1822,'Córdoba'),(5,1838,'Rosario'),(6,1831,'Posadas'),(7,1825,'Parana'),(8,1836,'Villa Mercedes');
 
-INSERT INTO ciudad VALUES (1,1818,'Cafayate'),(2,1818,'Buenos Aires'),(3,1818,'La Plata'),(4,1822,'Córdoba'),(5,1838,'Rosario'),(6,1831,'Posadas'),(7,1825,'Parana'),(8,1836,'Villa Mercedes');
-
 INSERT INTO cliente VALUES (1,'Seba','Apellido','36584266','1996-05-08',1,4,'posadas.sca@gmail.com'),(2,'Nico','Avila','32125322','1995-04-12',2,5,'alplanetaproject@gmail.com');
 INSERT INTO formapago VALUES (1,'Efectivo'),(2,'Tarjeta');
 INSERT INTO estadospasaje VALUES (1,'vendido','se abono el total del pasaje'),(2,'reservado','se abono un porcentaje del pasaje'),(3,'pendiente','no se registro pago');
