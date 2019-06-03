@@ -184,7 +184,7 @@ public class EventoDAOSQL implements EventoDAO {
 		
 		RolDTO rol2 = new RolDTO(2,"administrativo");
 		LoginDTO login2 = new LoginDTO (1,"sol","sol123",rol2);
-		AdministrativoDTO administrativo = new AdministrativoDTO(1,"soladministrativa",login2);
+		AdministrativoDTO administrativo = new AdministrativoDTO(1,"soladministrativa",login2,"sol@gmail.com");
 		
 		EstadoEventoDTO estado = new EstadoEventoDTO(1,"pendiente","el evento aún no se realizó");
 		
