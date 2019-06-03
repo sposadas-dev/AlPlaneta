@@ -32,7 +32,6 @@ public class GeneratePDF {
         
 
     private static final Font subcategoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
-    private static final String iTextExampleImage = "C:\\Users\\avmni\\Desktop\\AlPlanetaPDF.png";
     
 //    private static final Font categoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);    
 //    private static final Font blueFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);    
@@ -44,10 +43,6 @@ public class GeneratePDF {
     	urlPDF = urlPDF.substring(0, urlPDF.length()-16)+"PDF.pdf";
     	System.out.println(urlPDF);
 
-    	System.out.println(" - - - -Generamos el PDF en C:/user/PDFFile.pdf - - - - ");
-
-//    	File pdfNewFile2 = new File("C:\\Users\\avmni\\Desktop\\PDF.pdf");
-//    	File pdfNewFile2 = new File("C:\\Users\\avmni\\git\\AlPlaneta-Project\\target\\classes\\img\\PDF.pdf");
    
     	File pdfNewFile2 = new File(urlPDF);
         try {
