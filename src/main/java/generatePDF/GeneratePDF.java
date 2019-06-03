@@ -69,7 +69,7 @@ public class GeneratePDF {
             chapter.setNumberDepth(0);
             
             chapter.add(new Paragraph("Este Voucher corresponde a \n"
-            		+ cliente.getNombre()+" "+ cliente.getApellido()+" "+cliente.getMail()+"\n", paragraphFont));
+            		+ cliente.getNombre()+" "+ cliente.getApellido()+" "+cliente.getMail()+"\n ", paragraphFont));
 
             Image image;
             
