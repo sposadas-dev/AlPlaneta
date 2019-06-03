@@ -1,18 +1,16 @@
 package presentacion.vista.administrativo;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 public class VentanaVisualizarClientes extends JFrame {
 
@@ -22,7 +20,19 @@ public class VentanaVisualizarClientes extends JFrame {
 	private String[] nombreColumnasClientes = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento", "Teléfono Fijo","Teléfono Celular","Email"};
 	private JTable tablaClientes;
 	private JButton btnConfirmar;
+	
+	private JComboBox<String>comboBoxFiltro;
+	private JTextField txtFiltro;
+	private JButton btnAplicarFiltro;
+	private JButton btnBorrarFiltro;
 
+	public static VentanaVisualizarClientes getInstance(){
+		if(INSTANCE == null)
+			return new VentanaVisualizarClientes();
+		else
+			return INSTANCE;
+	}
+	
 	public VentanaVisualizarClientes() {
 		setTitle("Agregar pasaje - Selección de cliente");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -64,7 +74,7 @@ public class VentanaVisualizarClientes extends JFrame {
 			getContentPane().setLayout(null);
 
 			JScrollPane spPasajeros = new JScrollPane();
-			spPasajeros.setBounds(10, 113, 1109, 318);
+			spPasajeros.setBounds(10, 163, 1109, 268);
 			getContentPane().add(spPasajeros);
 			tablaClientes = new JTable(modelClientes);
 			spPasajeros.setViewportView(tablaClientes);
@@ -72,6 +82,29 @@ public class VentanaVisualizarClientes extends JFrame {
 			btnConfirmar = new JButton("Confirmar");
 			btnConfirmar.setBounds(485, 442, 136, 54);
 			getContentPane().add(btnConfirmar);
+			
+			JLabel lblFiltro = new JLabel("Filtrar por:");
+			lblFiltro.setBounds(156, 117, 98, 14);
+			getContentPane().add(lblFiltro);
+			
+			comboBoxFiltro = new JComboBox<String>();
+			comboBoxFiltro.setBounds(244, 114, 210, 20);
+			comboBoxFiltro.addItem("Seleccione");
+			comboBoxFiltro.addItem("DNI");
+			getContentPane().add(comboBoxFiltro);
+			
+			txtFiltro = new JTextField();
+			txtFiltro.setBounds(472, 114, 238, 20);
+			getContentPane().add(txtFiltro);
+			txtFiltro.setColumns(10);
+			
+			btnAplicarFiltro = new JButton("Aplicar");
+			btnAplicarFiltro.setBounds(724, 113, 158, 23);
+			getContentPane().add(btnAplicarFiltro);
+			
+			btnBorrarFiltro = new JButton("Borrar filtro");
+			btnBorrarFiltro.setBounds(900, 113, 158, 23);
+			getContentPane().add(btnBorrarFiltro);
 
 	}
 	
@@ -91,16 +124,23 @@ public class VentanaVisualizarClientes extends JFrame {
 		return btnConfirmar;
 	}
 
+	public JComboBox<String> getComboBoxFiltro() {
+		return comboBoxFiltro;
+	}
+
+	public JTextField getTxtFiltro() {
+		return txtFiltro;
+	}
+
+	public JButton getBtnAplicarFiltro() {
+		return btnAplicarFiltro;
+	}
+	
+	public JButton getBtnBorrarFiltro() {
+		return btnBorrarFiltro;
+	}
+
 	public void mostrarVentana(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}
-	
-	
-	public static VentanaVisualizarClientes getInstance(){
-		if(INSTANCE == null)
-			return new VentanaVisualizarClientes();
-		else
-			return INSTANCE;
-	}
-
 }

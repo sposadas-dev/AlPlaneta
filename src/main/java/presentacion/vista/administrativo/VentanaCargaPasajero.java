@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 public class VentanaCargaPasajero extends JFrame {
 
@@ -20,11 +21,13 @@ public class VentanaCargaPasajero extends JFrame {
 	private JTable tablaPasajeros;
 	private DefaultTableModel modelPasajeros;
 	private JButton btnAgregarPasajero; 
-	private JButton btnEliminar;
+	private JButton btnEliminarPasajero;
+	private JLabel lblPasajerosCargados;
 	private JButton btnConfirmar;
 	private JButton btnAtras;
-	private  String[] nombreColumnas = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento","Teléfono","Email"};
+	private String[] nombreColumnas = {"Nombre","Apellido","DNI","Fecha de nacimiento","Teléfono","Email"};
 
+	
 	public static VentanaCargaPasajero getInstance(){
 		if(INSTANCE == null)
 			return new VentanaCargaPasajero();
@@ -36,7 +39,7 @@ public class VentanaCargaPasajero extends JFrame {
 		setTitle("Carga de pasajeros");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
-		setBounds(100, 100, 545, 406);
+		setBounds(100, 100, 900, 430);
 		setLocationRelativeTo(null); 
 		
 		contentPane = new JPanel();
@@ -45,11 +48,11 @@ public class VentanaCargaPasajero extends JFrame {
 		contentPane.setLayout(null);
 		
 		btnAgregarPasajero = new JButton("Agregar");
-		btnAgregarPasajero.setBounds(410, 85, 109, 37);
+		btnAgregarPasajero.setBounds(730, 78, 109, 37);
 		contentPane.add(btnAgregarPasajero);
 		
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(10, 42, 390, 258);
+		spPasajeros.setBounds(10, 42, 692, 258);
 		contentPane.add(spPasajeros);
 		
 		modelPasajeros = new DefaultTableModel(null,nombreColumnas){
@@ -61,27 +64,35 @@ public class VentanaCargaPasajero extends JFrame {
 		tablaPasajeros = new JTable(modelPasajeros);
 		spPasajeros.setViewportView(tablaPasajeros);
 		
-		btnEliminar = new JButton("Eliminar");
-		btnEliminar.setBounds(410, 159, 109, 37);
-		contentPane.add(btnEliminar);
+		btnEliminarPasajero = new JButton("Eliminar");
+		btnEliminarPasajero.setBounds(730, 160, 109, 37);
+		contentPane.add(btnEliminarPasajero);
 		
 		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.setBounds(272, 319, 115, 37);
+		btnConfirmar.setBounds(400, 311, 124, 55);
 		contentPane.add(btnConfirmar);
 		
 		btnAtras = new JButton("Atrás");
-		btnAtras.setBounds(111, 319, 109, 37);
+		btnAtras.setBounds(189, 311, 124, 55);
 		contentPane.add(btnAtras);
+		
+		lblPasajerosCargados = new JLabel("");
+		lblPasajerosCargados.setBounds(571, 331, 261, 14);
+		contentPane.add(lblPasajerosCargados);
 		
 		this.setVisible(false);
 	}
 	
-	public JButton getBtnEliminar() {
-		return btnEliminar;
+	public JButton getBtnEliminarPasajero() {
+		return btnEliminarPasajero;
 	}
 
-	public void setBtnEliminar(JButton btnEliminar) {
-		this.btnEliminar = btnEliminar;
+	public void setBtnEliminarPasajero(JButton btnEliminarPasajero) {
+		this.btnEliminarPasajero = btnEliminarPasajero;
+	}
+
+	public JLabel getLblPasajerosCargados() {
+		return lblPasajerosCargados;
 	}
 
 	public void mostrarVentana(boolean b) {
@@ -131,6 +142,4 @@ public class VentanaCargaPasajero extends JFrame {
 	public JButton getBtnAtras() {
 		return btnAtras;
 	}
-	
-	
 }

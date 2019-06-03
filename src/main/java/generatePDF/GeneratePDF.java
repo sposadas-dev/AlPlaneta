@@ -33,7 +33,7 @@ public class GeneratePDF {
 
     private static final Font subcategoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static final String iTextExampleImage = "C:\\Users\\avmni\\Desktop\\AlPlanetaPDF.png";
-
+    
 //    private static final Font categoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);    
 //    private static final Font blueFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);    
 //    private static final Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
@@ -74,8 +74,7 @@ public class GeneratePDF {
             chapter.setNumberDepth(0);
             
             chapter.add(new Paragraph("Este Voucher corresponde a \n"
-            		+ cliente.getNombre()+" "+ cliente.getApellido()+" "+cliente.getMail()+"\n"
-            		+ "y alguna otra cosa mas que se pueda agregar...", paragraphFont));
+            		+ cliente.getNombre()+" "+ cliente.getApellido()+" "+cliente.getMail()+"\n", paragraphFont));
 
             Image image;
             
@@ -92,7 +91,7 @@ public class GeneratePDF {
             
             // Second page - some elements
             Chapter chapSecond = new Chapter(new Paragraph(new Anchor("Voucher")), 1);
-            Paragraph paragraphS = new Paragraph("Datos correspondiente al voucher ...", subcategoryFont);
+            Paragraph paragraphS = new Paragraph("Datos correspondientes al voucher", subcategoryFont);
             
             // Underline a paragraph by iText (subrayando un pÃ¡rrafo por iText)
             DottedLineSeparator dottedline = new DottedLineSeparator();
@@ -109,12 +108,12 @@ public class GeneratePDF {
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
             
-            text ="Fecha y Hora de Salida: "+ pasaje.getViaje().getFechaSalida()+" - Horario: "+pasaje.getViaje().getHoraSalida()+"hs";// "Fecha y Hora de Salida: 15-5-2019, 20:00 hs  \n ";
+            text ="Fecha y hora de salida: "+ pasaje.getViaje().getFechaSalida()+" - Horario: "+pasaje.getViaje().getHoraSalida()+"hs";// "Fecha y Hora de Salida: 15-5-2019, 20:00 hs  \n ";
             item = new ListItem(text);
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
            
-            text = "Fecha de Llegada: " + String.valueOf(pasaje.getViaje().getFechaLlegada());//"Hora de Llegada: 13:30 hs \n";
+            text = "Fecha de llegada: " + String.valueOf(pasaje.getViaje().getFechaLlegada());//"Hora de Llegada: 13:30 hs \n";
             item = new ListItem(text);
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);

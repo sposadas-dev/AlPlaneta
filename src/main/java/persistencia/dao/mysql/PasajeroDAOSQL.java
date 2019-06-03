@@ -18,6 +18,9 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 	private static final String readall = "SELECT * FROM pasajero";
 	private static final String update = "UPDATE pasajero SET nombre=?, apellido=?, dni=?, fechaNacimiento=?, telefono=?, email=? WHERE idPasajero=?;";
 	private static final String browse = "SELECT * FROM pasajero WHERE idPasajero=?";
+	
+	private static final String ultimoRegistro = "SELECT * FROM pasajero ORDER BY idPasajero desc limit 1";
+	private static final String browseByDni = "SELECT * FROM pasajero WHERE dni=?";
 
 	@Override
 	public boolean insert(PasajeroDTO pasajeroInsert) {
@@ -133,6 +136,62 @@ public class PasajeroDAOSQL implements PasajeroDAO {
 			}
 		} 
 		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public PasajeroDTO getPasajeroByDni(String dniPasajero) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		PasajeroDTO pasajero;
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(browseByDni);
+			
+			statement.setString(1, dniPasajero);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()){
+				pasajero = new PasajeroDTO(resultSet.getInt("idPasajero"), 
+										   resultSet.getString("nombre"),
+										   resultSet.getString("apellido"), 
+										   resultSet.getString("dni"),
+										   resultSet.getDate("fechaNacimiento"),
+										   resultSet.getString("telefono"),
+										   resultSet.getString("email")
+						  );
+				return pasajero;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public PasajeroDTO getUltimoRegistroPasajero() {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		PasajeroDTO pasajero;
+
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(ultimoRegistro);
+			resultSet = statement.executeQuery();
+				
+			if (resultSet.next()){
+				pasajero = new PasajeroDTO(resultSet.getInt("idPasajero"), 
+						   resultSet.getString("nombre"),
+						   resultSet.getString("apellido"), 
+						   resultSet.getString("dni"),
+						   resultSet.getDate("fechaNacimiento"),
+						   resultSet.getString("telefono"),
+						   resultSet.getString("email")
+		  );
+				return pasajero;
+			}
+		}catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;

@@ -17,7 +17,6 @@ CREATE TABLE `login` (
   PRIMARY KEY (`idLogin`)
 );
 
-
 CREATE TABLE `administrador` (
   `idAdministrador` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
@@ -88,10 +87,11 @@ CREATE TABLE `formapago` (
 );
 
 CREATE TABLE `pago` (
-  `idPago` int(11) NOT NULL AUTO_INCREMENT,
+  `idPago` int(11) AUTO_INCREMENT,
+  `idAdministrativo` int(11) NOT NULL,  
   `fechaPago` date NOT NULL,
   `monto` decimal(11,0) NOT NULL,
-  `idformapago` int(11) NOT NULL,
+  `idformapago` int(11),
   PRIMARY KEY (`idPago`)
 );
 
@@ -136,19 +136,29 @@ CREATE TABLE `viaje` (
 );
 
 CREATE TABLE `pasaje` (
-  `idPasaje` int(11) NOT NULL AUTO_INCREMENT,
-  `fechaVencimiento` date DEFAULT NULL,
+  `idPasaje` int(11) AUTO_INCREMENT,
+  `numeroComprobante` varchar(11) NOT NULL,
+  `fechaVencimiento` date,
   `valorViaje` decimal(11,0) NOT NULL,
+  `montoAPagar` decimal(11,0) NOT NULL,
   `idCliente` int(11) NOT NULL,
   `idViaje` int(11) NOT NULL,
   `idAdministrativo` int(11) NOT NULL,
   `idEstadoPasaje` int(11) NOT NULL,
-  `idPago` int(11) NOT NULL,
+  `motivoCancelacion` varchar(45),
+  `fechaCancelacion` date,
   PRIMARY KEY (`idPasaje`)
 ); 
 
+CREATE TABLE `pagos_pasaje` (
+  `idPagoPasaje` int(11) NOT NULL AUTO_INCREMENT,
+  `idPago` int(11) NOT NULL,
+  `idPasaje` int(11)NOT NULL,
+  PRIMARY KEY (`idPagoPasaje`)
+);
+
 CREATE TABLE `pasajero` (
-    `idPasajero` int(11) NOT NULL AUTO_INCREMENT,
+    `idPasajero` int(11) AUTO_INCREMENT,
     `nombre` varchar(45) NOT NULL,
     `apellido` varchar(45) NOT NULL,
     `dni` varchar(45) NOT NULL,
@@ -194,6 +204,7 @@ ALTER TABLE `cliente` ADD FOREIGN KEY (`idMedioContacto`) references mediocontac
 ALTER TABLE `cliente` ADD FOREIGN KEY (`idLogin`) references login(`idLogin`);
 
 ALTER TABLE `pago` ADD FOREIGN KEY (`idformapago`) references formapago(`idformapago`);
+ALTER TABLE `pago` ADD FOREIGN KEY (`idAdministrativo`) references administrativo(`idAdministrativo`);
 
 ALTER TABLE `provincia` ADD FOREIGN KEY (`idPais`)  references pais(`idPais`);
 ALTER TABLE `ciudad` ADD FOREIGN KEY (`idProvincia`) references provincia(`idProvincia`);
@@ -209,11 +220,13 @@ ALTER TABLE `viaje` ADD FOREIGN KEY (`idTransporte`) references transporte(`idTr
 ALTER TABLE `pasaje` ADD FOREIGN KEY (`idCliente`)  references cliente(`idCliente`);
 ALTER TABLE `pasaje` ADD FOREIGN KEY (`idViaje`) references viaje(`idViaje`);
 ALTER TABLE `pasaje` ADD FOREIGN KEY (`idAdministrativo`) references administrativo (`idAdministrativo`);
-ALTER TABLE `pasaje` ADD FOREIGN KEY (`idPago`) references pago(`idPago`);
 ALTER TABLE `pasaje` ADD FOREIGN KEY (`idEstadoPasaje`) references estadospasaje(`idEstadoPasaje`);
 
+ALTER TABLE `pagos_pasaje` ADD FOREIGN KEY (`idPago`)  references pago(`idPago`);
+ALTER TABLE `pagos_pasaje` ADD FOREIGN KEY (`idPasaje`)  references pasaje(`idPasaje`);
+
 ALTER TABLE `pasajes_pasajeros` ADD FOREIGN KEY (`idPasaje`)  references pasaje(`idPasaje`);
-ALTER TABLE `pasajes_pasajeros` ADD FOREIGN KEY (`idPasajero`)  references pasaje(`idPasaje`);
+ALTER TABLE `pasajes_pasajeros` ADD FOREIGN KEY (`idPasajero`)  references pasajero(`idPasajero`);
 
 ALTER TABLE `evento` ADD FOREIGN KEY (`idCliente`) references cliente(`idCliente`);
 ALTER TABLE `evento` ADD FOREIGN KEY (`idAdministrativo`) references administrativo(`idAdministrativo`);
@@ -231,7 +244,7 @@ INSERT INTO ciudad VALUES (1,1834,'Cafayate'),(2,1818,'Buenos Aires'),(3,1818,'L
 
 INSERT INTO cliente VALUES (1,'Seba','Apellido','36584266','1996-05-08',1,4,'posadas.sca@gmail.com'),(2,'Nico','Avila','32125322','1995-04-12',2,5,'alplanetaproject@gmail.com');
 INSERT INTO formapago VALUES (1,'Efectivo'),(2,'Tarjeta');
-INSERT INTO estadospasaje VALUES (1,'vendido','se abono el total del pasaje'),(2,'reservado','se abono un porcentaje del pasaje'),(3,'pendiente','no se registro pago');
+INSERT INTO estadospasaje VALUES (1,'Vendido','Se abono el total del pasaje'),(2,'Reservado','Se abono un porcentaje del pasaje'),(3,'Pendiente','No se registro pago'),(4,'Cancelado','Se cancelo el pasaje');
 INSERT INTO horario VALUES (1,'1:00'),(2,'2:00'),(3,'3:00'),(4,'4:00'),(5,'5:00'),(6,'6:00'),(7,'7:00'),(8,'8:00'),(9,'9:00'),(10,'10:00'),(11,'11:00'),(12,'12:00');
 INSERT INTO transporte VALUES (1,'Avion'),(2,'Micro'),(3,'Buquebus');
 INSERT INTO viaje VALUES (1,'2019-05-01','2019-05-02',500,2,1,1818,1818,5,5,'12:00',1,12,500),(2,'2019-05-04','2019-05-16',700,2,4,1818,1822,5,5,'3:00',2,14,150),(3,'2019-05-16','2019-05-28',1200,2,4,1818,1822,5,5,'7:00',3,24,1000);

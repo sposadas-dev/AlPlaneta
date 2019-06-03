@@ -41,8 +41,8 @@ public interface DAOAbstractFactory {
 	public EstadoEventoDAO createEstadoEventoDAO();
 	
 	public EventoDAO createEventoDAO();
+
+	public Pagos_PasajeDAO createPagos_PasajeDAO();
 	
 //	public CoordinadorDAO createCoordinadorDAO();
-
-
 }

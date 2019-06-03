@@ -15,7 +15,7 @@ public class Cliente {
 	public Cliente(DAOAbstractFactory metodo_persistencia){
 		this.cliente = metodo_persistencia.createClienteDAO();
 	}
-	
+
 	public void agregarCliente(ClienteDTO nuevoCliente){
 		this.cliente.insert(nuevoCliente);
 	}
@@ -30,6 +30,10 @@ public class Cliente {
 	
 	public ClienteDTO getByClienteById(int idCliente){
 		return this.cliente.getClienteById(idCliente);
+	}
+	
+	public ClienteDTO getClienteByDni(String dniCliente){
+		return this.cliente.getClienteByDni(dniCliente);
 	}
 	
 	public ClienteDTO getByLoginId(int idCliente){

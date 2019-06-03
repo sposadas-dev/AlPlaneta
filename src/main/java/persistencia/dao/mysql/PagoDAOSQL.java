@@ -13,7 +13,7 @@ import persistencia.dao.interfaz.PagoDAO;
 
 public class PagoDAOSQL implements PagoDAO {
 
-	private static final String insert = "INSERT INTO pago (idPago, fechaPago, monto, idformapago) VALUES (?,?,?,?)";
+	private static final String insert = "INSERT INTO pago (idPago, idAdministrativo, fechaPago, monto, idformapago) VALUES (?,?,?,?,?)";
 	private static final String readall = "SELECT * FROM pago";
 	private static final String delete = "DELETE FROM pago WHERE idPago=?";
 	private static final String update = "UPDATE pago SET fechaPago=?, monto=? WHERE idPago=?;";
@@ -29,30 +29,14 @@ public class PagoDAOSQL implements PagoDAO {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
 			
 			statement.setInt(1, pagoInsert.getIdPago());
-			statement.setDate(2, pagoInsert.getFechaPago());
-			statement.setBigDecimal(3, pagoInsert.getMonto());
-			statement.setInt(4,pagoInsert.getIdFormaPago().getIdFormaPago());
+			statement.setInt(2, pagoInsert.getAdministrativo().getIdAdministrativo());
+			statement.setDate(3, pagoInsert.getFechaPago());
+			statement.setBigDecimal(4, pagoInsert.getMonto());
+			statement.setInt(5,pagoInsert.getIdFormaPago().getIdFormaPago());
 		
 			if (statement.executeUpdate() > 0) 
 				return true;
 			
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	@Override
-	public boolean delete(PagoDTO pagoDelete) {
-		PreparedStatement statement;
-		int chequeoUpdate = 0;
-		Conexion conexion = Conexion.getConexion();
-		try {
-			statement = conexion.getSQLConexion().prepareStatement(delete);
-			statement.setString(1, Integer.toString(pagoDelete.getIdPago()));
-			chequeoUpdate = statement.executeUpdate();
-			if (chequeoUpdate > 0)
-				return true;
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
@@ -65,6 +49,7 @@ public class PagoDAOSQL implements PagoDAO {
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
 		ArrayList<PagoDTO> pagos = new ArrayList<PagoDTO>();
+		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
 		FormaPagoDAOSQL formapagoDAOSQL = new FormaPagoDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
@@ -72,6 +57,7 @@ public class PagoDAOSQL implements PagoDAO {
 
 			while (resultSet.next()) {
 				pagos.add(new PagoDTO(resultSet.getInt("idPago"),
+									  administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
 								      resultSet.getDate("fechaPago"),
 									  resultSet.getBigDecimal("monto"),
 									  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago"))
@@ -110,7 +96,8 @@ public class PagoDAOSQL implements PagoDAO {
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
 		PagoDTO pago;
-		FormaPagoDAOSQL pagoDAOSQL = new FormaPagoDAOSQL();
+		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
+		FormaPagoDAOSQL formapagoDAOSQL = new FormaPagoDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(browse);
 			
@@ -118,9 +105,11 @@ public class PagoDAOSQL implements PagoDAO {
 			resultSet = statement.executeQuery();
 			if (resultSet.next()){
 				pago = new PagoDTO(resultSet.getInt("idPago"),
-										   resultSet.getDate("fechaPago"),
-										   resultSet.getBigDecimal("monto"),
-										   pagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago")) );
+						  administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
+					      resultSet.getDate("fechaPago"),
+						  resultSet.getBigDecimal("monto"),
+						  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago"))
+						);
 				return pago;
 			}
 		} 
@@ -136,16 +125,19 @@ public class PagoDAOSQL implements PagoDAO {
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
 		PagoDTO pago;
-		FormaPagoDAOSQL pagoDAOSQL = new FormaPagoDAOSQL();
+		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
+		FormaPagoDAOSQL formapagoDAOSQL = new FormaPagoDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(ultimoRegistro);
-			
 			resultSet = statement.executeQuery();
+			
 			if (resultSet.next()){
 				pago = new PagoDTO(resultSet.getInt("idPago"),
-										   resultSet.getDate("fechaPago"),
-										   resultSet.getBigDecimal("monto"),
-										   pagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago")) );
+						  administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
+					      resultSet.getDate("fechaPago"),
+						  resultSet.getBigDecimal("monto"),
+						  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago"))
+						  );
 				return pago;
 			}
 		} 
@@ -154,4 +146,10 @@ public class PagoDAOSQL implements PagoDAO {
 		}
 		return null;
 	}
+
+	@Override
+	public boolean delete(PagoDTO pagoDelete) {
+		// TODO Auto-generated method stub
+		return false;
+	}	
 }

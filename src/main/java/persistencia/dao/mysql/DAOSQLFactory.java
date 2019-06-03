@@ -13,6 +13,7 @@ import persistencia.dao.interfaz.FormaPagoDAO;
 import persistencia.dao.interfaz.LoginDAO;
 import persistencia.dao.interfaz.MedioContactoDAO;
 import persistencia.dao.interfaz.PagoDAO;
+import persistencia.dao.interfaz.Pagos_PasajeDAO;
 import persistencia.dao.interfaz.PaisDAO;
 import persistencia.dao.interfaz.PasajeDAO;
 import persistencia.dao.interfaz.Pasaje_PasajerosDAO;
@@ -109,6 +110,10 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	@Override
 	public EstadoPasajeDAO createEstadoPasajeDAO() {
 		return new EstadoPasajeDAOSQL();
+	}
+	@Override
+	public Pagos_PasajeDAO createPagos_PasajeDAO() {
+		return new Pagos_PasajeDAOSQL();
 	}
 	
 	@Override

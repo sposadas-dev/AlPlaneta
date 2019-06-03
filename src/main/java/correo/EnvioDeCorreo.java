@@ -44,7 +44,7 @@ public class EnvioDeCorreo {
    MimeMessage mimeMessage = new MimeMessage(session);
  
    // Agregar quien envía el correo
-   mimeMessage.setFrom(new InternetAddress(correoEnvia, "Dato Java"));
+   mimeMessage.setFrom(new InternetAddress(correoEnvia, "Al Planeta"));
     
    // Los destinatarios
    InternetAddress[] internetAddresses = {
@@ -55,11 +55,11 @@ public class EnvioDeCorreo {
      internetAddresses);
  
    // Agregar el asunto al correo
-   mimeMessage.setSubject("Recuperacion de contrasena");
+   mimeMessage.setSubject("Recuperación de contraseña");
  
    // Creo la parte del mensaje
    MimeBodyPart mimeBodyPart = new MimeBodyPart();
-   mimeBodyPart.setText("Se ha solicitado la recuperacion de la contrasena, utilize: "+nuevaContrasena+" como nueva contrasena");
+   mimeBodyPart.setText("Hemos recibido una solicitud para restablecer la contraseña.\nDebe utilizar "+nuevaContrasena+" como nueva contraseña.");
  
    // Crear el multipart para agregar la parte del mensaje anterior
    Multipart multipart = new MimeMultipart();
@@ -123,14 +123,14 @@ public class EnvioDeCorreo {
          message.addRecipient(
              Message.RecipientType.TO,
              new InternetAddress(correoDestino));
-         message.setSubject("Prueba");
+         message.setSubject("Voucher");
          message.setContent(multiParte);
 
          // Se envia el correo.
          Transport t = session.getTransport("smtp");
          t.connect(emisor, claveCorreo);
          t.sendMessage(message, message.getAllRecipients());
-         System.out.println("se envia el correo");
+         System.out.println("Se envia el correo");
          t.close();
      }
      catch (Exception e)
@@ -141,8 +141,8 @@ public class EnvioDeCorreo {
  
  public static void main(String[] args) {
   EnvioDeCorreo correoTexto = new EnvioDeCorreo();
-//  correoTexto.enviarNuevaContrasena("AlPlanetaProject@gmail.com", "1234");
-  correoTexto.enviarAdjunto("AlPlanetaProject@gmail.com");
+  correoTexto.enviarNuevaContrasena("AlPlanetaProject@gmail.com", "1234");
+//  correoTexto.enviarAdjunto("AlPlanetaProject@gmail.com");
   
  }
 }
