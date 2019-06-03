@@ -24,6 +24,7 @@ public class VentanaVisualizarClientes extends JFrame {
 	private JComboBox<String>comboBoxFiltro;
 	private JTextField txtFiltro;
 	private JButton btnAplicarFiltro;
+	private JButton btnBorrarFiltro;
 
 	public static VentanaVisualizarClientes getInstance(){
 		if(INSTANCE == null)
@@ -83,23 +84,27 @@ public class VentanaVisualizarClientes extends JFrame {
 			getContentPane().add(btnConfirmar);
 			
 			JLabel lblFiltro = new JLabel("Filtrar por:");
-			lblFiltro.setBounds(203, 117, 98, 14);
+			lblFiltro.setBounds(156, 117, 98, 14);
 			getContentPane().add(lblFiltro);
 			
 			comboBoxFiltro = new JComboBox<String>();
-			comboBoxFiltro.setBounds(291, 114, 210, 20);
+			comboBoxFiltro.setBounds(244, 114, 210, 20);
 			comboBoxFiltro.addItem("Seleccione");
 			comboBoxFiltro.addItem("DNI");
 			getContentPane().add(comboBoxFiltro);
 			
 			txtFiltro = new JTextField();
-			txtFiltro.setBounds(523, 114, 238, 20);
+			txtFiltro.setBounds(472, 114, 238, 20);
 			getContentPane().add(txtFiltro);
 			txtFiltro.setColumns(10);
 			
-			btnAplicarFiltro = new JButton("Aplicar filtro");
-			btnAplicarFiltro.setBounds(811, 113, 158, 23);
+			btnAplicarFiltro = new JButton("Aplicar");
+			btnAplicarFiltro.setBounds(724, 113, 158, 23);
 			getContentPane().add(btnAplicarFiltro);
+			
+			btnBorrarFiltro = new JButton("Borrar filtro");
+			btnBorrarFiltro.setBounds(900, 113, 158, 23);
+			getContentPane().add(btnBorrarFiltro);
 
 	}
 	
@@ -129,6 +134,10 @@ public class VentanaVisualizarClientes extends JFrame {
 
 	public JButton getBtnAplicarFiltro() {
 		return btnAplicarFiltro;
+	}
+	
+	public JButton getBtnBorrarFiltro() {
+		return btnBorrarFiltro;
 	}
 
 	public void mostrarVentana(boolean visibilidad){

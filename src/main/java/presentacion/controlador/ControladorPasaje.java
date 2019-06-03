@@ -119,7 +119,8 @@ public class ControladorPasaje implements ActionListener{
 		
 		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
 		this.ventanaVisualizarClientes.getBtnAplicarFiltro().addActionListener(bc->buscarCliente(bc));
-
+		this.ventanaVisualizarClientes.getBtnBorrarFiltro().addActionListener(bf->borrarFiltros(bf));
+		
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(cv->confirmarSeleccionViaje(cv));
 		this.ventanaTablaViajes.getBtnAtras().addActionListener(a->volverVentanaCliente(a));
 		
@@ -150,6 +151,7 @@ public class ControladorPasaje implements ActionListener{
 		this.editarPago = true;
 	}
 
+
 	private void pagarPasaje(ActionEvent p) {
 		this.ventanaPago.mostrarVentana(true);
 	}
@@ -175,7 +177,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPasajero.getTxtTelefono().setText(pasajeroDTO.getTelefono());
 		this.ventanaPasajero.getTxtEmail().setText(pasajeroDTO.getEmail());
 		}else{
-			JOptionPane.showMessageDialog(ventanaPasajero, "No existe ningún cliente ni pasajero con ese DNI", "", 0);
+			JOptionPane.showMessageDialog(ventanaPasajero, "No existe ningún cliente ni pasajero con ese DNI", "Filtro", 0);
 		}
 	}
 	
@@ -187,9 +189,11 @@ public class ControladorPasaje implements ActionListener{
 	public void buscarCliente(ActionEvent bc){
 		String filtroSeleccionado = this.ventanaVisualizarClientes.getComboBoxFiltro().getSelectedItem().toString();
 		String dato = this.ventanaVisualizarClientes.getTxtFiltro().getText();
-		if (filtroSeleccionado.equals("DNI")) {
-			filtrarDniSegun(dato);
-//			buscarDniEnTabla(dato);	
+		if (filtroSeleccionado.equals("Seleccione")){
+			JOptionPane.showMessageDialog(null, "Debe seleccionar una opción", "Mensaje", JOptionPane.ERROR_MESSAGE);		
+		}else if (filtroSeleccionado.equals("DNI")) {
+//			filtrarDniSegun(dato);
+			buscarDniEnTabla(dato);	
 		}
 	}
 
@@ -203,15 +207,10 @@ public class ControladorPasaje implements ActionListener{
 			this.llenarTablaClientes();
 		}
 		if (resultado.size() == 0) {
-			JOptionPane.showMessageDialog(ventanaVisualizarClientes, "No existe ningún cliente con ese DNI.", "", 0);
+			JOptionPane.showMessageDialog(ventanaVisualizarClientes, "No existe ningún cliente con ese DNI.", "Filtro", 0);
 		}
 		return resultado;
 	}
-	
-//	private void buscarClienteDni(java.awt.event.KeyEvent bc){
-//		String dni = ventanaVisualizarClientes.getTxtFiltro().getText();
-//		buscarDniEnTabla(dni);
-//	}
 	
 	private void buscarDniEnTabla(String buscarDni){
 		 dm = (DefaultTableModel) ventanaVisualizarClientes.getModelClientes();
@@ -219,6 +218,13 @@ public class ControladorPasaje implements ActionListener{
 	        ventanaVisualizarClientes.getTablaClientes().setRowSorter(tr);
 	        tr.setRowFilter(RowFilter.regexFilter(buscarDni));
 	}
+	
+	private void borrarFiltros(ActionEvent bf) {
+		this.ventanaVisualizarClientes.getComboBoxFiltro().setSelectedIndex(0);
+		this.ventanaVisualizarClientes.getTxtFiltro().setText("");
+		this.llenarTablaClientes();
+	}
+
 	/*--------------------------------Fin de Filtro Cliente------------------------------------*/
 	
 	/*El personal administrativo debe seleccionar un cliente*/
@@ -467,7 +473,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaConfirmacionPasaje.getTxtDestino().setText(" "+ viajeSeleccionado.getPaisDestino().getNombre()+ ", "+viajeSeleccionado.getProvinciaDestino().getNombre()+", "+viajeSeleccionado.getCiudadDestino().getNombre());
 		this.ventanaConfirmacionPasaje.getTxtFormaPago().setText(""+pagoDTO.getIdFormaPago().getTipo());
 		this.ventanaConfirmacionPasaje.getTxtPagado().setText(""+pagoDTO.getMonto());
-		this.ventanaConfirmacionPasaje.getTxtTotal().setText(""+totalaPagar);
+		this.ventanaConfirmacionPasaje.getTxtTotal().setText(""+calcularMontoDePasaje());
 		llenarTablaDePasajerosConfirmarPasaje();
 	}
 		
@@ -479,7 +485,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaComprobante.getTxtOrigenViaje().setText(" "+ viajeSeleccionado.getPaisOrigen().getNombre()+ ", "+viajeSeleccionado.getProvinciaOrigen().getNombre()+", "+viajeSeleccionado.getCiudadOrigen().getNombre());
 		this.ventanaComprobante.getTxtDestinoViaje().setText(" "+ viajeSeleccionado.getPaisDestino().getNombre()+ ", "+viajeSeleccionado.getProvinciaDestino().getNombre()+", "+viajeSeleccionado.getCiudadDestino().getNombre());
 		this.ventanaComprobante.getTxtImportePagado().setText(" "+ pagoDTO.getMonto());
-		this.ventanaComprobante.getTxtValorViaje().setText(""+totalaPagar);
+		this.ventanaComprobante.getTxtValorViaje().setText(""+calcularMontoDePasaje());
 	}
 	
 	
@@ -621,6 +627,8 @@ public class ControladorPasaje implements ActionListener{
 			this.ventanaVisualizarPasaje.getTxtEstadoPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getNombre());
 			this.ventanaVisualizarPasaje.getTxtMontoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getValorViaje());
 			this.ventanaVisualizarPasaje.getTxtImporteDebePasaje().setText(""+this.pasajes_en_tabla.get(filaSeleccionada).getMontoAPagar());
+			this.ventanaVisualizarPasaje.getTxtMotivoCancelacion().setVisible(false);
+			this.ventanaVisualizarPasaje.getLblMotivoCancelacion().setVisible(false);
 			llenarTablaPagos(pasajes_en_tabla.get(filaSeleccionada).getIdPasaje());
 			pagarPasaje(filaSeleccionada);
 			

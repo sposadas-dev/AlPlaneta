@@ -21,6 +21,8 @@ public class PanelPasaje extends JPanel {
 	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor unitario", "Transporte","Estado"};
 	private JTable tablaReservas;
 	private JComboBox<String>comboBoxFiltros;
+	private JButton btnBuscar;
+	private JButton btnBorrarFiltros;
 
 	public PanelPasaje() {
 		
@@ -55,10 +57,6 @@ public class PanelPasaje extends JPanel {
 		lblFiltro.setBounds(389, 105, 100, 14);
 		add(lblFiltro);
 		
-		JButton btnBuscar = new JButton("Aplicar búsqueda");
-		btnBuscar.setBounds(760, 101, 216, 23);
-		add(btnBuscar);
-		
 		comboBoxFiltros = new JComboBox<String>();
 		comboBoxFiltros.setBounds(509, 102, 216, 20);
 		comboBoxFiltros.addItem("Seleccione");
@@ -67,8 +65,24 @@ public class PanelPasaje extends JPanel {
 		comboBoxFiltros.addItem("Reservado");
 		comboBoxFiltros.addItem("Vendido");
 		add(comboBoxFiltros);
+		
+		btnBuscar = new JButton("Aplicar búsqueda");
+		btnBuscar.setBounds(754, 91, 139, 38);
+		add(btnBuscar);
+		
+		btnBorrarFiltros = new JButton("Borrar Filtros");
+		btnBorrarFiltros.setBounds(913, 91, 130, 38);
+		add(btnBorrarFiltros);
 	}
 	
+	public JComboBox<String> getComboBoxFiltros() {
+		return comboBoxFiltros;
+	}
+
+	public void setComboBoxFiltros(JComboBox<String> comboBoxFiltros) {
+		this.comboBoxFiltros = comboBoxFiltros;
+	}
+
 	public void mostrarPanelPasaje(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}
@@ -95,5 +109,13 @@ public class PanelPasaje extends JPanel {
 
 	public void setTablaReservas(JTable tablaReservas) {
 		this.tablaReservas = tablaReservas;
+	}
+	
+	public JButton getBtnBuscar() {
+		return btnBuscar;
+	}
+	
+	public JButton getBtnBorrarFiltros() {
+		return btnBorrarFiltros;
 	}
 }
