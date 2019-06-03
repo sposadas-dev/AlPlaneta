@@ -102,7 +102,7 @@ public class GeneratePDF {
             // List by iText (listas por iText)
             
             // TODO: CAMBIAR POR NUMERO DE RESERVA = 002541155756
-            String text = String.valueOf(pasaje.getIdPasaje()); 
+            String text = String.valueOf("Código de pasaje: "+pasaje.getNumeroComprobante()); 
             List list = new List(List.UNORDERED);
             ListItem item = new ListItem(text);	
             item.setAlignment(Element.ALIGN_JUSTIFIED);

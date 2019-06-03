@@ -501,12 +501,6 @@ public class ControladorPasaje implements ActionListener{
 		BigDecimal valorViaje = calcularMontoDePasaje();
 		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
-<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
-	
-	    PagoDTO pagoPasaje = pago.getUltimoRegistroPago();
-		PasajeDTO pasajeDTO = new PasajeDTO(0,viaje,administrativoLogueado,cliente,calcularFechaReserva(viaje.getFechaSalida()),valorViaje,estadoPasaje,pagoPasaje,
-		pasajeros);
-=======
 		
 		viajeDTO.setCapacidad(viajeSeleccionado.getCapacidad()-pasajeros.size()); //Restamos la capacidad del viaje segun la cantidad de pasajeros
 		//Modelo viaje
@@ -523,7 +517,6 @@ public class ControladorPasaje implements ActionListener{
 		pasajeDTO = new PasajeDTO(0,numeroComprobante,viajeDTO,administrativoLogueado,cliente,calcularFechaReserva(viajeDTO.getFechaSalida()),valorViaje,montoAPagar,estadoPasaje,
 				pasajeros,"",null);
 		
->>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 		pasaje.agregarPasaje(pasajeDTO);
 		
 		PasajeDTO pDTO = pasaje.getUltimoRegistroPasaje();

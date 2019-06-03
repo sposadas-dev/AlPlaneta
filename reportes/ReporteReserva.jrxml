@@ -12,23 +12,11 @@
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
-	<field name="cliente" class="dto.ClienteDTO">
-		<fieldDescription><![CDATA[cliente]]></fieldDescription>
-	</field>
-	<field name="viaje" class="dto.ViajeDTO">
-		<fieldDescription><![CDATA[viaje]]></fieldDescription>
-	</field>
-	<field name="fechaVencimiento" class="java.sql.Date">
-		<fieldDescription><![CDATA[fechaVencimiento]]></fieldDescription>
-	</field>
-	<field name="valorViaje" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[valorViaje]]></fieldDescription>
-	</field>
 	<field name="pago" class="dto.PagoDTO">
 		<fieldDescription><![CDATA[pago]]></fieldDescription>
 	</field>
-	<field name="administrativo" class="dto.AdministrativoDTO">
-		<fieldDescription><![CDATA[administrativo]]></fieldDescription>
+	<field name="pasaje" class="dto.PasajeDTO">
+		<fieldDescription><![CDATA[pasaje]]></fieldDescription>
 	</field>
 	<title>
 		<band height="133" splitType="Stretch">
@@ -45,7 +33,7 @@
 					<text><![CDATA[Comprobante de reserva]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="489" y="2" width="56" height="20" uuid="0706116d-f632-4605-96d8-35fe765b5d67"/>
+					<reportElement x="490" y="0" width="56" height="20" uuid="0706116d-f632-4605-96d8-35fe765b5d67"/>
 					<textFieldExpression><![CDATA[$P{Fecha}]]></textFieldExpression>
 				</textField>
 				<staticText>
@@ -73,7 +61,7 @@
 				<textElement>
 					<font size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cliente}.getNombre().concat(" ").concat($F{cliente}.getApellido())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getCliente().getNombre().concat(" ").concat($F{pasaje}.getCliente().getApellido())]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="350" y="20" width="70" height="20" forecolor="#000000" uuid="73471874-579c-4079-a093-3c03ed4c15e5"/>
@@ -94,7 +82,7 @@
 				<textElement>
 					<font size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cliente}.getDni()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getCliente().getDni()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="20" width="124" height="20" forecolor="#000000" uuid="a30a3e68-14a7-4447-825e-dbb79df86adb"/>
@@ -115,7 +103,7 @@
 				<textElement>
 					<font size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{administrativo}.getNombre()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getAdministrativo().getNombre()]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -181,7 +169,7 @@
 				<textElement textAlignment="Center">
 					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{viaje}.getFechaSalida().toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getFechaSalida().toString()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement mode="Opaque" x="360" y="0" width="100" height="50" backcolor="#DBD9D9" uuid="c6eb03ac-14a0-4ae0-bde4-c9a0a3ea37d9"/>
@@ -193,7 +181,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{viaje}.getProvinciaOrigen().getNombre().concat(", ").concat($F{viaje}.getCiudadOrigen().getNombre())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getPaisOrigen().getNombre().concat(", ").concat($F{pasaje}.getViaje().getProvinciaOrigen().getNombre()).concat(", ").concat($F{pasaje}.getViaje().getCiudadOrigen().getNombre())]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement mode="Opaque" x="460" y="0" width="95" height="50" backcolor="#DBD9D9" uuid="8ca2af01-df13-4bc5-8e8d-bfd199204bfb"/>
@@ -205,7 +193,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{viaje}.getProvinciaDestino().getNombre().concat(", ").concat($F{viaje}.getCiudadDestino().getNombre())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getPaisDestino().getNombre().concat(", ").concat($F{pasaje}.getViaje().getProvinciaDestino().getNombre()).concat(", ").concat($F{pasaje}.getViaje().getCiudadDestino().getNombre())]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement mode="Opaque" x="90" y="0" width="91" height="50" backcolor="#DBD9D9" uuid="5f6f988f-284b-47b9-b313-5732725767a7"/>
@@ -219,7 +207,7 @@
 				<textElement textAlignment="Center">
 					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{viaje}.getFechaLlegada().toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getFechaLlegada().toString()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement mode="Opaque" x="181" y="0" width="89" height="50" backcolor="#DBD9D9" uuid="88d6e916-affc-4fe7-bc0b-411604cf5133"/>
@@ -233,7 +221,7 @@
 				<textElement>
 					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{viaje}.getHoraSalida()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getHoraSalida()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement mode="Opaque" x="270" y="0" width="90" height="50" backcolor="#DBD9D9" uuid="ff6d6701-fb96-4380-b1e3-bcbdb01c3e56"/>
@@ -247,7 +235,7 @@
 				<textElement textAlignment="Center">
 					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{viaje}.getTransporte().getNombre()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getTransporte().getNombre()]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="166">
@@ -264,7 +252,7 @@
 				<textElement>
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fechaVencimiento}.toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getFechaVencimiento().toString()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="38" width="160" height="41" uuid="1ba7b96d-9eda-48d0-8273-7862f70b65f2"/>
@@ -279,7 +267,7 @@
 				<textElement>
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{valorViaje}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getValorViaje().toString()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="80" width="124" height="41" uuid="0b6651e1-6e4e-4d02-af1e-6f434e1cd388"/>
