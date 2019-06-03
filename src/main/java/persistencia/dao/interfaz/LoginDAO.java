@@ -14,6 +14,8 @@ public interface LoginDAO {
 	public List<LoginDTO> readAll();
 
 	public boolean update(LoginDTO datos);
+	
+	public boolean updateEstado(String estado, int idLogin);
 
 	public LoginDTO getByDatos(String usr,String pass);
 

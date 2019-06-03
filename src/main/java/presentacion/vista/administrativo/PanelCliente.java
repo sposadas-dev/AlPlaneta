@@ -17,17 +17,19 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.JCheckBox;
 
 public class PanelCliente extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JButton btnRecargarTabla;
 	private DefaultTableModel modelClientes;
-	private String[] nombreColumnasClientes = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento", "Teléfono Fijo","Teléfono Celular","Email"};
+	private String[] nombreColumnasClientes = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento", "Teléfono Fijo","Teléfono Celular","Email", "Estado"};
 	private JTable tablaClientes;
 	private JButton btnConfirmar;
 	private JLabel lblClientes;
-
+	private JCheckBox activos;
+	private JCheckBox inactivos;
 	
 	public PanelCliente() {
 		
@@ -45,9 +47,9 @@ public class PanelCliente extends JPanel {
 		tablaClientes = new JTable(modelClientes);
 		spPasajeros.setViewportView(tablaClientes);
 		
-		btnRecargarTabla = new JButton("Recargar");
-		btnRecargarTabla.setBounds(421, 495, 165, 54);
-		add(btnRecargarTabla);
+//		btnRecargarTabla = new JButton("Recargar");
+//		btnRecargarTabla.setBounds(421, 495, 165, 54);
+//		add(btnRecargarTabla);
 		
 		btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(661, 495, 136, 54);
@@ -64,17 +66,34 @@ public class PanelCliente extends JPanel {
 		lblClientes.setForeground(Color.WHITE);
 		lblClientes.setFont(new Font("Tahoma", Font.BOLD, 36));
 		panelClientes.add(lblClientes);
+		
+		activos = new JCheckBox("Activos");
+		activos.setBounds(70, 6, 95, 21);
+		activos.setSelected(true);
+		add(activos);
+		
+		inactivos = new JCheckBox("Inactivos");
+		inactivos.setBounds(167, 5, 95, 21);
+		add(inactivos);
 	
 		btnConfirmar.setVisible(false);
-		btnRecargarTabla.setVisible(false);
+//		btnRecargarTabla.setVisible(false);
 	}
 
 	public void mostrarPanelCliente(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}
 	
-	public JButton getBtnRecargarTabla() {
-		return btnRecargarTabla;
+//	public JButton getBtnRecargarTabla() {
+//		return btnRecargarTabla;
+//	}
+	
+	public JCheckBox getActivos() {
+		return activos;
+	}
+	
+	public JCheckBox getInactivos() {
+		return inactivos;
 	}
 
 	public DefaultTableModel getModelClientes() {

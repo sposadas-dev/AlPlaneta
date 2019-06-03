@@ -29,7 +29,11 @@ public class VentanaLogin extends JFrame {
 	private JButton btnLogin;
 	private JPasswordField passwordField;
 	private JLabel lblError;
+<<<<<<< src/main/java/presentacion/vista/VentanaLogin.java
+	private JLabel lblErrorInactividad;
+=======
 	private JLabel lblClaveOlvidada;
+>>>>>>> src/main/java/presentacion/vista/VentanaLogin.java
 	
 	public static VentanaLogin getInstance(){
 		if(INSTANCE == null)
@@ -81,6 +85,14 @@ public class VentanaLogin extends JFrame {
 		contentPane.add(lblClaveOlvidada);
 		lblError.setVisible(false);
 		this.setVisible(false);
+
+		lblErrorInactividad = new JLabel("El usuario está inactivo");
+		lblErrorInactividad.setFont(new Font("Source Code Pro Semibold", Font.PLAIN, 9));
+		lblErrorInactividad.setForeground(Color.RED);
+		lblErrorInactividad.setBounds(30, 184, 189, 14);
+		contentPane.add(lblErrorInactividad);
+		lblErrorInactividad.setVisible(false);
+		this.setVisible(false);
 	}
 	
 	
@@ -115,6 +127,17 @@ public class VentanaLogin extends JFrame {
 	public void setLblError(JLabel lblError) {
 		this.lblError = lblError;
 	}
+<<<<<<< src/main/java/presentacion/vista/VentanaLogin.java
+
+	public JLabel getLblErrorInactividad() {
+		return lblErrorInactividad;
+	}
+	
+	public void setLblErrorInactividad(JLabel lblErrorInactividad) {
+		this.lblErrorInactividad = lblErrorInactividad;
+	}
+}
+=======
 	
 	public JLabel getLblClaveOlvidada() {
 		return lblClaveOlvidada;
@@ -137,3 +160,4 @@ public class VentanaLogin extends JFrame {
 		});
 	}
 }
+>>>>>>> src/main/java/presentacion/vista/VentanaLogin.java

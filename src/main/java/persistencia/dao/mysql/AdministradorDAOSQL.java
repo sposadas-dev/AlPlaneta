@@ -41,7 +41,6 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		return false;
 
 	}
-
 	@Override
 	public List<AdministradorDTO> readAll() {
 		PreparedStatement statement;

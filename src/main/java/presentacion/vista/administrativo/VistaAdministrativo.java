@@ -1,5 +1,8 @@
 package presentacion.vista.administrativo;
 
+<<<<<<< src/main/java/presentacion/vista/administrativo/VistaAdministrativo.java
+import java.awt.Font;
+=======
 import javax.swing.JFrame;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -9,16 +12,19 @@ import javax.swing.JTable;
 
 import persistencia.conexion.Conexion;
 
+>>>>>>> src/main/java/presentacion/vista/administrativo/VistaAdministrativo.java
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JPanel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JMenuBar;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JProgressBar;
+import javax.swing.JOptionPane;
 
+<<<<<<< src/main/java/presentacion/vista/administrativo/VistaAdministrativo.java
+import persistencia.conexion.Conexion;
+=======
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -27,6 +33,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+>>>>>>> src/main/java/presentacion/vista/administrativo/VistaAdministrativo.java
 
 public class VistaAdministrativo{
 	
@@ -38,8 +45,11 @@ public class VistaAdministrativo{
 
 	private JMenuBar menuBar;
 	private JMenu menuClientes;
-	private JMenuItem itemRegistrarCliente;
 	private JMenuItem itemVisualizarClientes;
+	private JMenuItem itemRegistrarCliente;
+	private JMenuItem itemEditarCliente;
+	private JMenuItem itemActivarCliente;
+	private JMenuItem itemDesactivarClientes;
 	
 	private JMenuItem itemVisualizarPasajes;
 	private JMenuItem itemAgregarPasaje;
@@ -51,6 +61,13 @@ public class VistaAdministrativo{
 	private JMenuItem itemEditarEvento;
 	private JMenuItem itemVisualizarEvento;
 	 
+	private static VistaAdministrativo INSTANCE;
+	public static VistaAdministrativo getInstance(){
+		if(INSTANCE == null)
+			return new VistaAdministrativo();
+		else
+			return INSTANCE;
+	}
 
 	public VistaAdministrativo() {
 		super();
@@ -73,7 +90,7 @@ public class VistaAdministrativo{
 		panelCliente.setLocation(0, 0);
 		frame.getContentPane().add(panelCliente);
 		panelCliente.setVisible(false);
-		panelCliente.getBtnRecargarTabla().setVisible(true);
+//		panelCliente.getBtnRecargarTabla().setVisible(true);
 		
 		panelPasaje = new PanelPasaje();
 		panelPasaje.getTablaReservas().setSize(1114, 900);
@@ -97,13 +114,25 @@ public class VistaAdministrativo{
 		menuClientes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuClientes);
 		
-		itemRegistrarCliente = new JMenuItem("Registrar cliente");
-		itemRegistrarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuClientes.add(itemRegistrarCliente);
-		
 		itemVisualizarClientes = new JMenuItem("Visualizar clientes");
 		itemVisualizarClientes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemVisualizarClientes);
+
+		itemRegistrarCliente = new JMenuItem("Registrar cliente");
+		itemRegistrarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuClientes.add(itemRegistrarCliente);
+
+		itemEditarCliente = new JMenuItem("Editar cliente");
+		itemEditarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuClientes.add(itemEditarCliente);
+
+		itemActivarCliente = new JMenuItem("Activar Cliente");
+		itemActivarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuClientes.add(itemActivarCliente);
+
+		itemDesactivarClientes = new JMenuItem("Desactivar Cliente");
+		itemDesactivarClientes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuClientes.add(itemDesactivarClientes);
 		
 		JMenu menuPasajes = new JMenu("Pasajes");
 		menuPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -150,13 +179,25 @@ public class VistaAdministrativo{
 	public PanelPasaje getPanelPasaje() {
 		return panelPasaje;
 	}
+	
+	public JMenuItem getItemVisualizarClientes() {
+		return itemVisualizarClientes;
+	}
 
 	public JMenuItem getItemRegistrarCliente() {
 		return itemRegistrarCliente;
 	}
-
-	public JMenuItem getItemVisualizarClientes() {
-		return itemVisualizarClientes;
+	
+	public JMenuItem getItemEditarCliente() {
+		return itemEditarCliente;
+	}
+	
+	public JMenuItem getItemActivarCliente() {
+		return itemActivarCliente;
+	}
+	
+	public JMenuItem getItemDesactivarCliente() {
+		return itemDesactivarClientes;
 	}
 	
 	public JMenuItem getItemAgregarPasaje() {

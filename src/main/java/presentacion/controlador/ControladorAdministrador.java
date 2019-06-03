@@ -1,33 +1,48 @@
 package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import modelo.Administrativo;
-import modelo.FormaPago;
-import modelo.Login;
-import modelo.Rol;
-import modelo.Transporte;
+
+import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.FormaPagoDTO;
 import dto.LoginDTO;
 import dto.RolDTO;
 import dto.TransporteDTO;
+import modelo.Administrador;
+import modelo.Administrativo;
+import modelo.FormaPago;
+import modelo.Login;
+import modelo.Rol;
+import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.Vista;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
+import presentacion.vista.administrador.VentanaEditarCuenta;
 import presentacion.vista.administrador.VistaAdministrador;
 
 public class ControladorAdministrador {
 	
 	private VistaAdministrador vistaAdministrador;
 	private VentanaAgregarEmpleado ventanaAgregarEmpleado;
+	private VentanaEditarCuenta ventanaEditarCuenta;
+	private int filaSeleccionada;
+	
 	private List<TransporteDTO> transportes_en_tabla;
 	private List<FormaPagoDTO> fpago_en_tabla;
-	private List<AdministrativoDTO> administrativos_en_tabla;
+//	private List<AdministrativoDTO> administrativos_en_tabla;
+	private List<LoginDTO> logins_en_tabla;
+	private List<LoginDTO> logins_aux;
 	
+	private Administrador administrador;
 	private Administrativo administrativo;
+//	private Cliente cliente;
+//	private Coordinador coordinador;
+//	private Contador contador;
+	
 	private Transporte transporte;
 	private FormaPago formapago;
 	private ControladorTransporte controladorTransporte;
@@ -44,9 +59,14 @@ public class ControladorAdministrador {
 		this.vistaAdministrador = vistaAdministrador;
 //INSTANCES		
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
+		this.ventanaEditarCuenta = VentanaEditarCuenta.getInstance();
 
 //MENU ITEMS		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
+		this.vistaAdministrador.getItemEditarCuenta().addActionListener(mve->mostrarVentanaEditarCuenta(mve));
+		this.vistaAdministrador.getItemEliminarCuenta().addActionListener(cc->desactivarCuenta(cc));
+		this.vistaAdministrador.getItemActivarCuenta().addActionListener(acc->activarCuenta(acc));
+		
 		this.vistaAdministrador.getItemAgregarTransporte().addActionListener(ac->agregarPanelTransporte(ac));
 		this.vistaAdministrador.getItemVisualizarTransportes().addActionListener(vt->visualizarTransportes(vt));
 		this.vistaAdministrador.getItemEditarTransporte().addActionListener(et->editarTransporte(et));
@@ -60,7 +80,8 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemEliminarFormaPago().addActionListener(dfp->eliminarFormaPago(dfp));
 		
 		this.vistaAdministrador.getPanelFormaPago().getBtnRecargarTabla().addActionListener(r->recargarTablaFormaPago(r));
-	
+		this.vistaAdministrador.getPanelEmpleados().getActivos().addActionListener(sa->cargarActivos(sa));
+		this.vistaAdministrador.getPanelEmpleados().getInactivos().addActionListener(si->cargarInactivos(si));
 
 //ITEM DESTINOS	
 		this.vistaAdministrador.getItemPais().addActionListener(p->mostrarVentanaAgregarPais(p));
@@ -72,8 +93,15 @@ public class ControladorAdministrador {
 //BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
 		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
+		
+		this.ventanaEditarCuenta.getBtnRegistrar().addActionListener(ec->editarCuenta(ec));
+		this.ventanaEditarCuenta.getBtnCancelar().addActionListener(can->cancelarEditarCuenta(can));
 
+		this.administrador = new Administrador(new DAOSQLFactory());
 		this.administrativo = new Administrativo(new DAOSQLFactory());
+//		this.coordinador = new Coordinador(new DAOSQLFactory());
+//		this.contador = new Contador(new DAOSQLFactory());
+		
 		this.transporte = new Transporte(new DAOSQLFactory());
 		this.formapago = new FormaPago(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
@@ -86,9 +114,53 @@ public class ControladorAdministrador {
 		this.controladorProvincia = ControladorProvincia.getInstance();
 		this.controladorCiudad = ControladorCiudad.getInstance();
 		this.controlador = Controlador.getInstance();
-	} 
-
+<<<<<<< src/main/java/presentacion/controlador/ControladorAdministrador.java
+	}
 	
+	public void cargarInactivos(ActionEvent si) {
+		this.llenarTablaEmpleados();
+	}
+=======
+	} 
+>>>>>>> src/main/java/presentacion/controlador/ControladorAdministrador.java
+
+	public void cargarActivos(ActionEvent sa) {
+		this.llenarTablaEmpleados();
+	}
+
+	private void desactivarCuenta(ActionEvent cc) {
+		int filaSelect = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
+		if (filaSelect != -1){
+			String estado = "Inactivo";
+			this.login.editarEstado(estado, this.logins_en_tabla.get(filaSelect).getIdDatosLogin());
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+		llenarTablaEmpleados();
+	}
+	
+	private void activarCuenta(ActionEvent acc) {
+		int filaSelect = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
+		if (filaSelect != -1){
+			String estado = "Activo";
+			this.login.editarEstado(estado, this.logins_en_tabla.get(filaSelect).getIdDatosLogin());
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+		llenarTablaEmpleados();
+	}
+
+	private void mostrarVentanaEditarCuenta(ActionEvent mve) {
+		int filaSeleccionada = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
+		if (filaSeleccionada != -1){
+			ventanaEditarCuenta.setVisible(true);
+			cargarcomboBoxRoles();
+			mostrarCuenta(filaSeleccionada);
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 	private void mostrarVentanaAgregarCiudad(ActionEvent p) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
@@ -138,18 +210,36 @@ public class ControladorAdministrador {
 
 	}
 	
-	private void mostrarVentanaViaje(ActionEvent ac) { //METODO AGREGADO!!
-		this.controlador.llenarCiudadesEnCargaViajes();
-		this.controlador.mostrarVentanaCargarViaje();
-	}//TERMINA METODO AGREGADO
-	/*Método para agregar a un empleado según el item que selecciona en el comboBox*/
+//	------------------------------------------- Empleados Cuenta -----------------------------------------
+	
+	//TERMINA METODO AGREGADO
+		/*Método para agregar a un empleado según el item que selecciona en el comboBox*/
 	private void agregarCuentaEmpleado(ActionEvent ac) {
 		//TODO: VER
+		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("administrador")){
+			LoginDTO nuevoLogin = new LoginDTO();
+			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
+			nuevoLogin.setContrasena(ventanaAgregarEmpleado.getTxtContrasenia().getText());
+			nuevoLogin.setRol(new RolDTO(1,"administrador"));
+			nuevoLogin.setEstado("Activo");
+			
+			login.agregarLogin(nuevoLogin);
+			
+			AdministradorDTO nuevoAdministrador = new AdministradorDTO(0,
+					ventanaAgregarEmpleado.getTxtNombre().getText(),
+					obtenerLoginDTO());
+			
+			administrador.agregarAdministrador(nuevoAdministrador);
+			llenarTablaEmpleados();
+			this.ventanaAgregarEmpleado.mostrarVentana(false);
+		}
+		
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("administrativo")){
 			LoginDTO nuevoLogin = new LoginDTO();
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
 			nuevoLogin.setContrasena(ventanaAgregarEmpleado.getTxtContrasenia().getText());
 			nuevoLogin.setRol(new RolDTO(2,"administrativo"));
+			nuevoLogin.setEstado("Activo");
 
 			login.agregarLogin(nuevoLogin);
 			
@@ -163,6 +253,52 @@ public class ControladorAdministrador {
 			llenarTablaEmpleados();
 			this.ventanaAgregarEmpleado.mostrarVentana(false);
 		}
+		//TODO: Falta agregar el empleado Contador y Coordinador.
+	}
+		
+	public void editarCuenta(ActionEvent ec) {
+			String estado = "Activo";
+			String rolNombre = this.ventanaEditarCuenta.getComboBoxRoles().getSelectedItem().toString();
+			int idLogin = this.logins_en_tabla.get(this.filaSeleccionada).getIdDatosLogin();
+			int idRol = 0;
+			switch(rolNombre) {
+				case "administrador":
+					idRol = 1;
+					break;
+				case "administrativo":
+					idRol = 2;
+					break;
+				case "coordinador":
+					idRol = 3;
+					break;
+				case "contador":
+					idRol = 4;
+					break;
+			}
+			String usuarioLogin = this.ventanaEditarCuenta.getTxtUsuario().getText();
+			String contrasenaLogin = this.ventanaEditarCuenta.getTxtContrasenia().getText();
+			RolDTO rol = new RolDTO(idRol, rolNombre);
+			LoginDTO login = new LoginDTO(idLogin, usuarioLogin, contrasenaLogin, rol, estado);
+			this.login.editarLogin(login);
+			llenarTablaEmpleados();
+			this.ventanaEditarCuenta.setVisible(false);
+	}
+	
+	private void mostrarCuenta(int filaSeleccionada){
+		this.filaSeleccionada = filaSeleccionada;
+		this.ventanaEditarCuenta.mostrarVentana(true);
+		ventanaEditarCuenta.getTxtUsuario().setText(this.logins_en_tabla.get(this.filaSeleccionada).getUsuario());
+		ventanaEditarCuenta.getTxtContrasenia().setText(this.logins_en_tabla.get(this.filaSeleccionada).getContrasena());
+	}
+	
+	private void cancelarEditarCuenta(ActionEvent can) {
+		this.ventanaEditarCuenta.limpiarCampos();
+		this.ventanaEditarCuenta.mostrarVentana(false);
+	}
+	
+	private void mostrarVentanaViaje(ActionEvent ac) { //METODO AGREGADO!!
+		this.controlador.llenarCiudadesEnCargaViajes();
+		this.controlador.mostrarVentanaCargarViaje();
 	}
 	
 	private LoginDTO obtenerLoginDTO() {
@@ -188,8 +324,8 @@ public class ControladorAdministrador {
 			roles [i] = rango;
 		}
 		this.ventanaAgregarEmpleado.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
+		this.ventanaEditarCuenta.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
 	}
-	
 	
 	private void cancelarAgregarCuentaEmpleado(ActionEvent c) {
 		this.ventanaAgregarEmpleado.limpiarCampos();
@@ -253,23 +389,48 @@ public class ControladorAdministrador {
 		}		
 	}
 	
-	
 	public void llenarTablaEmpleados(){
+		boolean activos = this.vistaAdministrador.getPanelEmpleados().getActivos().isSelected();
+		boolean inactivos = this.vistaAdministrador.getPanelEmpleados().getInactivos().isSelected();
+		
 		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setRowCount(0); //Para vaciar la tabla
 		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setColumnCount(0);
 		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setColumnIdentifiers(this.vistaAdministrador.getPanelEmpleados().getNombreColumnasEmpleados());
-			
-		this.administrativos_en_tabla = administrativo.obtenerAdministrativos();
-			
-		for (int i = 0; i < this.administrativos_en_tabla.size(); i++){
-			Object[] fila = {
-					this.administrativos_en_tabla.get(i).getNombre(),
-					this.administrativos_en_tabla.get(i).getDatosLogin().getUsuario(),
-					this.administrativos_en_tabla.get(i).getDatosLogin().getContrasena(),
-					this.administrativos_en_tabla.get(i).getDatosLogin().getRol().getNombre()
-			};
-			this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().addRow(fila);
-		}		
+		
+		this.logins_en_tabla = new ArrayList<LoginDTO>();
+		this.logins_aux = login.obtenerLogin();
+		
+		if(activos == true && inactivos == false) {
+			for (LoginDTO login : this.logins_aux) {
+				if(login.getRol().getIdRol() != 5) {
+					if(login.getEstado().equals("Activo"))
+					this.logins_en_tabla.add(login);
+				}
+			}
+		} else if (inactivos == true && activos == false) {
+			for (LoginDTO login : this.logins_aux) {
+				if(login.getRol().getIdRol() != 5) {
+					if(login.getEstado().equals("Inactivo"))
+						this.logins_en_tabla.add(login);
+				}
+			}
+		} else if (activos && inactivos) {
+			for (LoginDTO login : this.logins_aux) {
+				if(login.getRol().getIdRol() != 5) {
+						this.logins_en_tabla.add(login);
+				}
+			}
+		} 
+		
+		for (int i = 0; i < this.logins_en_tabla.size(); i++) {
+				Object[] fila = {
+						this.logins_en_tabla.get(i).getUsuario(),
+						this.logins_en_tabla.get(i).getContrasena(),
+						this.logins_en_tabla.get(i).getRol().getNombre(),
+						this.logins_en_tabla.get(i).getEstado()
+				};
+				this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().addRow(fila);
+		}
 	}
 	
 	//------------------------------FormaPago-------------------------------------------------

@@ -878,7 +878,10 @@ private void agregarPais(ActionEvent agP) {
 					viajes_en_tabla.get(i).getFechaSalida(),
 					viajes_en_tabla.get(i).getFechaLlegada(),
 					viajes_en_tabla.get(i).getPrecio(),
-					viajes_en_tabla.get(i).getHoraSalida()
+					viajes_en_tabla.get(i).getHoraSalida(),
+					viajes_en_tabla.get(i).getCapacidad(),
+					viajes_en_tabla.get(i).getTransporte().getNombre(),
+					viajes_en_tabla.get(i).getPrecio()
 			};
 			this.ventanaTablaViajes.getModelViajes().addRow(fila);
 		}

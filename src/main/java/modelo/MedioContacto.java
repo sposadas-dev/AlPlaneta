@@ -18,6 +18,10 @@ public class MedioContacto {
 		this.medio.insert(medio);
 	}
 	
+	public void editarMedioContacto(MedioContactoDTO medio) {
+		this.medio.update(medio);
+	}
+	
 	public List<MedioContactoDTO> obtenerMediosContacto(){
 		return this.medio.readAll();		
 	}

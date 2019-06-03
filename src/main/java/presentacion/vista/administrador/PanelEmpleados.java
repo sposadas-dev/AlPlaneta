@@ -9,15 +9,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JCheckBox;
 
 public class PanelEmpleados extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel modelEmpleados;
-	private String[] nombreColumnasEmpleados = {"Nombre del empleado","Usuario","Contraseña","Rol"};
+	private String[] nombreColumnasEmpleados = {"Usuario","Contraseña","Rol","Estado"};
 	private JTable tablaEmpleados;
 	private JButton btnConfirmar;
 	private JLabel lblEmpleados;
+	private JCheckBox activos;
+	private JCheckBox inactivos;
 
 	@SuppressWarnings("serial")
 	public PanelEmpleados() {
@@ -30,7 +33,6 @@ public class PanelEmpleados extends JPanel {
 		};
 		setLayout(null);
 		
-
 		JScrollPane spPasajeros = new JScrollPane();
 		spPasajeros.setBounds(32, 96, 1302, 483);
 		add(spPasajeros);
@@ -53,6 +55,15 @@ public class PanelEmpleados extends JPanel {
 		lblEmpleados.setForeground(Color.WHITE);
 		lblEmpleados.setFont(new Font("Tahoma", Font.BOLD, 36));
 		panelTransporte.add(lblEmpleados);
+		
+		activos = new JCheckBox("Activos");
+		activos.setBounds(70, 6, 95, 21);
+		activos.setSelected(true);
+		add(activos);
+		
+		inactivos = new JCheckBox("Inactivos");
+		inactivos.setBounds(167, 5, 95, 21);
+		add(inactivos);
 	
 		btnConfirmar.setVisible(false);
 	
@@ -60,6 +71,14 @@ public class PanelEmpleados extends JPanel {
 
 	public void mostrarPanelTransporte(boolean visibilidad){
 		this.setVisible(visibilidad);
+	}
+	
+	public JCheckBox getActivos() {
+		return activos;
+	}
+	
+	public JCheckBox getInactivos() {
+		return inactivos;
 	}
 
 	public DefaultTableModel getModelEmpleados() {
@@ -77,6 +96,4 @@ public class PanelEmpleados extends JPanel {
 	public JButton getBtnConfirmar() {
 		return btnConfirmar;
 	}
-	
-
 }

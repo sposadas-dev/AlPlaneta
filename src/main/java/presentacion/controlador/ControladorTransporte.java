@@ -34,8 +34,6 @@ public class ControladorTransporte implements ActionListener {
 		transportes_en_tabla = transporte.obtenerTransportes();
 	}
 
-
-
 	public void mostrarVentanaAgregarTransporte() {
 		this.ventanaAgregarTransporte.limpiarCampos();
 		this.ventanaAgregarTransporte.mostrarVentana();
@@ -72,7 +70,6 @@ public class ControladorTransporte implements ActionListener {
 		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarTransporte.mostrarVentana();
 		ventanaEditarTransporte.getTxtNombreTransporte().setText(this.transportes_en_tabla.get(this.filaSeleccionada).getNombre());
-		
 	}
 	
 	public void editarTransporte(ActionEvent ac) {
@@ -85,8 +82,6 @@ public class ControladorTransporte implements ActionListener {
 			this.transporte.editarTransporte(new TransporteDTO(transportes_en_tabla.get(this.filaSeleccionada).getIdTransporte(),nombreTransporte));
 			ventanaEditarTransporte.limpiarCampos();
 			ventanaEditarTransporte.dispose();
-			
-
 		}
 		
 	}
