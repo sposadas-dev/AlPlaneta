@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.JCheckBox;
 
 public class PanelCliente extends JPanel {
 
@@ -27,7 +28,8 @@ public class PanelCliente extends JPanel {
 	private JTable tablaClientes;
 	private JButton btnConfirmar;
 	private JLabel lblClientes;
-
+	private JCheckBox activos;
+	private JCheckBox inactivos;
 	
 	public PanelCliente() {
 		
@@ -64,6 +66,15 @@ public class PanelCliente extends JPanel {
 		lblClientes.setForeground(Color.WHITE);
 		lblClientes.setFont(new Font("Tahoma", Font.BOLD, 36));
 		panelClientes.add(lblClientes);
+		
+		activos = new JCheckBox("Activos");
+		activos.setBounds(70, 6, 95, 21);
+		activos.setSelected(true);
+		add(activos);
+		
+		inactivos = new JCheckBox("Inactivos");
+		inactivos.setBounds(167, 5, 95, 21);
+		add(inactivos);
 	
 		btnConfirmar.setVisible(false);
 //		btnRecargarTabla.setVisible(false);
@@ -76,6 +87,14 @@ public class PanelCliente extends JPanel {
 //	public JButton getBtnRecargarTabla() {
 //		return btnRecargarTabla;
 //	}
+	
+	public JCheckBox getActivos() {
+		return activos;
+	}
+	
+	public JCheckBox getInactivos() {
+		return inactivos;
+	}
 
 	public DefaultTableModel getModelClientes() {
 		return modelClientes;

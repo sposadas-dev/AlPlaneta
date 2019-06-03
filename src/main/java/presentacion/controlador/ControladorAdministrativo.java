@@ -2,7 +2,7 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -32,6 +32,7 @@ public class ControladorAdministrativo implements ActionListener {
 	private AdministrativoDTO administrativoLogueado;
 	private List<ClienteDTO> clientes_en_tabla;
 	private List<PasajeDTO> pasajes_en_tabla;
+	private List<ClienteDTO> clientes_aux;
 	private Cliente cliente;
 	private Pasaje pasaje;
 	private ControladorPasaje controladorPasaje;
@@ -57,6 +58,9 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getItemEditarPasaje().addActionListener(ep->mostrarVentanaEditarPasaje(ep));
 		this.vista.getItemCancelarPasaje().addActionListener(cp->cancelarPasaje(cp));
 		
+		this.vista.getPanelCliente().getActivos().addActionListener(sa->cargarActivos(sa));
+		this.vista.getPanelCliente().getInactivos().addActionListener(si->cargarInactivos(si));
+		
 		this.ventanaEditarCliente.getBtnEditar().addActionListener(ec->editarCliente(ec));
 //		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
 
@@ -66,6 +70,14 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
 		controladorCliente = new ControladorCliente(ventanaRegistrarCliente, ventanaEditarCliente, cliente);
+	}
+
+	public void cargarInactivos(ActionEvent si) {
+		this.llenarTablaClientes();
+	}
+
+	public void cargarActivos(ActionEvent sa) {
+		this.llenarTablaClientes();
 	}
 
 	public ControladorAdministrativo(){
@@ -218,12 +230,34 @@ public class ControladorAdministrativo implements ActionListener {
 	}
 	
 	private void llenarTablaClientes(){
+		boolean activos = this.vista.getPanelCliente().getActivos().isSelected();
+		boolean inactivos = this.vista.getPanelCliente().getInactivos().isSelected();
+		
 		this.vista.getPanelCliente().getModelClientes().setRowCount(0); //Para vaciar la tabla
 		this.vista.getPanelCliente().getModelClientes().setColumnCount(0);
 		this.vista.getPanelCliente().getModelClientes().setColumnIdentifiers(this.vista.getPanelCliente().getNombreColumnasClientes());
 			
-		this.clientes_en_tabla = cliente.obtenerClientes();
-			
+		this.clientes_en_tabla = new ArrayList<ClienteDTO>();
+		this.clientes_aux = cliente.obtenerClientes();
+
+		if(activos == true && inactivos == false) {
+			for (ClienteDTO cliente : this.clientes_aux) {
+				if (cliente.getLogin().getEstado().equals("Activo")) {
+					this.clientes_en_tabla.add(cliente);
+				}
+			}
+		}else if(inactivos == true && activos == false) {
+			for(ClienteDTO cliente : this.clientes_aux) {
+				if(cliente.getLogin().getEstado().equals("Inactivo")) {
+					this.clientes_en_tabla.add(cliente);
+				}
+			}
+		} else if(activos && inactivos) {
+			for (ClienteDTO cliente: this.clientes_aux) {
+				this.clientes_en_tabla.add(cliente);
+			}
+		}
+		
 		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
 			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
 							 this.clientes_en_tabla.get(i).getApellido(),

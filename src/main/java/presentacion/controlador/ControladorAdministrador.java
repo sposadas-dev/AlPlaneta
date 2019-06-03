@@ -80,7 +80,8 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemEliminarFormaPago().addActionListener(dfp->eliminarFormaPago(dfp));
 		
 		this.vistaAdministrador.getPanelFormaPago().getBtnRecargarTabla().addActionListener(r->recargarTablaFormaPago(r));
-	
+		this.vistaAdministrador.getPanelEmpleados().getActivos().addActionListener(sa->cargarActivos(sa));
+		this.vistaAdministrador.getPanelEmpleados().getInactivos().addActionListener(si->cargarInactivos(si));
 
 //ITEM DESTINOS	
 		this.vistaAdministrador.getItemPais().addActionListener(p->mostrarVentanaAgregarPais(p));
@@ -115,6 +116,14 @@ public class ControladorAdministrador {
 		this.controlador = Controlador.getInstance();
 	}
 	
+	public void cargarInactivos(ActionEvent si) {
+		this.llenarTablaEmpleados();
+	}
+
+	public void cargarActivos(ActionEvent sa) {
+		this.llenarTablaEmpleados();
+	}
+
 	private void desactivarCuenta(ActionEvent cc) {
 		int filaSelect = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
 		if (filaSelect != -1){
@@ -376,6 +385,9 @@ public class ControladorAdministrador {
 	}
 	
 	public void llenarTablaEmpleados(){
+		boolean activos = this.vistaAdministrador.getPanelEmpleados().getActivos().isSelected();
+		boolean inactivos = this.vistaAdministrador.getPanelEmpleados().getInactivos().isSelected();
+		
 		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setRowCount(0); //Para vaciar la tabla
 		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setColumnCount(0);
 		this.vistaAdministrador.getPanelEmpleados().getModelEmpleados().setColumnIdentifiers(this.vistaAdministrador.getPanelEmpleados().getNombreColumnasEmpleados());
@@ -383,11 +395,27 @@ public class ControladorAdministrador {
 		this.logins_en_tabla = new ArrayList<LoginDTO>();
 		this.logins_aux = login.obtenerLogin();
 		
-		for (LoginDTO login : this.logins_aux) {
-			if(login.getRol().getIdRol() != 5) {
-				this.logins_en_tabla.add(login);
+		if(activos == true && inactivos == false) {
+			for (LoginDTO login : this.logins_aux) {
+				if(login.getRol().getIdRol() != 5) {
+					if(login.getEstado().equals("Activo"))
+					this.logins_en_tabla.add(login);
+				}
 			}
-		}
+		} else if (inactivos == true && activos == false) {
+			for (LoginDTO login : this.logins_aux) {
+				if(login.getRol().getIdRol() != 5) {
+					if(login.getEstado().equals("Inactivo"))
+						this.logins_en_tabla.add(login);
+				}
+			}
+		} else if (activos && inactivos) {
+			for (LoginDTO login : this.logins_aux) {
+				if(login.getRol().getIdRol() != 5) {
+						this.logins_en_tabla.add(login);
+				}
+			}
+		} 
 		
 		for (int i = 0; i < this.logins_en_tabla.size(); i++) {
 				Object[] fila = {

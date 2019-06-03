@@ -44,10 +44,10 @@ public class ControladorCliente implements ActionListener{
 		this.ventanaRegistrarCliente.getBtnRegistrar().addActionListener(rc->registrarCliente(rc));
 		this.ventanaRegistrarCliente.getBtnCancelar().addActionListener(cv->cerrarVentanaCliente(cv));
 		
+		
 		this.ventanaEditarCliente.getBtnCancelar().addActionListener(ce->cancelarEditar());
 		
 	}
-	
 	
 	public void registrarCliente(ActionEvent rc){
 		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
