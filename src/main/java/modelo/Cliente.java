@@ -2,6 +2,7 @@ package modelo;
 
 import java.util.List;
 
+import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.TransporteDTO;
 import persistencia.dao.interfaz.ClienteDAO;
@@ -33,5 +34,17 @@ public class Cliente {
 	
 	public ClienteDTO getByLoginId(int idCliente){
 		return this.cliente.getByLoginId(idCliente);
+	}
+	
+	public ClienteDTO getByIdContacto(int idContacto){
+		return this.cliente.getByIdContacto(idContacto);
+	}
+	
+	public ClienteDTO buscarPorEmail(String email) {
+		return this.cliente.getByMail(email);
+	}
+	
+	public void actualizar(ClienteDTO cliente){
+		this.cliente.update(cliente);
 	}
 }
