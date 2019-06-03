@@ -1,30 +1,21 @@
 package presentacion.vista.administrativo;
 
-<<<<<<< src/main/java/presentacion/vista/administrativo/VistaAdministrativo.java
 import java.awt.Font;
-=======
 import javax.swing.JFrame;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
 import persistencia.conexion.Conexion;
-
->>>>>>> src/main/java/presentacion/vista/administrativo/VistaAdministrativo.java
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-
-<<<<<<< src/main/java/presentacion/vista/administrativo/VistaAdministrativo.java
 import persistencia.conexion.Conexion;
-=======
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -33,7 +24,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
->>>>>>> src/main/java/presentacion/vista/administrativo/VistaAdministrativo.java
 
 public class VistaAdministrativo{
 	

@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
-<<<<<<< src/main/java/presentacion/controlador/ControladorAdministrativo.java
 import dto.LoginDTO;
 import dto.MedioContactoDTO;
 import dto.PasajeDTO;
@@ -17,16 +16,14 @@ import dto.RolDTO;
 import modelo.Cliente;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.administrativo.VentanaEditarCliente;
-=======
 import dto.EventoDTO;
 import dto.PasajeDTO;
 import modelo.Cliente;
 import modelo.ModeloEvento;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.administrativo.VentanaEditarCliente;
 import presentacion.vista.administrativo.VentanaEditarEvento;
->>>>>>> src/main/java/presentacion/controlador/ControladorAdministrativo.java
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
@@ -36,12 +33,11 @@ import presentacion.vista.administrativo.VistaAdministrativo;
 public class ControladorAdministrativo implements ActionListener {
 
 	private VistaAdministrativo vista;
-<<<<<<< src/main/java/presentacion/controlador/ControladorAdministrativo.java
-=======
+
 	private VentanaRegistrarCliente ventanaCliente;
 	private VentanaRegistrarEvento ventanaEvento;
 	private VentanaEditarEvento ventanaEditarEvento;
->>>>>>> src/main/java/presentacion/controlador/ControladorAdministrativo.java
+
 	private VentanaVisualizarClientes ventanaVisualizarCliente;
 	private VentanaRegistrarCliente ventanaRegistrarCliente;
 	private VentanaEditarCliente ventanaEditarCliente;
@@ -49,30 +45,26 @@ public class ControladorAdministrativo implements ActionListener {
 	private AdministrativoDTO administrativoLogueado;
 	private List<ClienteDTO> clientes_en_tabla;
 	private List<PasajeDTO> pasajes_en_tabla;
-<<<<<<< src/main/java/presentacion/controlador/ControladorAdministrativo.java
+
 	private List<ClienteDTO> clientes_aux;
-=======
+
 	private List<EventoDTO> eventos_en_tabla;
->>>>>>> src/main/java/presentacion/controlador/ControladorAdministrativo.java
 	private Cliente cliente;
 	private Pasaje pasaje;
 	private ModeloEvento evento;
 	private ControladorPasaje controladorPasaje;
-<<<<<<< src/main/java/presentacion/controlador/ControladorAdministrativo.java
+
 	private ControladorCliente controladorCliente;
 	private int filaSeleccionada;
-	
-	public ControladorAdministrativo(VistaAdministrativo vista,AdministrativoDTO administrativoLogueado) {
-		this.vista = vista;
-=======
 	private ControladorEvento controladorEvento;
 	
 	public ControladorAdministrativo(VistaAdministrativo vista,AdministrativoDTO administrativoLogueado) {
+	
 		this.vista = vista;
 		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaEvento = VentanaRegistrarEvento.getInstance(); 
 		this.ventanaEditarEvento = VentanaEditarEvento.getInstance();
->>>>>>> src/main/java/presentacion/controlador/ControladorAdministrativo.java
+
 		this.ventanaVisualizarCliente = VentanaVisualizarClientes.getInstance();
 		this.ventanaRegistrarCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaEditarCliente = VentanaEditarCliente.getInstance();
@@ -108,26 +100,23 @@ public class ControladorAdministrativo implements ActionListener {
 		this.evento = new ModeloEvento(new DAOSQLFactory());
 		
 		controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
-<<<<<<< src/main/java/presentacion/controlador/ControladorAdministrativo.java
+
 		controladorCliente = new ControladorCliente(ventanaRegistrarCliente, ventanaEditarCliente, cliente);
-=======
+
 		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado, this.eventos_en_tabla);
-		
->>>>>>> src/main/java/presentacion/controlador/ControladorAdministrativo.java
 	}
 
 	public void cargarInactivos(ActionEvent si) {
 		this.llenarTablaClientes();
 	}
-<<<<<<< src/main/java/presentacion/controlador/ControladorAdministrativo.java
+
 
 	public void cargarActivos(ActionEvent sa) {
-=======
-	
+		this.llenarTablaClientes();
+	}
 	
 	
 	private void recargarTabla(ActionEvent r) {
->>>>>>> src/main/java/presentacion/controlador/ControladorAdministrativo.java
 		this.llenarTablaClientes();
 	}
 
@@ -314,16 +303,10 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelCliente().mostrarPanelCliente(true);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
 		this.llenarTablaClientes();
-<<<<<<< src/main/java/presentacion/controlador/ControladorAdministrativo.java
 		this.ventanaRegistrarCliente.limpiarCampos();
-		this.ventanaRegistrarCliente.mostrarVentana();
-//		ControladorCliente controladorCliente = new ControladorCliente(ventanaCliente,cliente);
-
-	}
-=======
 		this.ventanaCliente.limpiarCampos();
 		this.ventanaCliente.mostrarVentana();
-		ControladorCliente controladorCliente = new ControladorCliente(ventanaCliente,cliente);
+//		ControladorCliente controladorCliente = new ControladorCliente(ventanaCliente,cliente);
 	}
 	
 	private void mostrarVentanaAgregarEvento(ActionEvent ac)  {
@@ -369,8 +352,6 @@ public class ControladorAdministrativo implements ActionListener {
 	private void borrarFiltros(ActionEvent bf) {
 		llenarTablaPasajes(pasaje.obtenerPasajes());
 		this.vista.getPanelPasaje().getComboBoxFiltros().setSelectedIndex(0);
->>>>>>> src/main/java/presentacion/controlador/ControladorAdministrativo.java
-	
 	}
 		
 	private void llenarTablaClientes(){
@@ -386,13 +367,13 @@ public class ControladorAdministrativo implements ActionListener {
 
 		if(activos == true && inactivos == false) {
 			for (ClienteDTO cliente : this.clientes_aux) {
-				if (cliente.getLogin().getEstado().equals("Activo")) {
+				if (cliente.getLogin().getEstado().equals("activo")) {
 					this.clientes_en_tabla.add(cliente);
 				}
 			}
 		}else if(inactivos == true && activos == false) {
 			for(ClienteDTO cliente : this.clientes_aux) {
-				if(cliente.getLogin().getEstado().equals("Inactivo")) {
+				if(cliente.getLogin().getEstado().equals("inactivo")) {
 					this.clientes_en_tabla.add(cliente);
 				}
 			}
