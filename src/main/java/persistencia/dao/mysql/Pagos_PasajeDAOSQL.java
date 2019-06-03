@@ -17,6 +17,7 @@ public class Pagos_PasajeDAOSQL implements Pagos_PasajeDAO{
 	private static final String readall = "SELECT * FROM pagos_pasaje";
 //	private static final String browse = "SELECT * FROM pagos_pasaje WHERE idPagoPasaje=?";
 
+	
 	@Override
 	public boolean insert(Pagos_PasajeDTO nuevoPagoPasaje) {
 		PreparedStatement statement;

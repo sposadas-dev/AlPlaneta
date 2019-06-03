@@ -22,5 +22,4 @@ public interface PasajeroDAO {
 	public PasajeroDTO getUltimoRegistroPasajero();
 	
 	public PasajeroDTO getByMail(String email);
-
 }

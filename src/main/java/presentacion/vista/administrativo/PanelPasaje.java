@@ -25,7 +25,6 @@ public class PanelPasaje extends JPanel {
 	private JButton btnBorrarFiltros;
 
 	public PanelPasaje() {
-		
 		modelReservas = new DefaultTableModel(null,nombreColumnasReservas){
 		@Override
 			public boolean isCellEditable(int row, int column){

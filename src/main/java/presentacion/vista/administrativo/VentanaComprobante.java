@@ -35,6 +35,7 @@ public class VentanaComprobante extends JFrame {
 	private static VentanaComprobante INSTANCE;
 	private JTextField txtImportePagado;
 	
+	
 	public static VentanaComprobante getInstance(){
 		if(INSTANCE == null)
 			return new VentanaComprobante();

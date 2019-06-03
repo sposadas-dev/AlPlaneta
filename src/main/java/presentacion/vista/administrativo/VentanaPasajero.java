@@ -33,7 +33,6 @@ public class VentanaPasajero extends JFrame {
 	private JButton btnAplicarBusqueda;
 	private static VentanaPasajero INSTANCE;
 	
-
 	public static VentanaPasajero getInstance(){
 		if(INSTANCE == null)
 			return new VentanaPasajero();

@@ -9,5 +9,4 @@ public interface Pagos_PasajeDAO {
 	public boolean insert(Pagos_PasajeDTO nuevoPagoPasaje);
 
 	public List<Pagos_PasajeDTO> readAll();
-
 }

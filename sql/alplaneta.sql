@@ -17,7 +17,6 @@ CREATE TABLE `login` (
   PRIMARY KEY (`idLogin`)
 );
 
-
 CREATE TABLE `administrador` (
   `idAdministrador` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,

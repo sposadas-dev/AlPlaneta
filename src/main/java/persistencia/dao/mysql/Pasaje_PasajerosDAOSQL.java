@@ -21,6 +21,7 @@ public class Pasaje_PasajerosDAOSQL implements Pasaje_PasajerosDAO {
 	private static final String update = "UPDATE pasajes_pasajeros SET idPasaje=?, idPasajero=? WHERE idPasajePasajero=?;";
 	private static final String browseByIdPasaje = "SELECT * FROM pasajes_pasajeros WHERE idPasaje=?";
 
+	
 	@Override
 	public boolean insert(Pasaje_PasajerosDTO pasaje_pasajero) {
 

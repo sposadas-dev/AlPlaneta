@@ -15,7 +15,7 @@ public class Cliente {
 	public Cliente(DAOAbstractFactory metodo_persistencia){
 		this.cliente = metodo_persistencia.createClienteDAO();
 	}
-	
+
 	public void agregarCliente(ClienteDTO nuevoCliente){
 		this.cliente.insert(nuevoCliente);
 	}

@@ -34,7 +34,6 @@ public class VentanaConfirmacionPasaje extends JFrame {
 	private JButton btnAtras;
 	private static VentanaConfirmacionPasaje INSTANCE;
 	
-
 	public static VentanaConfirmacionPasaje getInstance(){
 		if(INSTANCE == null)
 			return new VentanaConfirmacionPasaje();

@@ -30,5 +30,4 @@ public class ModeloViaje {
 	public List<ViajeDTO> obtenerViajes(){
 		return this.viaje.readAll();		
 	}
-	
 }

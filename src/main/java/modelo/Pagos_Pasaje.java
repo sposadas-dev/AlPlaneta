@@ -20,4 +20,5 @@ private Pagos_PasajeDAO pagos_pasaje;
 	public List<Pagos_PasajeDTO> obtenerPagosPasaje(){
 		return this.pagos_pasaje.readAll();		
 	}
+	
 }

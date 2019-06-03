@@ -45,6 +45,4 @@ public interface DAOAbstractFactory {
 	public Pagos_PasajeDAO createPagos_PasajeDAO();
 	
 //	public CoordinadorDAO createCoordinadorDAO();
-
-
 }

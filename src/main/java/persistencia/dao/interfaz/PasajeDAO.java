@@ -18,3 +18,4 @@ public interface PasajeDAO {
 
 	public PasajeDTO getUltimoRegistroPasaje();
 }
+

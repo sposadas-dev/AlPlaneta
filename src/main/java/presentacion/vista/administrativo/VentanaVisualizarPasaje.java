@@ -16,7 +16,6 @@ import javax.swing.JSeparator;
 public class VentanaVisualizarPasaje extends JFrame {
 
 	private JPanel contentPane;
-	
 	private JTextField txtClienteDelPasaje;
 	private JTextField txtDniDelPasaje;
 	private JTextField txtCodigoDelPasaje;

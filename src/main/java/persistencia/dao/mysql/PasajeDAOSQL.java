@@ -24,6 +24,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 	private static final String browse = "SELECT * FROM pasaje WHERE idPasaje=?";
 	private static final String ultimoRegistro = "SELECT * FROM pasaje ORDER BY idPasaje desc limit 1";
 	
+	
 	@Override
 	public boolean insert(PasajeDTO pasaje) {
 

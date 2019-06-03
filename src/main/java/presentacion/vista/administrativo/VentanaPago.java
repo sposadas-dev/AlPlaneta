@@ -30,8 +30,6 @@ public class VentanaPago extends JFrame {
 	private ButtonGroup bg;
 	private JRadioButton radioPaga;
 	private JRadioButton radioReservaSinPagar; 
-	
-
 	private JComboBox<FormaPagoDTO> comboBoxFormaDePago;
 	private JLabel lblSelecioneUnaForma;
 	private JLabel lblMontoAPagar;

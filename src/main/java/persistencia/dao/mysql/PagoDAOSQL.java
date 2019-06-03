@@ -20,7 +20,6 @@ public class PagoDAOSQL implements PagoDAO {
 	private static final String browse = "SELECT * FROM pago WHERE idPago=?";
 	private static final String ultimoRegistro = "SELECT * FROM pago ORDER BY idPago desc limit 1";
 	
-	
 	@Override
 	public boolean insert(PagoDTO pagoInsert) {
 		PreparedStatement statement;

@@ -55,7 +55,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	private EnvioDeCorreo envioCorreo;		
 	private GeneratePDF pdf;
-
+	
 	private VentanaVisualizarClientes ventanaVisualizarClientes;
 	private VentanaTablaViajes ventanaTablaViajes;
 	private VentanaCargaPasajero ventanaCargaPasajero;

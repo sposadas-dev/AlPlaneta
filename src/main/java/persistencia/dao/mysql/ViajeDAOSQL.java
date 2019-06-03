@@ -22,7 +22,6 @@ public class ViajeDAOSQL implements ViajeDAO {
 	private static final String update = "UPDATE viaje SET precio =?, capacidad = ? WHERE idViaje= ?;";
 	private static final String browse = "SELECT * FROM viaje WHERE idViaje = ?";
 
-
 	@Override
 	public boolean insert(ViajeDTO viaje) {
 
