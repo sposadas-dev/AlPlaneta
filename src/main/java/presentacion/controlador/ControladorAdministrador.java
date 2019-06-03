@@ -86,7 +86,7 @@ public class ControladorAdministrador {
 		this.controladorProvincia = ControladorProvincia.getInstance();
 		this.controladorCiudad = ControladorCiudad.getInstance();
 		this.controlador = Controlador.getInstance();
-	}
+	} 
 
 	
 	private void mostrarVentanaAgregarCiudad(ActionEvent p) {

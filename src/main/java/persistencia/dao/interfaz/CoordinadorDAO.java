@@ -15,4 +15,8 @@ public interface CoordinadorDAO {
 	
 	public CoordinadorDTO getByMail(String email);
 
+	public CoordinadorDTO getByLoginId(int idLogin);
+	
+	public CoordinadorDTO getById(int id );
+
 }

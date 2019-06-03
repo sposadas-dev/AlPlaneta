@@ -11,10 +11,12 @@ import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
+import dto.CoordinadorDTO;
 import dto.LoginDTO;
 import modelo.Administrador;
 import modelo.Administrativo;
 import modelo.Cliente;
+import modelo.Coordinador;
 import modelo.Login;
 import modelo.MedioContacto;
 import persistencia.dao.mysql.DAOSQLFactory;
@@ -23,6 +25,7 @@ import presentacion.vista.VentanaLogin;
 import presentacion.vista.administrador.VistaAdministrador;
 import presentacion.vista.administrativo.VistaAdministrativo;
 import presentacion.vista.cliente.VistaCliente;
+import presentacion.vista.coordinador.VistaCoordinador;
 
 public class ControladorLogin {
 
@@ -31,6 +34,8 @@ public class ControladorLogin {
 	private EnvioDeCorreo envioDeCorreo;
 	private VistaAdministrador vistaAdministrador;
 	private VistaAdministrativo vistaAdministrativo;
+	private VistaCoordinador vistaCoordinador;
+	
 	private VistaCliente vistaCliente;
 	private Login modeloLogin;
 	private LoginDTO usuarioLogueado;
@@ -39,15 +44,24 @@ public class ControladorLogin {
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
+<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
+	private CoordinadorDTO coordinadorLogueado;
+	
+=======
 	private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
 	private MedioContacto modeloMedioContacto;
 	private Administrativo modeloAdministrativo;
 	private Integer idMedioContactoBuscado;
+>>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
 		this.vistaAdministrador = VistaAdministrador.getInstance();
+<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
+		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance()
+		this.vistaCoordinador = VistaCoordinador.getInstance();
+=======
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
 		this.modeloMedioContacto = new MedioContacto(new DAOSQLFactory());
 		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
@@ -63,12 +77,14 @@ public class ControladorLogin {
 		this.envioDeCorreo = new EnvioDeCorreo();
 		
 		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
+>>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 		this.vistaCliente = VistaCliente.getInstance();
 		
 		this.modeloLogin = login;
 		this.usuarioLogueado = null;
 		this.administradorLogueado = null;
 		this.clienteLogueado = null;
+		this.coordinadorLogueado = null;
 	
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
 		this.ventanaClaveOlvidada.getBtnRecuperarContrasena().addActionListener(e->realizarCambioContrasena(e));;
@@ -180,18 +196,20 @@ public class ControladorLogin {
 			if(usuarioLogueado.getRol().getIdRol()==2){
 				 administrativoLogueado = obtenerAdministrativo(usuarioLogueado);
 				 mostrarVentanaAdministrativo();
-
+			}else 
+				if(usuarioLogueado.getRol().getIdRol()==3) {
+					coordinadorLogueado = obtenerCoordinador(usuarioLogueado);
+					 mostrarVentanaCoordinador();
 			}else{
 				if(usuarioLogueado.getRol().getIdRol()==5){
 					 clienteLogueado = obtenerCliente(usuarioLogueado);
 					 mostrarVentanaCliente();
 				}
-				else{
+				else
 					if(usuarioLogueado.getRol().getIdRol()==1){
 						 administradorLogueado = obtenerAdministrador(usuarioLogueado);
 						 mostrarVentanaAdministrador();
 					}
-				}
 			}
 		}
 	}
@@ -214,6 +232,15 @@ public class ControladorLogin {
 		controladorPrueba.inicializar();
 	}
 	
+	/*Mostrar la ventana principal del coordinador*/
+	private void mostrarVentanaCoordinador() {
+		System.out.println("Se Loguea Como Coordinador");
+		System.out.println(coordinadorLogueado.getNombre());
+		this.ventanaLogin.setVisible(false);
+		ControladorCOOR controladorCoordinador = new ControladorCOOR(vistaCoordinador,coordinadorLogueado);
+		controladorCoordinador.inicializar();
+	}
+	
 	private void mostrarVentanaAdministrador() {
 		System.out.println("Se Loguea Como Administrador");
 		System.out.println(administradorLogueado.getNombre());
@@ -233,6 +260,12 @@ public class ControladorLogin {
 		Administrador administrador = new Administrador(new DAOSQLFactory());
 		return administrador.getByLoginId(loginUsuario.getIdDatosLogin());
 	}
+	
+	private CoordinadorDTO obtenerCoordinador(LoginDTO loginUsuario) {
+		Coordinador coordinador = new Coordinador(new DAOSQLFactory());
+		return coordinador.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
 	
 	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {
 		Cliente cliente = new Cliente(new DAOSQLFactory());
