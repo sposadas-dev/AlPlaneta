@@ -19,9 +19,8 @@ public class ViajeDAOSQL implements ViajeDAO {
 	private static final String insert = "INSERT INTO viaje (idViaje, fechaSalida, fechaLlegada, precio, idCiudadOrigen, idCiudadDestino, idProvinciaOrigen, idProvinciaDestino, idPaisOrigen, idPaisDestino, horaSalida, idTransporte, horasEstimadas, capacidad) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String delete = "DELETE FROM viaje WHERE idViaje = ?";
 	private static final String readall = "SELECT * FROM viaje";
-	private static final String update = "UPDATE viaje SET precio =? WHERE idViaje= ?;";
+	private static final String update = "UPDATE viaje SET precio =?, capacidad = ? WHERE idViaje= ?;";
 	private static final String browse = "SELECT * FROM viaje WHERE idViaje = ?";
-
 
 	@Override
 	public boolean insert(ViajeDTO viaje) {
@@ -121,7 +120,8 @@ public class ViajeDAOSQL implements ViajeDAO {
 			statement = conexion.getSQLConexion().prepareStatement(update);
 			
 			statement.setBigDecimal(1,viaje_editar.getPrecio());
-			statement.setInt(2, viaje_editar.getIdViaje());
+			statement.setInt(2, viaje_editar.getCapacidad());
+			statement.setInt(3, viaje_editar.getIdViaje());
 		
 			chequeoUpdate = statement.executeUpdate();
 			if(chequeoUpdate > 0) //Si se ejecutó devuelvo true

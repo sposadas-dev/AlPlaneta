@@ -228,7 +228,7 @@ this.controladorAdministrador_ventanaAgregarPais = VentanaAgregarPais.getInstanc
 		this.ventanaCliente.getBtnCancelar().addActionListener(bc->salirVentanaCliente(bc));
 		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaViaje(aV));
 	
-		this.ventanaCargarViaje.getBtnOK().addActionListener(v->mostrarDatosViaje(v));
+		//this.ventanaCargarViaje.getBtnOK().addActionListener(v->mostrarDatosViaje(v));
 		this.ventanaCargarViaje.getComboBoxPaisOrigen().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisOrigen(e);}});
 		
@@ -280,7 +280,7 @@ private void agregarPais(ActionEvent agP) {
 		else {
 			this.ventanaCargarViaje.getComboBoxProvinciaOrigen().setEnabled(false);
 			this.ventanaCargarViaje.getComboBoxCiudadOrigen().setEnabled(false);
-			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
+			//this.ventanaCargarViaje.getBtnOK().setEnabled(false);
 			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
 		}
 	}
@@ -317,7 +317,7 @@ private void agregarPais(ActionEvent agP) {
 		else {
 			this.ventanaCargarViaje.getComboBoxProvinciaDestino().setEnabled(false);
 			this.ventanaCargarViaje.getComboBoxCiudadDestino().setEnabled(false);
-			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
+//			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
 			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
 		}
 	}
@@ -329,11 +329,11 @@ private void agregarPais(ActionEvent agP) {
 			llenarComboBoxCiudadesOrigen(Integer.parseInt(obtenerIdDesdeCombo(provincia)));
 			origenListo = true;
 			if(origenListo && destinoListo) //Activa boton OK si seleccion destino y origen esta completa
-	    		ventanaCargarViaje.getBtnOK().setEnabled(true);
+	    		ventanaCargarViaje.getBtnCrearViaje().setEnabled(true);
 		}
 		else {
 			this.ventanaCargarViaje.getComboBoxCiudadOrigen().setEnabled(false);
-			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
+//			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
 			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
 		}
 		
@@ -346,11 +346,11 @@ private void agregarPais(ActionEvent agP) {
 	    	llenarComboBoxCiudadesDestino(Integer.parseInt(obtenerIdDesdeCombo(provincia)));
 	    	destinoListo = true;
 	    	if(origenListo && destinoListo) //Activa boton OK si seleccion destino y origen esta completa
-	    		ventanaCargarViaje.getBtnOK().setEnabled(true);
+	    		ventanaCargarViaje.getBtnCrearViaje().setEnabled(true);
 		}
 		else {
 			this.ventanaCargarViaje.getComboBoxCiudadDestino().setEnabled(false);
-			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
+//			this.ventanaCargarViaje.getBtnOK().setEnabled(false);
 			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
 		}
 	} 
@@ -430,13 +430,12 @@ private void agregarPais(ActionEvent agP) {
 			this.msjErrorOrigenDestino.add("FECHA DE SALIDA");
 			ret = ret && false;
 		}
-		if (!ret) {
-			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
-		}
-		else {
-
-			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(true);
-		}
+//		if (!ret) {
+//			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(false);
+//		}
+//		else {
+//			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(true);
+//		}
 		return ret;
 	}
 
@@ -485,7 +484,7 @@ private void agregarPais(ActionEvent agP) {
 	}
 /*< / VALIDACION DE ALTA VIAJESS >*/	
 	
-	private void mostrarDatosViaje(ActionEvent E) {
+	private boolean mostrarDatosViaje() {
 		this.msjErrorOrigenDestino = new ArrayList<String>();
 		this.ventanaCargarViaje.getLblErrores().setText("");
 		if(viajeValido()){
@@ -496,6 +495,7 @@ private void agregarPais(ActionEvent agP) {
 			this.fechaLlegada = calcularFechaLlegada(this.fechaSalida,this.horarioSalida,this.horasEstimadas);
 			this.ventanaCargarViaje.getTxtFechaDestino().setText(this.fechaLlegada.toString());
 			this.ventanaCargarViaje.getBtnCrearViaje().setEnabled(true);
+			return true;
 		}
 		else {
 			String mensaje = ("DATOS INVÁLIDOS: ");
@@ -505,6 +505,7 @@ private void agregarPais(ActionEvent agP) {
 			}
 			mensaje += ".";
 			this.ventanaCargarViaje.getLblErrores().setText(mensaje);
+			return false;
 		}
 	}	
 	private java.sql.Date convertUtilToSql(java.util.Date uDate) {
@@ -691,7 +692,8 @@ private void agregarPais(ActionEvent agP) {
 	}
 	
 	private void darAltaViaje(ActionEvent aV) {//throws Exception {
-		if(viajeValido()){
+//		mostrarDatosViaje();
+		if(mostrarDatosViaje()){
 			System.out.println("Dar de alta el viaje");
 			
 			this.fechaSalida = convertUtilToSql(this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate());
@@ -763,15 +765,15 @@ private void agregarPais(ActionEvent agP) {
 			this.ventanaCargarViaje.setVisible(false);
 			
 		}
-		else {
-			String mensaje = ("DATOS INVÁLIDOS: ");
-			mensaje += this.msjErrorOrigenDestino.get(0);
-			for(int i=1; i< this.msjErrorOrigenDestino.size(); i++) {
-				mensaje += ", "+this.msjErrorOrigenDestino.get(i);
-			}
-			mensaje += ".";
-			this.ventanaCargarViaje.getLblErrores().setText(mensaje);
-		}
+//		else {
+//			String mensaje = ("DATOS INVÁLIDOS: ");
+//			mensaje += this.msjErrorOrigenDestino.get(0);
+//			for(int i=1; i< this.msjErrorOrigenDestino.size(); i++) {
+//				mensaje += ", "+this.msjErrorOrigenDestino.get(i);
+//			}
+//			mensaje += ".";
+//			this.ventanaCargarViaje.getLblErrores().setText(mensaje);
+//		}
 	}	
 		
 	/*- - - - - - - -  - - - - - - - < / METODOS DE VIAJE> - - - - - - - - - - - - - - - - --  */

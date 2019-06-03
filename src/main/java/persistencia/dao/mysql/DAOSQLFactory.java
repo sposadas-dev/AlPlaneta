@@ -6,20 +6,23 @@ import persistencia.dao.interfaz.CiudadDAO;
 import persistencia.dao.interfaz.ClienteDAO;
 import persistencia.dao.interfaz.CoordinadorDAO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
+import persistencia.dao.interfaz.EstadoEventoDAO;
 import persistencia.dao.interfaz.EstadoPasajeDAO;
+import persistencia.dao.interfaz.EventoDAO;
 import persistencia.dao.interfaz.FormaPagoDAO;
 import persistencia.dao.interfaz.LoginDAO;
 import persistencia.dao.interfaz.MedioContactoDAO;
 import persistencia.dao.interfaz.PagoDAO;
+import persistencia.dao.interfaz.Pagos_PasajeDAO;
 import persistencia.dao.interfaz.PaisDAO;
 import persistencia.dao.interfaz.PasajeDAO;
 import persistencia.dao.interfaz.Pasaje_PasajerosDAO;
 import persistencia.dao.interfaz.PasajeroDAO;
 import persistencia.dao.interfaz.ProvinciaDAO;
+import persistencia.dao.interfaz.PuntoDAO;
 import persistencia.dao.interfaz.RolDAO;
 import persistencia.dao.interfaz.TransporteDAO;
 import persistencia.dao.interfaz.ViajeDAO;
-
 
 public class DAOSQLFactory implements DAOAbstractFactory {
 	
@@ -107,5 +110,24 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	@Override
 	public EstadoPasajeDAO createEstadoPasajeDAO() {
 		return new EstadoPasajeDAOSQL();
+	}
+	@Override
+	public PuntoDAO	 createPuntoDAO() {
+		return new PuntoDAOSQL();
+	}
+
+	@Override
+	public Pagos_PasajeDAO createPagos_PasajeDAO() {
+		return new Pagos_PasajeDAOSQL();
+	}
+	
+	@Override
+	public EstadoEventoDAO createEstadoEventoDAO() {
+		return new EstadoEventoDAOSQL();
+	}
+	
+	@Override
+	public EventoDAO createEventoDAO() {
+		return new EventoDAOSQL();
 	}
 }

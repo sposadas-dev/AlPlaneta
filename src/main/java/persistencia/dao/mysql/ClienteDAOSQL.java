@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.LoginDTO;
@@ -20,6 +21,9 @@ public class ClienteDAOSQL implements ClienteDAO {
 	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ?, idLogin= ? WHERE idCliente=? ;";
 	private static final String browse = "SELECT * FROM cliente WHERE idCliente = ?";
 	private static final String browseLogin = "SELECT * FROM cliente WHERE idLogin = ?";
+	private static final String browseByMailx = "SELECT * FROM cliente WHERE idMedioContacto = ?";
+	private static final String browseByMail = "SELECT * FROM cliente WHERE mail = ?";
+	private static final String browseByDni = "SELECT * FROM cliente WHERE dni=?";
 	
 	@Override
 	public boolean insert(ClienteDTO cliente) {
@@ -130,7 +134,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 	}
 	
 	@Override
-	public ClienteDTO getByLoginId(int id) {
+	public ClienteDTO getByIdContacto(int idContacto) {
 			PreparedStatement statement;
 			ResultSet resultSet;
 			Conexion conexion = Conexion.getConexion();
@@ -139,8 +143,8 @@ public class ClienteDAOSQL implements ClienteDAO {
 			LoginDAOSQL loginDAO = new LoginDAOSQL();
 			
 			try{
-				statement = conexion.getSQLConexion().prepareStatement(browseLogin);
-				statement.setInt(1, id);
+				statement = conexion.getSQLConexion().prepareStatement(browseByMailx);
+				statement.setInt(1, idContacto);
 				resultSet = statement.executeQuery();
 				
 				if(resultSet.next()){
@@ -160,18 +164,123 @@ public class ClienteDAOSQL implements ClienteDAO {
 			}
 			return null;
 		}
+
+	public ClienteDTO getByMail(String mail) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		ClienteDTO dto = null;
+		MedioContactoDAOSQL medioDAO = new MedioContactoDAOSQL();
+		LoginDAOSQL loginDAO = new LoginDAOSQL();
+		
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browseByMail);
+			statement.setString(1, mail);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				dto = new ClienteDTO(
+						resultSet.getInt("idCliente"),
+						resultSet.getString("nombre"),
+						resultSet.getString("apellido"),
+						resultSet.getString("dni"),
+						resultSet.getDate("fechaNacimiento"),
+						medioDAO.getMedioContactoById(resultSet.getInt("idMedioContacto")),
+						loginDAO.getById(resultSet.getInt("idLogin")));
+				return dto;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
+
+	
+	
+	public ClienteDTO getByLoginId(int id) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		ClienteDTO dto = null;
+		MedioContactoDAOSQL medioDAO = new MedioContactoDAOSQL();
+		LoginDAOSQL loginDAO = new LoginDAOSQL();
+		
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browseLogin);
+			statement.setInt(1, id);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				dto = new ClienteDTO(
+						resultSet.getInt("idCliente"),
+						resultSet.getString("nombre"),
+						resultSet.getString("apellido"),
+						resultSet.getString("dni"),
+						resultSet.getDate("fechaNacimiento"),
+						medioDAO.getMedioContactoById(resultSet.getInt("idMedioContacto")),
+						loginDAO.getById(resultSet.getInt("idLogin")));
+				return dto;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public ClienteDTO getClienteByDni(String dniCliente) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		ClienteDTO cliente;
+		MedioContactoDAOSQL medioContactoDAOSQL = new MedioContactoDAOSQL();
+		LoginDAOSQL loginDAOSQL = new LoginDAOSQL();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(browseByDni);
+			
+			statement.setString(1, dniCliente);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()){
+				cliente = new ClienteDTO(resultSet.getInt("idCliente"),
+						resultSet.getString("nombre"), 
+						resultSet.getString("apellido"), 
+						resultSet.getString("dni"), 
+						resultSet.getDate("fechaNacimiento"),
+						medioContactoDAOSQL.getMedioContactoById(resultSet.getInt("idMedioContacto")),
+						loginDAOSQL.getById(resultSet.getInt("idLogin"))
+						);
+				return cliente;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
+	
 	
 	public static void main(String[] args) {
 		ClienteDAOSQL dao = new ClienteDAOSQL();
 		
-		List<ClienteDTO> list = dao.readAll();
+		ClienteDTO adm = dao.getByMail("nicos@gmail.com");
+		if(adm!=null)
+			System.out.println(adm.getNombre());
+		else
+			System.out.println("no existe");
 		
-		for(ClienteDTO elem: list){
-			System.out.println(elem.getNombre());
-		}
 		
-		System.out.println(dao.getByLoginId(5).getLogin().getUsuario());
-		System.out.println(dao.getByLoginId(5).getMedioContacto().getTelefonoCelular());
+//		List<ClienteDTO> list = dao.readAll();
+		
+//		for(ClienteDTO elem: list){
+//			System.out.println(elem.getNombre());
+//		}
+//		
+//		System.out.println(dao.getByLoginId(5).getLogin().getUsuario());
+//		System.out.println(dao.getByLoginId(5).getMedioContacto().getTelefonoCelular());
+		
+//		System.out.println(dao.getByIdContacto(1).getLogin().getUsuario());
 	}
 	
 	

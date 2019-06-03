@@ -42,9 +42,6 @@ public class VentanaCargarViaje extends JFrame {
 	private JComboBox<?> comboBoxProvinciaDestino;
 	private JComboBox<?> comboBoxTransporte;
 
-
-	private JButton btnOK;
-	
 	private DefaultTableModel modelViajes;
 	private  String[] nombreColumnas = {"Origen","Destino"};
 	
@@ -95,7 +92,7 @@ public class VentanaCargarViaje extends JFrame {
 		
 		
 		btnCrearViaje = new JButton("Cargar Viaje");
-		btnCrearViaje.setEnabled(false);
+		btnCrearViaje.setEnabled(true);
 		btnCrearViaje.setBounds(345, 307, 173, 37); 	
 		contentPane.add(btnCrearViaje);
 		
@@ -155,11 +152,7 @@ public class VentanaCargarViaje extends JFrame {
 		lblCiudadOrigen = new JLabel("Ciudad Origen");
 		lblCiudadOrigen.setBounds(446, 149, 98, 14);
 		contentPane.add(lblCiudadOrigen);
-		
-		btnOK = new JButton("OK");
-		btnOK.setBounds(764, 232, 88, 29);
-		contentPane.add(btnOK);
-		
+
 		JLabel lblPaisDestino = new JLabel("Pais Destino");
 		lblPaisDestino.setBounds(13, 214, 98, 14);
 		contentPane.add(lblPaisDestino);
@@ -270,7 +263,6 @@ public class VentanaCargarViaje extends JFrame {
 		this.comboBoxProvinciaOrigen.setEnabled(false);
 		this.comboBoxProvinciaDestino.setEnabled(false);
 		
-		this.btnOK.setEnabled(false);
 	}
 
 	public JButton getBtnCrearViaje() {
@@ -368,15 +360,6 @@ public class VentanaCargarViaje extends JFrame {
 
 	public void setComboBoxProvinciaDestino(JComboBox<?> comboBoxProvinciaDestino) {
 		this.comboBoxProvinciaDestino = comboBoxProvinciaDestino;
-	}
-
-
-	public JButton getBtnOK() {
-		return btnOK;
-	}
-
-	public void setBtnOK(JButton btnSeleccionOrigen) {
-		this.btnOK = btnSeleccionOrigen;
 	}
 	
 	public JComboBox<?> getComboBoxTransporte() {

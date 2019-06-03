@@ -114,11 +114,15 @@ public class ControladorAdministrador {
 		this.controladorProvincia = ControladorProvincia.getInstance();
 		this.controladorCiudad = ControladorCiudad.getInstance();
 		this.controlador = Controlador.getInstance();
+<<<<<<< src/main/java/presentacion/controlador/ControladorAdministrador.java
 	}
 	
 	public void cargarInactivos(ActionEvent si) {
 		this.llenarTablaEmpleados();
 	}
+=======
+	} 
+>>>>>>> src/main/java/presentacion/controlador/ControladorAdministrador.java
 
 	public void cargarActivos(ActionEvent sa) {
 		this.llenarTablaEmpleados();
@@ -241,7 +245,8 @@ public class ControladorAdministrador {
 			
 			AdministrativoDTO nuevoAdministrativo = new AdministrativoDTO(0,
 					ventanaAgregarEmpleado.getTxtNombre().getText(),
-					obtenerLoginDTO());
+					obtenerLoginDTO(),
+					ventanaAgregarEmpleado.getTextMail().getText());
 			
 			Administrativo administrativo = new Administrativo(new DAOSQLFactory());
 			administrativo.agregarAdministrativo(nuevoAdministrativo);

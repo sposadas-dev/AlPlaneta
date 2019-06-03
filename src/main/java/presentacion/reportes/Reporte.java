@@ -19,6 +19,7 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import org.apache.log4j.Logger;
 
+import dto.Pagos_PasajeDTO;
 import dto.PasajeDTO;
 
 public class Reporte {
@@ -29,8 +30,8 @@ public class Reporte {
 	private Logger log = Logger.getLogger(Reporte.class);
 	
 
-    public void reporteReserva(PasajeDTO pasaje){
-    	Collection<PasajeDTO> collection = new ArrayList<PasajeDTO>();
+    public void reporteReserva(Pagos_PasajeDTO pasaje){
+    	Collection<Pagos_PasajeDTO> collection = new ArrayList<Pagos_PasajeDTO>();
 		collection.add(pasaje);
     	//Hardcodeado
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
@@ -47,9 +48,9 @@ public class Reporte {
 		}
     }       
     
-    public void reportePago(PasajeDTO pasaje){
-    	Collection<PasajeDTO> collection = new ArrayList<PasajeDTO>();
-		collection.add(pasaje);
+    public void reportePago(Pagos_PasajeDTO pago){
+    	Collection<Pagos_PasajeDTO> collection = new ArrayList<Pagos_PasajeDTO>();
+		collection.add(pago);
     	//Hardcodeado
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		parametersMap.put("Fecha", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));		

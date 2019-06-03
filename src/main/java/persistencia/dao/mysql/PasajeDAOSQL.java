@@ -6,22 +6,25 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import modelo.Pasaje;
+import modelo.Transporte;
+import dto.PagoDTO;
 import dto.PasajeDTO;
 import dto.PasajeroDTO;
+import dto.TransporteDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PasajeDAO;
 
 public class PasajeDAOSQL implements PasajeDAO {
 	
-	private static final String insert = "INSERT INTO pasaje(idPasaje,fechaVencimiento, valorViaje, idCliente, idViaje, idAdministrativo, idEstadoPasaje, idPago) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
-	
+	private static final String insert = "INSERT INTO pasaje(idPasaje, numeroComprobante,fechaVencimiento, valorViaje, montoAPagar, idCliente, idViaje, idAdministrativo, idEstadoPasaje,motivoCancelacion, fechaCancelacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 	private static final String delete = "DELETE FROM pasaje  WHERE idPasaje = ?";
-	
 	private static final String readall = "SELECT * FROM pasaje";
+	private static final String update = "UPDATE pasaje SET idEstadoPasaje=?, montoAPagar=?, motivoCancelacion=?, fechaCancelacion=? WHERE idPasaje = ?;";
+	private static final String browse = "SELECT * FROM pasaje WHERE idPasaje=?";
+	private static final String ultimoRegistro = "SELECT * FROM pasaje ORDER BY idPasaje desc limit 1";
 	
-	private static final String update = "UPDATE pasaje SET viaje.fechaSalida= ? WHERE idPasaje = ?;";
 	
-
 	@Override
 	public boolean insert(PasajeDTO pasaje) {
 
@@ -30,13 +33,16 @@ public class PasajeDAOSQL implements PasajeDAO {
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
 			statement.setInt(1, pasaje.getIdPasaje());
-			statement.setDate(2, pasaje.getFechaVencimiento());
-			statement.setBigDecimal(3, pasaje.getValorViaje());
-			statement.setInt(4, pasaje.getCliente().getIdCliente());
-			statement.setInt(5, pasaje.getViaje().getIdViaje());
-			statement.setInt(6, pasaje.getAdministrativo().getIdAdministrativo());
-			statement.setInt(7, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());
-			statement.setInt(8, pasaje.getPago().getIdPago());
+			statement.setString(2, pasaje.getNumeroComprobante());
+			statement.setDate(3, pasaje.getFechaVencimiento());
+			statement.setBigDecimal(4, pasaje.getValorViaje());
+			statement.setBigDecimal(5, pasaje.getMontoAPagar());
+			statement.setInt(6, pasaje.getCliente().getIdCliente());
+			statement.setInt(7, pasaje.getViaje().getIdViaje());
+			statement.setInt(8, pasaje.getAdministrativo().getIdAdministrativo());
+			statement.setInt(9, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());
+			statement.setString(10, pasaje.getMotivoCancelacion());
+			statement.setDate(11, pasaje.getDateCancelacion());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -74,8 +80,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
 		EstadoPasajeDAOSQL estadoPasajeDAOSQL = new EstadoPasajeDAOSQL();
 		PagoDAOSQL pagoDAOSQL = new PagoDAOSQL();
-		ArrayList<PasajeroDTO> pasajeros = new ArrayList<PasajeroDTO>();
-		Pasaje_PasajerosDAOSQL pasaje_pasajeros = new Pasaje_PasajerosDAOSQL();
+		Pasaje_PasajerosDAOSQL pasajeros = new Pasaje_PasajerosDAOSQL();
 
 		Conexion conexion = Conexion.getConexion();
 		try {
@@ -86,16 +91,18 @@ public class PasajeDAOSQL implements PasajeDAO {
 				pasajes.add(
 						new PasajeDTO(
 						resultSet.getInt("idPasaje"),
+						resultSet.getString("numeroComprobante"),
 						viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
 						administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
 						clienteDAOSQL.getClienteById(resultSet.getInt("idCliente")),
 						resultSet.getDate("fechaVencimiento"),
 						resultSet.getBigDecimal("valorViaje"),
+						resultSet.getBigDecimal("montoAPagar"),
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
-						pagoDAOSQL.getPagoById(resultSet.getInt("idPago")),
-						pasajeros
-						)
-						);							
+						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
+						resultSet.getString("motivoCancelacion"),
+						resultSet.getDate("fechaCancelacion")
+						));							
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -110,10 +117,11 @@ public class PasajeDAOSQL implements PasajeDAO {
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(update);
-
-			// statement.setBytes(1,reserva_editar.getFecha_salida());
-			// tatement.setInt(2, reserva_editar.getIdCliente()); //deberia ir datos del
-			// cliente
+			statement.setInt(1, pasaje_editar.getEstadoDelPasaje().getIdEstadoPasaje());
+			statement.setBigDecimal(2, pasaje_editar.getMontoAPagar());
+			statement.setString(3, pasaje_editar.getMotivoCancelacion());
+			statement.setDate(4, pasaje_editar.getDateCancelacion());
+			statement.setInt(5, pasaje_editar.getIdPasaje());
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
@@ -125,10 +133,79 @@ public class PasajeDAOSQL implements PasajeDAO {
 
 	}
 	@Override
-	public boolean getById(PasajeDAO pasajeDTO) {
-		// TODO Auto-generated method stub
-		return false;
+	public PasajeDTO getPasajeById(int idPasaje ){
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		PasajeDTO pasaje;
+		ClienteDAOSQL clienteDAOSQL = new ClienteDAOSQL();
+		ViajeDAOSQL viajeDAOSQL = new ViajeDAOSQL();
+		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
+		EstadoPasajeDAOSQL estadoPasajeDAOSQL = new EstadoPasajeDAOSQL();
+		Pasaje_PasajerosDAOSQL pasajeros = new Pasaje_PasajerosDAOSQL();
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browse);
+			statement.setInt(1, idPasaje);
+			resultSet = statement.executeQuery();
+				
+				if(resultSet.next()){
+					pasaje = new PasajeDTO(resultSet.getInt("idPasaje"),
+							resultSet.getString("numeroComprobante"),
+							viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
+							administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
+							clienteDAOSQL.getClienteById(resultSet.getInt("idCliente")),
+							resultSet.getDate("fechaVencimiento"),
+							resultSet.getBigDecimal("valorViaje"),
+							resultSet.getBigDecimal("montoAPagar"),
+							estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
+							pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
+							resultSet.getString("motivoCancelacion"),
+							resultSet.getDate("fechaCancelacion")
+							);
+										
+				return pasaje;
+				}
+				
+			}catch (SQLException e){
+				 e.printStackTrace();
+			}
+			return null;
+		}
+	@Override
+	public PasajeDTO getUltimoRegistroPasaje() {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		PasajeDTO pasaje;
+		ClienteDAOSQL clienteDAOSQL = new ClienteDAOSQL();
+		ViajeDAOSQL viajeDAOSQL = new ViajeDAOSQL();
+		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
+		EstadoPasajeDAOSQL estadoPasajeDAOSQL = new EstadoPasajeDAOSQL();
+		Pasaje_PasajerosDAOSQL pasajeros = new Pasaje_PasajerosDAOSQL();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(ultimoRegistro);
+			resultSet = statement.executeQuery();
+				
+			if (resultSet.next()){
+				pasaje = new PasajeDTO(resultSet.getInt("idPasaje"),
+						resultSet.getString("numeroComprobante"),
+						viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
+						administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
+						clienteDAOSQL.getClienteById(resultSet.getInt("idCliente")),
+						resultSet.getDate("fechaVencimiento"),
+						resultSet.getBigDecimal("valorViaje"),
+						resultSet.getBigDecimal("montoAPagar"),
+						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
+						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
+						resultSet.getString("motivoCancelacion"),
+						resultSet.getDate("fechaCancelacion")
+						);
+			return pasaje;
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
-
-
 }

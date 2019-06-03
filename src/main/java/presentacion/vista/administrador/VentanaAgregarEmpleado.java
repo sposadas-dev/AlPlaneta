@@ -31,12 +31,21 @@ public class VentanaAgregarEmpleado extends JFrame {
 	}
 
 	private static VentanaAgregarEmpleado INSTANCE;
+	private JTextField textMail;
 	
 	public static VentanaAgregarEmpleado getInstance(){
 		if(INSTANCE == null)
 			return new VentanaAgregarEmpleado ();
 		else
 			return INSTANCE;
+	}
+
+	public JTextField getTextMail() {
+		return textMail;
+	}
+
+	public void setTextMail(JTextField textMail) {
+		this.textMail = textMail;
 	}
 
 	public VentanaAgregarEmpleado() {
@@ -67,7 +76,7 @@ public class VentanaAgregarEmpleado extends JFrame {
 		contentPane.add(lblContrasenia);
 		
 		JLabel lblRol = new JLabel("Rol:");
-		lblRol.setBounds(90, 261, 74, 14);
+		lblRol.setBounds(90, 287, 74, 14);
 		contentPane.add(lblRol);
 		
 		txtNombre = new JTextField();
@@ -76,7 +85,7 @@ public class VentanaAgregarEmpleado extends JFrame {
 		txtNombre.setColumns(10);
 		
 		comboBoxRoles = new JComboBox<RolDTO>();
-		comboBoxRoles.setBounds(189, 258, 122, 20);
+		comboBoxRoles.setBounds(189, 290, 122, 20);
 		contentPane.add(comboBoxRoles);
 		
 //		txtApellido = new JTextField();
@@ -98,15 +107,8 @@ public class VentanaAgregarEmpleado extends JFrame {
 		btnRegistrar.setForeground(Color.WHITE);
 		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnRegistrar.setBackground(new Color(5, 196, 107));
-		btnRegistrar.setBounds(59, 321, 131, 42);
+		btnRegistrar.setBounds(59, 335, 131, 42);
 		contentPane.add(btnRegistrar);
-		
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setForeground(Color.WHITE);
-		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnCancelar.setBackground(new Color(192, 57, 43));
-		btnCancelar.setBounds(216, 321, 131, 42);
-		contentPane.add(btnCancelar);
 		
 		JPanel panelRegistrarEmpleado = new JPanel();
 		panelRegistrarEmpleado.setLayout(null);
@@ -119,6 +121,15 @@ public class VentanaAgregarEmpleado extends JFrame {
 		lblRegistrarEmpleado.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblRegistrarEmpleado.setBounds(27, 0, 253, 53);
 		panelRegistrarEmpleado.add(lblRegistrarEmpleado);
+		
+		textMail = new JTextField();
+		textMail.setColumns(10);
+		textMail.setBounds(190, 252, 121, 20);
+		contentPane.add(textMail);
+		
+		JLabel lblMail = new JLabel("Mail :");
+		lblMail.setBounds(90, 251, 74, 14);
+		contentPane.add(lblMail);
 	}
 	
 	public JButton getBtnRegistrar() {

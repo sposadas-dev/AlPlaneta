@@ -12,14 +12,14 @@ import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.AdministradorDAO;
 
 public class AdministradorDAOSQL implements AdministradorDAO {
-	private static final String insert = "INSERT INTO administrador(idAdministrador, nombre, idLogin)" + " VALUES (?, ?, ?)";
 
+	private static final String insert = "INSERT INTO administrador(idAdministrador, nombre, idLogin, mail)" + " VALUES (?, ?, ?, ?)";
 	private static final String readall = "SELECT * FROM administrador";
-
 	private static final String update = "UPDATE administrador SET nombre = ? WHERE idAdministrador = ?";
-	
+	private static final String updateMail = "UPDATE administrador SET mail = ? WHERE idAdministrador = ?";
 	private static final String browse = "SELECT * FROM administrador WHERE idAdministrador = ?";
 	private static final String browseLogin = "SELECT * FROM administrador WHERE idLogin = ?";
+	private static final String browseByMail = "SELECT * FROM administrador WHERE mail = ?";
 
 	@Override
 	public boolean insert(AdministradorDTO administrador) {
@@ -30,6 +30,7 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 			statement.setInt(1, administrador.getIdAdministrador());
 			statement.setString(2, administrador.getNombre());
 			statement.setInt(3, administrador.getDatosLogin().getIdDatosLogin());
+			statement.setString(4, administrador.getMail());
 
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -58,7 +59,8 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 						new AdministradorDTO(
 								resultSet.getInt("idAdministrador"),
 								resultSet.getString("nombre"),
-								dao.getById(resultSet.getInt("idLogin"))));
+								dao.getById(resultSet.getInt("idLogin")),
+								resultSet.getString("mail" )));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -77,6 +79,27 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 			statement.setString(1, administrador.getNombre());
 			statement.setInt(2, administrador.getIdAdministrador()); // deberia
 			statement.setInt(3, administrador.getDatosLogin().getIdDatosLogin());
+			statement.setString(4, administrador.getMail());
+
+			chequeoUpdate = statement.executeUpdate();
+			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean updateMail(AdministradorDTO administrador) {
+		PreparedStatement statement;
+		int chequeoUpdate = 0;
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(updateMail);
+
+			statement.setString(1, administrador.getMail());
+			statement.setInt(2, administrador.getIdAdministrador()); // deberia
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
@@ -113,7 +136,8 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 				dto = new AdministradorDTO(
 						resultSet.getInt("idAdministrador"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")));
+						dao.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"));
 				return dto;
 			}
 			
@@ -140,7 +164,8 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 				dto = new AdministradorDTO(
 						resultSet.getInt("idAdministrador"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")));
+						dao.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"));
 				return dto;
 			}
 			
@@ -150,21 +175,55 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		return null;
 	}
 	
+	public AdministradorDTO getByMail(String mail ){
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		AdministradorDTO dto;
+		
+		LoginDAOSQL dao = new LoginDAOSQL();
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browseByMail);
+			statement.setString(1, mail);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				dto = new AdministradorDTO(
+						resultSet.getInt("idAdministrador"),
+						resultSet.getString("nombre"),
+						dao.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"));
+				return dto;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	public static void main(String[] args) {
 		AdministradorDAOSQL dao = new AdministradorDAOSQL();
 		
 		List<AdministradorDTO> list = dao.readAll();
 		
-		for(AdministradorDTO elem: list){
-			System.out.println(elem.getNombre());
-		}
-		System.out.println(dao.getByLoginId(2).getNombre());
-		System.out.println(dao.getByLoginId(5).getNombre());
+		AdministradorDTO adm = dao.getByMail("nico@gmail.com");
+		if(adm!=null)
+			System.out.println(adm.getNombre());
+		else
+			System.out.println("no existe");
+//		
+//		
+//		for(AdministradorDTO elem: list){
+//			System.out.println(elem.getNombre());
+//		}
+//		System.out.println(dao.getByLoginId(2).getNombre());
+//		System.out.println(dao.getByLoginId(5).getNombre());
 	}
 
 	@Override
 	public boolean delete(AdministradorDTO administrador_a_eliminar) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

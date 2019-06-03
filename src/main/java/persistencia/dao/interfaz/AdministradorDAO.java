@@ -3,6 +3,7 @@ package persistencia.dao.interfaz;
 import java.util.List;
 
 import dto.AdministradorDTO;
+import dto.AdministrativoDTO;
 
 public interface AdministradorDAO {
 
@@ -17,4 +18,8 @@ public interface AdministradorDAO {
 	public AdministradorDTO getById(int id );
 
 	public AdministradorDTO getByLoginId(int id);
+	
+	public AdministradorDTO getByMail(String email);
+
+	public boolean updateMail(AdministradorDTO administrador2);
 }
