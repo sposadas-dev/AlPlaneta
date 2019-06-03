@@ -29,4 +29,12 @@ public class Pasajero {
 	public void editarPasajero(PasajeroDTO pasajeroUpdate) {
 		this.pasajero.update(pasajeroUpdate);
 	}
+	
+	public PasajeroDTO getPasajeroByDni(String dniPasajero){
+		return this.pasajero.getPasajeroByDni(dniPasajero);
+	}
+
+	public PasajeroDTO getUltimoRegistroPasajero() {
+		return this.pasajero.getUltimoRegistroPasajero();
+	}
 }

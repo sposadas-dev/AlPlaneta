@@ -2,8 +2,11 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JOptionPane;
+
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EventoDTO;
@@ -55,7 +58,9 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		this.vista.getPanelCliente().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 //		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
-
+		this.vista.getPanelPasaje().getBtnBuscar().addActionListener(b->filtrar(b));
+		this.vista.getPanelPasaje().getBtnBorrarFiltros().addActionListener(bf->borrarFiltros(bf));
+		
 		this.vista.getItemAgregarEvento().addActionListener(ac->mostrarVentanaAgregarEvento(ac));
 		this.vista.getItemVisualizarEventos().addActionListener(ac->mostrarEventos(ac));
 		this.vista.getItemEditarEvento().addActionListener(ac->mostrarVentanaEditarEvento(ac));
@@ -82,7 +87,7 @@ public class ControladorAdministrativo implements ActionListener {
 
 	public void inicializar(){
 		this.vista.mostrarVentana();
-		this.llenarTablaPasajes();
+		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 		controladorEvento.controlarNotificacionesInicioSesion();
 		controladorEvento.controlarNotificacionesContinuo();
 	}
@@ -97,7 +102,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.ventanaVisualizarCliente.mostrarVentana(true);
-		this.llenarTablaPasajes();
+		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 		
 		controladorPasaje.iniciar();
 	}
@@ -107,14 +112,13 @@ public class ControladorAdministrativo implements ActionListener {
 		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
 		if (filaSeleccionada != -1){
 			controladorPasaje.editarPasaje(filaSeleccionada);
-			llenarTablaPasajes();
+			llenarTablaPasajes(pasaje.obtenerPasajes());
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}	
 	}
 	
 	private void mostrarVentanaEditarEvento(ActionEvent ep) {
-		this.llenarTablaEventos();
 		int filaSeleccionada = this.vista.getPanelEvento().getTablaEventos().getSelectedRow();
 		if (filaSeleccionada != -1){
 			verDatosDelEvento(filaSeleccionada);
@@ -149,7 +153,7 @@ public class ControladorAdministrativo implements ActionListener {
 		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
 		if (filaSeleccionada != -1){
 			controladorPasaje.eliminarPasaje(filaSeleccionada);
-			llenarTablaPasajes();
+			llenarTablaPasajes(pasaje.obtenerPasajes());
 		
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
@@ -158,7 +162,7 @@ public class ControladorAdministrativo implements ActionListener {
 	private void mostrarPasajes(ActionEvent ap) {
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
-		this.llenarTablaPasajes();
+		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 	}
 	
 	private void mostrarEventos(ActionEvent ap) {
@@ -189,6 +193,41 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaEvento.limpiarCampos();
 		this.ventanaEvento.mostrarVentana();
 	}
+	
+	public void filtrar(ActionEvent bc){
+		String filtroSeleccionado = this.vista.getPanelPasaje().getComboBoxFiltros().getSelectedItem().toString();
+		if (filtroSeleccionado.equals("Seleccione")){
+			JOptionPane.showMessageDialog(null, "Debe seleccionar una opción", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}else if (filtroSeleccionado.equals("Cancelado")) {
+			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
+		}else if(filtroSeleccionado.equals("Pendiente")){
+			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
+		}else if(filtroSeleccionado.equals("Reservado")){
+			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
+		}else if(filtroSeleccionado.equals("Vendido")){
+			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
+		}
+	}
+	
+	public List<PasajeDTO> filtrarPasajeSegun(String estado) {
+		List<PasajeDTO> resultado = new ArrayList<PasajeDTO>();
+		this.clientes_en_tabla = cliente.obtenerClientes();
+		for (int i = 0; i < pasajes_en_tabla.size(); i++) {
+			if (pasajes_en_tabla.get(i).getEstadoDelPasaje().getNombre().compareTo(estado)==0) {
+				resultado.add(pasajes_en_tabla.get(i));
+			}
+		}
+		if (resultado.size() == 0) {
+			JOptionPane.showMessageDialog(vista.getPanelPasaje(), "No existe ningún pasaje con ese estado", "", 0);
+		}
+		return resultado;
+	}
+	
+	private void borrarFiltros(ActionEvent bf) {
+		llenarTablaPasajes(pasaje.obtenerPasajes());
+		this.vista.getPanelPasaje().getComboBoxFiltros().setSelectedIndex(0);
+	
+	}
 		
 	private void llenarTablaClientes(){
 		this.vista.getPanelCliente().getModelClientes().setRowCount(0); //Para vaciar la tabla
@@ -210,12 +249,12 @@ public class ControladorAdministrativo implements ActionListener {
 		}		
 	}
 	
-	private void llenarTablaPasajes(){
+	private void llenarTablaPasajes(List<PasajeDTO> pasajes){
 		this.vista.getPanelPasaje().getModelReservas().setRowCount(0); //Para vaciar la tabla
 		this.vista.getPanelPasaje().getModelReservas().setColumnCount(0);
 		this.vista.getPanelPasaje().getModelReservas().setColumnIdentifiers(this.vista.getPanelPasaje().getNombreColumnasReservas());
 
-		this.pasajes_en_tabla = pasaje.obtenerPasajes();
+		this.pasajes_en_tabla = pasajes;
 			
 		for (int i = 0; i < this.pasajes_en_tabla.size(); i++){
 
@@ -223,13 +262,13 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getCliente().getDni(),
 							this.pasajes_en_tabla.get(i).getCliente().getNombre(),
 							this.pasajes_en_tabla.get(i).getCliente().getApellido(),
-							this.pasajes_en_tabla.get(i).getIdPasaje(),
+							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
 							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
-							this.pasajes_en_tabla.get(i).getViaje().getPrecio(),
+							this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
 							this.pasajes_en_tabla.get(i).getEstadoDelPasaje().getNombre()
 			};

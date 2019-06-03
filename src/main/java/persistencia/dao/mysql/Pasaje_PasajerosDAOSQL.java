@@ -8,21 +8,18 @@ import java.util.List;
 
 import dto.PasajeDTO;
 import dto.Pasaje_PasajerosDTO;
+import dto.PasajeroDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PasajeDAO;
 import persistencia.dao.interfaz.Pasaje_PasajerosDAO;
 
 public class Pasaje_PasajerosDAOSQL implements Pasaje_PasajerosDAO {
 	
-	private static final String insert = "INSERT INTO pasajes_pasajeros(idPasajePasajero, idPasaje, idPasajero)"
-			+ " VALUES (?, ?, ?)";
-	
-	private static final String delete = "DELETE FROM pasajes_pasajeros  WHERE idPasajePasajero = ?";
-	
+	private static final String insert = "INSERT INTO pasajes_pasajeros(idPasajePasajero, idPasaje, idPasajero) VALUES (?, ?, ?)";
+	private static final String delete = "DELETE FROM pasajes_pasajeros WHERE idPasajePasajero = ?";
 	private static final String readall = "SELECT * FROM pasajes_pasajeros";
-	
 	private static final String update = "UPDATE pasajes_pasajeros SET idPasaje=?, idPasajero=? WHERE idPasajePasajero=?;";
-	
+	private static final String browseByIdPasaje = "SELECT * FROM pasajes_pasajeros WHERE idPasaje=?";
 
 	@Override
 	public boolean insert(Pasaje_PasajerosDTO pasaje_pasajero) {
@@ -63,7 +60,6 @@ public class Pasaje_PasajerosDAOSQL implements Pasaje_PasajerosDAO {
 	
 	@Override
 	public List<Pasaje_PasajerosDTO> readAll() {
-
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
 		List<Pasaje_PasajerosDTO> pasajes = new ArrayList<Pasaje_PasajerosDTO>();
@@ -109,7 +105,24 @@ public class Pasaje_PasajerosDAOSQL implements Pasaje_PasajerosDAO {
 		return false;
 	}
 
-	
-
-
+	@Override
+	public List<PasajeroDTO> traerPasajerosDePasaje(int idPasaje){
+		PreparedStatement statement;
+		ResultSet resultSet;
+		ArrayList<PasajeroDTO> pasaje_pasajeros = new ArrayList<PasajeroDTO>();
+		PasajeroDAOSQL pasajeroDAOSQL = new PasajeroDAOSQL();
+		Conexion conexion = Conexion.getConexion();
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browseByIdPasaje);
+			statement.setInt(1, idPasaje);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				pasaje_pasajeros.add(pasajeroDAOSQL.browse(resultSet.getInt("idPasajero")));
+			}			
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return pasaje_pasajeros;
+	}
 }

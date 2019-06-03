@@ -24,5 +24,5 @@ public interface ClienteDAO {
 	
 	public ClienteDTO getByMail(String email);
 
-	
+	public ClienteDTO getClienteByDni(String dniCliente);
 }

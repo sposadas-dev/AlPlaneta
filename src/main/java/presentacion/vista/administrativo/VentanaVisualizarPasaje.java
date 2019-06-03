@@ -10,22 +10,32 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.JTextField;
+import javax.swing.JSeparator;
 
 public class VentanaVisualizarPasaje extends JFrame {
 
 	private JPanel contentPane;
-	private JLabel lblClienteDelPasaje;
-	private JLabel lblDniDelPasaje;
-	private JLabel lblOrigenDelPasaje;
-	private JLabel lblDestinoDelPasaje;
-	private JLabel lblTransporteDelPasaje;
-	private JLabel lblEstadoPasaje;
-	private JLabel lblMontoDelPasaje;
-	private JLabel lblRestante;
+	
+	private JTextField txtClienteDelPasaje;
+	private JTextField txtDniDelPasaje;
+	private JTextField txtCodigoDelPasaje;
+	private JTextField txtOrigenDelPasaje;
+	private JTextField txtDestinoDelPasaje;
+	private JTextField txtTransporteDelPasaje;
+	private JTextField txtEstadoPasaje;
+	private JTextField txtMontoDelPasaje;
+	private JTextField txtImporteDebePasaje;
 	private JButton btnPagar;
 	private JButton btnAceptar;
-	
+	private JButton btnVerPagos;
 	private static VentanaVisualizarPasaje INSTANCE;
+	private JLabel lblCodigoPasaje;
+
+	private JLabel lblMotivoCancelacion;
+	private JTextField txtMotivoCancelacion;
+	
+	
 	
 	public static VentanaVisualizarPasaje getInstance(){
 		if(INSTANCE == null){	
@@ -35,10 +45,11 @@ public class VentanaVisualizarPasaje extends JFrame {
 			return INSTANCE;
 		}
 	}
+
 	public VentanaVisualizarPasaje() {
 		setTitle("Visualizar pasaje");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 600, 400);
+		setBounds(100, 100, 660, 514);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		
@@ -47,97 +58,10 @@ public class VentanaVisualizarPasaje extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblCliente = new JLabel("Cliente:");
-		lblCliente.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblCliente.setBounds(27, 74, 46, 14);
-		contentPane.add(lblCliente);
-		
-		JLabel lblOrigen = new JLabel("Origen:");
-		lblOrigen.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblOrigen.setBounds(27, 122, 46, 14);
-		contentPane.add(lblOrigen);
-		
-		JLabel lblDestino = new JLabel("Destino:");
-		lblDestino.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblDestino.setBounds(27, 163, 77, 14);
-		contentPane.add(lblDestino);
-		
-		JLabel lblTransporte = new JLabel("Transporte:");
-		lblTransporte.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblTransporte.setBounds(27, 200, 95, 14);
-		contentPane.add(lblTransporte);
-		
-		JLabel lblEstadoDelPasaje = new JLabel("Estado del pasaje:");
-		lblEstadoDelPasaje.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblEstadoDelPasaje.setBounds(310, 200, 127, 14);
-		contentPane.add(lblEstadoDelPasaje);
-		
-		JLabel lblDni = new JLabel("DNI:");
-		lblDni.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblDni.setBounds(310, 74, 46, 14);
-		contentPane.add(lblDni);
-		
-		btnAceptar = new JButton("Aceptar");
-		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAceptar.setBounds(290, 299, 156, 49);
-		btnAceptar.setBackground(new Color(52, 152, 219));
-		btnAceptar.setForeground(Color.WHITE);
-		contentPane.add(btnAceptar);
-		
-		lblClienteDelPasaje = new JLabel("");
-		lblClienteDelPasaje.setBounds(83, 74, 180, 14);
-		contentPane.add(lblClienteDelPasaje);
-		
-		lblDniDelPasaje = new JLabel("");
-		lblDniDelPasaje.setBounds(366, 74, 143, 14);
-		contentPane.add(lblDniDelPasaje);
-		
-		lblOrigenDelPasaje = new JLabel("");
-		lblOrigenDelPasaje.setBounds(86, 122, 285, 14);
-		contentPane.add(lblOrigenDelPasaje);
-		
-		lblDestinoDelPasaje = new JLabel("");
-		lblDestinoDelPasaje.setBounds(93, 163, 208, 14);
-		contentPane.add(lblDestinoDelPasaje);
-		
-		lblTransporteDelPasaje = new JLabel("");
-		lblTransporteDelPasaje.setBounds(106, 200, 180, 14);
-		contentPane.add(lblTransporteDelPasaje);
-		
-		lblEstadoPasaje = new JLabel("");
-		lblEstadoPasaje.setBounds(425, 200, 127, 14);
-		contentPane.add(lblEstadoPasaje);
-		
-		JLabel lblMonto = new JLabel("Monto: $");
-		lblMonto.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblMonto.setBounds(27, 248, 95, 14);
-		contentPane.add(lblMonto);
-		
-		lblMontoDelPasaje = new JLabel("");
-		lblMontoDelPasaje.setBounds(93, 248, 97, 14);
-		contentPane.add(lblMontoDelPasaje);
-		
-		JLabel lblMontoAPagar = new JLabel("Importe restante: $");
-		lblMontoAPagar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblMontoAPagar.setBounds(310, 248, 143, 14);
-		contentPane.add(lblMontoAPagar);
-		
-		lblRestante = new JLabel("");
-		lblRestante.setBounds(441, 248, 143, 14);
-		contentPane.add(lblRestante);
-		
-		btnPagar = new JButton("Pagar");
-		btnPagar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnPagar.setBounds(121, 299, 150, 51);
-		btnPagar.setBackground(new Color(5, 196, 107));
-		btnPagar.setForeground(Color.WHITE);
-
-		contentPane.add(btnPagar);
-		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(95, 158, 160));
-		panel.setBounds(0, 0, 594, 53);
+		panel.setBounds(0, 0, 654, 53);
 		contentPane.add(panel);
 		
 		JLabel lblVisualizarPasaje = new JLabel("Visualizar pasaje");
@@ -145,39 +69,194 @@ public class VentanaVisualizarPasaje extends JFrame {
 		lblVisualizarPasaje.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblVisualizarPasaje.setBounds(191, 0, 214, 53);
 		panel.add(lblVisualizarPasaje);
-	}
-	
-	public JLabel getLblClienteDelPasaje() {
-		return lblClienteDelPasaje;
-	}
-
-	public JLabel getLblDniDelPasaje() {
-		return lblDniDelPasaje;
-	}
-	
-	public JLabel getLblOrigenDelPasaje() {
-		return lblOrigenDelPasaje;
-	}
-	
-	public JLabel getLblDestinoDelPasaje() {
-		return lblDestinoDelPasaje;
-	}
-	
-	public JLabel getLblTransporteDelPasaje() {
-		return lblTransporteDelPasaje;
-	}
-	
-	public JLabel getLblEstadoPasaje() {
-		return lblEstadoPasaje;
-	}
-	
-	public JLabel getLblMontoDelPasaje() {
-		return lblMontoDelPasaje;
-	}
-
 		
-	public JLabel getLblRestante() {
-		return lblRestante;
+		JLabel lblCliente = new JLabel("Cliente:");
+		lblCliente.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblCliente.setBounds(27, 74, 46, 14);
+		contentPane.add(lblCliente);
+		
+		JLabel lblDni = new JLabel("DNI:");
+		lblDni.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblDni.setBounds(363, 74, 46, 14);
+		contentPane.add(lblDni);
+		
+		JLabel lblOrigen = new JLabel("Origen:");
+		lblOrigen.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblOrigen.setBounds(27, 157, 46, 14);
+		contentPane.add(lblOrigen);
+		
+		JLabel lblDestino = new JLabel("Destino:");
+		lblDestino.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblDestino.setBounds(27, 204, 77, 14);
+		contentPane.add(lblDestino);
+		
+		JLabel lblTransporte = new JLabel("Transporte:");
+		lblTransporte.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTransporte.setBounds(27, 247, 95, 14);
+		contentPane.add(lblTransporte);
+		
+		JLabel lblEstadoDelPasaje = new JLabel("Estado del pasaje:");
+		lblEstadoDelPasaje.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblEstadoDelPasaje.setBounds(327, 247, 127, 14);
+		contentPane.add(lblEstadoDelPasaje);
+		
+		JLabel lblMonto = new JLabel("Total: $");
+		lblMonto.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblMonto.setBounds(27, 294, 95, 14);
+		contentPane.add(lblMonto);
+		
+		JLabel lblMontoAPagar = new JLabel("Importe restante a pagar: $");
+		lblMontoAPagar.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblMontoAPagar.setBounds(303, 294, 183, 14);
+		contentPane.add(lblMontoAPagar);
+		
+		txtClienteDelPasaje = new JTextField();
+		txtClienteDelPasaje.setBackground(Color.WHITE);
+		txtClienteDelPasaje.setEditable(false);
+		txtClienteDelPasaje.setBounds(83, 72, 208, 20);
+		contentPane.add(txtClienteDelPasaje);
+		txtClienteDelPasaje.setColumns(10);
+		
+		txtDniDelPasaje = new JTextField();
+		txtDniDelPasaje.setBackground(Color.WHITE);
+		txtDniDelPasaje.setEditable(false);
+		txtDniDelPasaje.setBounds(411, 72, 201, 20);
+		contentPane.add(txtDniDelPasaje);
+		txtDniDelPasaje.setColumns(10);
+		
+		txtOrigenDelPasaje = new JTextField();
+		txtOrigenDelPasaje.setBackground(Color.WHITE);
+		txtOrigenDelPasaje.setEditable(false);
+		txtOrigenDelPasaje.setBounds(95, 155, 405, 20);
+		contentPane.add(txtOrigenDelPasaje);
+		txtOrigenDelPasaje.setColumns(10);
+		
+		txtDestinoDelPasaje = new JTextField();
+		txtDestinoDelPasaje.setEditable(false);
+		txtDestinoDelPasaje.setBackground(Color.WHITE);
+		txtDestinoDelPasaje.setColumns(10);
+		txtDestinoDelPasaje.setBounds(95, 202, 405, 20);
+		contentPane.add(txtDestinoDelPasaje);
+		
+		txtTransporteDelPasaje = new JTextField();
+		txtTransporteDelPasaje.setBackground(Color.WHITE);
+		txtTransporteDelPasaje.setEditable(false);
+		txtTransporteDelPasaje.setBounds(102, 245, 183, 20);
+		contentPane.add(txtTransporteDelPasaje);
+		txtTransporteDelPasaje.setColumns(10);
+		
+		txtEstadoPasaje = new JTextField();
+		txtEstadoPasaje.setBackground(Color.WHITE);
+		txtEstadoPasaje.setEditable(false);
+		txtEstadoPasaje.setBounds(464, 245, 149, 20);
+		contentPane.add(txtEstadoPasaje);
+		txtEstadoPasaje.setColumns(10);
+		
+		txtMontoDelPasaje = new JTextField();
+		txtMontoDelPasaje.setBackground(Color.WHITE);
+		txtMontoDelPasaje.setEditable(false);
+		txtMontoDelPasaje.setBounds(102, 292, 143, 20);
+		contentPane.add(txtMontoDelPasaje);
+		txtMontoDelPasaje.setColumns(10);
+		
+		txtImporteDebePasaje = new JTextField();
+		txtImporteDebePasaje.setBackground(Color.WHITE);
+		txtImporteDebePasaje.setEditable(false);
+		txtImporteDebePasaje.setBounds(497, 292, 135, 20);
+		contentPane.add(txtImporteDebePasaje);
+		txtImporteDebePasaje.setColumns(10);
+		
+		txtMotivoCancelacion = new JTextField();
+		txtMotivoCancelacion.setEditable(false);
+		txtMotivoCancelacion.setColumns(10);
+		txtMotivoCancelacion.setBackground(Color.WHITE);
+		txtMotivoCancelacion.setBounds(183, 337, 449, 28);
+		contentPane.add(txtMotivoCancelacion);
+		txtMotivoCancelacion.setVisible(false);
+		
+		btnPagar = new JButton("Pagar");
+		btnPagar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnPagar.setBounds(440, 412, 150, 51);
+		btnPagar.setBackground(new Color(5, 196, 107));
+		btnPagar.setForeground(Color.WHITE);
+		
+		contentPane.add(btnPagar);
+		
+		btnVerPagos = new JButton("Ver pagos");
+		btnVerPagos.setForeground(Color.WHITE);
+		btnVerPagos.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnVerPagos.setBackground(new Color(192, 192, 192));
+		btnVerPagos.setBounds(61, 412, 150, 51);
+		contentPane.add(btnVerPagos);
+		
+		btnAceptar = new JButton("Aceptar");
+		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnAceptar.setBounds(249, 413, 143, 49);
+		btnAceptar.setBackground(new Color(52, 152, 219));
+		btnAceptar.setForeground(Color.WHITE);
+		contentPane.add(btnAceptar);
+		
+		lblCodigoPasaje = new JLabel("Código del pasaje:");
+		lblCodigoPasaje.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblCodigoPasaje.setBounds(27, 116, 112, 14);
+		contentPane.add(lblCodigoPasaje);
+		
+		lblMotivoCancelacion = new JLabel("Motivo de cancelacion:");
+		lblMotivoCancelacion.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblMotivoCancelacion.setBounds(27, 341, 163, 14);
+		contentPane.add(lblMotivoCancelacion);
+		lblMotivoCancelacion.setVisible(false);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(27, 372, 605, 14);
+		contentPane.add(separator);
+		
+		txtCodigoDelPasaje = new JTextField();
+		txtCodigoDelPasaje.setEditable(false);
+		txtCodigoDelPasaje.setBackground(Color.WHITE);
+		txtCodigoDelPasaje.setBounds(149, 114, 321, 20);
+		contentPane.add(txtCodigoDelPasaje);
+		txtCodigoDelPasaje.setColumns(10);
+	}
+	
+	public JTextField getTxtCodigoDelPasaje() {
+		return txtCodigoDelPasaje;
+	}
+
+	public JTextField getTxtMotivoCancelacion() {
+		return txtMotivoCancelacion;
+	}
+
+	public JTextField getTxtClienteDelPasaje() {
+		return txtClienteDelPasaje;
+	}
+	
+	public JTextField getTxtDniDelPasaje() {
+		return txtDniDelPasaje;
+	}
+	
+	public JTextField getTxtOrigenDelPasaje() {
+		return txtOrigenDelPasaje;
+	}
+
+	public JTextField getTxtDestinoDelPasaje() {
+		return txtDestinoDelPasaje;
+	}
+	
+	public JTextField getTxtTransporteDelPasaje() {
+		return txtTransporteDelPasaje;
+	}
+	
+	public JTextField getTxtMontoDelPasaje() {
+		return txtMontoDelPasaje;
+	}
+	
+	public JTextField getTxtEstadoPasaje() {
+		return txtEstadoPasaje;
+	}
+	
+	public JTextField getTxtImporteDebePasaje() {
+		return txtImporteDebePasaje;
 	}
 	
 	public JButton getBtnAceptar() {
@@ -188,6 +267,15 @@ public class VentanaVisualizarPasaje extends JFrame {
 		return btnPagar;
 	}
 	
+	public JButton getBtnVerPagos() {
+		return btnVerPagos;
+	}
+	
+
+	public JLabel getLblMotivoCancelacion() {
+		return lblMotivoCancelacion;
+	}
+
 	public void mostrarVentana(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}

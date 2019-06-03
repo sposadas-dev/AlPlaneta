@@ -4,6 +4,7 @@ import java.util.List;
 
 import dto.PasajeDTO;
 import dto.Pasaje_PasajerosDTO;
+import dto.PasajeroDTO;
 
 public interface Pasaje_PasajerosDAO {
 
@@ -16,5 +17,7 @@ public interface Pasaje_PasajerosDAO {
 	public boolean delete(Pasaje_PasajerosDTO pasaje_pasajeros);
 
 	public boolean insert(Pasaje_PasajerosDTO pasaje_pasajeros);
+	
+	public List<PasajeroDTO> traerPasajerosDePasaje(int idPasaje);
 	
 }
