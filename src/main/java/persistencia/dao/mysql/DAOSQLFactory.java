@@ -24,7 +24,6 @@ import persistencia.dao.interfaz.RolDAO;
 import persistencia.dao.interfaz.TransporteDAO;
 import persistencia.dao.interfaz.ViajeDAO;
 
-
 public class DAOSQLFactory implements DAOAbstractFactory {
 	
 	public LoginDAO createLoginDAO() {
@@ -115,5 +114,20 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	@Override
 	public PuntoDAO	 createPuntoDAO() {
 		return new PuntoDAOSQL();
+	}
+
+	@Override
+	public Pagos_PasajeDAO createPagos_PasajeDAO() {
+		return new Pagos_PasajeDAOSQL();
+	}
+	
+	@Override
+	public EstadoEventoDAO createEstadoEventoDAO() {
+		return new EstadoEventoDAOSQL();
+	}
+	
+	@Override
+	public EventoDAO createEventoDAO() {
+		return new EventoDAOSQL();
 	}
 }

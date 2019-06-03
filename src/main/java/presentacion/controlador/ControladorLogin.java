@@ -44,24 +44,21 @@ public class ControladorLogin {
 	private AdministrativoDTO administrativoLogueado;
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 	private CoordinadorDTO coordinadorLogueado;
 	
-=======
 	private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
 	private MedioContacto modeloMedioContacto;
 	private Administrativo modeloAdministrativo;
 	private Integer idMedioContactoBuscado;
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
+
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
 		this.ventanaLogin = ventanaLogin;
 		this.vistaAdministrador = VistaAdministrador.getInstance();
-<<<<<<< src/main/java/presentacion/controlador/ControladorLogin.java
 		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance()
 		this.vistaCoordinador = VistaCoordinador.getInstance();
-=======
+		
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
 		this.modeloMedioContacto = new MedioContacto(new DAOSQLFactory());
 		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
@@ -77,7 +74,6 @@ public class ControladorLogin {
 		this.envioDeCorreo = new EnvioDeCorreo();
 		
 		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
->>>>>>> src/main/java/presentacion/controlador/ControladorLogin.java
 		this.vistaCliente = VistaCliente.getInstance();
 		
 		this.modeloLogin = login;
@@ -88,8 +84,6 @@ public class ControladorLogin {
 	
 		this.ventanaLogin.getBtnLogin().addActionListener(log->loguearse(log));
 		this.ventanaClaveOlvidada.getBtnRecuperarContrasena().addActionListener(e->realizarCambioContrasena(e));;
-		
-		
 		
 		this.ventanaLogin.getLblClaveOlvidada().addMouseListener(new MouseListener(){
 			public void mouseClicked(MouseEvent e) {
@@ -265,8 +259,7 @@ public class ControladorLogin {
 		Coordinador coordinador = new Coordinador(new DAOSQLFactory());
 		return coordinador.getByLoginId(loginUsuario.getIdDatosLogin());
 	}
-	
-	
+		
 	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {
 		Cliente cliente = new Cliente(new DAOSQLFactory());
 		return cliente.getByLoginId(loginUsuario.getIdDatosLogin());
