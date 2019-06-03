@@ -107,7 +107,7 @@ public class VentanaAgregarEmpleado extends JFrame {
 		btnRegistrar.setForeground(Color.WHITE);
 		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnRegistrar.setBackground(new Color(5, 196, 107));
-		btnRegistrar.setBounds(59, 335, 131, 42);
+		btnRegistrar.setBounds(137, 336, 131, 42);
 		contentPane.add(btnRegistrar);
 		
 		JPanel panelRegistrarEmpleado = new JPanel();

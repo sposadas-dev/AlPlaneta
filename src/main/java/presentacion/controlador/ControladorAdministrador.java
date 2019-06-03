@@ -92,7 +92,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemAgregarViaje().addActionListener(v->mostrarVentanaViaje(v));
 //BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
-		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
+//		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
 		
 		this.ventanaEditarCuenta.getBtnRegistrar().addActionListener(ec->editarCuenta(ec));
 		this.ventanaEditarCuenta.getBtnCancelar().addActionListener(can->cancelarEditarCuenta(can));
@@ -399,14 +399,14 @@ public class ControladorAdministrador {
 		if(activos == true && inactivos == false) {
 			for (LoginDTO login : this.logins_aux) {
 				if(login.getRol().getIdRol() != 5) {
-					if(login.getEstado().equals("Activo"))
+					if(login.getEstado().equals("activo") || login.getEstado().equals("Activo"))
 					this.logins_en_tabla.add(login);
 				}
 			}
 		} else if (inactivos == true && activos == false) {
 			for (LoginDTO login : this.logins_aux) {
 				if(login.getRol().getIdRol() != 5) {
-					if(login.getEstado().equals("Inactivo"))
+					if(login.getEstado().equals("inactivo") || login.getEstado().equals("Inactivo"))
 						this.logins_en_tabla.add(login);
 				}
 			}

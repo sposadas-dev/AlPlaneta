@@ -246,7 +246,7 @@ ALTER TABLE `evento` ADD FOREIGN KEY (`idAdministrativo`) references administrat
 ALTER TABLE `evento` ADD FOREIGN KEY (`idEstadoEvento`) references estadoevento(`idEstadoEvento`);
 
 INSERT INTO rol VALUES (1,'administrador'),(2,'administrativo'),(3,'coordinador'),(4,'contador'),(5,'cliente');
-INSERT INTO login VALUES (1,'sol','sol123',2,'activo'),(2,'lizz','liz123',1,'inactivo'),(3,'Mica','mica123',3,'activo'),(4,'Seba','seba123',5,'activo'),(5,'nicoAdministrador','nico123',1,'inactivo');
+INSERT INTO login VALUES (1,'sol','sol123',2,'activo'),(2,'lizz','liz123',1,'activo'),(3,'Mica','mica123',3,'activo'),(4,'Seba','seba123',5,'activo'),(5,'nicoAdministrador','nico123',1,'inactivo');
 INSERT INTO mediocontacto VALUES (1,'44514236','1532691249','lizzmoreno@gmail.com'),(2,'46649865','1546823599','alplanetaproject@gmail.com'),(3,'44329865','1523234598','solhoyos@hotmail.com'),(4,'44513295','1546853265','avila_nico@yahoo.com'),(5,'44661634','1598564571','juan.p@gmail.com'),(6,'44513269','1562773216','pepito.lopez@hotmail.com'),(7,'44519723','1565379812','legrand_mirta@yahoo.com.ar');
 INSERT INTO administrador VALUES (1,'lizz',2,'moreno.lizk@gmail.com');
 INSERT INTO administrativo VALUES (1,'solAdministrativa',1,'hoyos.mariasol@gmail.com');
