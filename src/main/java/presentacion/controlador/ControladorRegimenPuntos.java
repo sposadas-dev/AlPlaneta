@@ -78,20 +78,22 @@ public class ControladorRegimenPuntos implements ActionListener {
 		this.ventanaModificarRegimenPuntos.getDateVencimiento().setDate(this.puntos_en_tabla.get(this.filaSeleccionada).getVencimiento());
 	}
 	
-	public void ModificarRegimenPuntos(ActionEvent ac) { 
+    public void ModificarRegimenPuntos(ActionEvent ac) { 
 		int confirm = JOptionPane.showOptionDialog(
 	            null,"¿Estás seguro que quieres editar el regimen puntos?", 
 			             "Editar puntos", JOptionPane.YES_NO_OPTION,
 			             JOptionPane.WARNING_MESSAGE, null, null, null);
 		if (confirm == 0){
+			java.util.Date dateFechaVencimiento = this.ventanaModificarRegimenPuntos.getDateVencimiento().getDate();
+			java.sql.Date fechaVencimiento = new java.sql.Date(dateFechaVencimiento.getTime());
 			this.punto.editarPunto(new PuntoDTO(puntos_en_tabla.get(this.filaSeleccionada).getIdPunto(),
-												puntos_en_tabla.get(this.filaSeleccionada).getPunto(),
-												puntos_en_tabla.get(this.filaSeleccionada).getARS(),
-												puntos_en_tabla.get(this.filaSeleccionada).getVencimiento()));
+												Integer.parseInt(this.ventanaModificarRegimenPuntos.getTxtCantPuntos().getText()),
+												Integer.parseInt(this.ventanaModificarRegimenPuntos.getTextARS().getText()),
+												fechaVencimiento));
 			ventanaModificarRegimenPuntos.limpiarCampos();
 			ventanaModificarRegimenPuntos.dispose(); 
- 
 		}  
+	}  
 		
 	}
 	private void cancelarVentanaModificarRegimenPuntos(ActionEvent c) {
