@@ -2,11 +2,9 @@ package modelo;
 
 import java.util.List;
 
+import dto.LoginDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.LoginDAO;
-import persistencia.dao.interfaz.MedioContactoDAO;
-import dto.LoginDTO;
-import dto.MedioContactoDTO;
 
 public class Login {
 

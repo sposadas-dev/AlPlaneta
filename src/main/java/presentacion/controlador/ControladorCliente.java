@@ -3,9 +3,11 @@ package presentacion.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JOptionPane;
 
+import correo.EnvioDeCorreo;
 import dto.ClienteDTO;
 import dto.LoginDTO;
 import dto.MedioContactoDTO;
@@ -24,10 +26,12 @@ public class ControladorCliente implements ActionListener{
 	private VentanaEditarCliente ventanaEditarCliente;
 	private PanelCliente panelCliente;
 	private List<ClienteDTO> clientes_en_tabla;
+	private String contrasenaProvisoria;
 
 	private Cliente cliente;
 	private MedioContacto medioContacto; 
-	private Login login;
+	private Login Modelologin;
+	private EnvioDeCorreo enviodeCorreo;
 
 	public ControladorCliente() {
 		super();
@@ -37,9 +41,11 @@ public class ControladorCliente implements ActionListener{
 		this.ventanaRegistrarCliente = ventanaRegistrarCliente;
 		this.ventanaEditarCliente = ventanaEditarCliente;
 		this.cliente = cliente;
+		this.contrasenaProvisoria = null;
+		this.enviodeCorreo = new EnvioDeCorreo();
 		
 		this.medioContacto =  new MedioContacto(new DAOSQLFactory());
-		this.login = new Login(new DAOSQLFactory());
+		this.Modelologin = new Login(new DAOSQLFactory());
 		this.panelCliente = new PanelCliente();
 		this.ventanaRegistrarCliente.getBtnRegistrar().addActionListener(rc->registrarCliente(rc));
 		this.ventanaRegistrarCliente.getBtnCancelar().addActionListener(cv->cerrarVentanaCliente(cv));
@@ -59,16 +65,20 @@ public class ControladorCliente implements ActionListener{
 		mContacto.setTelefonoFijo(this.ventanaRegistrarCliente.getTxtTelefonoFijo().getText());
 		mContacto.setTelefonoCelular(this.ventanaRegistrarCliente.getTxtTelefonoCelular().getText());
 		mContacto.setEmail(this.ventanaRegistrarCliente.getTxtEmail().getText());
-	
 		medioContacto.agregarMedioContacto(mContacto);
-	
+		this.contrasenaProvisoria = UUID.randomUUID().toString().toUpperCase().substring(0, 8);
+
 		LoginDTO loginCliente = new LoginDTO();
 		loginCliente.setUsuario(this.ventanaRegistrarCliente.getTxtUsuario().getText());
-		loginCliente.setContrasena(this.ventanaRegistrarCliente.getTxtContrasenia().getText());
+		// TODO: GENERAR CONTRASENA PROVISORIA
+//		loginCliente.setContrasena(this.ventanaRegistrarCliente.getTxtContrasenia().getText());
+		loginCliente.setContrasena(contrasenaProvisoria);
 		loginCliente.setRol(new RolDTO(5,"cliente"));
-		loginCliente.setEstado("Activo");
+		loginCliente.setEstado("activo");
 		
-		login.agregarLogin(loginCliente);
+		Modelologin.agregarLogin(loginCliente);
+		
+		LoginDTO loginProv = obtenerLoginDTO();
 		
 		ClienteDTO nuevoCliente = new ClienteDTO(0,
 			this.ventanaRegistrarCliente.getTxtNombre().getText(),
@@ -76,18 +86,23 @@ public class ControladorCliente implements ActionListener{
 			this.ventanaRegistrarCliente.getTxtDni().getText(),
 			fechaNacimiento,
 			obtenerMedioContactoDTO(),
-			obtenerLoginDTO()
+			loginProv
 												);
+		System.out.println("Generamos el cliente: "+nuevoCliente.getNombre()+"-"+nuevoCliente.getMail());
+		
 		if(camposLlenos()){
 			cliente.agregarCliente(nuevoCliente);
 			this.llenarTablaClientes();
 			this.ventanaRegistrarCliente.limpiarCampos();
 			this.ventanaRegistrarCliente.cerrarVentana();
 		}
+		Cliente modeloCliente = new Cliente(new DAOSQLFactory());
+		ClienteDTO clienteDTO = cliente.getByLoginId(loginProv.getIdDatosLogin());
+		enviodeCorreo.enviarNuevaContrasena(clienteDTO.getMail(), contrasenaProvisoria,"Generacion de Usuario");
 	}
 
 	public void editarCliente(ClienteDTO cliente_a_editar) {
-		this.login.editarLogin(cliente_a_editar.getLogin());
+		this.Modelologin.editarLogin(cliente_a_editar.getLogin());
 		this.medioContacto.editarMedioContacto(cliente_a_editar.getMedioContacto());
 		this.cliente.editarCliente(cliente_a_editar);
 
@@ -100,12 +115,12 @@ public class ControladorCliente implements ActionListener{
 	
 	public void desactivarCliente(int clienteSeleccionado) {
 		String estado = "Inactivo";
-		this.login.editarEstado(estado, clienteSeleccionado);
+		this.Modelologin.editarEstado(estado, clienteSeleccionado);
 	}
 	
 	public void activarCliente(int clienteSeleccionado) {
 		String estado = "Activo";
-		this.login.editarEstado(estado, clienteSeleccionado);
+		this.Modelologin.editarEstado(estado, clienteSeleccionado);
 	}
 	
 	private MedioContactoDTO obtenerMedioContactoDTO() {
@@ -123,10 +138,10 @@ public class ControladorCliente implements ActionListener{
 	
 	private LoginDTO obtenerLoginDTO() {
 		LoginDTO loginDTO = new LoginDTO();
-		List<LoginDTO> logins = login.obtenerLogin();
+		List<LoginDTO> logins = Modelologin.obtenerLogin();
 		for(LoginDTO l: logins){
 			if(l.getUsuario().equals(this.ventanaRegistrarCliente.getTxtUsuario().getText()) &&
-					l.getContrasena().equals(this.ventanaRegistrarCliente.getTxtContrasenia().getText())){
+					l.getContrasena().equals(contrasenaProvisoria)){
 			loginDTO = l;
 		}
 	}
@@ -145,7 +160,6 @@ public class ControladorCliente implements ActionListener{
 				ventanaRegistrarCliente.getTxtDni().getText().isEmpty() ||				
 				(ventanaRegistrarCliente.getDateFechaNacimiento().getDate()== null) ||
 				ventanaRegistrarCliente.getTxtUsuario().getText().isEmpty() ||
-				ventanaRegistrarCliente.getTxtContrasenia().getText().isEmpty() ||
 				ventanaRegistrarCliente.getTxtTelefonoFijo().getText().isEmpty() ||
 				ventanaRegistrarCliente.getTxtTelefonoCelular().getText().isEmpty() ||
 				ventanaRegistrarCliente.getTxtEmail().getText().isEmpty()

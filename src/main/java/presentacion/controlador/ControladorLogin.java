@@ -168,7 +168,7 @@ public class ControladorLogin {
 	}
 	
 	private void enviarContrasenaViaMail() {
-		this.envioDeCorreo.enviarNuevaContrasena(mailDeRecuperacion, contrasenaProvisoria);
+		this.envioDeCorreo.enviarNuevaContrasena(mailDeRecuperacion, contrasenaProvisoria,"Recuperacion de Contrasena");
 		this.ventanaClaveOlvidada.setVisible(false);
 	}
 	
@@ -265,7 +265,7 @@ public class ControladorLogin {
 	}
 		
 	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {
-		Cliente cliente = new Cliente(new DAOSQLFactory());
-		return cliente.getByLoginId(loginUsuario.getIdDatosLogin());
+		Cliente modeloCliente = new Cliente(new DAOSQLFactory());
+		return modeloCliente.getByLoginId(loginUsuario.getIdDatosLogin());
 	}
 }

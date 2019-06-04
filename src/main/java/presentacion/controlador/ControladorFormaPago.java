@@ -7,12 +7,10 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import dto.FormaPagoDTO;
-
 import modelo.FormaPago;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.VentanaAgregarFormaPago;
 import presentacion.vista.administrador.VentanaEditarFormaPago;
-import presentacion.vista.administrador.VistaAdministrador;
 
 public class ControladorFormaPago implements ActionListener {
 

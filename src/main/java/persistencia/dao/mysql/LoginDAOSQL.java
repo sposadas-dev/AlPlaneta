@@ -65,6 +65,8 @@ public class LoginDAOSQL implements LoginDAO{
 	}
 	@Override
 	public boolean update(LoginDTO datosNuevos) {
+		System.out.println(datosNuevos.getUsuario()+" "+datosNuevos.getContrasena()+" "+datosNuevos.getRol()+" "+datosNuevos.getEstado()+" "+datosNuevos.getIdDatosLogin());
+		
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
