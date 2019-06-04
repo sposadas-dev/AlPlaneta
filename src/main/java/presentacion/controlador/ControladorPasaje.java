@@ -30,20 +30,14 @@ import generatePDF.GeneratePDF;
 import modelo.Cliente;
 import modelo.EstadoPasaje;
 import modelo.FormaPago;
-<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
-=======
 import modelo.ModeloPromocion;
->>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 import modelo.ModeloViaje;
 import modelo.Pago;
 import modelo.Pagos_Pasaje;
 import modelo.Pasaje;
 import modelo.Pasaje_Pasajeros;
 import modelo.Pasajero;
-<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
 import modelo.Punto;
-=======
->>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.reportes.Reporte;
 import presentacion.vista.administrativo.VentanaCancelacionPasaje;

@@ -114,12 +114,12 @@ public class ControladorCliente implements ActionListener{
 	}
 	
 	public void desactivarCliente(int clienteSeleccionado) {
-		String estado = "Inactivo";
+		String estado = "inactivo";
 		this.Modelologin.editarEstado(estado, clienteSeleccionado);
 	}
 	
 	public void activarCliente(int clienteSeleccionado) {
-		String estado = "Activo";
+		String estado = "activo";
 		this.Modelologin.editarEstado(estado, clienteSeleccionado);
 	}
 	

@@ -156,7 +156,7 @@ public class ControladorAdministrativo implements ActionListener {
 		java.util.Date dateFechaNacimiento = this.ventanaEditarCliente.getDateFechaNacimiento().getDate();
 		java.sql.Date fechaNacimientoCliente = new java.sql.Date(dateFechaNacimiento.getTime());
 		
-		String estado = "Activo";
+		String estado = "activo";
 		int idCliente = this.clientes_en_tabla.get(this.filaSeleccionada).getIdCliente();
 		String nombreCliente = this.ventanaEditarCliente.getTxtNombre().getText();
 		String apellidoCliente = this.ventanaEditarCliente.getTxtApellido().getText();
