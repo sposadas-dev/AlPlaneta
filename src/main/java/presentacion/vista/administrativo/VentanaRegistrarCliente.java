@@ -158,15 +158,12 @@ public class VentanaRegistrarCliente extends JFrame {
 		contentPane.add(txtUsuario);
 		txtUsuario.setColumns(10);
 		
-		JLabel lblContrasenia = new JLabel("Contraseña:");
-		lblContrasenia.setBounds(305, 212, 98, 14);
-		contentPane.add(lblContrasenia);
-		
 		txtContrasenia = new JTextField();
 		txtContrasenia.setBounds(390, 209, 168, 20);
 		contentPane.add(txtContrasenia);
 		txtContrasenia.setColumns(10);
-	}
+		txtContrasenia.setVisible(false);
+	}//´PUEDO PONER QUE NO SEA VISIBLE EL TXT.....????????????????????????
 	
 	public void mostrarVentana()
 	{

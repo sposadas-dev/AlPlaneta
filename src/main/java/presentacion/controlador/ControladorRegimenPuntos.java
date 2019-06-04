@@ -95,7 +95,6 @@ public class ControladorRegimenPuntos implements ActionListener {
 		}  
 	}  
 		
-	}
 	private void cancelarVentanaModificarRegimenPuntos(ActionEvent c) {
 		this.ventanaModificarRegimenPuntos.limpiarCampos();
 		this.ventanaModificarRegimenPuntos.cerrarVentana();

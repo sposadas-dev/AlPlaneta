@@ -16,7 +16,7 @@ import persistencia.dao.interfaz.ClienteDAO;
 
 public class ClienteDAOSQL implements ClienteDAO {
 
-	private static final String insert = "INSERT INTO cliente(idCliente, nombre, apellido, dni, fechaNacimiento, idMedioContacto, idLogin) VALUES(?, ?, ?, ?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO cliente(idCliente, nombre, apellido, dni, fechaNacimiento, idMedioContacto, idLogin, mail) VALUES(?, ?, ?, ?, ?, ?, ?,?)";
 	private static final String readall = "SELECT * FROM cliente";
 	private static final String update = "UPDATE cliente SET nombre=? , apellido=? , dni=? , fechaNacimiento=? , idMedioContacto= ?, idLogin= ? WHERE idCliente=? ;";
 	private static final String browse = "SELECT * FROM cliente WHERE idCliente = ?";
@@ -38,6 +38,7 @@ public class ClienteDAOSQL implements ClienteDAO {
 			statement.setDate(5, cliente.getFechaNacimiento());
 			statement.setInt(6, cliente.getMedioContacto().getIdMedioContacto());
 			statement.setInt(7,cliente.getLogin().getIdDatosLogin());
+			statement.setString(8,cliente.getMedioContacto().getEmail());
 			
 			if (statement.executeUpdate() > 0) // Si se ejecuto devuelvo true
 				return true;

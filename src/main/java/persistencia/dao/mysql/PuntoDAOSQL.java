@@ -1,13 +1,12 @@
 package persistencia.dao.mysql;
 
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import modelo.Punto;
 
 import dto.PuntoDTO;
 import persistencia.conexion.Conexion;
@@ -132,22 +131,29 @@ public class PuntoDAOSQL implements PuntoDAO{
 	
 
 	public static void main(String[] args) {
-		Punto dao = new Punto(new DAOSQLFactory());
-		
-		List<PuntoDTO> list = dao.obtenerPunto(); 
-		
-		for(PuntoDTO elem: list){
-			System.out.println(elem.getPunto());
-			elem.setPunto(20);
-			dao.editarPunto(elem);
-			
-		}
-		System.out.println("- - - - - - - - - - - - -");
+//		Punto dao = new Punto(new DAOSQLFactory());
+//		
+//		List<PuntoDTO> list = dao.obtenerPunto(); 
+//		
+//		for(PuntoDTO elem: list){
+//			System.out.println(elem.getPunto());
+//			elem.setPunto(20);
+//			dao.editarPunto(elem);
+//			
+//		}
+//		System.out.println("- - - - - - - - - - - - -");
 //		System.out.println(dao.getPuntoById(1).getARS());
 //		dao.agregarPunto();
 //		tiene id, cantpuntos, ARS, y vencimiento
 //		 
-		 
+//	        BigDecimal big = new BigDecimal("925.0000");
+//	        String[] parts = big.toString().split("\\.");
+//	        Integer parteEntera= Integer.parseInt(parts[0]);
+//	        Integer parteDecimal= Integer.parseInt(parts[1]);
+	        
+//	        System.out.println("Parte entera: " + parteEntera);
+//	        System.out.println("Parte decimal: " + parteDecimal);
+
 	} 
 
 }

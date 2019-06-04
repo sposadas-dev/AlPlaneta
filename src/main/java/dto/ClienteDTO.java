@@ -12,6 +12,7 @@ public class ClienteDTO {
 	private MedioContactoDTO medioContacto;
 	private LoginDTO login;
 	private String mail;
+	private int puntos;
 
 	public ClienteDTO(int idCliente, String nombre, String apellido, String dni, Date fechaNacimiento, MedioContactoDTO medioContacto, LoginDTO login){
 		super();
@@ -23,6 +24,7 @@ public class ClienteDTO {
 		this.medioContacto = medioContacto;
 		this.login = login;
 		this.mail = medioContacto.getEmail();
+		this.puntos = 0;
 	}
 
 	public ClienteDTO() {
@@ -50,6 +52,14 @@ public class ClienteDTO {
 
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
+	}
+
+	public int getPuntos() {
+		return puntos;
+	}
+
+	public void setPuntos(int puntos) {
+		this.puntos = puntos;
 	}
 
 	public String getDni() {
