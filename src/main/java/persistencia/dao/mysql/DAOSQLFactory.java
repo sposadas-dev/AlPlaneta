@@ -18,6 +18,7 @@ import persistencia.dao.interfaz.PaisDAO;
 import persistencia.dao.interfaz.PasajeDAO;
 import persistencia.dao.interfaz.Pasaje_PasajerosDAO;
 import persistencia.dao.interfaz.PasajeroDAO;
+import persistencia.dao.interfaz.PromocionDAO;
 import persistencia.dao.interfaz.ProvinciaDAO;
 import persistencia.dao.interfaz.PuntoDAO;
 import persistencia.dao.interfaz.RolDAO;
@@ -129,5 +130,10 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	@Override
 	public EventoDAO createEventoDAO() {
 		return new EventoDAOSQL();
+	}
+	
+	@Override
+	public PromocionDAO createPromocionDAO() {
+		return new PromocionDAOSQL();
 	}
 }
