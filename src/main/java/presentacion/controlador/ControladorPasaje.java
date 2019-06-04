@@ -1,6 +1,5 @@
 package presentacion.controlador;
 
-import generatePDF.GeneratePDF;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
@@ -16,28 +15,29 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import correo.EnvioDeCorreo;
-import modelo.Cliente;
-import modelo.EstadoPasaje;
-import modelo.FormaPago;
-import modelo.ModeloViaje;
-import modelo.Pago;
-import modelo.Pagos_Pasaje;
-import modelo.Pasaje;
-import modelo.Pasaje_Pasajeros;
-import modelo.Pasajero;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EstadoPasajeDTO;
 import dto.FormaPagoDTO;
 import dto.PagoDTO;
 import dto.Pagos_PasajeDTO;
-import dto.PaisDTO;
 import dto.PasajeDTO;
 import dto.Pasaje_PasajerosDTO;
 import dto.PasajeroDTO;
+import dto.PromocionDTO;
 import dto.ViajeDTO;
+import generatePDF.GeneratePDF;
+import modelo.Cliente;
+import modelo.EstadoPasaje;
+import modelo.FormaPago;
+import modelo.ModeloPromocion;
+import modelo.ModeloViaje;
+import modelo.Pago;
+import modelo.Pagos_Pasaje;
+import modelo.Pasaje;
+import modelo.Pasaje_Pasajeros;
+import modelo.Pasajero;
 import persistencia.dao.mysql.DAOSQLFactory;
-import persistencia.dao.mysql.PaisDAOSQL;
 import presentacion.reportes.Reporte;
 import presentacion.vista.administrativo.VentanaCancelacionPasaje;
 import presentacion.vista.administrativo.VentanaCargaPasajero;
@@ -88,6 +88,7 @@ public class ControladorPasaje implements ActionListener{
 	private Pasaje pasaje;
 	private Pagos_Pasaje pagos_pasaje;
 	private Pasaje_Pasajeros pasajes_pasajeros;
+	private ModeloPromocion modeloPromocion;
 	/*Fin de modelos*/
 	
 	private BigDecimal totalaPagar;
@@ -95,6 +96,8 @@ public class ControladorPasaje implements ActionListener{
 	private PagoDTO pagoDTO;
 	private boolean editarPago;
 	private DefaultTableModel dm;
+	private ViajeDTO viajeDTO;
+	private java.util.Date fechaActual;
 	
 	public ControladorPasaje(VentanaVisualizarClientes ventanaVisualizarClientes, Cliente cliente, AdministrativoDTO administrativoLogueado){
 		this.ventanaVisualizarClientes = ventanaVisualizarClientes;
@@ -109,6 +112,10 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaTarjeta = VentanaTarjeta.getInstance();
 		this.ventanaCancelacionPasaje = VentanaCancelacionPasaje.getInstance();
 		
+		
+		java.util.Date fecha = new java.util.Date(); 
+		this.fechaActual = new java.sql.Date(fecha.getTime());	
+		
 		this.cliente = cliente;
 		this.viaje = new ModeloViaje(new DAOSQLFactory());
 		this.pasajero = new Pasajero(new DAOSQLFactory());
@@ -116,6 +123,7 @@ public class ControladorPasaje implements ActionListener{
 		this.pasaje = new Pasaje(new DAOSQLFactory());
 		this.pagos_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
 		this.pasajes_pasajeros = new Pasaje_Pasajeros(new DAOSQLFactory());
+		this.modeloPromocion = new ModeloPromocion(new DAOSQLFactory());
 		
 		this.pdf = new GeneratePDF();				
 		this.envioCorreo = new EnvioDeCorreo();
@@ -155,6 +163,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaCancelacionPasaje.getBtnAceptar().addActionListener(cp->cancelarPasaje(cp));
 		this.administrativoLogueado = administrativoLogueado;
 		this.editarPago = true;
+		
 	}
 
 
@@ -496,9 +505,10 @@ public class ControladorPasaje implements ActionListener{
 	
 	
 	private void darAltaDeUnPasaje(ActionEvent dp) {
-		ViajeDTO viajeDTO = viajeSeleccionado;
-		ClienteDTO cliente = clienteSeleccionado;
+		viajeDTO = viajeSeleccionado;
 		BigDecimal valorViaje = calcularMontoDePasaje();
+
+		ClienteDTO cliente = clienteSeleccionado;
 		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
 		
@@ -563,11 +573,45 @@ public class ControladorPasaje implements ActionListener{
     }
 	
 	private BigDecimal calcularMontoDePasaje() {
+		BigDecimal valorFinal;
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
 		totalaPagar = Valor1;
-		return totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
+		valorFinal = totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
+		
+		for(PromocionDTO p : modeloPromocion.obtenerPromocion()) {
+			if(p.getViaje().getIdViaje() == viajeSeleccionado.getIdViaje())
+				if(promocionActiva(p))
+					valorFinal = calcularMontoDePasajeConDescuento(valorFinal, p.getPorcentaje());
+		}
+	
+		return valorFinal;
+	}
+	
+	public boolean promocionActiva(PromocionDTO p) {
+		boolean activa = false;
+		boolean noVencida = false;
+		for(PromocionDTO x : modeloPromocion.obtenerPromocion()) {
+			if(x.getIdPromocion()==p.getIdPromocion()) {
+				if(x.getEstado().equals("activa")) {
+					activa = true;
+					if(this.fechaActual.before(x.getFechaVencimiento()))
+						noVencida = true;
+				}
+			}
+		}
+		if(activa && noVencida)
+			return true;
+		else
+			return false;
+		
 	}
 		
+	
+	private BigDecimal calcularMontoDePasajeConDescuento(BigDecimal valor, int porcentaje) {
+		BigDecimal nuevoValor = new BigDecimal(100-porcentaje);
+		return valor.multiply(nuevoValor).divide(new BigDecimal(100));
+	}
+	
 	private EstadoPasajeDTO calcularEstadoPasaje() {
 		EstadoPasaje estado = new EstadoPasaje(new DAOSQLFactory());
 		EstadoPasajeDTO ret;
@@ -702,4 +746,11 @@ public class ControladorPasaje implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 	}
+//	public static void main(String[] args) {
+//		ControladorPasaje c = new ControladorPasaje(new VentanaVisualizarClientes(), new Cliente(new DAOSQLFactory()), new AdministrativoDTO());
+//		BigDecimal valor = new BigDecimal (4500);
+//		int porcentajeDescuento = 45;
+//		System.out.println(c.calcularMontoDePasajeConDescuento(valor, porcentajeDescuento).toString()+" precio con DESCUENTO!");
+//		
+//	}
 }
