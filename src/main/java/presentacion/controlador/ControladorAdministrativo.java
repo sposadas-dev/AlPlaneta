@@ -498,7 +498,6 @@ public class ControladorAdministrativo implements ActionListener {
 		for (int i = 0; i < this.eventos_en_tabla.size(); i++){
 
 			Object[] fila = {
-							this.eventos_en_tabla.get(i).getIdEvento(),
 							this.eventos_en_tabla.get(i).getFechaIngreso(),
 							this.eventos_en_tabla.get(i).getFechaEvento(),
 							this.eventos_en_tabla.get(i).getHoraEvento(),
