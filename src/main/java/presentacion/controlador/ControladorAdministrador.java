@@ -9,12 +9,14 @@ import javax.swing.JOptionPane;
 
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
+import dto.CoordinadorDTO;
 import dto.FormaPagoDTO;
 import dto.LoginDTO;
 import dto.RolDTO;
 import dto.TransporteDTO;
 import modelo.Administrador;
 import modelo.Administrativo;
+import modelo.Coordinador;
 import modelo.FormaPago;
 import modelo.Login;
 import modelo.Rol;
@@ -127,7 +129,7 @@ public class ControladorAdministrador {
 	private void desactivarCuenta(ActionEvent cc) {
 		int filaSelect = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
 		if (filaSelect != -1){
-			String estado = "Inactivo";
+			String estado = "inactivo";
 			this.login.editarEstado(estado, this.logins_en_tabla.get(filaSelect).getIdDatosLogin());
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
@@ -138,7 +140,7 @@ public class ControladorAdministrador {
 	private void activarCuenta(ActionEvent acc) {
 		int filaSelect = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
 		if (filaSelect != -1){
-			String estado = "Activo";
+			String estado = "activo";
 			this.login.editarEstado(estado, this.logins_en_tabla.get(filaSelect).getIdDatosLogin());
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
@@ -217,7 +219,7 @@ public class ControladorAdministrador {
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
 			nuevoLogin.setContrasena(ventanaAgregarEmpleado.getTxtContrasenia().getText());
 			nuevoLogin.setRol(new RolDTO(1,"administrador"));
-			nuevoLogin.setEstado("Activo");
+			nuevoLogin.setEstado("activo");
 			
 			login.agregarLogin(nuevoLogin);
 			
@@ -235,7 +237,7 @@ public class ControladorAdministrador {
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
 			nuevoLogin.setContrasena(ventanaAgregarEmpleado.getTxtContrasenia().getText());
 			nuevoLogin.setRol(new RolDTO(2,"administrativo"));
-			nuevoLogin.setEstado("Activo");
+			nuevoLogin.setEstado("activo");
 
 			login.agregarLogin(nuevoLogin);
 			
@@ -249,11 +251,31 @@ public class ControladorAdministrador {
 			llenarTablaEmpleados();
 			this.ventanaAgregarEmpleado.mostrarVentana(false);
 		}
+		
+		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("coordinador")){
+			LoginDTO nuevoLogin = new LoginDTO();
+			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
+			nuevoLogin.setContrasena(ventanaAgregarEmpleado.getTxtContrasenia().getText());
+			nuevoLogin.setRol(new RolDTO(3,"coordinador"));
+			nuevoLogin.setEstado("activo");
+
+			login.agregarLogin(nuevoLogin);
+			
+			CoordinadorDTO nuevoCoordinador = new CoordinadorDTO(0,
+					ventanaAgregarEmpleado.getTxtNombre().getText(),
+					obtenerLoginDTO(),
+					ventanaAgregarEmpleado.getTextMail().getText());
+			
+			Coordinador coordinador = new Coordinador(new DAOSQLFactory());
+			coordinador.agregarCoordinador(nuevoCoordinador);
+			llenarTablaEmpleados();
+			this.ventanaAgregarEmpleado.mostrarVentana(false);
+		}
 		//TODO: Falta agregar el empleado Contador y Coordinador.
 	}
 		
 	public void editarCuenta(ActionEvent ec) {
-			String estado = "Activo";
+			String estado = "activo";
 			String rolNombre = this.ventanaEditarCuenta.getComboBoxRoles().getSelectedItem().toString();
 			int idLogin = this.logins_en_tabla.get(this.filaSeleccionada).getIdDatosLogin();
 			int idRol = 0;
