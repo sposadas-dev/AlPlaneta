@@ -5,16 +5,16 @@ public class CoordinadorDTO {
 	private int idCoordinador;
 	private String nombre;
 	private LoginDTO datosLogin;
+	private String mail;
 	
 		
-	public CoordinadorDTO( int idCoordinador, String nombre, LoginDTO datosLogin)
-	{
+	public CoordinadorDTO( int idCoordinador, String nombre, LoginDTO datosLogin, String mail){
 		super();
 		this.idCoordinador =  idCoordinador;
 		this.nombre = nombre;
 		this.datosLogin = datosLogin;
+		this.mail = mail;
 	}
-
 
 	public int getIdCoordinador() {
 		return idCoordinador;
@@ -43,6 +43,14 @@ public class CoordinadorDTO {
 
 	public void setDatosLogin(LoginDTO datosLogin) {
 		this.datosLogin = datosLogin;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 	
 

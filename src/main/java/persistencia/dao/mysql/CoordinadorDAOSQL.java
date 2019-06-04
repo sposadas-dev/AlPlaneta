@@ -14,7 +14,7 @@ import persistencia.dao.interfaz.CoordinadorDAO;
 
 public class CoordinadorDAOSQL implements CoordinadorDAO {
 	
-	private static final String insert = "INSERT INTO coordinador(idCoordinador, nombre, idLogin)  VALUES (?, ?, ?)";
+	private static final String insert = "INSERT INTO coordinador(idCoordinador, nombre, idLogin,mail)  VALUES (?, ?, ?,?)";
 
 	private static final String readall = "SELECT * FROM coordinador";
 
@@ -33,6 +33,7 @@ public class CoordinadorDAOSQL implements CoordinadorDAO {
 			statement.setInt(1, coordinador.getIdCoordinador());
 			statement.setString(2, coordinador.getNombre());
 			statement.setInt(3, coordinador.getDatosLogin().getIdDatosLogin());
+			statement.setString(4, coordinador.getMail());
 
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -62,7 +63,8 @@ public class CoordinadorDAOSQL implements CoordinadorDAO {
 						new CoordinadorDTO(
 								resultSet.getInt("idCoordinador"),
 								resultSet.getString("nombre"),
-								dao.getById(resultSet.getInt("idLogin"))));
+								dao.getById(resultSet.getInt("idLogin")),
+								resultSet.getString("mail")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -108,7 +110,8 @@ public class CoordinadorDAOSQL implements CoordinadorDAO {
 				dto = new CoordinadorDTO(
 						resultSet.getInt("idCoordinador"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")));
+						dao.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"));
 				return dto;
 			}
 			
@@ -135,7 +138,8 @@ public class CoordinadorDAOSQL implements CoordinadorDAO {
 				dto = new CoordinadorDTO(
 						resultSet.getInt("idCoordinador"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")));
+						dao.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"));
 				return dto;
 			}
 			
