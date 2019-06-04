@@ -207,6 +207,15 @@ CREATE TABLE `punto`(
  PRIMARY KEY (`idPunto`)
 );
 
+CREATE TABLE `promocion`(
+`idPromocion` int(11) NOT NULL AUTO_INCREMENT,
+`idViaje` int(11) NOT NULL,
+`porcentaje` int (3) NOT NULL,
+`stock` int (11) NOT NULL,
+`fechaVencimiento` date NOT NULL,
+`estado` varchar (8) NOT NULL,
+PRIMARY KEY (`idPromocion`)
+);
 
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLogin`)  references login(`idLogin`);
@@ -245,6 +254,8 @@ ALTER TABLE `evento` ADD FOREIGN KEY (`idCliente`) references cliente(`idCliente
 ALTER TABLE `evento` ADD FOREIGN KEY (`idAdministrativo`) references administrativo(`idAdministrativo`);
 ALTER TABLE `evento` ADD FOREIGN KEY (`idEstadoEvento`) references estadoevento(`idEstadoEvento`);
 
+ALTER TABLE `promocion` ADD FOREIGN KEY (`idViaje`) references viaje(`idViaje`);
+
 INSERT INTO rol VALUES (1,'administrador'),(2,'administrativo'),(3,'coordinador'),(4,'contador'),(5,'cliente');
 INSERT INTO login VALUES (1,'sol','sol123',2,'activo'),(2,'lizz','liz123',1,'activo'),(3,'Mica','mica123',3,'activo'),(4,'Seba','seba123',5,'activo'),(5,'nicoAdministrador','nico123',1,'inactivo');
 INSERT INTO mediocontacto VALUES (1,'44514236','1532691249','lizzmoreno@gmail.com'),(2,'46649865','1546823599','alplanetaproject@gmail.com'),(3,'44329865','1523234598','solhoyos@hotmail.com'),(4,'44513295','1546853265','avila_nico@yahoo.com'),(5,'44661634','1598564571','juan.p@gmail.com'),(6,'44513269','1562773216','pepito.lopez@hotmail.com'),(7,'44519723','1565379812','legrand_mirta@yahoo.com.ar');
@@ -267,3 +278,5 @@ INSERT INTO estadoevento VALUES (1,'pendiente','el evento aún no se realizó'),
 
 INSERT INTO evento VALUES (1,'2019-05-27','2019-05-30','15:00:00','Consulta sobre reserva de viaje',1,1,2,'',1), (2,'2019-05-28','2019-06-04','18:00:00','Llamar a cliente por reclamo',2,1,1,'',0), (3,'2019-05-28','2019-06-04','19:15:00','Llamar al cliente por viaje a San Juan, Argentina',1,1,1,'',0), (4,'2019-05-29','2019-06-06','15:00:00','Llamar al cliente por reclamo de un viaje',2,1,1,'',0);
 INSERT INTO punto VALUES (1,1,100,'2019-07-25');
+
+INSERT INTO promocion VALUES (1,2,15,200,'2019-10-04','activa');

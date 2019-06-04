@@ -1,29 +1,16 @@
 package presentacion.vista.administrativo;
 
 import java.awt.Font;
-import javax.swing.JFrame;
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import persistencia.conexion.Conexion;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+
 import persistencia.conexion.Conexion;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class VistaAdministrativo{
 	
@@ -32,6 +19,7 @@ public class VistaAdministrativo{
 	private PanelCliente panelCliente;
 	private PanelPasaje panelPasaje;
 	private PanelEvento panelEvento;
+	private PanelPromocion panelPromocion;
 
 	private JMenuBar menuBar;
 	private JMenu menuClientes;
@@ -51,6 +39,11 @@ public class VistaAdministrativo{
 	private JMenuItem itemEditarEvento;
 	private JMenuItem itemVisualizarEvento;
 	 
+	private JMenu menuPromociones;
+	private JMenuItem itemAgregarPromocion;
+	private JMenuItem itemDarBajaPromocion;
+	private JMenuItem itemVisualizarPromociones;
+	
 	private static VistaAdministrativo INSTANCE;
 	public static VistaAdministrativo getInstance(){
 		if(INSTANCE == null)
@@ -95,6 +88,13 @@ public class VistaAdministrativo{
 		panelEvento.setLocation(0, 0);
 		frame.getContentPane().add(panelEvento);
 		panelEvento.setVisible(false);
+		
+		panelPromocion = new PanelPromocion();
+		panelPromocion.getTablaPromocion().setSize(1114, 900);
+		panelPromocion.setSize(1352, 700);
+		panelPromocion.setLocation(0, 0);
+		frame.getContentPane().add(panelPromocion);
+		panelPromocion.setVisible(false);
 		
 		menuBar = new JMenuBar();
 		menuBar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -159,6 +159,22 @@ public class VistaAdministrativo{
 		itemVisualizarEvento = new JMenuItem("Visualizar eventos");
 		itemVisualizarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuEventos.add(itemVisualizarEvento);
+		
+		menuPromociones = new JMenu("Promociones");
+		menuPromociones.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		menuBar.add(menuPromociones);
+		
+		itemAgregarPromocion = new JMenuItem("Agregar promoción");
+		itemAgregarPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPromociones.add(itemAgregarPromocion);
+		
+		itemDarBajaPromocion = new JMenuItem("Dar de baja promoción");
+		itemDarBajaPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPromociones.add(itemDarBajaPromocion);
+		
+		itemVisualizarPromociones = new JMenuItem("Visualizar promociones");
+		itemVisualizarPromociones.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPromociones.add(itemVisualizarPromociones);
 	}
 	
 
@@ -235,6 +251,28 @@ public class VistaAdministrativo{
 	public JMenuItem getItemEditarEvento() {
 		return itemEditarEvento;
 	}
+	
+	public PanelPromocion getPanelPromocion() {
+		return panelPromocion;
+	}
+
+	public JMenu getMenuPromociones() {
+		return menuPromociones;
+	}
+
+	public JMenuItem getItemAgregarPromocion() {
+		return itemAgregarPromocion;
+	}
+
+	public JMenuItem getItemDarBajaPromocion() {
+		return itemDarBajaPromocion;
+	}
+	
+	public JMenuItem getItemVisualizarPromociones() {
+		return itemVisualizarPromociones;
+	}
+
+
 
 	public void mostrarVentana(){
 		this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
