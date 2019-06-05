@@ -44,7 +44,7 @@ public class Reporte {
 		}
 		catch( JRException ex ) 
 		{
-			log.error("Ocurrió un error mientras se cargaba el archivo ReporteReserva.Jasper", ex);
+			log.error("Ocurrió un error mientras se cargaba el archivo ReporteReserva.jasper", ex);
 		}
     }       
     
@@ -62,7 +62,7 @@ public class Reporte {
 		}
 		catch( JRException ex ) 
 		{
-			log.error("Ocurrió un error mientras se cargaba el archivo ReportePago.Jasper", ex);
+			log.error("Ocurrió un error mientras se cargaba el archivo ReportePago.jasper", ex);
 		}
     }    
     
