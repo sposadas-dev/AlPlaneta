@@ -165,10 +165,12 @@ public class ControladorAdministrativo implements ActionListener {
 				this.clientes_en_tabla.get(this.filaSeleccionada).getLogin().getRol().getIdRol(),
 				this.clientes_en_tabla.get(this.filaSeleccionada).getLogin().getRol().getNombre()
 				);
+		String contrasenia = cliente.getByClienteById(idCliente).getLogin().getContrasena();
+		
 		LoginDTO loginCliente = new LoginDTO(
 				this.clientes_en_tabla.get(this.filaSeleccionada).getLogin().getIdDatosLogin(),
 				this.ventanaEditarCliente.getTxtUsuario().getText(),
-				this.ventanaEditarCliente.getTxtContrasenia().getText(),
+				contrasenia,
 				rolCliente,
 				estado
 				);
@@ -205,7 +207,6 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaEditarCliente.getTxtDni().setText(this.clientes_en_tabla.get(this.filaSeleccionada).getDni());
 		this.ventanaEditarCliente.getDateFechaNacimiento().setDate(this.clientes_en_tabla.get(this.filaSeleccionada).getFechaNacimiento());
 		this.ventanaEditarCliente.getTxtUsuario().setText(this.clientes_en_tabla.get(this.filaSeleccionada).getLogin().getUsuario());
-		this.ventanaEditarCliente.getTxtContrasenia().setText(this.clientes_en_tabla.get(this.filaSeleccionada).getLogin().getContrasena());
 		this.ventanaEditarCliente.getTxtTelefonoFijo().setText(this.clientes_en_tabla.get(this.filaSeleccionada).getMedioContacto().getTelefonoFijo());
 		this.ventanaEditarCliente.getTxtTelefonoCelular().setText(this.clientes_en_tabla.get(this.filaSeleccionada).getMedioContacto().getTelefonoCelular());
 		this.ventanaEditarCliente.getTxtEmail().setText(this.clientes_en_tabla.get(this.filaSeleccionada).getMedioContacto().getEmail());
