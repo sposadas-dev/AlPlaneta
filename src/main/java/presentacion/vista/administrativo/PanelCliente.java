@@ -30,6 +30,7 @@ public class PanelCliente extends JPanel {
 	private JLabel lblClientes;
 	private JCheckBox activos;
 	private JCheckBox inactivos;
+	private JTextField txtFiltro;
 	
 	public PanelCliente() {
 		
@@ -75,6 +76,15 @@ public class PanelCliente extends JPanel {
 		inactivos = new JCheckBox("Inactivos");
 		inactivos.setBounds(167, 5, 95, 21);
 		add(inactivos);
+		
+		txtFiltro = new JTextField();
+		txtFiltro.setBounds(344, 7, 96, 19);
+		add(txtFiltro);
+		txtFiltro.setColumns(10);
+		
+		JLabel lblFiltro = new JLabel("Filtro");
+		lblFiltro.setBounds(301, 10, 30, 13);
+		add(lblFiltro);
 	
 		btnConfirmar.setVisible(false);
 //		btnRecargarTabla.setVisible(false);
@@ -87,6 +97,10 @@ public class PanelCliente extends JPanel {
 //	public JButton getBtnRecargarTabla() {
 //		return btnRecargarTabla;
 //	}
+	
+	public JTextField getTxtFiltro() {
+		return txtFiltro;
+	}
 	
 	public JCheckBox getActivos() {
 		return activos;

@@ -2,10 +2,15 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
@@ -59,6 +64,10 @@ public class ControladorAdministrativo implements ActionListener {
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
 
+	private DefaultTableModel dm;
+	private StringBuilder cad= new StringBuilder();
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
+	
 	private static ControladorAdministrativo INSTANCE;
 	
 	public static ControladorAdministrativo getInstance(){
@@ -93,6 +102,26 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getItemAgregarPasaje().addActionListener(ap->mostrarVentanaAgregarPasaje(ap));
 		this.vista.getItemEditarPasaje().addActionListener(ep->mostrarVentanaEditarPasaje(ep));
 		this.vista.getItemCancelarPasaje().addActionListener(cp->cancelarPasaje(cp));
+		
+		this.vista.getPanelCliente().getTxtFiltro().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					dm = (DefaultTableModel) vista.getPanelCliente().getModelClientes();
+					TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
+					vista.getPanelCliente().getTablaClientes().setRowSorter(tr);
+					if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+						if (letra == KeyEvent.VK_BACK_SPACE){
+							if(cad.length() != 0) {
+								cad.deleteCharAt(cad.length()-1);
+						        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+							}
+						} else{
+							cad.append(String.valueOf(letra));
+			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+						}
+					}
+			}
+		});
 		
 		this.vista.getPanelCliente().getActivos().addActionListener(sa->cargarActivos(sa));
 		this.vista.getPanelCliente().getInactivos().addActionListener(si->cargarInactivos(si));
