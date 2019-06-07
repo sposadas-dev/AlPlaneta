@@ -45,6 +45,7 @@ public class VistaAdministrativo{
 	private JMenuItem itemVisualizarPromociones;
 	
 	private static VistaAdministrativo INSTANCE;
+	
 	public static VistaAdministrativo getInstance(){
 		if(INSTANCE == null)
 			return new VistaAdministrativo();

@@ -58,6 +58,15 @@ public class ControladorAdministrativo implements ActionListener {
 	private int filaSeleccionada;
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
+
+	private static ControladorAdministrativo INSTANCE;
+	
+	public static ControladorAdministrativo getInstance(){
+		if(INSTANCE == null)
+			return new ControladorAdministrativo();
+		else
+			return INSTANCE;
+	}
 	
 	public ControladorAdministrativo(VistaAdministrativo vista,AdministrativoDTO administrativoLogueado) {
 	
@@ -417,7 +426,11 @@ public class ControladorAdministrativo implements ActionListener {
 		llenarTablaPasajes(pasaje.obtenerPasajes());
 		this.vista.getPanelPasaje().getComboBoxFiltros().setSelectedIndex(0);
 	}
-		
+	
+	public void llenarTabla() {
+		this.llenarTablaClientes();
+	}
+	
 	private void llenarTablaClientes(){
 		boolean activos = this.vista.getPanelCliente().getActivos().isSelected();
 		boolean inactivos = this.vista.getPanelCliente().getInactivos().isSelected();

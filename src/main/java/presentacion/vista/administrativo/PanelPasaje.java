@@ -1,18 +1,15 @@
 package presentacion.vista.administrativo;
 
+import java.awt.Color;
+import java.awt.Font;
+
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
-import java.awt.Color;
-
-import javax.swing.JLabel;
-
-import java.awt.Font;
-
-import javax.swing.JComboBox;
 
 public class PanelPasaje extends JPanel {
 
@@ -72,6 +69,7 @@ public class PanelPasaje extends JPanel {
 		btnBorrarFiltros = new JButton("Borrar Filtros");
 		btnBorrarFiltros.setBounds(913, 91, 130, 38);
 		add(btnBorrarFiltros);
+		
 	}
 	
 	public JComboBox<String> getComboBoxFiltros() {
