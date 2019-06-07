@@ -2,9 +2,11 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 import dto.AdministrativoDTO;
@@ -96,10 +98,15 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getItemAgregarEvento().addActionListener(ac->mostrarVentanaAgregarEvento(ac));
 		this.vista.getItemVisualizarEventos().addActionListener(ac->mostrarEventos(ac));
 		this.vista.getItemEditarEvento().addActionListener(ac->mostrarVentanaEditarEvento(ac));
+		this.ventanaEditarEvento.getBtnEditar().addActionListener(ac->actualizarTablaEventos(ac));
+		this.ventanaEvento.getBtnRegistrar().addActionListener(ac->actualizarTablaEventos(ac));
+		this.vista.getPanelEvento().getBtnBuscar().addActionListener(b->filtrarEvento(b));
+		this.vista.getPanelEvento().getBtnBorrarFiltros().addActionListener(bf->borrarFiltrosEvento(bf));
 		
 		this.vista.getItemAgregarPromocion().addActionListener(ac->mostrarVentanaAgregarPromocion(ac));
 		this.vista.getItemVisualizarPromociones().addActionListener(ac->mostrarPromociones(ac));
 		this.vista.getItemDarBajaPromocion().addActionListener(ac->darBajaPromocion(ac));
+		this.ventanaPromocion.getBtnRegistrar().addActionListener(ac->actualizarTablaPromocion(ac));
 		
 		this.administrativoLogueado = administrativoLogueado;
 		this.cliente = new Cliente(new DAOSQLFactory());
@@ -259,7 +266,8 @@ public class ControladorAdministrativo implements ActionListener {
 		int filaSeleccionada = this.vista.getPanelEvento().getTablaEventos().getSelectedRow();
 		if (filaSeleccionada != -1){
 			verDatosDelEvento(filaSeleccionada);
-			llenarTablaEventos();
+//			llenarTablaEventos(evento.obtenerEvento());
+//			controladorEvento.llenarMotivos(this.eventos_en_tabla.get(filaSeleccionada));
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}	
@@ -280,19 +288,34 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorEvento.llenarComboHora();
 		controladorEvento.llenarComboMinutos();
 		controladorEvento.setEventoSeleccionado(this.eventos_en_tabla.get(filaSeleccionada));
-		System.out.println(this.eventos_en_tabla.get(filaSeleccionada).getMotivoReprogramacion()+"DATO VIEJO");
+		//controladorEvento.llenarMotivos(this.eventos_en_tabla.get(filaSeleccionada));
 		if (filaSeleccionada != -1){
+			
 			ventanaEditarEvento.mostrarVentana(true);
-			//ventanaEditarEvento.getComboHoraEvento().setSelectedItem(this.eventos_en_tabla.get(filaSeleccionada).getHoraEvento().toString());
+			ventanaEditarEvento.getDateFechaEvento().setDate(this.eventos_en_tabla.get(filaSeleccionada).getFechaEvento());
+			ventanaEditarEvento.getComboHora().setSelectedItem(obtenerHora(this.eventos_en_tabla.get(filaSeleccionada).getHoraEvento()));
+			ventanaEditarEvento.getComboMinutos().setSelectedItem(obtenerMinutos(this.eventos_en_tabla.get(filaSeleccionada).getHoraEvento()));
+			
 			ventanaEditarEvento.getTxtDescripcion().setText(this.eventos_en_tabla.get(filaSeleccionada).getDescripcion());
-			ventanaEditarEvento.getComboEstadoEvento().setSelectedItem(this.eventos_en_tabla.get(filaSeleccionada).getEstadoEvento().toString());
+			ventanaEditarEvento.getComboEstadoEvento().setSelectedItem(this.eventos_en_tabla.get(filaSeleccionada).getEstadoEvento().getNombre());
 			ventanaEditarEvento.getTxtDni().setText(this.eventos_en_tabla.get(filaSeleccionada).getCliente().getDni());
 			ventanaEditarEvento.getTxtApellido().setText(this.eventos_en_tabla.get(filaSeleccionada).getCliente().getApellido());
 			ventanaEditarEvento.getTxtNombre().setText(this.eventos_en_tabla.get(filaSeleccionada).getCliente().getNombre());
+			
 		}
 		else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	private String obtenerHora(Time horario) {
+		String[] horarioString = horario.toString().split(":");
+		return horarioString[0];
+	}
+	
+	private String obtenerMinutos(Time horario) {
+		String[] horarioString = horario.toString().split(":");
+		return horarioString[1];
 	}
 	
 	/*private void verDatosDeLaPromocion(int filaSeleccionada) {
@@ -332,7 +355,8 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
 		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
-		this.llenarTablaEventos();
+		limpiarFiltrosEvento();
+		this.llenarTablaEventos(evento.obtenerEvento());
 		this.controladorEvento.actualizarEventosVistos();
 	}
 	
@@ -355,6 +379,8 @@ public class ControladorAdministrativo implements ActionListener {
 		}
 		this.llenarTablaClientes();
 	}
+	
+
 	private void mostrarVentanaAgregarCliente(ActionEvent ac)  {
 		this.vista.getPanelCliente().mostrarPanelCliente(true);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
@@ -367,19 +393,21 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	private void mostrarVentanaAgregarEvento(ActionEvent ac)  {
 		controladorEvento.iniciar();
-		this.vista.getPanelEvento().mostrarPanelEvento(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
 		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
+//		this.llenarTablaEventos(evento.obtenerEvento());
 		this.ventanaEvento.limpiarCampos();
 		this.ventanaEvento.mostrarVentana();
 	}
 	
 	private void mostrarVentanaAgregarPromocion(ActionEvent ac)  {
 		controladorPromocion.iniciar();
-		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
+		this.vista.getPanelPromocion().mostrarPanelPromocion(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
+		this.llenarTablaPromociones();
 		this.ventanaPromocion.limpiarCampos();
 		this.ventanaPromocion.mostrarVentana();
 	}
@@ -399,6 +427,74 @@ public class ControladorAdministrativo implements ActionListener {
 		}
 	}
 	
+	public void llenarComboFiltroEvento(){
+		ArrayList<String> datos = new ArrayList<String>();
+		this.vista.getPanelEvento().getComboFiltros().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String filtro = vista.getPanelEvento().getComboFiltros().getSelectedItem().toString();
+				if(!filtro.equals("Seleccione")) {
+		 			vista.getPanelEvento().getComboOpcionesFiltros().setEnabled(true);
+					if(filtro.equals("Fecha de Ingreso")) {
+						datos.clear();
+			 			for(EventoDTO x : eventos_en_tabla)
+			 				if(!datos.contains(x.getFechaIngreso().toString()))
+			 					datos.add(x.getFechaIngreso().toString());
+					}
+					if(filtro.equals("Fecha del Evento")) {
+						datos.clear();
+			 			for(EventoDTO x : eventos_en_tabla)
+			 				if(!datos.contains(x.getFechaEvento().toString()))
+			 					datos.add(x.getFechaEvento().toString());
+					}
+					if(filtro.equals("Apellido del Cliente")) {
+						datos.clear();
+			 			for(EventoDTO x : eventos_en_tabla)
+			 				if(!datos.contains(x.getCliente().getApellido()))
+			 					datos.add(x.getCliente().getApellido());
+					}
+					if(filtro.equals("Estado")) {
+						datos.clear();
+			 			for(EventoDTO x : eventos_en_tabla)
+			 				if(!datos.contains(x.getEstadoEvento().getNombre()))
+			 					datos.add(x.getEstadoEvento().getNombre());
+					}
+					String [] datosCombo = new String[datos.size()];
+		 			vista.getPanelEvento().getComboOpcionesFiltros().setModel(new DefaultComboBoxModel<String>(datos.toArray(datosCombo)));
+				}
+				else {					
+					limpiarFiltrosEvento();
+					llenarTablaEventos(evento.obtenerEvento());
+				}
+			}
+		});
+	}
+	
+	public void filtrarEvento(ActionEvent e) {
+		if(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedIndex() !=-1)
+			llenarTablaEventos(filtrarEventoSegun(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedItem().toString()));
+		else
+			JOptionPane.showMessageDialog(vista.getPanelEvento(), "No se ha seleccionado ningún filtro");
+	}
+	
+	public List<EventoDTO> filtrarEventoSegun(String datoCombo){
+		List<EventoDTO> ret = new ArrayList<EventoDTO>();
+		for(EventoDTO x : evento.obtenerEvento()) {
+			if(this.vista.getPanelEvento().getComboFiltros().getSelectedItem().equals("Fecha de Ingreso"))
+				if(x.getFechaIngreso().toString().equals(datoCombo))
+					ret.add(x);
+			if(this.vista.getPanelEvento().getComboFiltros().getSelectedItem().equals("Fecha del Evento"))
+				if(x.getFechaEvento().toString().equals(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedItem()))
+					ret.add(x);
+			if(this.vista.getPanelEvento().getComboFiltros().getSelectedItem().equals("Apellido del Cliente"))
+				if(x.getCliente().getApellido().equals(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedItem()))
+					ret.add(x);
+			if(this.vista.getPanelEvento().getComboFiltros().getSelectedItem().equals("Estado"))
+				if(x.getEstadoEvento().getNombre().equals(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedItem()))
+					ret.add(x);
+		}
+		return ret;
+	}
+	
 	public List<PasajeDTO> filtrarPasajeSegun(String estado) {
 		List<PasajeDTO> resultado = new ArrayList<PasajeDTO>();
 		this.clientes_en_tabla = cliente.obtenerClientes();
@@ -416,6 +512,11 @@ public class ControladorAdministrativo implements ActionListener {
 	private void borrarFiltros(ActionEvent bf) {
 		llenarTablaPasajes(pasaje.obtenerPasajes());
 		this.vista.getPanelPasaje().getComboBoxFiltros().setSelectedIndex(0);
+	}
+	
+	private void borrarFiltrosEvento(ActionEvent e) {
+		llenarTablaEventos(evento.obtenerEvento());
+		limpiarFiltrosEvento();
 	}
 		
 	private void llenarTablaClientes(){
@@ -488,28 +589,35 @@ public class ControladorAdministrativo implements ActionListener {
 		}		
 	}
 	
-	private void llenarTablaEventos(){
+	private void llenarTablaEventos(List<EventoDTO> tabla){
 		this.vista.getPanelEvento().getModelEventos().setRowCount(0); //Para vaciar la tabla
 		this.vista.getPanelEvento().getModelEventos().setColumnCount(0);
 		this.vista.getPanelEvento().getModelEventos().setColumnIdentifiers(this.vista.getPanelEvento().getNombreColumnasEventos());
 
 		this.eventos_en_tabla = evento.obtenerEvento();
 			
-		for (int i = 0; i < this.eventos_en_tabla.size(); i++){
+		for (int i = 0; i < tabla.size(); i++){
 
 			Object[] fila = {
-							this.eventos_en_tabla.get(i).getFechaIngreso(),
-							this.eventos_en_tabla.get(i).getFechaEvento(),
-							this.eventos_en_tabla.get(i).getHoraEvento(),
-							this.eventos_en_tabla.get(i).getDescripcion(),
-							this.eventos_en_tabla.get(i).getCliente().getApellido(),
-							this.eventos_en_tabla.get(i).getCliente().getNombre(),
-							this.eventos_en_tabla.get(i).getAdministrativo().getNombre(),
-							this.eventos_en_tabla.get(i).getEstadoEvento().getNombre(),
-							this.eventos_en_tabla.get(i).getMotivoReprogramacion()
+							tabla.get(i).getFechaIngreso(),
+							tabla.get(i).getFechaEvento(),
+							tabla.get(i).getHoraEvento(),
+							tabla.get(i).getDescripcion(),
+							tabla.get(i).getCliente().getApellido(),
+							tabla.get(i).getCliente().getNombre(),
+							tabla.get(i).getAdministrativo().getNombre(),
+							tabla.get(i).getEstadoEvento().getNombre(),
+							this.estaReprogramado(tabla.get(i))
 			};
 							this.vista.getPanelEvento().getModelEventos().addRow(fila);
-		}		
+		}	
+		this.llenarComboFiltroEvento();
+	}
+	
+	private void actualizarTablaEventos(ActionEvent e) {
+		llenarComboFiltroEvento();
+		limpiarFiltrosEvento();
+		llenarTablaEventos(evento.obtenerEvento());
 	}
 	
 	private void llenarTablaPromociones(){
@@ -534,6 +642,23 @@ public class ControladorAdministrativo implements ActionListener {
 			};
 							this.vista.getPanelPromocion().getModelPromocion().addRow(fila);
 		}		
+	}
+	
+	public void actualizarTablaPromocion(ActionEvent e) {
+		this.llenarTablaPromociones();
+	}
+	
+	public String estaReprogramado(EventoDTO e) {
+		if(e.getMotivoReprogramacion().equals(""))
+			return "no";
+		else
+			return "si";
+	}
+	
+	private void limpiarFiltrosEvento() {
+		this.vista.getPanelEvento().getComboFiltros().setSelectedIndex(0);
+		this.vista.getPanelEvento().getComboOpcionesFiltros().setSelectedIndex(-1);
+		this.vista.getPanelEvento().getComboOpcionesFiltros().setEnabled(false);
 	}
 	
 	@Override

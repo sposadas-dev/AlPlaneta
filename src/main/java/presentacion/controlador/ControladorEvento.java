@@ -26,13 +26,16 @@ import persistencia.dao.mysql.EstadoEventoDAOSQL;
 import presentacion.vista.administrativo.NotificacionEmergente;
 import presentacion.vista.administrativo.PanelEvento;
 import presentacion.vista.administrativo.VentanaEditarEvento;
+import presentacion.vista.administrativo.VentanaMotivosReprogramacionEvento;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
 import presentacion.vista.administrativo.VentanaTablaClientes;
+import presentacion.vista.administrativo.VistaAdministrativo;
 import presentacion.vista.administrativo.VistaNotificacionDeEvento;
 
 public class ControladorEvento {
 
 	private VentanaTablaClientes ventanaTablaClientes;
+	private VentanaMotivosReprogramacionEvento ventanaMotivos;
 	private EventoDTO eventoSeleccionado;
 	private NotificacionEmergente notificacion;
 	private VistaNotificacionDeEvento vistaNotificacion;
@@ -69,19 +72,19 @@ public class ControladorEvento {
 		this.clienteSeleccionado = null; //cliente que selecciona en la tabla 		
 		this.administrativoLogueado = administrativoLogueado;
 		this.estado = null;
-		this.motivoReprogramacion=" - ";
+		this.motivoReprogramacion="";
 		this.eventoRegistrado = null;
 		
 		
 		this.ventanaEvento = ventanaEvento;
 		this.ventanaEditarEvento = VentanaEditarEvento.getInstance();
 		this.ventanaTablaClientes = VentanaTablaClientes.getInstance();
+		this.ventanaMotivos = VentanaMotivosReprogramacionEvento.getInstance();
 		this.notificacion = NotificacionEmergente.getInstance();
 		this.vistaNotificacion = VistaNotificacionDeEvento.getInstance();
 		
 		this.cliente = new Cliente(new DAOSQLFactory());
 		this.setPasaje(new Pasaje(new DAOSQLFactory()));
-		
 		this.setPanelEvento(new PanelEvento());
 		this.estadoEvento = new ModeloEstadoEvento(new DAOSQLFactory());
 		this.evento = new ModeloEvento(new DAOSQLFactory());
@@ -92,9 +95,12 @@ public class ControladorEvento {
 		
 		this.ventanaEditarEvento.getBtnEditar().addActionListener(rc->editarEvento(rc));
 		this.ventanaEditarEvento.getBtnCancelar().addActionListener(rc->cancelarEditarEvento(rc));
+		this.ventanaEditarEvento.getBtnMotivos().addActionListener(rc->verVentanaMotivos(rc));
 
 		this.ventanaTablaClientes.getBtnAtras().addActionListener(vc->volverVentanaAgregarEvento(vc));
 		this.ventanaTablaClientes.getBtnConfirmar().addActionListener(ce->agregarClienteToEvento(ce));
+		
+		this.ventanaMotivos.getBtnCancelar().addActionListener(a->cerrarVentanaMotivos(a));
 		
 		this.notificacion.getBtnVerNotificacion().addActionListener(v->mostrarEvento(v));
 		
@@ -153,18 +159,30 @@ public class ControladorEvento {
 	}
 	
 	public void editarEvento(ActionEvent rc){
-		if(camposLlenosEditarEvento()){		
-			Date fechaEvento = convertUtilToSql(this.ventanaEditarEvento.getDateFechaEvento().getDate());
-			Time horaEvento = obtenerHora(this.ventanaEditarEvento.getComboHora().getSelectedItem().toString(),this.ventanaEditarEvento.getComboMinutos().getSelectedItem().toString());
-			String motivoReprogramacion = this.ventanaEditarEvento.getTxtReprogramacion().getText();	
-			EstadoEventoDTO estado = obtenerEstadoEventoPorNombre(this.ventanaEditarEvento.getComboEstadoEvento().getSelectedItem().toString());
-			
-			EventoDTO nuevoEvento = new EventoDTO(eventoSeleccionado.getIdEvento(),fechaIngreso,fechaEvento,horaEvento,descripcion,eventoSeleccionado.getCliente(),administrativoLogueado,estado,motivoReprogramacion,0);
-			evento.editarEvento(nuevoEvento);
-			
-			this.ventanaEditarEvento.limpiarCampos();
-			this.ventanaEditarEvento.cerrarVentana();
-		}
+		Date fechaEvento = convertUtilToSql(this.ventanaEditarEvento.getDateFechaEvento().getDate());
+		Time horaEvento = obtenerHora(this.ventanaEditarEvento.getComboHora().getSelectedItem().toString(),this.ventanaEditarEvento.getComboMinutos().getSelectedItem().toString());
+		String motivoReprogramacion;
+		if(eventoSeleccionado.getMotivoReprogramacion().equals(""))
+			motivoReprogramacion = "- "+this.ventanaEditarEvento.getTxtReprogramacion().getText();	
+		else
+			motivoReprogramacion = eventoSeleccionado.getMotivoReprogramacion()+"\n- "+this.ventanaEditarEvento.getTxtReprogramacion().getText();	
+		EstadoEventoDTO estado = obtenerEstadoEventoPorNombre(this.ventanaEditarEvento.getComboEstadoEvento().getSelectedItem().toString());
+		
+		EventoDTO nuevoEvento = new EventoDTO(eventoSeleccionado.getIdEvento(),fechaIngreso,fechaEvento,horaEvento,descripcion,eventoSeleccionado.getCliente(),administrativoLogueado,estado,motivoReprogramacion,0);
+		evento.editarEvento(nuevoEvento);
+		
+		this.ventanaEditarEvento.limpiarCampos();
+		this.ventanaEditarEvento.cerrarVentana();
+	}
+	
+	public void llenarMotivos(EventoDTO evento) {
+		ventanaMotivos.getTxtMotivos().setText(evento.getMotivoReprogramacion());
+	}
+	
+	public void verVentanaMotivos(ActionEvent e) {
+		ventanaEditarEvento.mostrarVentana(false);
+		llenarMotivos(eventoSeleccionado);
+		ventanaMotivos.mostrarVentana(true);	
 	}
 	
 	private void mostrarClientes(ActionEvent r) {
@@ -173,6 +191,7 @@ public class ControladorEvento {
 		llenarTablaClientes();
 	}
 	
+
 	private void llenarTablaClientes(){
 		this.ventanaTablaClientes.getModelClientes().setRowCount(0); //Para vaciar la tabla
 		this.ventanaTablaClientes.getModelClientes().setColumnCount(0);
@@ -213,14 +232,6 @@ public class ControladorEvento {
 		}
 			return true;
 	}
-
-	private boolean camposLlenosEditarEvento(){
-		if (ventanaEditarEvento.getDateFechaEvento().getDate() == null || ventanaEditarEvento.getTxtReprogramacion().getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, "Debe cargar todos los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
-				return false;
-		}
-			return true;
-	}
 	
 	private EstadoEventoDTO obtenerEstadoEventoPorNombre(String nombre){
 		for(EstadoEventoDTO e : estadoEvento.obtenerEstadosEvento())
@@ -232,6 +243,12 @@ public class ControladorEvento {
 	private void cerrarVentanaEvento(ActionEvent cv) {
 		this.ventanaEvento.limpiarCampos();
 		this.ventanaEvento.cerrarVentana();
+	}
+	
+	private void cerrarVentanaMotivos(ActionEvent e) {
+		this.ventanaEditarEvento.mostrarVentana(true);
+		this.ventanaMotivos.limpiarCampos();
+		this.ventanaMotivos.cerrarVentana();
 	}
 	
 	public void controlarNotificacionesContinuo(){
