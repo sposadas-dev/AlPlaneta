@@ -96,12 +96,6 @@ public class ControladorProvincia implements ActionListener {
 	
 	public void agregarProvincia(ActionEvent rc) {
 		
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres agregar la provincia?", 
-			             "Agregar provincia", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		if (confirm == 0 && permiteAgregarProvincia()){
-
 			String idPais = obtenerId(this.ventanaAgregarProvincia.getComboBoxPaises().getSelectedItem().toString());
 			ProvinciaDTO nuevoProvincia = new ProvinciaDTO();
 			
@@ -111,8 +105,6 @@ public class ControladorProvincia implements ActionListener {
 	
 			this.ventanaAgregarProvincia.limpiarCampos();
 			this.ventanaAgregarProvincia.cerrarVentana();
-			JOptionPane.showMessageDialog(null, "Provincia agregada","Provincia", JOptionPane.INFORMATION_MESSAGE);
-		}
 		llenarTablaVistaProvincias();
 	}
 	
@@ -131,11 +123,6 @@ public class ControladorProvincia implements ActionListener {
 	}
 	
 	public void editarProvincia(ActionEvent ac) {
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres editar la provincia?", 
-			             "Editar provincia", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0){
 			ProvinciaDTO p = provincias_en_tabla.get(this.tableroDeProvincias.getTablaProvincias().getSelectedRow());
 //			ProvinciaDTO nuevaProvincia = provincias_en_tabla.get(this.filaSeleccionada);
 			p.setNombre(this.ventanaEditarProvincia.getTxtNombreProvincia().getText());
@@ -143,9 +130,6 @@ public class ControladorProvincia implements ActionListener {
 			this.modeloProvincia.editarProvincia(p);
 			ventanaEditarProvincia.limpiarCampos();
 			ventanaEditarProvincia.dispose();
-			JOptionPane.showMessageDialog(null, "Provincia editada","Provincia", JOptionPane.INFORMATION_MESSAGE);
-
-		}
 		llenarTablaVistaProvincias();
 	}
 	
@@ -173,17 +157,7 @@ public class ControladorProvincia implements ActionListener {
 	
 	public void eliminarProvincia(){
 		ProvinciaDTO p = provincias_en_tabla.get(this.tableroDeProvincias.getTablaProvincias().getSelectedRow());
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres eliminar la provincia?", 
-			             "Eliminar provincia", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0 && permiteEliminar(p) ){
-			this.modeloProvincia.borrarProvincia(p);
-			JOptionPane.showMessageDialog(null, "Provincia eliminada","Provincia", JOptionPane.INFORMATION_MESSAGE);
-		}
-		else{
-			JOptionPane.showMessageDialog(null, "No pudo eliminarse","Provincia", JOptionPane.ERROR_MESSAGE);
-		}
+		this.modeloProvincia.borrarProvincia(p);
 		llenarTablaVistaProvincias();
 	}
 	

@@ -74,19 +74,11 @@ public class ControladorPais implements ActionListener {
 	}
 
 	public void agregarPais(ActionEvent rc) {
-		System.out.println();
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres agregar el pais?", 
-			             "Agregar pais", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		if (confirm == 0){
-			PaisDTO nuevoPais = new PaisDTO();
-			nuevoPais.setNombre(this.ventanaAgregarPais.getTxtNombrePais().getText());
-			modeloPais.agregarPais(nuevoPais);
-			this.ventanaAgregarPais.limpiarCampos();
-			this.ventanaAgregarPais.cerrarVentana();
-			
-		}
+		PaisDTO nuevoPais = new PaisDTO();
+		nuevoPais.setNombre(this.ventanaAgregarPais.getTxtNombrePais().getText());
+		modeloPais.agregarPais(nuevoPais);
+		this.ventanaAgregarPais.limpiarCampos();
+		this.ventanaAgregarPais.cerrarVentana();
 		llenarTablaVistaPaises();
 	}
 	
@@ -95,19 +87,11 @@ public class ControladorPais implements ActionListener {
 		this.ventanaAgregarPais.cerrarVentana();
 	}
 	public void editarPais(ActionEvent ac) {
-		
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres editar el pais?", 
-			             "Editar pais", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0){
-			String nombrePais = this.ventanaEditarPais.getTxtNombrePais().getText();
-			this.modeloPais.editarPais(new PaisDTO(pais_en_tabla.get(this.tableroDePaises.getTablaPaises().getSelectedRow()).getIdPais(),nombrePais));
-			System.out.println("se edito el pais");
-			ventanaEditarPais.limpiarCampos();
-			ventanaEditarPais.cerrarVentana();
-			
-		}
+		String nombrePais = this.ventanaEditarPais.getTxtNombrePais().getText();
+		this.modeloPais.editarPais(new PaisDTO(pais_en_tabla.get(this.tableroDePaises.getTablaPaises().getSelectedRow()).getIdPais(),nombrePais));
+		System.out.println("se edito el pais");
+		ventanaEditarPais.limpiarCampos();
+		ventanaEditarPais.cerrarVentana();
 		llenarTablaVistaPaises();
 	}
 	
@@ -117,17 +101,9 @@ public class ControladorPais implements ActionListener {
 	}
 	public void eliminarPais(){
 		PaisDTO p = pais_en_tabla.get(this.tableroDePaises.getTablaPaises().getSelectedRow());
-		System.out.println("ID-A ELIMINAR: "+ p.getIdPais());
-		System.out.println("NOMBRE-A ELIMINAR: "+ p.getNombre());
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres eliminar el pais?", 
-			             "Eliminar pais", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0 && permiteEliminar(p) ){
+		if ( permiteEliminar(p) ){
 			this.modeloPais.borrarPais(p);
-			
-		}
-		else{
+		} else{
 			JOptionPane.showMessageDialog(null, "No pudo eliminarse","Pais", JOptionPane.ERROR_MESSAGE);
 		}
 		llenarTablaVistaPaises();
