@@ -187,7 +187,7 @@ public class VistaAdministrador extends JFrame {
 		panelFormaPago.setLocation(0, 0);
 		getContentPane().add(panelFormaPago);
 		panelFormaPago.setVisible(false);
-		panelFormaPago.getBtnRecargarTabla().setVisible(true);
+//		panelFormaPago.getBtnRecargarTabla().setVisible(true);
 		
 		this.setVisible(false);
 	}

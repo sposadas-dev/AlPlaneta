@@ -4,16 +4,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import dto.FormaPagoDTO;
 import modelo.FormaPago;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.VentanaAgregarFormaPago;
 import presentacion.vista.administrador.VentanaEditarFormaPago;
+import presentacion.vista.administrador.VistaAdministrador;
 
 public class ControladorFormaPago implements ActionListener {
 
+	private VistaAdministrador vistaAdministrador;
 	private VentanaAgregarFormaPago ventanaAgregarFormaPago;
 	private VentanaEditarFormaPago ventanaEditarFormaPago;
 	private FormaPago formaPago;
@@ -23,6 +23,7 @@ public class ControladorFormaPago implements ActionListener {
 	public ControladorFormaPago(){
 		this.ventanaAgregarFormaPago = VentanaAgregarFormaPago.getInstance();
 		this.ventanaEditarFormaPago = VentanaEditarFormaPago.getInstance();
+		this.vistaAdministrador = VistaAdministrador.getInstance();
 		
 		this.ventanaAgregarFormaPago.getBtnAgregar().addActionListener(rc->agregarFormaPago(rc));
 		this.ventanaAgregarFormaPago.getBtnCancelar().addActionListener(c->cancelarVentanaAgregarFormaPago(c));
@@ -32,6 +33,10 @@ public class ControladorFormaPago implements ActionListener {
 		this.formas_de_pagos_en_tabla = formaPago.obtenerFormaPago();
 	}
 
+	public void obtenerFormaDePagoActualizado() {
+		this.formas_de_pagos_en_tabla = formaPago.obtenerFormaPago();
+	}
+	
 	public void mostrarVentanaAgregarFormaPago() {
 		this.ventanaAgregarFormaPago.limpiarCampos();
 		this.ventanaAgregarFormaPago.mostrarVentana();
@@ -43,19 +48,12 @@ public class ControladorFormaPago implements ActionListener {
 	}
 	
 	public void agregarFormaPago(ActionEvent rc) {
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres agregar la forma de pago?", 
-			             "Agregar forma de pago", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		if (confirm == 0){
-			FormaPagoDTO nuevoFormaPago = new FormaPagoDTO();
-			nuevoFormaPago.setTipo(this.ventanaAgregarFormaPago.getTxtTipoPago().getText());
-			formaPago.agregarFormaPago(nuevoFormaPago);
-	
-			this.ventanaAgregarFormaPago.limpiarCampos();
-			this.ventanaAgregarFormaPago.cerrarVentana();
-			
-		}
+		FormaPagoDTO nuevoFormaPago = new FormaPagoDTO();
+		nuevoFormaPago.setTipo(this.ventanaAgregarFormaPago.getTxtTipoPago().getText());
+		formaPago.agregarFormaPago(nuevoFormaPago);
+		llenarTablaFormaPago();
+		this.ventanaAgregarFormaPago.limpiarCampos();
+		this.ventanaAgregarFormaPago.cerrarVentana();
 	}
 	
 	private void cancelarVentanaAgregarFormaPago(ActionEvent c) {
@@ -64,26 +62,19 @@ public class ControladorFormaPago implements ActionListener {
 	}
 	
 	public void editarFormaPago(int filaSeleccionada){
+		obtenerFormaDePagoActualizado();
 		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarFormaPago.mostrarVentana();
 		ventanaEditarFormaPago.getTxtTipoFormaPago().setText(this.formas_de_pagos_en_tabla.get(this.filaSeleccionada).getTipo());
-		
 	}
 	
 	public void editarFormaPago(ActionEvent ac) {
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres editar la forma de pago?", 
-			             "Editar Forma Pago", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0){
-			String tipo = this.ventanaEditarFormaPago.getTxtTipoFormaPago().getText();
-			this.formaPago.editarFormaPago(new FormaPagoDTO(formas_de_pagos_en_tabla.get(this.filaSeleccionada).getIdFormaPago(),tipo));
-			ventanaEditarFormaPago.limpiarCampos();
-			ventanaEditarFormaPago.dispose();
-			
-
-		}
-		
+		obtenerFormaDePagoActualizado();
+		String tipo = this.ventanaEditarFormaPago.getTxtTipoFormaPago().getText();
+		this.formaPago.editarFormaPago(new FormaPagoDTO(formas_de_pagos_en_tabla.get(this.filaSeleccionada).getIdFormaPago(),tipo));
+		llenarTablaFormaPago();
+		ventanaEditarFormaPago.limpiarCampos();
+		ventanaEditarFormaPago.dispose();
 	}
 	
 	private void cancelarVentanaEditarFormaPago(ActionEvent c) {
@@ -93,13 +84,23 @@ public class ControladorFormaPago implements ActionListener {
 
 	
 	public void eliminarFormaPago(int filaSeleccionada){
-		int confirm = JOptionPane.showOptionDialog(
-		            null,"¿Estás seguro que quieres eliminar la forma de pago?", 
-				             "Eliminar FormaPago", JOptionPane.YES_NO_OPTION,
-				             JOptionPane.ERROR_MESSAGE, null, null, null);
-	 if (confirm == 0){
+		obtenerFormaDePagoActualizado();
 		this.formaPago.borrarFormaPago(formas_de_pagos_en_tabla.get(filaSeleccionada));
-	 }
+		llenarTablaFormaPago();
+	}
+	
+	public void llenarTablaFormaPago(){
+		this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().setColumnCount(0);
+		this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().setColumnIdentifiers(this.vistaAdministrador.getPanelFormaPago().getNombreColumnasFormaPago());
+			
+		this.formas_de_pagos_en_tabla = formaPago.obtenerFormaPago();
+			
+		for (int i = 0; i < this.formas_de_pagos_en_tabla.size(); i++){
+			Object[] fila = {this.formas_de_pagos_en_tabla.get(i).getTipo(),
+			};
+			this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().addRow(fila);
+		}		
 	}
 	
 	@Override
