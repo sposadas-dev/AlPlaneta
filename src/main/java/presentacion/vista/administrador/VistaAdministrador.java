@@ -48,11 +48,15 @@ public class VistaAdministrador extends JFrame {
 	private JMenuItem itemEliminarProvincia;
 	
 	private static VistaAdministrador INSTANCE;
+	
 	public static VistaAdministrador getInstance(){
-		if(INSTANCE == null)
-			return new VistaAdministrador();
-		else
+		if(INSTANCE == null) {
+			INSTANCE = new VistaAdministrador();
 			return INSTANCE;
+		}
+		else {
+			return INSTANCE;
+		}
 	}
 
 	public VistaAdministrador() {

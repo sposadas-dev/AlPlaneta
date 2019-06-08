@@ -369,8 +369,6 @@ public class ControladorAdministrador {
 		int filaSeleccionada = this.vistaAdministrador.getPanelTransporte().getTablaTransportes().getSelectedRow();
 		if (filaSeleccionada != -1){
 			controladorTransporte.editarTransporte(filaSeleccionada);
-			llenarTablaTransportes();
-
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
@@ -382,11 +380,10 @@ public class ControladorAdministrador {
 		int filaSeleccionada = this.vistaAdministrador.getPanelTransporte().getTablaTransportes().getSelectedRow();
 		if (filaSeleccionada != -1){
 			controladorTransporte.eliminarTransporte(filaSeleccionada);
-			llenarTablaTransportes();
-		
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
+		llenarTablaTransportes();
 	}
 	
 	public void recargarTabla(ActionEvent r){

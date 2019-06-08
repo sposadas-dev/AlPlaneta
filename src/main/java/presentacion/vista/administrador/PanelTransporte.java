@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PanelTransporte extends JPanel {
 
@@ -38,12 +40,16 @@ public class PanelTransporte extends JPanel {
 		tablaTransportes = new JTable(modelTransportes);
 		spPasajeros.setViewportView(tablaTransportes);
 		
-		btnRecargarTabla = new JButton("Recargar");
-		btnRecargarTabla.setBounds(422, 608, 165, 54);
+		btnRecargarTabla = new JButton("Verificar Transportes");
+		btnRecargarTabla.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnRecargarTabla.setBounds(610, 589, 165, 54);
 		add(btnRecargarTabla);
 		
 		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.setBounds(640, 608, 136, 54);
+		btnConfirmar.setBounds(827, 608, 136, 54);
 		add(btnConfirmar);
 		
 		JPanel panelTransporte = new JPanel();
