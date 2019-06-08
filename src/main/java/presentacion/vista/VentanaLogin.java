@@ -8,18 +8,25 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JRadioButton;
 
 import java.awt.Font;
+
 import javax.swing.JComboBox;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JPasswordField;
+
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class VentanaLogin extends JFrame {
 
@@ -41,6 +48,8 @@ public class VentanaLogin extends JFrame {
 	}
 	
 	public VentanaLogin() {
+		setTitle("Login");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 283, 333);
 		setLocationRelativeTo(null);
@@ -76,10 +85,16 @@ public class VentanaLogin extends JFrame {
 		lblError.setBounds(30, 179, 189, 14);
 		contentPane.add(lblError);
 		
-		lblClaveOlvidada = new JLabel("He olvidado mi contraseña");
-		lblClaveOlvidada.setBounds(34, 199, 173, 20);
-		lblClaveOlvidada.setFont(new Font("Source Code Pro Semibold", Font.PLAIN, 9));
+		lblClaveOlvidada = new JLabel("¿Olvidaste tu contraseña?");
+		lblClaveOlvidada.setBounds(58, 196, 173, 20);
+		lblClaveOlvidada.setFont(new Font("Dialog", Font.PLAIN, 11));
 		lblClaveOlvidada.setForeground(Color.BLUE);
+		Font font = lblClaveOlvidada.getFont();
+		Hashtable<TextAttribute, Object> map = new Hashtable<TextAttribute, Object>();
+		map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		font = font.deriveFont(map);
+		lblClaveOlvidada.setFont(font);
+		
 		contentPane.add(lblClaveOlvidada);
 		lblError.setVisible(false);
 		this.setVisible(false);

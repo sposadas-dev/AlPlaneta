@@ -22,7 +22,6 @@ public class VentanaEditarCliente extends JFrame {
 	private JTextField txtDni;
 	private JDateChooser dateFechaNacimiento;
 	private JTextField txtUsuario;
-	private JTextField txtContrasenia;
 	private JTextField txtTelefonoFijo;
 	private JTextField txtTelefonoCelular;
 	private JTextField txtEmail;
@@ -62,7 +61,7 @@ public class VentanaEditarCliente extends JFrame {
 			
 			JLabel lblRegistrarCliente = new JLabel("Editar cliente");
 			lblRegistrarCliente.setForeground(Color.WHITE);
-			lblRegistrarCliente.setBounds(191, 0, 214, 53);
+			lblRegistrarCliente.setBounds(228, 0, 214, 53);
 			panelCliente.add(lblRegistrarCliente);
 			lblRegistrarCliente.setFont(new Font("Tahoma", Font.BOLD, 24));
 			
@@ -157,22 +156,22 @@ public class VentanaEditarCliente extends JFrame {
 			contentPane.add(txtUsuario);
 			txtUsuario.setColumns(10);
 			
-			JLabel lblContrasenia = new JLabel("Contraseña:");
-			lblContrasenia.setBounds(305, 212, 98, 14);
-			contentPane.add(lblContrasenia);
-			
-			txtContrasenia = new JTextField();
-			txtContrasenia.setBounds(390, 209, 168, 20);
-			contentPane.add(txtContrasenia);
-			txtContrasenia.setColumns(10);
 		}
 
 	public void mostrarVentana() {
 		this.setVisible(true);
 	}
 
+	public void cerrarVentana() {
+		this.setVisible(false);
+	}
+
 	public JTextField getTxtNombre() {
 		return txtNombre;
+	}
+	
+	public void setTxtNombre(JTextField txtNombre) {
+		this.txtNombre = txtNombre;
 	}
 
 	public JTextField getTxtApellido() {
@@ -203,10 +202,6 @@ public class VentanaEditarCliente extends JFrame {
 		return txtUsuario;
 	}
 
-	public JTextField getTxtContrasenia() {
-		return txtContrasenia;
-	}
-
 	public JButton getBtnEditar() {
 		return btnEditar;
 	}
@@ -215,23 +210,14 @@ public class VentanaEditarCliente extends JFrame {
 		return btnCancelar;
 	}
 
-	public void cerrarVentana() {
-		this.dispose();
-	}
-
 	public void limpiarCampos() {
 		this.txtNombre.setText(null);
 		this.txtApellido.setText(null);
 		this.txtDni.setText(null);
 		this.txtUsuario.setText(null);
-		this.txtContrasenia.setText(null);
 		this.dateFechaNacimiento.setDate(null);
 		this.txtTelefonoFijo.setText(null);
 		this.txtTelefonoCelular.setText(null);
 		this.txtEmail.setText(null);
-	}
-
-	public void setTxtNombre(JTextField txtNombre) {
-		this.txtNombre = txtNombre;
 	}
 }
