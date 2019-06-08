@@ -65,7 +65,8 @@ public class ControladorProvincia implements ActionListener {
 	}
 
 	private void mostrarVentanaEditarProvincia(ActionEvent a) {
-		this.ventanaEditarProvincia.limpiarCampos();
+		ProvinciaDTO p = provincias_en_tabla.get(this.tableroDeProvincias.getTablaProvincias().getSelectedRow());
+		this.ventanaEditarProvincia.getTxtNombreProvincia().setText(p.getNombre());
 		this.ventanaEditarProvincia.mostrarVentana();
 	}
 
@@ -135,10 +136,11 @@ public class ControladorProvincia implements ActionListener {
 			             "Editar provincia", JOptionPane.YES_NO_OPTION,
 			             JOptionPane.WARNING_MESSAGE, null, null, null);
 		if (confirm == 0){
-			ProvinciaDTO nuevaProvincia = provincias_en_tabla.get(this.filaSeleccionada);
-			nuevaProvincia.setNombre(this.ventanaEditarProvincia.getTxtNombreProvincia().getText());
-			System.out.println("a editar "+nuevaProvincia.getNombre());
-			this.modeloProvincia.editarProvincia(nuevaProvincia);
+			ProvinciaDTO p = provincias_en_tabla.get(this.tableroDeProvincias.getTablaProvincias().getSelectedRow());
+//			ProvinciaDTO nuevaProvincia = provincias_en_tabla.get(this.filaSeleccionada);
+			p.setNombre(this.ventanaEditarProvincia.getTxtNombreProvincia().getText());
+			System.out.println("a editar "+p.getNombre());
+			this.modeloProvincia.editarProvincia(p);
 			ventanaEditarProvincia.limpiarCampos();
 			ventanaEditarProvincia.dispose();
 			JOptionPane.showMessageDialog(null, "Provincia editada","Provincia", JOptionPane.INFORMATION_MESSAGE);
