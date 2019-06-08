@@ -1,18 +1,16 @@
 package presentacion.vista.administrativo;
 
+import java.awt.Color;
+import java.awt.Font;
+
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
-import java.awt.Color;
-
-import javax.swing.JLabel;
-
-import java.awt.Font;
-
-import javax.swing.JComboBox;
+import javax.swing.JCheckBox;
 
 public class PanelPasaje extends JPanel {
 
@@ -20,9 +18,11 @@ public class PanelPasaje extends JPanel {
 	private DefaultTableModel modelReservas;
 	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor unitario", "Transporte","Estado"};
 	private JTable tablaReservas;
-	private JComboBox<String>comboBoxFiltros;
-	private JButton btnBuscar;
-	private JButton btnBorrarFiltros;
+	private JCheckBox cancelCheckBox;
+	private JCheckBox pendCheckBox;
+	private JCheckBox reserCheckBox;
+	private JCheckBox vendCheckBox;
+
 
 	public PanelPasaje() {
 		modelReservas = new DefaultTableModel(null,nombreColumnasReservas){
@@ -51,35 +51,38 @@ public class PanelPasaje extends JPanel {
 		lblPasajes.setBounds(589, 0, 219, 65);
 		panelPasajes.add(lblPasajes);
 		
-		JLabel lblFiltro = new JLabel("Filtrar por:");
-		lblFiltro.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblFiltro.setBounds(389, 105, 100, 14);
-		add(lblFiltro);
+		cancelCheckBox = new JCheckBox("Cancelados");
+		cancelCheckBox.setBounds(463, 100, 95, 21);
+		add(cancelCheckBox);
+
+		pendCheckBox = new JCheckBox("Pendientes");
+		pendCheckBox.setBounds(592, 100, 95, 21);
+		add(pendCheckBox);
 		
-		comboBoxFiltros = new JComboBox<String>();
-		comboBoxFiltros.setBounds(509, 102, 216, 20);
-		comboBoxFiltros.addItem("Seleccione");
-		comboBoxFiltros.addItem("Cancelado");
-		comboBoxFiltros.addItem("Pendiente");
-		comboBoxFiltros.addItem("Reservado");
-		comboBoxFiltros.addItem("Vendido");
-		add(comboBoxFiltros);
+		reserCheckBox = new JCheckBox("Reservados");
+		reserCheckBox.setBounds(731, 100, 95, 21);
+		add(reserCheckBox);
 		
-		btnBuscar = new JButton("Aplicar búsqueda");
-		btnBuscar.setBounds(754, 91, 139, 38);
-		add(btnBuscar);
+		vendCheckBox = new JCheckBox("Vendidos");
+		vendCheckBox.setBounds(857, 100, 95, 21);
+		add(vendCheckBox);
 		
-		btnBorrarFiltros = new JButton("Borrar Filtros");
-		btnBorrarFiltros.setBounds(913, 91, 130, 38);
-		add(btnBorrarFiltros);
 	}
 	
-	public JComboBox<String> getComboBoxFiltros() {
-		return comboBoxFiltros;
+	public JCheckBox getCancelCheckBox() {
+		return cancelCheckBox;
 	}
-
-	public void setComboBoxFiltros(JComboBox<String> comboBoxFiltros) {
-		this.comboBoxFiltros = comboBoxFiltros;
+	
+	public JCheckBox getPendCheckBox() {
+		return pendCheckBox;
+	}
+	
+	public JCheckBox getReserCheckBox() {
+		return reserCheckBox;
+	}
+	
+	public JCheckBox getVendCheckBox() {
+		return vendCheckBox;
 	}
 
 	public void mostrarPanelPasaje(boolean visibilidad){
@@ -110,11 +113,4 @@ public class PanelPasaje extends JPanel {
 		this.tablaReservas = tablaReservas;
 	}
 	
-	public JButton getBtnBuscar() {
-		return btnBuscar;
-	}
-	
-	public JButton getBtnBorrarFiltros() {
-		return btnBorrarFiltros;
-	}
 }

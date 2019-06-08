@@ -45,6 +45,7 @@ public class VistaAdministrativo{
 	private JMenuItem itemVisualizarPromociones;
 	
 	private static VistaAdministrativo INSTANCE;
+	
 	public static VistaAdministrativo getInstance(){
 		if(INSTANCE == null)
 			return new VistaAdministrativo();
@@ -164,6 +165,10 @@ public class VistaAdministrativo{
 		menuPromociones.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuPromociones);
 		
+		itemVisualizarPromociones = new JMenuItem("Visualizar promociones");
+		itemVisualizarPromociones.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPromociones.add(itemVisualizarPromociones);
+
 		itemAgregarPromocion = new JMenuItem("Agregar promoción");
 		itemAgregarPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPromociones.add(itemAgregarPromocion);
@@ -172,9 +177,6 @@ public class VistaAdministrativo{
 		itemDarBajaPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPromociones.add(itemDarBajaPromocion);
 		
-		itemVisualizarPromociones = new JMenuItem("Visualizar promociones");
-		itemVisualizarPromociones.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuPromociones.add(itemVisualizarPromociones);
 	}
 	
 

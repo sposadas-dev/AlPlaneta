@@ -2,6 +2,8 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
@@ -14,18 +16,18 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.CiudadDTO;
 import dto.ClienteDTO;
-import dto.EstadoPasajeDTO;
 import dto.HorarioReservaDTO;
 import dto.LoginDTO;
 import dto.PagoDTO;
 import dto.PaisDTO;
-import dto.PasajeDTO;
 import dto.PasajeroDTO;
 import dto.ProvinciaDTO;
 import dto.TransporteDTO;
@@ -139,6 +141,10 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 	private ModeloCiudad modeloCiudad;
 	private Transporte modeloTransporte;
 	private ModeloViaje modeloViaje;
+	//Filtro
+	private DefaultTableModel dm;
+	private StringBuilder cad= new StringBuilder();
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
 	
 	private static Controlador INSTANCE;
 	
@@ -215,6 +221,25 @@ this.controladorAdministrador_ventanaAgregarPais = VentanaAgregarPais.getInstanc
 		this.viajeSeleccionado = new ViajeDTO();
 		this.transporteSeleccionado = new TransporteDTO();
 		
+		this.ventanaTablaViajes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
+		    public void keyTyped(KeyEvent e){
+		            char letra = e.getKeyChar();
+		            dm = (DefaultTableModel) ventanaTablaViajes.getModelViajes();
+		            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
+		           ventanaTablaViajes.getTablaViajes().setRowSorter(tr);
+		            if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+		                if (letra == KeyEvent.VK_BACK_SPACE){
+		                    if(cad.length() != 0) {
+		                        cad.deleteCharAt(cad.length()-1);
+		                        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                    }
+		                } else{
+		                    cad.append(String.valueOf(letra));
+		                    tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                }
+		            }
+		    }
+		});
 		
 		this.controladorAdministrador_ventanaAgregarPais.getBtnAgregar().addActionListener(agP->agregarPais(agP));
 		
@@ -508,6 +533,7 @@ private void agregarPais(ActionEvent agP) {
 			return false;
 		}
 	}	
+	
 	private java.sql.Date convertUtilToSql(java.util.Date uDate) {
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
         return sDate;

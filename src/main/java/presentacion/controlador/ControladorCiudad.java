@@ -49,13 +49,14 @@ public class ControladorCiudad implements ActionListener {
 		this.tableroDeCiudades.getBtnAgregar().addActionListener(a->mostrarVentanaAgregarCiudad(a));
 		this.tableroDeCiudades.getBtnEditar().addActionListener(a->mostrarVentanaEditarCiudad(a));
 		
+		this.tableroDeCiudades.getBtnBorrar().addActionListener(bc->borrarCiudad(bc));
+		
 		this.ventanaAgregarCiudad.getBtnAgregar().addActionListener(rc -> agregarCiudad(rc));
 		this.ventanaAgregarCiudad.getBtnCancelar().addActionListener(c->cancelarVentanaAgregarCiudad(c));
 
 		this.ventanaEditarCiudad.getBtnEditar().addActionListener(ac -> editarCiudad(ac));
 		this.ventanaEditarCiudad.getBtnCancelar().addActionListener(c->cancelarVentanaEditarCiudad(c));
-
-
+		
 		this.modeloProvincia = new ModeloProvincia(new DAOSQLFactory());
 		this.modeloCiudad = new ModeloCiudad(new DAOSQLFactory());
 		this.modeloViaje = new ModeloViaje(new DAOSQLFactory());
@@ -63,7 +64,6 @@ public class ControladorCiudad implements ActionListener {
 		this.panel = new VentanaPanelGeneral();
 	}
 
-	
 	private void mostrarVentanaEditarCiudad(ActionEvent a) {
 		this.ventanaEditarCiudad.limpiarCampos();
 		this.ventanaEditarCiudad.mostrarVentana();
@@ -89,9 +89,7 @@ public class ControladorCiudad implements ActionListener {
 
 	public void agregarCiudad(ActionEvent rc) {
 
-		int confirm = JOptionPane.showOptionDialog(null, "¿Estás seguro que quieres agregar la ciudad?",
-				"Agregar ciudad", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		if (confirm == 0 && permiteAgregarCiudad()) {
+		if ( permiteAgregarCiudad() ) {
 
 			String idProvincia = obtenerId(
 					this.ventanaAgregarCiudad.getComboBoxProvincias().getSelectedItem().toString());
@@ -103,15 +101,14 @@ public class ControladorCiudad implements ActionListener {
 
 			this.ventanaAgregarCiudad.limpiarCampos();
 			this.ventanaAgregarCiudad.cerrarVentana();
-			
 
 		}
 		llenarTablaVistaCiudades();
 	}
 
 	private void cancelarVentanaEditarCiudad(ActionEvent c) {
-		this.ventanaAgregarCiudad.limpiarCampos();
-		this.ventanaAgregarCiudad.cerrarVentana();
+		this.ventanaEditarCiudad.limpiarCampos();
+		this.ventanaEditarCiudad.cerrarVentana();
 	}
 
 	private boolean permiteAgregarCiudad() {
@@ -123,24 +120,19 @@ public class ControladorCiudad implements ActionListener {
 	}
 
 	public void editarCiudad(ActionEvent ac) {
-		int confirm = JOptionPane.showOptionDialog(null, "¿Estás seguro que quieres editar la ciudad?",
-				"Editar ciudad", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0) {
-			CiudadDTO nuevaCiudad = ciudades_en_tabla.get(this.filaSeleccionada);
-			nuevaCiudad.setNombre(this.ventanaEditarCiudad.getTxtNombreCiudad().getText());
-			System.out.println("a editar " + nuevaCiudad.getNombre());
-			this.modeloCiudad.editarCiudad(nuevaCiudad);
-			ventanaEditarCiudad.limpiarCampos();
-			ventanaEditarCiudad.dispose();
-			JOptionPane.showMessageDialog(null, "Ciudad editada", "Ciudad", JOptionPane.INFORMATION_MESSAGE);
-		}
+		CiudadDTO nuevaCiudad = ciudades_en_tabla.get(this.filaSeleccionada);
+		nuevaCiudad.setNombre(this.ventanaEditarCiudad.getTxtNombreCiudad().getText());
+		System.out.println("a editar " + nuevaCiudad.getNombre());
+		this.modeloCiudad.editarCiudad(nuevaCiudad);
+		ventanaEditarCiudad.limpiarCampos();
+		ventanaEditarCiudad.dispose();
 		llenarTablaVistaCiudades();
 
 	}
 	
 	private void cancelarVentanaAgregarCiudad(ActionEvent c) {
-		this.ventanaEditarCiudad.limpiarCampos();
-		this.ventanaEditarCiudad.cerrarVentana();
+		this.ventanaAgregarCiudad.limpiarCampos();
+		this.ventanaAgregarCiudad.cerrarVentana();
 	}
 	
 	public void llenarTablaVistaCiudades(){
@@ -162,22 +154,20 @@ public class ControladorCiudad implements ActionListener {
 		}
 	}
 	
+
+	private void borrarCiudad(ActionEvent bc) {
+		eliminarCiudad();
+	}
+	
 	public void eliminarCiudad(){
 		CiudadDTO p = ciudades_en_tabla.get(this.tableroDeCiudades.getTablaCiudades().getSelectedRow());
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres eliminar la ciudad?", 
-			             "Eliminar provincia", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0 && permiteEliminar(p) ){
+		if ( permiteEliminar(p) ){
 			this.modeloCiudad.borrarCiudad(p);
-			
-		}
-		else{
+		}else{
 			JOptionPane.showMessageDialog(null, "No pudo eliminarse","Ciudad", JOptionPane.ERROR_MESSAGE);
 		}
 		llenarTablaVistaCiudades();
 	}
-	
 
 	private boolean permiteEliminar(CiudadDTO ciudadDTO) {
 		ArrayList<ViajeDTO> viajes = (ArrayList<ViajeDTO>) modeloViaje.obtenerViajes();

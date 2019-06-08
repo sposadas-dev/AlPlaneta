@@ -2,9 +2,14 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import dto.ClienteDTO;
 import dto.LoginDTO;
@@ -30,6 +35,10 @@ public class ControladorUsuario implements ActionListener {
 	private VentanaVisualizarDatos ventanaVisualizarDatos;
 	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	
+	private DefaultTableModel dm;
+	private StringBuilder cad= new StringBuilder();
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
+	
 	public ControladorUsuario(VistaCliente vistaCliente, ClienteDTO cliente){
 		this.vistaCliente = vistaCliente;
 		this.cliente = cliente;
@@ -43,7 +52,47 @@ public class ControladorUsuario implements ActionListener {
 		this.vistaCliente.getItemVisualizarViajesHistoricos().addActionListener(vr->mostrarVentanaViajes(vr));
 		this.vistaCliente.getItemVisualizarDatos().addActionListener(vd->mostrarVentanaVisualizarDatos(vd));
 		this.vistaCliente.getItemCambiarContrasenia().addActionListener(c->mostrarVentanaCambiarContrasenia(c));
-	
+
+		this.ventanaViajes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
+		    public void keyTyped(KeyEvent e){
+		            char letra = e.getKeyChar();
+		            dm = (DefaultTableModel) ventanaViajes.getModelViajes();
+		            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
+		            ventanaViajes.getTablaViajes().setRowSorter(tr);
+		            if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+		                if (letra == KeyEvent.VK_BACK_SPACE){
+		                    if(cad.length() != 0) {
+		                        cad.deleteCharAt(cad.length()-1);
+		                        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                    }
+		                } else{
+		                    cad.append(String.valueOf(letra));
+		                    tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                }
+		            }
+		    }
+		});
+		
+		this.ventanaReservas.getTxtFiltro().addKeyListener(new KeyAdapter(){            
+		    public void keyTyped(KeyEvent e){
+		            char letra = e.getKeyChar();
+		            dm = (DefaultTableModel) ventanaReservas.getModelReservas();
+		            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
+		            ventanaReservas.getTablaReservas().setRowSorter(tr);
+		            if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+		                if (letra == KeyEvent.VK_BACK_SPACE){
+		                    if(cad.length() != 0) {
+		                        cad.deleteCharAt(cad.length()-1);
+		                        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                    }
+		                } else{
+		                    cad.append(String.valueOf(letra));
+		                    tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                }
+		            }
+		    }
+		});
+		
 		this.ventanaReservas.getBtnAceptar().addActionListener(vd->cerrarVentanaReserva(vd));
 		this.ventanaViajes.getBtnAceptar().addActionListener(vd->cerrarVentanaViajes(vd));
 		this.ventanaVisualizarDatos.getBtnAceptar().addActionListener(vd->cerrarVentana(vd));

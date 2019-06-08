@@ -19,9 +19,10 @@ import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrativo.PanelCliente;
 import presentacion.vista.administrativo.VentanaEditarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
+import presentacion.vista.administrativo.VistaAdministrativo;
 
 public class ControladorCliente implements ActionListener{
-	
+	private VistaAdministrativo vistaAdministrativo;
 	private VentanaRegistrarCliente ventanaRegistrarCliente;
 	private VentanaEditarCliente ventanaEditarCliente;
 	private PanelCliente panelCliente;
@@ -32,7 +33,7 @@ public class ControladorCliente implements ActionListener{
 	private MedioContacto medioContacto; 
 	private Login Modelologin;
 	private EnvioDeCorreo enviodeCorreo;
-
+	
 	public ControladorCliente() {
 		super();
 	}
@@ -50,9 +51,8 @@ public class ControladorCliente implements ActionListener{
 		this.ventanaRegistrarCliente.getBtnRegistrar().addActionListener(rc->registrarCliente(rc));
 		this.ventanaRegistrarCliente.getBtnCancelar().addActionListener(cv->cerrarVentanaCliente(cv));
 		
-		
 		this.ventanaEditarCliente.getBtnCancelar().addActionListener(ce->cancelarEditar());
-		
+		this.vistaAdministrativo = VistaAdministrativo.getInstance();
 	}
 	
 	public void registrarCliente(ActionEvent rc){
@@ -92,6 +92,7 @@ public class ControladorCliente implements ActionListener{
 		
 		if(camposLlenos()){
 			cliente.agregarCliente(nuevoCliente);
+			vistaAdministrativo.getPanelCliente().getModelClientes().getColumnName(1);
 			this.llenarTablaClientes();
 			this.ventanaRegistrarCliente.limpiarCampos();
 			this.ventanaRegistrarCliente.cerrarVentana();

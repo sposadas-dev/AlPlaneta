@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JTextField;
 
 public class VentanaViajes extends JFrame {
 
@@ -21,6 +22,7 @@ public class VentanaViajes extends JFrame {
 	private String[] columnasViajes = {"Origen","Destino","Fecha de salida", "Fecha de llegada","Transporte","Precio"};
 	private JButton btnAceptar;
 	private static VentanaViajes instance;
+	private JTextField txtFiltro;
 	
 	public static VentanaViajes  getInstance() {
 		if (instance == null)
@@ -46,8 +48,18 @@ public class VentanaViajes extends JFrame {
 		JLabel lblViajes = new JLabel("Mis viajes históricos");
 		lblViajes.setForeground(Color.WHITE);
 		lblViajes.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblViajes.setBounds(318, 0, 253, 53);
+		lblViajes.setBounds(10, 0, 253, 53);
 		panel.add(lblViajes);
+		
+		txtFiltro = new JTextField();
+		txtFiltro.setBounds(389, 23, 168, 19);
+		panel.add(txtFiltro);
+		txtFiltro.setColumns(10);
+		
+		JLabel lblFiltro = new JLabel("Filtro");
+		lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblFiltro.setBounds(351, 26, 35, 13);
+		panel.add(lblFiltro);
 		
 		JScrollPane spViajes = new JScrollPane();
 		spViajes.setBounds(10, 64, 902, 262);
@@ -71,6 +83,10 @@ public class VentanaViajes extends JFrame {
 		
 	}
 
+	public JTextField getTxtFiltro() {
+		return txtFiltro;
+	}
+	
 	public JButton getBtnAceptar() {
 		return btnAceptar;
 	}
