@@ -63,7 +63,8 @@ public class ControladorPais implements ActionListener {
 	}
 
 	private void mostrarVentanaEditarPais(ActionEvent a) {
-		this.ventanaEditarPais.limpiarCampos();
+		PaisDTO p = pais_en_tabla.get(this.tableroDePaises.getTablaPaises().getSelectedRow());
+		this.ventanaEditarPais.getTxtNombrePais().setText(p.getNombre());
 		this.ventanaEditarPais.mostrarVentana();
 	}
 
@@ -82,7 +83,6 @@ public class ControladorPais implements ActionListener {
 			PaisDTO nuevoPais = new PaisDTO();
 			nuevoPais.setNombre(this.ventanaAgregarPais.getTxtNombrePais().getText());
 			modeloPais.agregarPais(nuevoPais);
-	
 			this.ventanaAgregarPais.limpiarCampos();
 			this.ventanaAgregarPais.cerrarVentana();
 			
