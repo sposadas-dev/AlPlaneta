@@ -7,11 +7,12 @@ import presentacion.vista.VentanaLogin;
 public class Main {
 	
 	public static void main(String[] args) throws Exception {
-
+		
 		Login login = new Login(new DAOSQLFactory());
 		VentanaLogin ventanaLogin = new VentanaLogin();
 		ControladorLogin controladorLogin = new ControladorLogin(ventanaLogin, login);
 		controladorLogin.iniciar();
-		
+	
 	}
-}	
+	
+}		

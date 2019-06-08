@@ -84,10 +84,6 @@ public class PanelCliente extends JPanel {
 		this.setVisible(visibilidad);
 	}
 	
-//	public JButton getBtnRecargarTabla() {
-//		return btnRecargarTabla;
-//	}
-	
 	public JCheckBox getActivos() {
 		return activos;
 	}

@@ -45,7 +45,7 @@ public class TransporteDAOSQL implements TransporteDAO {
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(delete);
-			statement.setString(1, Integer.toString(transporte_a_eliminar.getIdTransporte()));
+			statement.setInt(1, transporte_a_eliminar.getIdTransporte());
 			chequeoUpdate = statement.executeUpdate();
 			if(chequeoUpdate > 0) //Si se ejecutó devuelvo true
 				return true;

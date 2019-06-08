@@ -74,14 +74,14 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemEditarTransporte().addActionListener(et->editarTransporte(et));
 		this.vistaAdministrador.getItemEliminarTransporte().addActionListener(dt->eliminarTransporte(dt));
 
-		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
+//		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 		
 		this.vistaAdministrador.getItemAgregarFormaPago().addActionListener(afp->agregarPanelFormaPago(afp));
 		this.vistaAdministrador.getItemVisualizarFormaPago().addActionListener(vfp->visualizarFormaPago(vfp));
 		this.vistaAdministrador.getItemEditarFormaPago().addActionListener(efp->editarFormaPago(efp));
 		this.vistaAdministrador.getItemEliminarFormaPago().addActionListener(dfp->eliminarFormaPago(dfp));
 		
-		this.vistaAdministrador.getPanelFormaPago().getBtnRecargarTabla().addActionListener(r->recargarTablaFormaPago(r));
+//		this.vistaAdministrador.getPanelFormaPago().getBtnRecargarTabla().addActionListener(r->recargarTablaFormaPago(r));
 		this.vistaAdministrador.getPanelEmpleados().getActivos().addActionListener(sa->cargarActivos(sa));
 		this.vistaAdministrador.getPanelEmpleados().getInactivos().addActionListener(si->cargarInactivos(si));
 
@@ -217,7 +217,7 @@ public class ControladorAdministrador {
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("administrador")){
 			LoginDTO nuevoLogin = new LoginDTO();
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
-			nuevoLogin.setContrasena(ventanaAgregarEmpleado.getTxtContrasenia().getText());
+			nuevoLogin.setContrasena(new String(ventanaAgregarEmpleado.getTxtContrasena().getPassword()));
 			nuevoLogin.setRol(new RolDTO(1,"administrador"));
 			nuevoLogin.setEstado("activo");
 			
@@ -235,7 +235,7 @@ public class ControladorAdministrador {
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("administrativo")){
 			LoginDTO nuevoLogin = new LoginDTO();
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
-			nuevoLogin.setContrasena(ventanaAgregarEmpleado.getTxtContrasenia().getText());
+			nuevoLogin.setContrasena(new String(ventanaAgregarEmpleado.getTxtContrasena().getPassword()));
 			nuevoLogin.setRol(new RolDTO(2,"administrativo"));
 			nuevoLogin.setEstado("activo");
 
@@ -255,7 +255,7 @@ public class ControladorAdministrador {
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("coordinador")){
 			LoginDTO nuevoLogin = new LoginDTO();
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
-			nuevoLogin.setContrasena(ventanaAgregarEmpleado.getTxtContrasenia().getText());
+			nuevoLogin.setContrasena(new String(ventanaAgregarEmpleado.getTxtContrasena().getPassword()));
 			nuevoLogin.setRol(new RolDTO(3,"coordinador"));
 			nuevoLogin.setEstado("activo");
 
@@ -294,7 +294,7 @@ public class ControladorAdministrador {
 					break;
 			}
 			String usuarioLogin = this.ventanaEditarCuenta.getTxtUsuario().getText();
-			String contrasenaLogin = this.ventanaEditarCuenta.getTxtContrasenia().getText();
+			String contrasenaLogin = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
 			RolDTO rol = new RolDTO(idRol, rolNombre);
 			LoginDTO login = new LoginDTO(idLogin, usuarioLogin, contrasenaLogin, rol, estado);
 			this.login.editarLogin(login);
@@ -306,7 +306,7 @@ public class ControladorAdministrador {
 		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarCuenta.mostrarVentana(true);
 		ventanaEditarCuenta.getTxtUsuario().setText(this.logins_en_tabla.get(this.filaSeleccionada).getUsuario());
-		ventanaEditarCuenta.getTxtContrasenia().setText(this.logins_en_tabla.get(this.filaSeleccionada).getContrasena());
+		ventanaEditarCuenta.getTxtContrasena().setText(this.logins_en_tabla.get(this.filaSeleccionada).getContrasena());
 	}
 	
 	private void cancelarEditarCuenta(ActionEvent can) {
@@ -324,7 +324,7 @@ public class ControladorAdministrador {
 		List<LoginDTO> logins = login.obtenerLogin();
 		for(LoginDTO l: logins){
 			if(l.getUsuario().equals(this.ventanaAgregarEmpleado.getTxtUsuario().getText()) &&
-					l.getContrasena().equals(this.ventanaAgregarEmpleado.getTxtContrasenia().getText())){
+					l.getContrasena().equals(new String(this.ventanaAgregarEmpleado.getTxtContrasena().getPassword()))){
 			loginDTO = l;
 		}
 	}
@@ -369,8 +369,6 @@ public class ControladorAdministrador {
 		int filaSeleccionada = this.vistaAdministrador.getPanelTransporte().getTablaTransportes().getSelectedRow();
 		if (filaSeleccionada != -1){
 			controladorTransporte.editarTransporte(filaSeleccionada);
-			llenarTablaTransportes();
-
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
@@ -382,11 +380,10 @@ public class ControladorAdministrador {
 		int filaSeleccionada = this.vistaAdministrador.getPanelTransporte().getTablaTransportes().getSelectedRow();
 		if (filaSeleccionada != -1){
 			controladorTransporte.eliminarTransporte(filaSeleccionada);
-			llenarTablaTransportes();
-		
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
+		llenarTablaTransportes();
 	}
 	
 	public void recargarTabla(ActionEvent r){

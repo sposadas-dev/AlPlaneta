@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 public class VentanaTablaViajes extends JFrame {
 
@@ -25,9 +26,8 @@ public class VentanaTablaViajes extends JFrame {
 	private JButton btnConfirmar;
 	private JButton btnAtras;
 	private  String[] nombreColumnas = {"Origen","Destino","Fecha de salida","Fecha de llegada","Hora de salida","Horas estimadas","Capacidad","Transporte","Precio"};
-	private JLabel label;
-	private JComboBox<String> comboBox;
-	private JButton button;
+	private JTextField txtFiltro;
+	private JLabel lblFiltro;
 
 	public static VentanaTablaViajes getInstance(){
 		if(INSTANCE == null)
@@ -68,22 +68,23 @@ public class VentanaTablaViajes extends JFrame {
 		btnAtras.setBounds(249, 395, 150, 49);
 		contentPane.add(btnAtras);
 		
-		label = new JLabel("Filtrar por:");
-		label.setFont(new Font("Tahoma", Font.BOLD, 11));
-		label.setBounds(189, 48, 100, 14);
-		contentPane.add(label);
+		txtFiltro = new JTextField();
+		txtFiltro.setBounds(326, 43, 200, 19);
+		contentPane.add(txtFiltro);
+		txtFiltro.setColumns(10);
 		
-		comboBox = new JComboBox<String>();
-		comboBox.setBounds(312, 45, 216, 20);
-		contentPane.add(comboBox);
-		
-		button = new JButton("Aplicar búsqueda");
-		button.setBounds(601, 44, 216, 23);
-		contentPane.add(button);
+		lblFiltro = new JLabel("Filtro");
+		lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblFiltro.setBounds(278, 45, 38, 13);
+		contentPane.add(lblFiltro);
 		
 		this.setVisible(false);
 	}
 
+	public JTextField getTxtFiltro() {
+		return txtFiltro;
+	}
+	
 	public void mostrarVentana(boolean b) {
 		this.setVisible(b);
 	}

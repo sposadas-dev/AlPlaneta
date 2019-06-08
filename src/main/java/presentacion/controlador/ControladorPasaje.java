@@ -2,6 +2,8 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -96,9 +98,12 @@ public class ControladorPasaje implements ActionListener{
 	private AdministrativoDTO administrativoLogueado;
 	private PagoDTO pagoDTO;
 	private boolean editarPago;
-	private DefaultTableModel dm;
 	private ViajeDTO viajeDTO;
 	private java.util.Date fechaActual;
+	
+	private DefaultTableModel dm;
+	private StringBuilder cad= new StringBuilder();
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
 	
 	public ControladorPasaje(VentanaVisualizarClientes ventanaVisualizarClientes, Cliente cliente, AdministrativoDTO administrativoLogueado){
 		this.ventanaVisualizarClientes = ventanaVisualizarClientes;
@@ -131,6 +136,46 @@ public class ControladorPasaje implements ActionListener{
 		
 		this.pasajeros_en_reserva = new ArrayList<PasajeroDTO>();
 		this.pasajes_en_tabla = ModeloPasaje.obtenerPasajes();
+		
+		this.ventanaVisualizarClientes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					dm = (DefaultTableModel) ventanaVisualizarClientes.getModelClientes();
+					TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
+					ventanaVisualizarClientes.getTablaClientes().setRowSorter(tr);
+					if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+						if (letra == KeyEvent.VK_BACK_SPACE){
+							if(cad.length() != 0) {
+								cad.deleteCharAt(cad.length()-1);
+						        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+							}
+						} else{
+							cad.append(String.valueOf(letra));
+			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+						}
+					}
+			}
+		});
+		
+		this.ventanaTablaViajes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
+		    public void keyTyped(KeyEvent e){
+		            char letra = e.getKeyChar();
+		            dm = (DefaultTableModel) ventanaTablaViajes.getModelViajes();
+		            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
+		           ventanaTablaViajes.getTablaViajes().setRowSorter(tr);
+		            if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+		                if (letra == KeyEvent.VK_BACK_SPACE){
+		                    if(cad.length() != 0) {
+		                        cad.deleteCharAt(cad.length()-1);
+		                        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                    }
+		                } else{
+		                    cad.append(String.valueOf(letra));
+		                    tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                }
+		            }
+		    }
+		});
 		
 		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
 		this.ventanaVisualizarClientes.getBtnAplicarFiltro().addActionListener(bc->buscarCliente(bc));
@@ -166,7 +211,6 @@ public class ControladorPasaje implements ActionListener{
 		this.editarPago = true;
 		
 	}
-
 
 	private void pagarPasaje(ActionEvent p) {
 		this.ventanaPago.mostrarVentana(true);
@@ -208,7 +252,6 @@ public class ControladorPasaje implements ActionListener{
 		if (filtroSeleccionado.equals("Seleccione")){
 			JOptionPane.showMessageDialog(null, "Debe seleccionar una opción", "Mensaje", JOptionPane.ERROR_MESSAGE);		
 		}else if (filtroSeleccionado.equals("DNI")) {
-//			filtrarDniSegun(dato);
 			buscarDniEnTabla(dato);	
 		}
 	}

@@ -16,6 +16,7 @@ import java.awt.Color;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import javax.swing.JTextField;
 
 public class VentanaReservas extends JFrame {
 
@@ -24,6 +25,7 @@ public class VentanaReservas extends JFrame {
 	private  String[] columnasReservas = {"Origen","Destino","Fecha de vencimiento","Fecha de salida", "Fecha de llegada","Hora de salida","Transporte"};
 	private JButton btnAceptar;
 	private static VentanaReservas instance;
+	private JTextField txtFiltro;
 	
 	public static VentanaReservas  getInstance() {
 		if (instance == null)
@@ -49,8 +51,18 @@ public class VentanaReservas extends JFrame {
 		JLabel lblReservas = new JLabel("Mis reservas");
 		lblReservas.setForeground(Color.WHITE);
 		lblReservas.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblReservas.setBounds(318, 0, 253, 53);
+		lblReservas.setBounds(33, 0, 253, 53);
 		panel.add(lblReservas);
+		
+		txtFiltro = new JTextField();
+		txtFiltro.setBounds(374, 23, 154, 19);
+		panel.add(txtFiltro);
+		txtFiltro.setColumns(10);
+		
+		JLabel lblFiltro = new JLabel("Filtro");
+		lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblFiltro.setBounds(318, 26, 46, 13);
+		panel.add(lblFiltro);
 		
 		JScrollPane spReservas = new JScrollPane();
 		spReservas.setBounds(10, 64, 922, 262);
@@ -73,6 +85,11 @@ public class VentanaReservas extends JFrame {
 		getContentPane().add(btnAceptar);
 		
 	}
+	
+	public JTextField getTxtFiltro() {
+		return txtFiltro;
+	}
+	
 	public JTable getTablaReservas() {
 		return tablaReservas;
 	}
