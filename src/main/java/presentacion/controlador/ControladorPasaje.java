@@ -98,10 +98,10 @@ public class ControladorPasaje implements ActionListener{
 	private AdministrativoDTO administrativoLogueado;
 	private PagoDTO pagoDTO;
 	private boolean editarPago;
-	private DefaultTableModel dm;
 	private ViajeDTO viajeDTO;
 	private java.util.Date fechaActual;
 	
+	private DefaultTableModel dm;
 	private StringBuilder cad= new StringBuilder();
 	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
 	
@@ -155,6 +155,26 @@ public class ControladorPasaje implements ActionListener{
 						}
 					}
 			}
+		});
+		
+		this.ventanaTablaViajes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
+		    public void keyTyped(KeyEvent e){
+		            char letra = e.getKeyChar();
+		            dm = (DefaultTableModel) ventanaTablaViajes.getModelViajes();
+		            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
+		           ventanaTablaViajes.getTablaViajes().setRowSorter(tr);
+		            if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+		                if (letra == KeyEvent.VK_BACK_SPACE){
+		                    if(cad.length() != 0) {
+		                        cad.deleteCharAt(cad.length()-1);
+		                        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                    }
+		                } else{
+		                    cad.append(String.valueOf(letra));
+		                    tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                }
+		            }
+		    }
 		});
 		
 		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
