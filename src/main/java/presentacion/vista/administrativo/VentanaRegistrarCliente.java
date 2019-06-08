@@ -158,15 +158,9 @@ public class VentanaRegistrarCliente extends JFrame {
 		contentPane.add(txtUsuario);
 		txtUsuario.setColumns(10);
 		
-		txtContrasenia = new JTextField();
-		txtContrasenia.setBounds(390, 209, 168, 20);
-		contentPane.add(txtContrasenia);
-		txtContrasenia.setColumns(10);
-		txtContrasenia.setVisible(false);
-	}//´PUEDO PONER QUE NO SEA VISIBLE EL TXT.....????????????????????????
+	}
 	
-	public void mostrarVentana()
-	{
+	public void mostrarVentana(){
 		this.setVisible(true);
 	}
 	
@@ -223,7 +217,6 @@ public class VentanaRegistrarCliente extends JFrame {
 		this.txtApellido.setText(null);
 		this.txtDni.setText(null);
 		this.txtUsuario.setText(null);
-		this.txtContrasenia.setText(null);
 		this.dateFechaNacimiento.setDate(null);
 		this.txtTelefonoFijo.setText(null);
 		this.txtTelefonoCelular.setText(null);
