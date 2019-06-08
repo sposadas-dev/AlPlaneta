@@ -40,14 +40,6 @@ public class PanelTransporte extends JPanel {
 		tablaTransportes = new JTable(modelTransportes);
 		spPasajeros.setViewportView(tablaTransportes);
 		
-		btnRecargarTabla = new JButton("Verificar Transportes");
-		btnRecargarTabla.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnRecargarTabla.setBounds(610, 589, 165, 54);
-		add(btnRecargarTabla);
-		
 		btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(827, 608, 136, 54);
 		add(btnConfirmar);
@@ -65,16 +57,16 @@ public class PanelTransporte extends JPanel {
 		panelTransporte.add(lblTransportes);
 	
 		btnConfirmar.setVisible(false);
-		btnRecargarTabla.setVisible(false);
+//		btnRecargarTabla.setVisible(false);
 	}
 
 	public void mostrarPanelTransporte(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}
 	
-	public JButton getBtnRecargarTabla() {
-		return btnRecargarTabla;
-	}
+//	public JButton getBtnRecargarTabla() {
+//		return btnRecargarTabla;
+//	}
 	
 	public DefaultTableModel getModelTransportes() {
 		return modelTransportes;

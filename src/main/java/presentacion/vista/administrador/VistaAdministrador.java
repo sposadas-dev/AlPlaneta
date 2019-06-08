@@ -149,7 +149,7 @@ public class VistaAdministrador extends JFrame {
 		panelTransporte.setLocation(0, 0);
 		getContentPane().add(panelTransporte);
 		panelTransporte.setVisible(false);
-		panelTransporte.getBtnRecargarTabla().setVisible(true);
+//		panelTransporte.getBtnRecargarTabla().setVisible(true);
 
 		
 		panelEmpleados = new PanelEmpleados();
