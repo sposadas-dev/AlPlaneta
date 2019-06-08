@@ -19,4 +19,5 @@ public interface Pasaje_PasajerosDAO {
 	public boolean insert(Pasaje_PasajerosDTO pasaje_pasajeros);
 	
 	public List<PasajeroDTO> traerPasajerosDePasaje(int idPasaje);
+
 }
