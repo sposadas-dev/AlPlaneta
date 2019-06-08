@@ -57,7 +57,7 @@ public class PanelFormaPago  extends JPanel {
 		panelFomaPago.add(lblFormaPago);
 	
 		btnConfirmar.setVisible(false);
-		btnRecargarTabla.setVisible(false);
+//		btnRecargarTabla.setVisible(false);
 	}
 
 	public void mostrarPanelFormaPago(boolean visibilidad){

@@ -533,6 +533,7 @@ private void agregarPais(ActionEvent agP) {
 			return false;
 		}
 	}	
+	
 	private java.sql.Date convertUtilToSql(java.util.Date uDate) {
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
         return sDate;
