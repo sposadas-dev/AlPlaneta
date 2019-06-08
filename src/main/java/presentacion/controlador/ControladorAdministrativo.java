@@ -52,7 +52,8 @@ public class ControladorAdministrativo implements ActionListener {
 	private List<PromocionDTO> promociones_en_tabla;
 
 	private List<ClienteDTO> clientes_aux;
-
+	private List<PasajeDTO> pasajes_aux;
+	
 	private List<EventoDTO> eventos_en_tabla;
 	private Cliente cliente;
 	private Pasaje pasaje;
@@ -64,10 +65,6 @@ public class ControladorAdministrativo implements ActionListener {
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
 
-	private DefaultTableModel dm;
-	private StringBuilder cad= new StringBuilder();
-	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
-	
 	private static ControladorAdministrativo INSTANCE;
 	
 	public static ControladorAdministrativo getInstance(){
@@ -103,33 +100,20 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getItemEditarPasaje().addActionListener(ep->mostrarVentanaEditarPasaje(ep));
 		this.vista.getItemCancelarPasaje().addActionListener(cp->cancelarPasaje(cp));
 		
-		this.vista.getPanelCliente().getTxtFiltro().addKeyListener(new KeyAdapter(){            
-			public void keyTyped(KeyEvent e){
-					char letra = e.getKeyChar();
-					dm = (DefaultTableModel) vista.getPanelCliente().getModelClientes();
-					TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
-					vista.getPanelCliente().getTablaClientes().setRowSorter(tr);
-					if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
-						if (letra == KeyEvent.VK_BACK_SPACE){
-							if(cad.length() != 0) {
-								cad.deleteCharAt(cad.length()-1);
-						        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
-							}
-						} else{
-							cad.append(String.valueOf(letra));
-			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
-						}
-					}
-			}
-		});
-		
 		this.vista.getPanelCliente().getActivos().addActionListener(sa->cargarActivos(sa));
 		this.vista.getPanelCliente().getInactivos().addActionListener(si->cargarInactivos(si));
 		
 		this.ventanaEditarCliente.getBtnEditar().addActionListener(ec->editarCliente(ec));
 //		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
-		this.vista.getPanelPasaje().getBtnBuscar().addActionListener(b->filtrar(b));
-		this.vista.getPanelPasaje().getBtnBorrarFiltros().addActionListener(bf->borrarFiltros(bf));
+		
+		this.vista.getPanelPasaje().getCancelCheckBox().addActionListener(ccb->cargarCancelados(ccb));
+		this.vista.getPanelPasaje().getPendCheckBox().addActionListener(pcb->cargarPendientes(pcb));
+		this.vista.getPanelPasaje().getReserCheckBox().addActionListener(rcb->cargarReservados(rcb));
+		this.vista.getPanelPasaje().getVendCheckBox().addActionListener(vcb->cargarVendidos(vcb));
+		
+		
+//		this.vista.getPanelPasaje().getBtnBuscar().addActionListener(b->filtrar(b));
+//		this.vista.getPanelPasaje().getBtnBorrarFiltros().addActionListener(bf->borrarFiltros(bf));
 		
 		this.vista.getItemAgregarEvento().addActionListener(ac->mostrarVentanaAgregarEvento(ac));
 		this.vista.getItemVisualizarEventos().addActionListener(ac->mostrarEventos(ac));
@@ -154,6 +138,22 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
 	}
 
+	public void cargarCancelados(ActionEvent ccb) {
+		this.llenarTablaPasajes();
+	}
+	
+	public void cargarPendientes(ActionEvent pcb) {
+		this.llenarTablaPasajes();
+	}
+	
+	public void cargarReservados(ActionEvent rcb) {
+		this.llenarTablaPasajes();
+	}
+	
+	public void cargarVendidos(ActionEvent vcb) {
+		this.llenarTablaPasajes();
+	}
+	
 	public void cargarInactivos(ActionEvent si) {
 		this.llenarTablaClientes();
 	}
@@ -163,11 +163,6 @@ public class ControladorAdministrativo implements ActionListener {
 		this.llenarTablaClientes();
 	}
 	
-	
-	private void recargarTabla(ActionEvent r) {
-		this.llenarTablaClientes();
-	}
-
 	public ControladorAdministrativo(){
 		super();
 	}
@@ -188,7 +183,6 @@ public class ControladorAdministrativo implements ActionListener {
 	}
 	// ------------------------------------------- Desactivar Cliente ------------------------
 
-	//TODO: Hacer acá el edit del Cliente.
 	private void editarCliente(ActionEvent ec) {
 
 		java.util.Date dateFechaNacimiento = this.ventanaEditarCliente.getDateFechaNacimiento().getDate();
@@ -422,21 +416,6 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaPromocion.mostrarVentana();
 	}
 	
-	public void filtrar(ActionEvent bc){
-		String filtroSeleccionado = this.vista.getPanelPasaje().getComboBoxFiltros().getSelectedItem().toString();
-		if (filtroSeleccionado.equals("Seleccione")){
-			JOptionPane.showMessageDialog(null, "Debe seleccionar una opción", "Mensaje", JOptionPane.ERROR_MESSAGE);
-		}else if (filtroSeleccionado.equals("Cancelado")) {
-			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
-		}else if(filtroSeleccionado.equals("Pendiente")){
-			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
-		}else if(filtroSeleccionado.equals("Reservado")){
-			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
-		}else if(filtroSeleccionado.equals("Vendido")){
-			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
-		}
-	}
-	
 	public List<PasajeDTO> filtrarPasajeSegun(String estado) {
 		List<PasajeDTO> resultado = new ArrayList<PasajeDTO>();
 		this.clientes_en_tabla = cliente.obtenerClientes();
@@ -449,11 +428,6 @@ public class ControladorAdministrativo implements ActionListener {
 			JOptionPane.showMessageDialog(vista.getPanelPasaje(), "No existe ningún pasaje con ese estado", "", 0);
 		}
 		return resultado;
-	}
-	
-	private void borrarFiltros(ActionEvent bf) {
-		llenarTablaPasajes(pasaje.obtenerPasajes());
-		this.vista.getPanelPasaje().getComboBoxFiltros().setSelectedIndex(0);
 	}
 	
 	public void llenarTabla() {
@@ -500,6 +474,36 @@ public class ControladorAdministrativo implements ActionListener {
 							 this.clientes_en_tabla.get(i).getLogin().getEstado()
 							};
 			this.vista.getPanelCliente().getModelClientes().addRow(fila);
+		}		
+	}
+	
+	private void llenarTablaPasajes(){
+		this.vista.getPanelPasaje().getModelReservas().setRowCount(0); //Para vaciar la tabla
+		this.vista.getPanelPasaje().getModelReservas().setColumnCount(0);
+		this.vista.getPanelPasaje().getModelReservas().setColumnIdentifiers(this.vista.getPanelPasaje().getNombreColumnasReservas());
+
+		this.pasajes_en_tabla = new ArrayList<PasajeDTO>();
+		this.pasajes_aux = pasaje.obtenerPasajes();
+		
+		this.pasajes_en_tabla = obtenerPasajesFiltrados(this.pasajes_aux);
+		
+		for (int i = 0; i < this.pasajes_en_tabla.size(); i++){
+
+			Object[] fila = {
+							this.pasajes_en_tabla.get(i).getCliente().getDni(),
+							this.pasajes_en_tabla.get(i).getCliente().getNombre(),
+							this.pasajes_en_tabla.get(i).getCliente().getApellido(),
+							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
+							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
+							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
+							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
+							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
+							this.pasajes_en_tabla.get(i).getValorViaje(),
+							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
+							this.pasajes_en_tabla.get(i).getEstadoDelPasaje().getNombre()
+			};
+							this.vista.getPanelPasaje().getModelReservas().addRow(fila);
 		}		
 	}
 	
@@ -576,6 +580,126 @@ public class ControladorAdministrativo implements ActionListener {
 			};
 							this.vista.getPanelPromocion().getModelPromocion().addRow(fila);
 		}		
+	}
+	
+	private ArrayList<PasajeDTO> obtenerPasajesFiltrados(List<PasajeDTO> pasajes_aux){
+		
+		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
+		
+		boolean cancel = this.vista.getPanelPasaje().getCancelCheckBox().isSelected();
+		boolean pend = this.vista.getPanelPasaje().getPendCheckBox().isSelected();
+		boolean reser = this.vista.getPanelPasaje().getReserCheckBox().isSelected();
+		boolean vend = this.vista.getPanelPasaje().getVendCheckBox().isSelected();
+
+		if (cancel == false && pend == false && reser == false && vend == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				pasajes.add(pasaje);
+			}
+		} else if (cancel == true && pend == true && reser == true && vend == true ) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				pasajes.add(pasaje);
+			}
+		} else if (cancel == true && pend == true && reser == true && vend == false ) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!pasaje.getEstadoDelPasaje().getNombre().equals("Vendido")) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (cancel == true && pend == true && reser == false && vend == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Vendido") || pasaje.getEstadoDelPasaje().getNombre().equals("Reservado"))) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (cancel == true && pend == false && reser == false && vend == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Vendido") || 
+						pasaje.getEstadoDelPasaje().getNombre().equals("Reservado") || 
+							pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente") )) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (vend == true && reser == true && pend == true && cancel == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado")) ) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (vend == true && reser == true && pend == false && cancel == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente"))) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (vend == true && reser == false && pend == false && cancel == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || 
+						pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente") || 
+							pasaje.getEstadoDelPasaje().getNombre().equals("Reservado") )) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (reser == true && pend == true && vend == true && cancel == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado")) ) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (reser == true && pend == true && vend == false && cancel == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || pasaje.getEstadoDelPasaje().getNombre().equals("Vendido"))) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (reser == true && pend == false && vend == false && cancel == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || 
+						pasaje.getEstadoDelPasaje().getNombre().equals("Vendido") || 
+							pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente") )) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (pend == true && vend == true && reser == true && cancel == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado")) ) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (pend == true && vend == true && reser == false && cancel == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || pasaje.getEstadoDelPasaje().getNombre().equals("Reservado"))) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (pend == true && vend == false && reser == false && cancel == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || 
+						pasaje.getEstadoDelPasaje().getNombre().equals("Reservado") || 
+							pasaje.getEstadoDelPasaje().getNombre().equals("Vendido") )) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (cancel == true && reser == false && pend == true && vend == true) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Reservado")) ) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (cancel == true && pend == false && reser == true && vend == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente") || pasaje.getEstadoDelPasaje().getNombre().equals("Vendido"))) {
+					pasajes.add(pasaje);
+				}
+			}
+		} else if (cancel == true && reser == true && vend == true && pend == false) {
+			for(PasajeDTO pasaje : this.pasajes_aux) {
+				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente")) ) {
+					pasajes.add(pasaje);
+				}
+			}
+		}
+		
+		return pasajes;
 	}
 	
 	@Override
