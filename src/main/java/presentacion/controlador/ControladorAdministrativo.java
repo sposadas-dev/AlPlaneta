@@ -58,6 +58,7 @@ public class ControladorAdministrativo implements ActionListener {
 	private int filaSeleccionada;
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
+	private controladorDatosLogin controladorDatosLogin;
 	
 	public ControladorAdministrativo(VistaAdministrativo vista,AdministrativoDTO administrativoLogueado) {
 	
@@ -65,13 +66,10 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaEvento = VentanaRegistrarEvento.getInstance(); 
 		this.ventanaEditarEvento = VentanaEditarEvento.getInstance();
-
 		this.ventanaVisualizarCliente = VentanaVisualizarClientes.getInstance();
 		this.ventanaRegistrarCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaEditarCliente = VentanaEditarCliente.getInstance();
-
 		this.ventanaVisualizarPasaje = VentanaVisualizarPasaje.getInstance();
-		
 		this.ventanaPromocion = VentanaRegistrarPromocion.getInstance();
 		
 		this.vista.getItemRegistrarCliente().addActionListener(ac->mostrarVentanaAgregarCliente(ac));
@@ -79,6 +77,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getItemEditarCliente().addActionListener(mve->mostrarVentanaEditarCliente(mve));
 		this.vista.getItemActivarCliente().addActionListener(acc->activarCliente(acc));
 		this.vista.getItemDesactivarCliente().addActionListener(dc->desactivarCliente(dc));
+		this.vista.getItemRestablecerContrasena().addActionListener(r->restablecerContrasena(r));
 		
 		this.vista.getItemVisualizarPasajes().addActionListener(ap->mostrarPasajes(ap));
 		this.vista.getItemAgregarPasaje().addActionListener(ap->mostrarVentanaAgregarPasaje(ap));
@@ -108,23 +107,24 @@ public class ControladorAdministrativo implements ActionListener {
 		this.promocion = new ModeloPromocion(new DAOSQLFactory());
 		
 		controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
-
 		controladorCliente = new ControladorCliente(ventanaRegistrarCliente, ventanaEditarCliente, cliente);
-
 		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado, this.eventos_en_tabla);
-		
 		controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
+		controladorDatosLogin = new controladorDatosLogin();
+	
+	}
+
+	private void restablecerContrasena(ActionEvent r) {
+		controladorDatosLogin.restablecerContrasena();
 	}
 
 	public void cargarInactivos(ActionEvent si) {
 		this.llenarTablaClientes();
 	}
 
-
 	public void cargarActivos(ActionEvent sa) {
 		this.llenarTablaClientes();
 	}
-	
 	
 	private void recargarTabla(ActionEvent r) {
 		this.llenarTablaClientes();

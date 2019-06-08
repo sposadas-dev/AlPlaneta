@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.AdministradorDTO;
+import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.CoordinadorDTO;
 import persistencia.conexion.Conexion;
@@ -15,14 +16,11 @@ import persistencia.dao.interfaz.CoordinadorDAO;
 public class CoordinadorDAOSQL implements CoordinadorDAO {
 	
 	private static final String insert = "INSERT INTO coordinador(idCoordinador, nombre, idLogin,mail)  VALUES (?, ?, ?,?)";
-
 	private static final String readall = "SELECT * FROM coordinador";
-
 	private static final String update = "UPDATE coordinador SET nombre = ? WHERE idCoordinador = ?";
-	
 	private static final String browse = "SELECT * FROM coordinador WHERE idCoordinador = ?";
 	private static final String browseLogin = "SELECT * FROM coordinador WHERE idLogin = ?";
-
+	private static final String browseByMail = "SELECT * FROM coordinador WHERE mail = ?";
 
 	@Override
 	public boolean insert(CoordinadorDTO coordinador) {
@@ -163,9 +161,31 @@ public class CoordinadorDAOSQL implements CoordinadorDAO {
 	}
 
 	@Override
-	public CoordinadorDTO getByMail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+	public CoordinadorDTO getByMail(String mail) {
+			PreparedStatement statement;
+			ResultSet resultSet;
+			Conexion conexion = Conexion.getConexion();
+			CoordinadorDTO dto;
+			
+			LoginDAOSQL dao = new LoginDAOSQL();
+			try{
+				statement = conexion.getSQLConexion().prepareStatement(browseByMail);
+				statement.setString(1, mail);
+				resultSet = statement.executeQuery();
+				
+				if(resultSet.next()){
+					dto = new CoordinadorDTO(
+							resultSet.getInt("idCoordinador"),
+							resultSet.getString("nombre"),
+							dao.getById(resultSet.getInt("idLogin")),
+							resultSet.getString("mail"));
+					return dto;
+				}
+				
+			}catch (SQLException e){
+				 e.printStackTrace();
+			}
+			return null;
 	}
 
 }

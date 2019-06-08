@@ -45,6 +45,7 @@ public class VistaAdministrativo{
 	private JMenuItem itemVisualizarPromociones;
 	
 	private static VistaAdministrativo INSTANCE;
+	private JMenuItem itemRestablecerContrasena;
 	public static VistaAdministrativo getInstance(){
 		if(INSTANCE == null)
 			return new VistaAdministrativo();
@@ -123,6 +124,10 @@ public class VistaAdministrativo{
 		itemDesactivarClientes = new JMenuItem("Desactivar Cliente");
 		itemDesactivarClientes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemDesactivarClientes);
+		
+		itemRestablecerContrasena = new JMenuItem("Restablecer Contraseña");
+		itemRestablecerContrasena.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuClientes.add(itemRestablecerContrasena);
 		
 		JMenu menuPasajes = new JMenu("Pasajes");
 		menuPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -272,7 +277,13 @@ public class VistaAdministrativo{
 		return itemVisualizarPromociones;
 	}
 
+	public JMenuItem getItemRestablecerContrasena() {
+		return itemRestablecerContrasena;
+	}
 
+	public void setItemRestablecerContrasena(JMenuItem itemRestablecerContrasena) {
+		this.itemRestablecerContrasena = itemRestablecerContrasena;
+	}
 
 	public void mostrarVentana(){
 		this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

@@ -63,6 +63,7 @@ public class GeneratePDF {
             document.addAuthor("Al Planeta");
             document.addCreator("Administrador");
             
+            
             Chunk chunk = new Chunk(" Voucher Al Planeta ", chapterFont);
 //            chunk.setBackground(BaseColor.GRAY);
             // Creamos el primer capitulo

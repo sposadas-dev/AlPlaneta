@@ -130,7 +130,6 @@ public class ControladorLogin {
 	}
 	
 	public boolean cambioDeContrasena(){
-		
 		AdministrativoDTO administrativo = modeloAdministrativo.buscarPorEmail(mailDeRecuperacion);
 		if(administrativo!=null){
 			System.out.println("Usuario es:" + administrativo.getNombre());
