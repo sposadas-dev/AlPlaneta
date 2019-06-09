@@ -209,12 +209,18 @@ CREATE TABLE `punto`(
 
 CREATE TABLE `promocion`(
 `idPromocion` int(11) NOT NULL AUTO_INCREMENT,
-`idViaje` int(11) NOT NULL,
 `porcentaje` int (3) NOT NULL,
 `stock` int (11) NOT NULL,
 `fechaVencimiento` date NOT NULL,
-`estado` varchar (8) NOT NULL,
+`estado` varchar(8) NOT NULL,
 PRIMARY KEY (`idPromocion`)
+);
+
+CREATE TABLE `viaje_promocion` (
+  `idViajePromocion` int(11) NOT NULL AUTO_INCREMENT,
+  `idViaje` int(11) NOT NULL,
+  `idPromocion` int(11)NOT NULL,
+  PRIMARY KEY (`idViajePromocion`)
 );
 
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);
@@ -254,7 +260,8 @@ ALTER TABLE `evento` ADD FOREIGN KEY (`idCliente`) references cliente(`idCliente
 ALTER TABLE `evento` ADD FOREIGN KEY (`idAdministrativo`) references administrativo(`idAdministrativo`);
 ALTER TABLE `evento` ADD FOREIGN KEY (`idEstadoEvento`) references estadoevento(`idEstadoEvento`);
 
-ALTER TABLE `promocion` ADD FOREIGN KEY (`idViaje`) references viaje(`idViaje`);
+ALTER TABLE `viaje_promocion` ADD FOREIGN KEY (`idViaje`)  references viaje(`idViaje`);
+ALTER TABLE `viaje_promocion` ADD FOREIGN KEY (`idPromocion`)  references promocion(`idPromocion`);
 
 INSERT INTO rol VALUES (1,'administrador'),(2,'administrativo'),(3,'coordinador'),(4,'contador'),(5,'cliente');
 INSERT INTO login VALUES (1,'sol','sol123',2,'activo'),(2,'lizz','liz123',1,'activo'),(3,'Mica','mica123',3,'activo'),(4,'Seba','seba123',5,'activo'),(5,'nicoAdministrador','nico123',1,'inactivo');
@@ -279,4 +286,5 @@ INSERT INTO estadoevento VALUES (1,'pendiente','el evento aún no se realizó'),
 INSERT INTO evento VALUES (1,'2019-05-27','2019-05-30','15:00:00','Consulta sobre reserva de viaje',1,1,2,'',1), (2,'2019-05-28','2019-06-04','18:00:00','Llamar a cliente por reclamo',2,1,1,'',0), (3,'2019-05-28','2019-06-04','19:15:00','Llamar al cliente por viaje a San Juan, Argentina',1,1,1,'',0), (4,'2019-05-29','2019-06-06','15:00:00','Llamar al cliente por reclamo de un viaje',2,1,1,'',0);
 INSERT INTO punto VALUES (1,1,100,'2019-07-25');
 
-INSERT INTO promocion VALUES (1,2,15,200,'2019-10-04','activa');
+INSERT INTO promocion VALUES (1,15,200,'2019-10-04','activa');
+INSERT INTO viaje_promocion VALUES (1,2,1);

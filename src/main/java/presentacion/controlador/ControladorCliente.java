@@ -70,7 +70,6 @@ public class ControladorCliente implements ActionListener{
 
 		LoginDTO loginCliente = new LoginDTO();
 		loginCliente.setUsuario(this.ventanaRegistrarCliente.getTxtUsuario().getText());
-		// TODO: GENERAR CONTRASENA PROVISORIA
 //		loginCliente.setContrasena(this.ventanaRegistrarCliente.getTxtContrasenia().getText());
 		loginCliente.setContrasena(contrasenaProvisoria);
 		loginCliente.setRol(new RolDTO(5,"cliente"));

@@ -1,31 +1,30 @@
 package presentacion.vista.administrativo;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JRadioButton;
-
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JComboBox;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import dto.FormaPagoDTO;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
-import javax.swing.JSeparator;
-
 public class VentanaPago extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7511173230268773962L;
 	private JPanel contentPane;
 	private ButtonGroup bg;
 	private JRadioButton radioPaga;
@@ -37,6 +36,11 @@ public class VentanaPago extends JFrame {
 	private JLabel lblMontoaPagar;
 	private JButton btnPago;
 	private JButton btnAtras;
+	private JLabel lblDatoPorcentajeDescuento;
+	private JLabel lblDatoMontoOriginal;
+	private Component lblPorcentajeDeDescuento;
+	private JLabel lblMontoOriginal;
+	private JLabel lblImporte;
 
 	private static VentanaPago INSTANCE;
 	
@@ -66,33 +70,33 @@ public class VentanaPago extends JFrame {
 		comboBoxFormaDePago.setEnabled(false);
 
 		btnPago = new JButton("Confirmar pago");
-		btnPago.setBounds(367, 296, 142, 54); 	
+		btnPago.setBounds(367, 308, 142, 54); 	
 		contentPane.add(btnPago);
 		
 		lblSelecioneUnaForma = new JLabel("Seleccione una forma de pago");
 		lblSelecioneUnaForma.setBounds(36, 118, 198, 17);
 		contentPane.add(lblSelecioneUnaForma);
 		
-		lblMontoAPagar = new JLabel("Monto a pagar :");
-		lblMontoAPagar.setBounds(152, 194, 157, 14);
+		lblMontoAPagar = new JLabel("Monto a pagar:");
+		lblMontoAPagar.setBounds(152, 201, 157, 14);
 		contentPane.add(lblMontoAPagar);
 		
-		JLabel lblNewLabel = new JLabel("Importe:");
-		lblNewLabel.setBounds(152, 242, 157, 14);
-		contentPane.add(lblNewLabel);
+		lblImporte = new JLabel("Importe:");
+		lblImporte.setBounds(152, 255, 157, 14);
+		contentPane.add(lblImporte);
 		
 		textImporteTotal = new JTextField();
-		textImporteTotal.setBounds(367, 239, 167, 20);
+		textImporteTotal.setBounds(367, 252, 167, 20);
 		contentPane.add(textImporteTotal);
 		textImporteTotal.setEditable(false);
 		textImporteTotal.setColumns(10);
 		
 		lblMontoaPagar = new JLabel("-");
-		lblMontoaPagar.setBounds(367, 194, 167, 14);
+		lblMontoaPagar.setBounds(367, 201, 167, 14);
 		contentPane.add(lblMontoaPagar);
 		
 		btnAtras = new JButton("Atrás");
-		btnAtras.setBounds(171, 296, 134, 54);
+		btnAtras.setBounds(171, 308, 134, 54);
 		contentPane.add(btnAtras);
 		
 		radioPaga = new JRadioButton("Paga");
@@ -144,10 +148,54 @@ public class VentanaPago extends JFrame {
 		contentPane.add(btnIngresarTarjeta);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(67, 159, 467, 37);
+		separator.setBounds(67, 159, 467, 16);
 		contentPane.add(separator);
 		
+		lblMontoOriginal = new JLabel("Monto original:");
+		lblMontoOriginal.setBounds(152, 188, 157, 14);
+		contentPane.add(lblMontoOriginal);
+		lblMontoOriginal.setVisible(false);
+		
+		lblDatoMontoOriginal = new JLabel("-");
+		lblDatoMontoOriginal.setBounds(367, 188, 167, 14);
+		contentPane.add(lblDatoMontoOriginal);
+		lblDatoMontoOriginal.setVisible(false);
+		
+		lblPorcentajeDeDescuento = new JLabel("Porcentaje de descuento:");
+		lblPorcentajeDeDescuento.setBounds(152, 215, 157, 14);
+		contentPane.add(lblPorcentajeDeDescuento);
+		lblPorcentajeDeDescuento.setVisible(false);
+		
+		lblDatoPorcentajeDescuento = new JLabel("-");
+		lblDatoPorcentajeDescuento.setBounds(367, 212, 167, 14);
+		contentPane.add(lblDatoPorcentajeDescuento);
+		lblDatoPorcentajeDescuento.setVisible(false);
+		
 		this.setVisible(false);
+		
+		
+	}
+	
+	public void mostrarDatosPromocion() {
+		lblMontoOriginal.setVisible(true);
+		lblDatoMontoOriginal.setVisible(true);
+		lblPorcentajeDeDescuento.setVisible(true);
+		lblDatoPorcentajeDescuento.setVisible(true);
+		lblImporte.setBounds(152, 269, 157, 14);
+		lblMontoAPagar.setBounds(152, 242, 157, 14);
+		lblMontoaPagar.setBounds(367, 242, 167, 14);
+		textImporteTotal.setBounds(367, 266, 167, 20);
+	}
+	
+	private void borrarDatosPromocion() {
+		lblMontoOriginal.setVisible(false);
+		lblDatoMontoOriginal.setVisible(false);
+		lblPorcentajeDeDescuento.setVisible(false);
+		lblDatoPorcentajeDescuento.setVisible(false);
+		lblImporte.setBounds(152, 255, 157, 14);
+		lblMontoAPagar.setBounds(152, 201, 157, 14);
+		lblMontoaPagar.setBounds(367, 201, 167, 14);
+		textImporteTotal.setBounds(367, 252, 167, 20);
 	}
 		
 	public JButton getBtnAtras() {
@@ -201,5 +249,18 @@ public class VentanaPago extends JFrame {
 	
 	public void limpiarCampos(){
 		this.textImporteTotal.setText("");
+		borrarDatosPromocion();
 	}
+
+
+	public void setLblDatoPorcentajeDescuento(String lblDatoPorcentajeDescuento) {
+		this.lblDatoPorcentajeDescuento.setText(lblDatoPorcentajeDescuento);
+	}
+
+
+	public void setLblDatoMontoOriginal(String lblDatoMontoOriginal) {
+		this.lblDatoMontoOriginal.setText(lblDatoMontoOriginal);
+	}
+	
+	
 }

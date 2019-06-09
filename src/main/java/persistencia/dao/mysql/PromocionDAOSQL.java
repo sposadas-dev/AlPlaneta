@@ -1,6 +1,5 @@
 package persistencia.dao.mysql;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,15 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.PromocionDTO;
-import dto.ViajeDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PromocionDAO;
 
 public class PromocionDAOSQL implements PromocionDAO {
 
-	private static final String insert = "INSERT INTO promocion (idPromocion, idViaje, porcentaje, stock, fechaVencimiento, estado) VALUES (?,?,?,?,?,?)";
+	private static final String insert = "INSERT INTO promocion (idPromocion, porcentaje, stock, fechaVencimiento, estado) VALUES (?,?,?,?,?)";
 	private static final String readall = "SELECT * FROM promocion";
-	private static final String update = "UPDATE promocion SET estado=? WHERE idPromocion= ?";
+	private static final String updateEstado = "UPDATE promocion SET estado=? WHERE idPromocion= ?";
+	private static final String update = "UPDATE promocion SET porcentaje=?, stock=?, fechaVencimiento=? WHERE idPromocion= ?";
 	private static final String browse = "SELECT * FROM promocion WHERE idPromocion = ?";
 
 	@Override
@@ -26,11 +25,11 @@ public class PromocionDAOSQL implements PromocionDAO {
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
 			statement.setInt(1, promocion.getIdPromocion());
-			statement.setInt(2, promocion.getViaje().getIdViaje());
-			statement.setInt(3, promocion.getPorcentaje());
-			statement.setInt(4, promocion.getStock());
-			statement.setDate(5, promocion.getFechaVencimiento());
-			statement.setString(6, promocion.getEstado());
+//			statement.setObject(2, promocion.getViajes());
+			statement.setInt(2, promocion.getPorcentaje());
+			statement.setInt(3, promocion.getStock());
+			statement.setDate(4, promocion.getFechaVencimiento());
+			statement.setString(5, promocion.getEstado());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -48,8 +47,6 @@ public class PromocionDAOSQL implements PromocionDAO {
 		ArrayList<PromocionDTO> promocions = new ArrayList<PromocionDTO>();
 		Conexion conexion = Conexion.getConexion();
 	
-		ViajeDAOSQL viaje = new ViajeDAOSQL();
-	
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
@@ -57,7 +54,6 @@ public class PromocionDAOSQL implements PromocionDAO {
 			while(resultSet.next()){
 				promocions.add(new PromocionDTO(
 					resultSet.getInt("idPromocion"),
-					viaje.getViajeById(resultSet.getInt("idViaje")),
 					resultSet.getInt("porcentaje"),
 					resultSet.getInt("stock"),
 					resultSet.getDate("fechaVencimiento"),
@@ -72,12 +68,12 @@ public class PromocionDAOSQL implements PromocionDAO {
 	}
 
 	@Override
-	public boolean update(PromocionDTO promocion) {
+	public boolean updateEstado(PromocionDTO promocion) {
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
 		try {
-			statement = conexion.getSQLConexion().prepareStatement(update);
+			statement = conexion.getSQLConexion().prepareStatement(updateEstado);
 			
 			statement.setString(1, promocion.getEstado());
 			statement.setInt(2, promocion.getIdPromocion());
@@ -91,15 +87,38 @@ public class PromocionDAOSQL implements PromocionDAO {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean update(PromocionDTO promocion) {
+		PreparedStatement statement;
+		int chequeoUpdate = 0;
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(update);
+			
+			statement.setInt(1, promocion.getPorcentaje());
+			statement.setInt(2, promocion.getStock());
+			statement.setDate(3, promocion.getFechaVencimiento());
+			statement.setInt(4, promocion.getIdPromocion());
+		
+			chequeoUpdate = statement.executeUpdate();
+			if(chequeoUpdate > 0) //Si se ejecutó devuelvo true
+				return true;
+		} 
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return false;
+	}
 
+	
+	
 	@Override
 	public PromocionDTO getPromocionById(int id ){
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
 
-		ViajeDAOSQL viaje = new ViajeDAOSQL();
-		
 		PromocionDTO ret;
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browse);
@@ -108,7 +127,6 @@ public class PromocionDAOSQL implements PromocionDAO {
 			
 			if(resultSet.next()){
 				ret = new PromocionDTO(resultSet.getInt("idPromocion"),
-						viaje.getViajeById(resultSet.getInt("idViaje")),
 						resultSet.getInt("porcentaje"),
 						resultSet.getInt("stock"),
 						resultSet.getDate("fechaVencimiento"),

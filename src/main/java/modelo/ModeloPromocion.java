@@ -18,6 +18,10 @@ public class ModeloPromocion {
 		this.promocion.insert(promocion);
 	}
 	
+	public void editarEstadoPromocion(PromocionDTO promocion) {
+		this.promocion.updateEstado(promocion);
+	}
+	
 	public void editarPromocion(PromocionDTO promocion) {
 		this.promocion.update(promocion);
 	}
