@@ -20,10 +20,13 @@ import dto.RolDTO;
 import modelo.Cliente;
 import modelo.ModeloEvento;
 import modelo.ModeloPromocion;
+import modelo.ModeloViaje;
+import modelo.ModeloViaje_Promocion;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrativo.VentanaEditarCliente;
 import presentacion.vista.administrativo.VentanaEditarEvento;
+import presentacion.vista.administrativo.VentanaEditarPromocion;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
 import presentacion.vista.administrativo.VentanaRegistrarPromocion;
@@ -38,6 +41,7 @@ public class ControladorAdministrativo implements ActionListener {
 	private VentanaRegistrarCliente ventanaCliente;
 	private VentanaRegistrarEvento ventanaEvento;
 	private VentanaRegistrarPromocion ventanaPromocion;
+	private VentanaEditarPromocion ventanaEditarPromocion;
 	private VentanaEditarEvento ventanaEditarEvento;
 	private VentanaVisualizarClientes ventanaVisualizarCliente;
 	private VentanaRegistrarCliente ventanaRegistrarCliente;
@@ -56,6 +60,8 @@ public class ControladorAdministrativo implements ActionListener {
 	private ModeloEvento evento;
 	private ControladorPasaje controladorPasaje;
 	private ModeloPromocion promocion;
+	private ModeloViaje viaje;
+	private ModeloViaje_Promocion viaje_promocion;
 	private ControladorCliente controladorCliente;
 	private int filaSeleccionada;
 	private ControladorEvento controladorEvento;
@@ -75,6 +81,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaVisualizarPasaje = VentanaVisualizarPasaje.getInstance();
 		
 		this.ventanaPromocion = VentanaRegistrarPromocion.getInstance();
+		this.ventanaEditarPromocion = VentanaEditarPromocion.getInstance();
 		
 		this.vista.getItemRegistrarCliente().addActionListener(ac->mostrarVentanaAgregarCliente(ac));
 		this.vista.getItemVisualizarClientes().addActionListener(ac->agregarPanelClientes(ac));
@@ -104,15 +111,19 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelEvento().getBtnBorrarFiltros().addActionListener(bf->borrarFiltrosEvento(bf));
 		
 		this.vista.getItemAgregarPromocion().addActionListener(ac->mostrarVentanaAgregarPromocion(ac));
+		this.vista.getItemEditarPromocion().addActionListener(ac->mostrarVentanaEditarPromocion(ac));
 		this.vista.getItemVisualizarPromociones().addActionListener(ac->mostrarPromociones(ac));
-		this.vista.getItemDarBajaPromocion().addActionListener(ac->darBajaPromocion(ac));
+		this.vista.getItemEditarEstadoPromocion().addActionListener(ac->editarEstadoPromocionUno(ac));
 		this.ventanaPromocion.getBtnRegistrar().addActionListener(ac->actualizarTablaPromocion(ac));
+		this.ventanaEditarPromocion.getBtnEditar().addActionListener(ac->actualizarTablaPromocion(ac));
 		
 		this.administrativoLogueado = administrativoLogueado;
 		this.cliente = new Cliente(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
 		this.evento = new ModeloEvento(new DAOSQLFactory());
 		this.promocion = new ModeloPromocion(new DAOSQLFactory());
+		this.viaje_promocion = new ModeloViaje_Promocion(new DAOSQLFactory());
+		this.viaje = new ModeloViaje(new DAOSQLFactory());
 		
 		controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
 
@@ -273,15 +284,15 @@ public class ControladorAdministrativo implements ActionListener {
 		}	
 	}
 	
-	/*private void mostrarVentanaEditarPromocion(ActionEvent ep) {
+	private void mostrarVentanaEditarPromocion(ActionEvent ep) {
+		this.vista.getPanelPromocion().mostrarPanelPromocion(true);
 		int filaSeleccionada = this.vista.getPanelPromocion().getTablaPromocion().getSelectedRow();
 		if (filaSeleccionada != -1){
 			verDatosDeLaPromocion(filaSeleccionada);
-			llenarTablaPromociones();
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}	
-	}*/
+	}
 	
 	private void verDatosDelEvento(int filaSeleccionada) {
 		controladorEvento.llenarComboEstados();
@@ -318,17 +329,20 @@ public class ControladorAdministrativo implements ActionListener {
 		return horarioString[1];
 	}
 	
-	/*private void verDatosDeLaPromocion(int filaSeleccionada) {
+	private void verDatosDeLaPromocion(int filaSeleccionada) {
+		controladorPromocion.llenarComboPorcentaje();
 		controladorPromocion.setPromocionSeleccionada(this.promociones_en_tabla.get(filaSeleccionada));
 		if (filaSeleccionada != -1){
-			ventanaEditarPromocion.mostrarVentana(true);
-			ventanaEditarPromocion.getComboPorcentaje().setSelectedItem(this.promociones_en_tabla.get(filaSeleccionada).getPorcentaje().toString());
-			ventanaEditarPromocion.get.setText(this.promociones_en_tabla.get(filaSeleccionada).getStock());
+			ventanaEditarPromocion.setVisible(true);
+			ventanaEditarPromocion.getDateFechaVencimiento().setDate(this.promociones_en_tabla.get(filaSeleccionada).getFechaVencimiento());
+			ventanaEditarPromocion.getComboPorcentaje().setSelectedItem(this.promociones_en_tabla.get(filaSeleccionada).getPorcentaje()+"");
+			ventanaEditarPromocion.getTxtStock().setText(this.promociones_en_tabla.get(filaSeleccionada).getStock()+"");
 		}
 		else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-	}*/
+	}
+
 
 	private void cancelarPasaje(ActionEvent cp) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
@@ -368,19 +382,30 @@ public class ControladorAdministrativo implements ActionListener {
 		this.llenarTablaPromociones();
 	}
 	
-	private void darBajaPromocion(ActionEvent v) {
+	private void editarEstadoPromocionUno(ActionEvent ep) {
 		this.vista.getPanelPromocion().mostrarPanelPromocion(true);
-		int promoSeleccionada = this.vista.getPanelPromocion().getTablaPromocion().getSelectedRow();
-		if (promoSeleccionada != -1){
-			controladorPromocion.darBajaPromocion(promoSeleccionada);
-			llenarTablaPromociones();
+		int filaSeleccionada = this.vista.getPanelPromocion().getTablaPromocion().getSelectedRow();
+		if (filaSeleccionada != -1){
+			editarEstadoPromocionDos(filaSeleccionada);
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
-		}
-		this.llenarTablaClientes();
+		}	
 	}
 	
-
+	private void editarEstadoPromocionDos(int filaSeleccionada) {
+		controladorPromocion.setPromocionSeleccionada(this.promociones_en_tabla.get(filaSeleccionada));
+		if (filaSeleccionada != -1){
+			PromocionDTO seleccionada = this.promociones_en_tabla.get(filaSeleccionada);
+			if(seleccionada.getEstado().equals("inactiva"))
+				seleccionada.setEstado("activa");
+			else
+				if(seleccionada.getEstado().equals("activa"))
+					seleccionada.setEstado("inactiva");
+			promocion.editarEstadoPromocion(seleccionada);
+		}
+		this.llenarTablaPromociones();
+	}
+	
 	private void mostrarVentanaAgregarCliente(ActionEvent ac)  {
 		this.vista.getPanelCliente().mostrarPanelCliente(true);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
@@ -630,23 +655,19 @@ public class ControladorAdministrativo implements ActionListener {
 		for (int i = 0; i < this.promociones_en_tabla.size(); i++){
 
 			Object[] fila = {
-							//this.promociones_en_tabla.get(i).getViaje().getIdViaje(),
 							this.promociones_en_tabla.get(i).getPorcentaje()+" %",
 							this.promociones_en_tabla.get(i).getStock(),
 							this.promociones_en_tabla.get(i).getFechaVencimiento(),
-							this.promociones_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre()+", "+this.promociones_en_tabla.get(i).getViaje().getProvinciaOrigen().getNombre(),
-							this.promociones_en_tabla.get(i).getViaje().getCiudadDestino().getNombre()+", "+this.promociones_en_tabla.get(i).getViaje().getProvinciaDestino().getNombre(),
-							this.promociones_en_tabla.get(i).getViaje().getFechaSalida().toString(),
-							this.promociones_en_tabla.get(i).getViaje().getFechaLlegada().toString(),
 							this.promociones_en_tabla.get(i).getEstado()
 			};
 							this.vista.getPanelPromocion().getModelPromocion().addRow(fila);
 		}		
 	}
-	
+		
 	public void actualizarTablaPromocion(ActionEvent e) {
 		this.llenarTablaPromociones();
 	}
+	
 	
 	public String estaReprogramado(EventoDTO e) {
 		if(e.getMotivoReprogramacion().equals(""))

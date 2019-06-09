@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.AbstractButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -41,7 +42,8 @@ public class VistaAdministrativo{
 	 
 	private JMenu menuPromociones;
 	private JMenuItem itemAgregarPromocion;
-	private JMenuItem itemDarBajaPromocion;
+	private JMenuItem itemEditarEstadoPromocion;
+	private JMenuItem itemEditarPromocion;
 	private JMenuItem itemVisualizarPromociones;
 	
 	private static VistaAdministrativo INSTANCE;
@@ -168,13 +170,17 @@ public class VistaAdministrativo{
 		itemAgregarPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPromociones.add(itemAgregarPromocion);
 		
-		itemDarBajaPromocion = new JMenuItem("Dar de baja promoción");
-		itemDarBajaPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuPromociones.add(itemDarBajaPromocion);
+		itemEditarPromocion = new JMenuItem("Editar promoción");
+		itemEditarPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPromociones.add(itemEditarPromocion);
 		
 		itemVisualizarPromociones = new JMenuItem("Visualizar promociones");
 		itemVisualizarPromociones.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPromociones.add(itemVisualizarPromociones);
+		
+		itemEditarEstadoPromocion = new JMenuItem("Modificar estado");
+		itemEditarEstadoPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPromociones.add(itemEditarEstadoPromocion);
 	}
 	
 
@@ -264,8 +270,8 @@ public class VistaAdministrativo{
 		return itemAgregarPromocion;
 	}
 
-	public JMenuItem getItemDarBajaPromocion() {
-		return itemDarBajaPromocion;
+	public JMenuItem getItemEditarEstadoPromocion() {
+		return itemEditarEstadoPromocion;
 	}
 	
 	public JMenuItem getItemVisualizarPromociones() {
@@ -294,5 +300,9 @@ public class VistaAdministrativo{
 
 	public JMenuItem getItemVisualizarEventos() {
 		return itemVisualizarEvento;
+	}
+
+	public JMenuItem getItemEditarPromocion() {
+		return itemEditarPromocion;
 	}
 }

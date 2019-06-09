@@ -17,30 +17,30 @@ import javax.swing.border.EmptyBorder;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 
-public class VentanaRegistrarPromocion extends JFrame {
+public class VentanaEditarPromocion extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JDateChooser dateFechaVencimiento;
 	private JComboBox<String> comboPorcentaje;
 	private JTextField txtStock;
-	private JButton btnRegistrar;
+	private JButton btnEditar;
 	private JButton btnCancelar;
 	private JButton btnAsociarViaje;
 
-	private static VentanaRegistrarPromocion ventanaCliente;
+	private static VentanaEditarPromocion ventanaCliente;
 	private JLabel label;
 	
-	public static VentanaRegistrarPromocion getInstance(){
+	public static VentanaEditarPromocion getInstance(){
 		if(ventanaCliente == null){	
-			ventanaCliente = new VentanaRegistrarPromocion();
+			ventanaCliente = new VentanaEditarPromocion();
 			return ventanaCliente;
 		}else{
 			return ventanaCliente;
 		}
 	}
 	
-	public VentanaRegistrarPromocion() {
+	public VentanaEditarPromocion() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(400, 150, 361, 449);
@@ -59,7 +59,7 @@ public class VentanaRegistrarPromocion extends JFrame {
 		contentPane.add(panelCliente);
 		panelCliente.setLayout(null);
 		
-		JLabel lblRegistrarPromocion = new JLabel("Registrar promoción");
+		JLabel lblRegistrarPromocion = new JLabel("Editar promoción");
 		lblRegistrarPromocion.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRegistrarPromocion.setForeground(Color.WHITE);
 		lblRegistrarPromocion.setBounds(0, 0, 355, 53);
@@ -89,12 +89,12 @@ public class VentanaRegistrarPromocion extends JFrame {
 		separadorCliente.setBounds(35, 327, 284, 2);
 		contentPane.add(separadorCliente);
 		
-		btnRegistrar = new JButton("Registrar");
-		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnRegistrar.setBackground(new Color(52, 152, 219));
-		btnRegistrar.setForeground(Color.WHITE);
-		btnRegistrar.setBounds(35, 342, 131, 42);
-		contentPane.add(btnRegistrar);
+		btnEditar = new JButton("Editar");
+		btnEditar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnEditar.setBackground(new Color(52, 152, 219));
+		btnEditar.setForeground(Color.WHITE);
+		btnEditar.setBounds(35, 342, 131, 42);
+		contentPane.add(btnEditar);
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setForeground(Color.WHITE);
@@ -111,7 +111,7 @@ public class VentanaRegistrarPromocion extends JFrame {
 		comboPorcentaje.setBounds(104, 96, 52, 22);
 		contentPane.add(comboPorcentaje);
 		
-		btnAsociarViaje = new JButton("Asociar viajes");
+		btnAsociarViaje = new JButton("Ver viajes");
 		btnAsociarViaje.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnAsociarViaje.setBounds(104, 283, 152, 31);
 		contentPane.add(btnAsociarViaje);
@@ -136,8 +136,8 @@ public class VentanaRegistrarPromocion extends JFrame {
 		return comboPorcentaje;
 	}
 	
-	public JButton getBtnRegistrar() {
-		return btnRegistrar;
+	public JButton getBtnEditar() {
+		return btnEditar;
 	}
 	
 	public JButton getBtnCancelar() {

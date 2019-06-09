@@ -50,5 +50,6 @@ public interface DAOAbstractFactory {
 
 	public PromocionDAO createPromocionDAO();
 	
+	public Viaje_PromocionDAO createViaje_PromocionDAO();
 //	public CoordinadorDAO createCoordinadorDAO();
 }

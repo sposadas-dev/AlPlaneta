@@ -26,12 +26,14 @@ import dto.Pasaje_PasajerosDTO;
 import dto.PasajeroDTO;
 import dto.PromocionDTO;
 import dto.ViajeDTO;
+import dto.Viaje_PromocionDTO;
 import generatePDF.GeneratePDF;
 import modelo.Cliente;
 import modelo.EstadoPasaje;
 import modelo.FormaPago;
 import modelo.ModeloPromocion;
 import modelo.ModeloViaje;
+import modelo.ModeloViaje_Promocion;
 import modelo.Pago;
 import modelo.Pagos_Pasaje;
 import modelo.Pasaje;
@@ -90,9 +92,12 @@ public class ControladorPasaje implements ActionListener{
 	private Pagos_Pasaje pagos_pasaje;
 	private Pasaje_Pasajeros pasajes_pasajeros;
 	private ModeloPromocion modeloPromocion;
+	private ModeloViaje_Promocion viaje_promocion;
 	/*Fin de modelos*/
 	
 	private BigDecimal totalaPagar;
+	private BigDecimal precioOriginal;
+	private int porcentajeDescuento;
 	private AdministrativoDTO administrativoLogueado;
 	private PagoDTO pagoDTO;
 	private boolean editarPago;
@@ -125,6 +130,7 @@ public class ControladorPasaje implements ActionListener{
 		this.pagos_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
 		this.pasajes_pasajeros = new Pasaje_Pasajeros(new DAOSQLFactory());
 		this.modeloPromocion = new ModeloPromocion(new DAOSQLFactory());
+		this.viaje_promocion = new ModeloViaje_Promocion (new DAOSQLFactory());
 		
 		this.pdf = new GeneratePDF();				
 		this.envioCorreo = new EnvioDeCorreo();
@@ -282,6 +288,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	private void volverVentanaCargaPasajero(ActionEvent vc) {
 		this.ventanaPago.mostrarVentana(false);
+		this.ventanaPago.limpiarCampos();
 		this.ventanaCargaPasajero.mostrarVentana(true);
 	}
 	
@@ -595,13 +602,23 @@ public class ControladorPasaje implements ActionListener{
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
 		totalaPagar = Valor1;
 		valorFinal = totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
+		this.precioOriginal = valorFinal;
 		
-		for(PromocionDTO p : modeloPromocion.obtenerPromocion()) {
-			if(p.getViaje().getIdViaje() == viajeSeleccionado.getIdViaje())
-				if(promocionActiva(p))
-					valorFinal = calcularMontoDePasajeConDescuento(valorFinal, p.getPorcentaje());
-		}
-	
+		for(Viaje_PromocionDTO vp : viaje_promocion.obtenerViajePromocion()) {
+			if(vp.getIdViaje() == viajeSeleccionado.getIdViaje()) {
+				for(PromocionDTO p : modeloPromocion.obtenerPromocion()) {
+					if(p.getIdPromocion() == vp.getIdPromocion()) {
+						if(promocionActiva(p)) {
+							this.ventanaPago.mostrarDatosPromocion();
+							this.ventanaPago.setLblDatoMontoOriginal("$ "+this.precioOriginal.toString());
+							this.porcentajeDescuento = p.getPorcentaje();
+							this.ventanaPago.setLblDatoPorcentajeDescuento("-"+this.porcentajeDescuento+""+" %");
+							valorFinal = calcularMontoDePasajeConDescuento(valorFinal, p.getPorcentaje());
+						}
+					}
+				}
+			}
+		}	
 		return valorFinal;
 	}
 	

@@ -9,6 +9,8 @@ public interface PromocionDAO {
 	
 	public List<PromocionDTO> readAll();
 
+	public boolean updateEstado(PromocionDTO promocion);
+	
 	public boolean update(PromocionDTO promocion);
 
 	public PromocionDTO getPromocionById(int id);
