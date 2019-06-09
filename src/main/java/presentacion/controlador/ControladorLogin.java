@@ -246,7 +246,6 @@ public class ControladorLogin {
 		controladorAdministrador.inicializar();
 	}
 		
-		
 /*-----------------------METODOS BUSCADOR POR ROLES ---------------------*/
 	private AdministrativoDTO obtenerAdministrativo(LoginDTO loginUsuario) {
 		Administrativo administrativo = new Administrativo(new DAOSQLFactory());
