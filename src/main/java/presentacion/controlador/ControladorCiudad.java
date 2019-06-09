@@ -9,6 +9,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 import dto.CiudadDTO;
+import dto.PaisDTO;
 import dto.ProvinciaDTO;
 import dto.ViajeDTO;
 import modelo.ModeloCiudad;
@@ -65,7 +66,8 @@ public class ControladorCiudad implements ActionListener {
 	}
 
 	private void mostrarVentanaEditarCiudad(ActionEvent a) {
-		this.ventanaEditarCiudad.limpiarCampos();
+		CiudadDTO c = ciudades_en_tabla.get(this.tableroDeCiudades.getTablaCiudades().getSelectedRow());
+		this.ventanaEditarCiudad.getTxtNombreCiudad().setText(c.getNombre());
 		this.ventanaEditarCiudad.mostrarVentana();
 	}
 
@@ -120,10 +122,9 @@ public class ControladorCiudad implements ActionListener {
 	}
 
 	public void editarCiudad(ActionEvent ac) {
-		CiudadDTO nuevaCiudad = ciudades_en_tabla.get(this.filaSeleccionada);
-		nuevaCiudad.setNombre(this.ventanaEditarCiudad.getTxtNombreCiudad().getText());
-		System.out.println("a editar " + nuevaCiudad.getNombre());
-		this.modeloCiudad.editarCiudad(nuevaCiudad);
+		CiudadDTO c = ciudades_en_tabla.get(this.tableroDeCiudades.getTablaCiudades().getSelectedRow());
+		c.setNombre(this.ventanaEditarCiudad.getTxtNombreCiudad().getText());
+		this.modeloCiudad.editarCiudad(c);
 		ventanaEditarCiudad.limpiarCampos();
 		ventanaEditarCiudad.dispose();
 		llenarTablaVistaCiudades();

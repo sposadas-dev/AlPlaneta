@@ -86,6 +86,7 @@ public class ControladorPais implements ActionListener {
 		this.ventanaAgregarPais.limpiarCampos();
 		this.ventanaAgregarPais.cerrarVentana();
 	}
+	
 	public void editarPais(ActionEvent ac) {
 		String nombrePais = this.ventanaEditarPais.getTxtNombrePais().getText();
 		this.modeloPais.editarPais(new PaisDTO(pais_en_tabla.get(this.tableroDePaises.getTablaPaises().getSelectedRow()).getIdPais(),nombrePais));
