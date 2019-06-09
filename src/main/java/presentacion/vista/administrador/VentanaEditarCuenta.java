@@ -16,6 +16,7 @@ import dto.RolDTO;
 
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.JPasswordField;
 
 public class VentanaEditarCuenta extends JFrame{
 
@@ -27,11 +28,11 @@ public class VentanaEditarCuenta extends JFrame{
 	private JTextField txtNombre;
 	private JTextField txtApellido;
 	private JTextField txtUsuario;
-	private JTextField txtContrasenia;
 	private JComboBox<RolDTO> comboBoxRoles;
 	private JButton btnRegistrar;
 	private JButton btnCancelar;
 	private static VentanaEditarCuenta INSTANCE;
+	private JPasswordField txtContrasena;
 	
 	public static VentanaEditarCuenta getInstance(){
 		if(INSTANCE == null)
@@ -89,11 +90,10 @@ public class VentanaEditarCuenta extends JFrame{
 		txtUsuario.setBounds(189, 175, 122, 20);
 		contentPane.add(txtUsuario);
 		txtUsuario.setColumns(10);
-		
-		txtContrasenia = new JTextField();
-		txtContrasenia.setBounds(189, 218, 121, 20);
-		contentPane.add(txtContrasenia);
-		txtContrasenia.setColumns(10);
+
+		txtContrasena = new JPasswordField();
+		txtContrasena.setBounds(189, 219, 122, 19);
+		contentPane.add(txtContrasena);
 		
 		btnRegistrar = new JButton("Registrar");
 		btnRegistrar.setForeground(Color.WHITE);
@@ -120,6 +120,7 @@ public class VentanaEditarCuenta extends JFrame{
 		lblRegistrarEmpleado.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblRegistrarEmpleado.setBounds(27, 0, 253, 53);
 		panelRegistrarEmpleado.add(lblRegistrarEmpleado);
+		
 	}
 	
 	public JButton getBtnCancelar() {
@@ -142,8 +143,8 @@ public class VentanaEditarCuenta extends JFrame{
 		return txtUsuario;
 	}
 
-	public JTextField getTxtContrasenia() {
-		return txtContrasenia;
+	public JPasswordField getTxtContrasena() {
+		return txtContrasena;
 	}
 
 	public JComboBox<RolDTO> getComboBoxRoles() {
@@ -157,6 +158,6 @@ public class VentanaEditarCuenta extends JFrame{
 	public void limpiarCampos() {
 //		this.txtNombre.setText("");
 		this.txtUsuario.setText("");
-		this.txtContrasenia.setText("");
+		this.txtContrasena.setText("");
 	}
 }

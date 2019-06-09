@@ -1,10 +1,15 @@
 package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import dto.PromocionDTO;
 import dto.ViajeDTO;
@@ -32,6 +37,11 @@ public class ControladorPromocion {
 	private java.sql.Date fechaVencimiento; 
 	private String estado;		
 	
+	//Filtro
+	private DefaultTableModel dm;
+	private StringBuilder cad= new StringBuilder();
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
+	
 	private PromocionDTO promocionRegistrada;
 
 	public ControladorPromocion(VentanaRegistrarPromocion ventanaPromocion, ModeloPromocion promocion, List<PromocionDTO> promociones_en_tabla){
@@ -53,7 +63,27 @@ public class ControladorPromocion {
 
 		this.ventanaTablaViajes.getBtnAtras().addActionListener(vc->volverVentanaAgregarPromocion(vc));
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(ce->asociarViajeEnPromocion(ce));
-
+		
+		this.ventanaTablaViajes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
+		    public void keyTyped(KeyEvent e){
+		            char letra = e.getKeyChar();
+		            dm = (DefaultTableModel) ventanaTablaViajes.getModelViajes();
+		            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
+		           ventanaTablaViajes.getTablaViajes().setRowSorter(tr);
+		            if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+		                if (letra == KeyEvent.VK_BACK_SPACE){
+		                    if(cad.length() != 0) {
+		                        cad.deleteCharAt(cad.length()-1);
+		                        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                    }
+		                } else{
+		                    cad.append(String.valueOf(letra));
+		                    tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		                }
+		            }
+		    }
+		});
+		
 	}
 	public void iniciar(){
 		llenarComboEstado();

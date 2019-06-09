@@ -36,9 +36,9 @@ public class PanelFormaPago  extends JPanel {
 		tablaFormaPago = new JTable(modelFormaPago);
 		formaPago.setViewportView(tablaFormaPago);
 		
-		btnRecargarTabla = new JButton("Recargar");
-		btnRecargarTabla.setBounds(422, 608, 165, 54);
-		add(btnRecargarTabla);
+//		btnRecargarTabla = new JButton("Recargar");
+//		btnRecargarTabla.setBounds(422, 608, 165, 54);
+//		add(btnRecargarTabla);
 		
 		btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(640, 608, 136, 54);
@@ -57,16 +57,16 @@ public class PanelFormaPago  extends JPanel {
 		panelFomaPago.add(lblFormaPago);
 	
 		btnConfirmar.setVisible(false);
-		btnRecargarTabla.setVisible(false);
+//		btnRecargarTabla.setVisible(false);
 	}
 
 	public void mostrarPanelFormaPago(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}
 	
-	public JButton getBtnRecargarTabla() {
-		return btnRecargarTabla;
-	}
+//	public JButton getBtnRecargarTabla() {
+//		return btnRecargarTabla;
+//	}
 
 	public DefaultTableModel getModelFormaPago() {
 		return modelFormaPago;

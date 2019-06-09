@@ -36,6 +36,8 @@ public class VentanaClaveOlvidada extends JFrame {
 	}
 	
 	public VentanaClaveOlvidada() {
+		setTitle("Recuperar contraseña");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 283, 192);
 		setLocationRelativeTo(null);
@@ -74,18 +76,5 @@ public class VentanaClaveOlvidada extends JFrame {
 
 	public JButton getBtnRecuperarContrasena() {
 		return btnRecuperarContraseña;
-	}
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaClaveOlvidada frame = new VentanaClaveOlvidada();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 }

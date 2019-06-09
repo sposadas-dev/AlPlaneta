@@ -15,6 +15,9 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
+import javax.swing.JEditorPane;
+import javax.swing.SwingConstants;
+import javax.swing.JScrollPane;
 
 public class VentanaRegistrarEvento extends JFrame {
 
@@ -24,7 +27,7 @@ public class VentanaRegistrarEvento extends JFrame {
 	private JComboBox<String> comboHora;
 	private JComboBox<String> comboEstado;
 	private JComboBox<String> comboMinutos;
-	private JTextField txtDescripcion;
+	private JEditorPane txtDescripcion;
 	private JTextField txtDni;
 	private JButton btnRegistrar;
 	private JButton btnCancelar;
@@ -32,6 +35,7 @@ public class VentanaRegistrarEvento extends JFrame {
 	private JLabel label;
 
 	private static VentanaRegistrarEvento ventanaCliente;
+	private JScrollPane scrollPane;
 	
 	public static VentanaRegistrarEvento getInstance(){
 		if(ventanaCliente == null){	
@@ -46,7 +50,7 @@ public class VentanaRegistrarEvento extends JFrame {
 		setResizable(false);
 		setTitle("Registrar evento");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(400, 150, 597, 449);
+		setBounds(400, 150, 536, 518);
 		setLocationRelativeTo(null); // centrado en pantalla
 
 		
@@ -58,13 +62,14 @@ public class VentanaRegistrarEvento extends JFrame {
 		
 		JPanel panelCliente = new JPanel();
 		panelCliente.setBackground(new Color(66, 99, 145));
-		panelCliente.setBounds(0, 0, 591, 53);
+		panelCliente.setBounds(0, 0, 530, 53);
 		contentPane.add(panelCliente);
 		panelCliente.setLayout(null);
 		
 		JLabel lblRegistrarEvento = new JLabel("Registrar evento");
+		lblRegistrarEvento.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRegistrarEvento.setForeground(Color.WHITE);
-		lblRegistrarEvento.setBounds(191, 0, 214, 53);
+		lblRegistrarEvento.setBounds(0, 0, 530, 53);
 		panelCliente.add(lblRegistrarEvento);
 		lblRegistrarEvento.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
@@ -82,27 +87,30 @@ public class VentanaRegistrarEvento extends JFrame {
 		editor.setEditable(false);
 		contentPane.add(dateFechaEvento);
 		
-		txtDescripcion = new JTextField();
-		txtDescripcion.setBounds(119, 176, 435, 20);
-		contentPane.add(txtDescripcion);
-		txtDescripcion.setColumns(10);
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(119, 176, 376, 132);
+		contentPane.add(scrollPane);
+		
+		txtDescripcion = new JEditorPane();
+		scrollPane.setViewportView(txtDescripcion);
+		//txtDescripcion.setColumns(10);
 		
 		JSeparator separadorCliente = new JSeparator();
-		separadorCliente.setBounds(64, 327, 490, 2);
+		separadorCliente.setBounds(64, 400, 490, 2);
 		contentPane.add(separadorCliente);
 		
 		btnRegistrar = new JButton("Registrar");
 		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnRegistrar.setBackground(new Color(52, 152, 219));
 		btnRegistrar.setForeground(Color.WHITE);
-		btnRegistrar.setBounds(135, 343, 131, 42);
+		btnRegistrar.setBounds(120, 416, 131, 42);
 		contentPane.add(btnRegistrar);
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setBackground(new Color(192, 57, 43));
 		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnCancelar.setBounds(308, 343, 131, 42);
+		btnCancelar.setBounds(278, 416, 131, 42);
 		contentPane.add(btnCancelar);			
 		
 		JLabel lblHoraEvento = new JLabel("Hora evento:");
@@ -110,7 +118,7 @@ public class VentanaRegistrarEvento extends JFrame {
 		contentPane.add(lblHoraEvento);
 		
 		JLabel lblContrasenia = new JLabel("Estado del evento:");
-		lblContrasenia.setBounds(35, 215, 123, 14);
+		lblContrasenia.setBounds(35, 326, 123, 14);
 		contentPane.add(lblContrasenia);
 		
 		comboHora = new JComboBox<String>();
@@ -142,22 +150,22 @@ public class VentanaRegistrarEvento extends JFrame {
 		});
 		
 		comboEstado = new JComboBox<String>();
-		comboEstado.setBounds(150, 209, 131, 22);
+		comboEstado.setBounds(150, 320, 131, 22);
 		contentPane.add(comboEstado);
 		
 		btnAgregarCliente = new JButton("Cliente");
 		btnAgregarCliente.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAgregarCliente.setBounds(35, 244, 111, 31);
+		btnAgregarCliente.setBounds(35, 355, 111, 31);
 		contentPane.add(btnAgregarCliente);
 		
 		txtDni = new JTextField();
 		txtDni.setEditable(false);
 		txtDni.setColumns(10);
-		txtDni.setBounds(195, 250, 116, 20);
+		txtDni.setBounds(195, 361, 116, 20);
 		contentPane.add(txtDni);
 		
 		JLabel lblDni = new JLabel("DNI:");
-		lblDni.setBounds(160, 245, 72, 31);
+		lblDni.setBounds(160, 356, 72, 31);
 		contentPane.add(lblDni);
 		
 		label = new JLabel(":");
@@ -177,7 +185,7 @@ public class VentanaRegistrarEvento extends JFrame {
 		return dateFechaEvento;
 	}
 	
-	public JTextField getTxtDescripcion() {
+	public JEditorPane getTxtDescripcion() {
 		return txtDescripcion;
 	}
 	

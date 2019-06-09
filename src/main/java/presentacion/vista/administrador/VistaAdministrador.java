@@ -48,11 +48,15 @@ public class VistaAdministrador extends JFrame {
 	private JMenuItem itemEliminarProvincia;
 	
 	private static VistaAdministrador INSTANCE;
+	
 	public static VistaAdministrador getInstance(){
-		if(INSTANCE == null)
-			return new VistaAdministrador();
-		else
+		if(INSTANCE == null) {
+			INSTANCE = new VistaAdministrador();
 			return INSTANCE;
+		}
+		else {
+			return INSTANCE;
+		}
 	}
 
 	public VistaAdministrador() {
@@ -145,7 +149,7 @@ public class VistaAdministrador extends JFrame {
 		panelTransporte.setLocation(0, 0);
 		getContentPane().add(panelTransporte);
 		panelTransporte.setVisible(false);
-		panelTransporte.getBtnRecargarTabla().setVisible(true);
+//		panelTransporte.getBtnRecargarTabla().setVisible(true);
 
 		
 		panelEmpleados = new PanelEmpleados();
@@ -183,7 +187,7 @@ public class VistaAdministrador extends JFrame {
 		panelFormaPago.setLocation(0, 0);
 		getContentPane().add(panelFormaPago);
 		panelFormaPago.setVisible(false);
-		panelFormaPago.getBtnRecargarTabla().setVisible(true);
+//		panelFormaPago.getBtnRecargarTabla().setVisible(true);
 		
 		this.setVisible(false);
 	}

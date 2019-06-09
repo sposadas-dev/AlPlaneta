@@ -1,21 +1,25 @@
 package presentacion.vista.administrativo;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
-import java.awt.Color;
-import java.awt.SystemColor;
-import javax.swing.JSeparator;
-import javax.swing.JComboBox;
-import javax.swing.SwingConstants;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.MouseWheelEvent;
+import javax.swing.JScrollPane;
 
 public class VentanaEditarEvento extends JFrame {
 
@@ -27,8 +31,9 @@ public class VentanaEditarEvento extends JFrame {
 	private JComboBox<String> comboEstado;
 	private JButton btnEditar;
 	private JButton btnCancelar;
-	private JTextField txtDescripcion;
-	private JTextField txtReprogramacion;
+	private JButton btnMotivos;
+	private JEditorPane txtDescripcion;
+	private JEditorPane txtReprogramacion;
 	private JTextField txtDni;
 	private JTextField txtApellido;
 	private JTextField txtNombre;	
@@ -48,7 +53,7 @@ public class VentanaEditarEvento extends JFrame {
 		setResizable(false);
 		setTitle("Editar evento");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(400, 150, 597, 441);
+		setBounds(400, 150, 597, 572);
 		setLocationRelativeTo(null); // centrado en pantalla
 
 		
@@ -72,7 +77,7 @@ public class VentanaEditarEvento extends JFrame {
 		lblEditarEvento.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
 		JLabel lblFechaEvento = new JLabel("Fecha evento:\t");
-		lblFechaEvento.setBounds(35, 92, 87, 14);
+		lblFechaEvento.setBounds(35, 75, 87, 14);
 		contentPane.add(lblFechaEvento);
 		
 		JLabel lblDescripcion = new JLabel("Descripción:");
@@ -80,45 +85,49 @@ public class VentanaEditarEvento extends JFrame {
 		contentPane.add(lblDescripcion);
 		
 		dateFechaEvento = new JDateChooser();
-		dateFechaEvento.setBounds(120, 86, 131, 20);
+		dateFechaEvento.setBounds(120, 69, 131, 20);
 		JTextFieldDateEditor editor = (JTextFieldDateEditor) dateFechaEvento.getDateEditor();
 		editor.setEditable(false);
 		contentPane.add(dateFechaEvento);
 		
-		txtDescripcion = new JTextField();
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(119, 114, 435, 94);
+		contentPane.add(scrollPane_1);
+		
+		txtDescripcion = new JEditorPane();
+		scrollPane_1.setViewportView(txtDescripcion);
 		txtDescripcion.setEditable(false);
-		txtDescripcion.setBounds(119, 119, 435, 20);
-		contentPane.add(txtDescripcion);
-		txtDescripcion.setColumns(10);
+		//txtDescripcion.setColumns(10);
 		
 		JSeparator separadorCliente = new JSeparator();
-		separadorCliente.setBounds(35, 182, 519, 8);
+		separadorCliente.setBounds(35, 248, 519, 8);
 		contentPane.add(separadorCliente);
 		
 		btnEditar = new JButton("Editar");
 		btnEditar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnEditar.setBackground(new Color(52, 152, 219));
 		btnEditar.setForeground(Color.WHITE);
-		btnEditar.setBounds(133, 345, 131, 42);
+		btnEditar.setBounds(133, 482, 131, 42);
 		contentPane.add(btnEditar);
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setBackground(new Color(192, 57, 43));
 		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnCancelar.setBounds(306, 345, 131, 42);
+		btnCancelar.setBounds(306, 482, 131, 42);
 		contentPane.add(btnCancelar);			
 		
+		
 		JLabel lblHoraEvento = new JLabel("Hora evento:");
-		lblHoraEvento.setBounds(338, 88, 85, 14);
+		lblHoraEvento.setBounds(354, 71, 85, 14);
 		contentPane.add(lblHoraEvento);
 		
 		JLabel lblContrasenia = new JLabel("Estado del evento:");
-		lblContrasenia.setBounds(35, 155, 123, 14);
+		lblContrasenia.setBounds(35, 221, 123, 14);
 		contentPane.add(lblContrasenia);
 		
 		comboHora = new JComboBox<String>();
-		comboHora.setBounds(416, 83, 40, 22);
+		comboHora.setBounds(432, 66, 40, 22);
 		contentPane.add(comboHora);
 		comboHora.addMouseWheelListener(new MouseWheelListener() {
 			public void mouseWheelMoved(MouseWheelEvent e) {
@@ -132,7 +141,7 @@ public class VentanaEditarEvento extends JFrame {
 		});
 		
 		comboMinutos = new JComboBox<String>();
-		comboMinutos.setBounds(468, 83, 40, 22);
+		comboMinutos.setBounds(484, 66, 40, 22);
 		contentPane.add(comboMinutos);
 		comboMinutos.addMouseWheelListener(new MouseWheelListener() {
 			public void mouseWheelMoved(MouseWheelEvent e) {
@@ -146,60 +155,69 @@ public class VentanaEditarEvento extends JFrame {
 		});
 		
 		comboEstado = new JComboBox<String>();
-		comboEstado.setBounds(145, 150, 131, 22);
+		comboEstado.setBounds(145, 216, 131, 22);
 		contentPane.add(comboEstado);
 		
 		txtDni = new JTextField();
 		txtDni.setEditable(false);
 		txtDni.setColumns(10);
-		txtDni.setBounds(70, 288, 116, 20);
+		txtDni.setBounds(70, 425, 116, 20);
 		contentPane.add(txtDni);
 		
 		JLabel lblDni = new JLabel("DNI:");
-		lblDni.setBounds(35, 283, 72, 31);
+		lblDni.setBounds(35, 420, 72, 31);
 		contentPane.add(lblDni);
 		
 		JLabel lblMotivoDeReprogramacion = new JLabel("Motivo de reprogramación:");
-		lblMotivoDeReprogramacion.setBounds(35, 203, 164, 31);
+		lblMotivoDeReprogramacion.setBounds(35, 269, 164, 31);
 		contentPane.add(lblMotivoDeReprogramacion);
 		
-		txtReprogramacion = new JTextField();
-		txtReprogramacion.setColumns(10);
-		txtReprogramacion.setBounds(195, 208, 359, 20);
-		contentPane.add(txtReprogramacion);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(195, 274, 359, 97);
+		contentPane.add(scrollPane);
+		
+		txtReprogramacion = new JEditorPane();
+		scrollPane.setViewportView(txtReprogramacion);
 		
 		JLabel lblDatosCliente = new JLabel("Datos cliente");
 		lblDatosCliente.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblDatosCliente.setBounds(35, 257, 98, 31);
+		lblDatosCliente.setBounds(35, 394, 98, 31);
 		contentPane.add(lblDatosCliente);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(35, 247, 519, 8);
+		separator.setBounds(35, 384, 519, 8);
 		contentPane.add(separator);
 		
 		JLabel lblApellido = new JLabel("Apellido:");
-		lblApellido.setBounds(198, 283, 72, 31);
+		lblApellido.setBounds(198, 420, 72, 31);
 		contentPane.add(lblApellido);
 		
 		txtApellido = new JTextField();
 		txtApellido.setEditable(false);
 		txtApellido.setColumns(10);
-		txtApellido.setBounds(250, 288, 116, 20);
+		txtApellido.setBounds(250, 425, 116, 20);
 		contentPane.add(txtApellido);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(385, 283, 72, 31);
+		lblNombre.setBounds(385, 420, 72, 31);
 		contentPane.add(lblNombre);
 		
 		txtNombre = new JTextField();
 		txtNombre.setEditable(false);
 		txtNombre.setColumns(10);
-		txtNombre.setBounds(438, 287, 116, 20);
+		txtNombre.setBounds(438, 424, 116, 20);
 		contentPane.add(txtNombre);
 		
 		JLabel label = new JLabel(":");
-		label.setBounds(459, 90, 79, 14);
+		label.setBounds(475, 73, 46, 14);
 		contentPane.add(label);
+		
+		btnMotivos = new JButton("Motivos");
+		btnMotivos.setForeground(Color.WHITE);
+		btnMotivos.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnMotivos.setBackground(Color.GRAY);
+		btnMotivos.setBounds(45, 313, 131, 42);
+		contentPane.add(btnMotivos);
 	}
 	
 	public void mostrarVentana(boolean b){
@@ -209,7 +227,7 @@ public class VentanaEditarEvento extends JFrame {
 		return dateFechaEvento;
 	}
 	
-	public JTextField getTxtDescripcion() {
+	public JEditorPane getTxtDescripcion() {
 		return txtDescripcion;
 	}
 	
@@ -236,12 +254,17 @@ public class VentanaEditarEvento extends JFrame {
 	public JButton getBtnCancelar() {
 		return btnCancelar;
 	}
+	
+	public JButton getBtnMotivos() {
+		return btnMotivos;
+	}
+
 
 	public static VentanaEditarEvento getVentanaCliente() {
 		return ventanaCliente;
 	}
 
-	public JTextField getTxtReprogramacion() {
+	public JEditorPane getTxtReprogramacion() {
 		return txtReprogramacion;
 	}
 

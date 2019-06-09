@@ -15,6 +15,7 @@ import dto.RolDTO;
 
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.JPasswordField;
 
 public class VentanaAgregarEmpleado extends JFrame {
 
@@ -22,7 +23,6 @@ public class VentanaAgregarEmpleado extends JFrame {
 	private JTextField txtNombre;
 	private JTextField txtApellido;
 	private JTextField txtUsuario;
-	private JTextField txtContrasenia;
 	private JComboBox<RolDTO> comboBoxRoles;
 	private JButton btnRegistrar;
 	private JButton btnCancelar;
@@ -32,6 +32,7 @@ public class VentanaAgregarEmpleado extends JFrame {
 
 	private static VentanaAgregarEmpleado INSTANCE;
 	private JTextField textMail;
+	private JPasswordField txtContrasena;
 	
 	public static VentanaAgregarEmpleado getInstance(){
 		if(INSTANCE == null)
@@ -98,10 +99,9 @@ public class VentanaAgregarEmpleado extends JFrame {
 		contentPane.add(txtUsuario);
 		txtUsuario.setColumns(10);
 		
-		txtContrasenia = new JTextField();
-		txtContrasenia.setBounds(189, 218, 121, 20);
-		contentPane.add(txtContrasenia);
-		txtContrasenia.setColumns(10);
+		txtContrasena = new JPasswordField();
+		txtContrasena.setBounds(189, 219, 122, 19);
+		contentPane.add(txtContrasena);
 		
 		btnRegistrar = new JButton("Registrar");
 		btnRegistrar.setForeground(Color.WHITE);
@@ -124,7 +124,7 @@ public class VentanaAgregarEmpleado extends JFrame {
 		
 		textMail = new JTextField();
 		textMail.setColumns(10);
-		textMail.setBounds(190, 252, 121, 20);
+		textMail.setBounds(189, 252, 122, 20);
 		contentPane.add(textMail);
 		
 		JLabel lblMail = new JLabel("Mail :");
@@ -132,6 +132,9 @@ public class VentanaAgregarEmpleado extends JFrame {
 		contentPane.add(lblMail);
 	}
 	
+	public JPasswordField getTxtContrasena() {
+		return txtContrasena;
+	}
 	public JButton getBtnRegistrar() {
 		return btnRegistrar;
 	}
@@ -148,10 +151,6 @@ public class VentanaAgregarEmpleado extends JFrame {
 		return txtUsuario;
 	}
 
-	public JTextField getTxtContrasenia() {
-		return txtContrasenia;
-	}
-
 	public JComboBox<RolDTO> getComboBoxRoles() {
 		return comboBoxRoles;
 	}
@@ -164,6 +163,6 @@ public class VentanaAgregarEmpleado extends JFrame {
 		this.txtNombre.setText("");
 //		this.txtApellido.setText("");
 		this.txtUsuario.setText("");
-		this.txtContrasenia.setText("");
+		this.txtContrasena.setText("");
 	}
 }

@@ -194,7 +194,7 @@ CREATE TABLE `evento`(
   `idCliente` int(11) NOT NULL,
   `idAdministrativo` int(11) NOT NULL,
   `idEstadoEvento` int(11) NOT NULL,
-  `motivoReprogramacion` varchar(60) NOT NULL,
+  `motivoReprogramacion` varchar(600) NOT NULL,
   `visto` int(1) NOT NULL,
   PRIMARY KEY (`idEvento`)
 );

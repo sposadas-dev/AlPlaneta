@@ -15,6 +15,7 @@ import presentacion.vista.administrador.VistaAdministrador;
 
 public class ControladorTransporte implements ActionListener {
 
+	private VistaAdministrador vistaAdministrador;
 	private VentanaAgregarTransporte ventanaAgregarTransporte;
 	private VentanaEditarTransporte ventanaEditarTransporte;
 	private Transporte transporte;
@@ -24,7 +25,8 @@ public class ControladorTransporte implements ActionListener {
 	public ControladorTransporte(){
 		this.ventanaAgregarTransporte = VentanaAgregarTransporte.getInstance();
 		this.ventanaEditarTransporte = VentanaEditarTransporte.getInstance();
-		
+		this.vistaAdministrador = VistaAdministrador.getInstance();
+
 		this.ventanaAgregarTransporte.getBtnAgregar().addActionListener(rc->agregarTransporte(rc));
 		this.ventanaAgregarTransporte.getBtnCancelar().addActionListener(c->cancelarVentanaAgregarTransporte(c));
 		this.ventanaEditarTransporte.getBtnEditar().addActionListener(ac->editarTransporte(ac));
@@ -33,7 +35,21 @@ public class ControladorTransporte implements ActionListener {
 		this.transporte = new Transporte(new DAOSQLFactory());
 		transportes_en_tabla = transporte.obtenerTransportes();
 	}
-
+	
+	public void llenarTablaTransportes(){
+		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setColumnCount(0);
+		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setColumnIdentifiers(this.vistaAdministrador.getPanelTransporte().getNombreColumnasTransporte());
+			
+		this.transportes_en_tabla = transporte.obtenerTransportes();
+			
+		for (int i = 0; i < this.transportes_en_tabla.size(); i++){
+			Object[] fila = {this.transportes_en_tabla.get(i).getNombre(),
+			};
+			this.vistaAdministrador.getPanelTransporte().getModelTransportes().addRow(fila);
+		}		
+	}
+	
 	public void mostrarVentanaAgregarTransporte() {
 		this.ventanaAgregarTransporte.limpiarCampos();
 		this.ventanaAgregarTransporte.mostrarVentana();
@@ -45,59 +61,47 @@ public class ControladorTransporte implements ActionListener {
 	}
 	
 	public void agregarTransporte(ActionEvent rc) {
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres agregar el transporte?", 
-			             "Agregar transporte", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		if (confirm == 0){
-			TransporteDTO nuevoTransporte = new TransporteDTO();
-			nuevoTransporte.setNombre(this.ventanaAgregarTransporte.getTxtNombreTransporte().getText());
-			transporte.agregarTransporte(nuevoTransporte);
-	
-			this.ventanaAgregarTransporte.limpiarCampos();
-			this.ventanaAgregarTransporte.cerrarVentana();
-			
-
-		}
+		obtenerTransportesActualizado();
+		TransporteDTO nuevoTransporte = new TransporteDTO();
+		nuevoTransporte.setNombre(this.ventanaAgregarTransporte.getTxtNombreTransporte().getText());
+		transporte.agregarTransporte(nuevoTransporte);
+		llenarTablaTransportes();
+		this.ventanaAgregarTransporte.limpiarCampos();
+		this.ventanaAgregarTransporte.cerrarVentana();
 	}
-
 
 	private void cancelarVentanaAgregarTransporte(ActionEvent c) {
 		this.ventanaAgregarTransporte.limpiarCampos();
 		this.ventanaAgregarTransporte.cerrarVentana();
 	}
 	public void editarTransporte(int filaSeleccionada){
+		obtenerTransportesActualizado();
 		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarTransporte.mostrarVentana();
 		ventanaEditarTransporte.getTxtNombreTransporte().setText(this.transportes_en_tabla.get(this.filaSeleccionada).getNombre());
 	}
 	
 	public void editarTransporte(ActionEvent ac) {
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres editar el transporte?", 
-			             "Editar transporte", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0){
-			String nombreTransporte = this.ventanaEditarTransporte.getTxtNombreTransporte().getText();
-			this.transporte.editarTransporte(new TransporteDTO(transportes_en_tabla.get(this.filaSeleccionada).getIdTransporte(),nombreTransporte));
-			ventanaEditarTransporte.limpiarCampos();
-			ventanaEditarTransporte.dispose();
-		}
-		
+		obtenerTransportesActualizado();
+		String nombreTransporte = this.ventanaEditarTransporte.getTxtNombreTransporte().getText();
+		this.transporte.editarTransporte(new TransporteDTO(transportes_en_tabla.get(this.filaSeleccionada).getIdTransporte(),nombreTransporte));
+		llenarTablaTransportes();
+		ventanaEditarTransporte.limpiarCampos();
+		ventanaEditarTransporte.dispose();
 	}
+	
 	private void cancelarVentanaEditarTransporte(ActionEvent c) {
 		this.ventanaEditarTransporte.limpiarCampos();
 		this.ventanaEditarTransporte.cerrarVentana();
 	}
 	
+	public void obtenerTransportesActualizado() {
+		this.transportes_en_tabla = transporte.obtenerTransportes();
+	}
+	
 	public void eliminarTransporte(int filaSeleccionada){
-		int confirm = JOptionPane.showOptionDialog(
-		            null,"¿Estás seguro que quieres eliminar el transporte?", 
-				             "Eliminar transporte", JOptionPane.YES_NO_OPTION,
-				             JOptionPane.ERROR_MESSAGE, null, null, null);
-	 if (confirm == 0){
+		obtenerTransportesActualizado();
 		this.transporte.borrarTransporte(transportes_en_tabla.get(filaSeleccionada));
-	 }
 	}
 	
 	@Override
