@@ -454,21 +454,6 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaPromocion.mostrarVentana();
 	}
 	
-	public void filtrar(ActionEvent bc){
-		String filtroSeleccionado = this.vista.getPanelPasaje().getComboBoxFiltros().getSelectedItem().toString();
-		if (filtroSeleccionado.equals("Seleccione")){
-			JOptionPane.showMessageDialog(null, "Debe seleccionar una opción", "Mensaje", JOptionPane.ERROR_MESSAGE);
-		}else if (filtroSeleccionado.equals("Cancelado")) {
-			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
-		}else if(filtroSeleccionado.equals("Pendiente")){
-			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
-		}else if(filtroSeleccionado.equals("Reservado")){
-			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
-		}else if(filtroSeleccionado.equals("Vendido")){
-			llenarTablaPasajes(filtrarPasajeSegun(filtroSeleccionado));
-		}
-	}
-	
 	public void llenarComboFiltroEvento(){
 		ArrayList<String> datos = new ArrayList<String>();
 		this.vista.getPanelEvento().getComboFiltros().addActionListener(new ActionListener() {
@@ -730,6 +715,8 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelEvento().getComboFiltros().setSelectedIndex(0);
 		this.vista.getPanelEvento().getComboOpcionesFiltros().setSelectedIndex(-1);
 		this.vista.getPanelEvento().getComboOpcionesFiltros().setEnabled(false);
+	}
+	
 	private ArrayList<PasajeDTO> obtenerPasajesFiltrados(List<PasajeDTO> pasajes_aux){
 		
 		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
