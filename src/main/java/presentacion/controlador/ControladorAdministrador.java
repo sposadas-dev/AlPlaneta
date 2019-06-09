@@ -209,7 +209,6 @@ public class ControladorAdministrador {
 	}
 	
 //	------------------------------------------- Empleados Cuenta -----------------------------------------
-	
 	//TERMINA METODO AGREGADO
 		/*Método para agregar a un empleado según el item que selecciona en el comboBox*/
 	private void agregarCuentaEmpleado(ActionEvent ac) {

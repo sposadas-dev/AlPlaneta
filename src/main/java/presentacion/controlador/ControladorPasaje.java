@@ -123,7 +123,6 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaTarjeta = VentanaTarjeta.getInstance();
 		this.ventanaCancelacionPasaje = VentanaCancelacionPasaje.getInstance();
 		
-		
 		java.util.Date fecha = new java.util.Date(); 
 		this.fechaActual = new java.sql.Date(fecha.getTime());	
 		
@@ -184,8 +183,6 @@ public class ControladorPasaje implements ActionListener{
 		});
 		
 		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
-		this.ventanaVisualizarClientes.getBtnAplicarFiltro().addActionListener(bc->buscarCliente(bc));
-		this.ventanaVisualizarClientes.getBtnBorrarFiltro().addActionListener(bf->borrarFiltros(bf));
 		
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(cv->confirmarSeleccionViaje(cv));
 		this.ventanaTablaViajes.getBtnAtras().addActionListener(a->volverVentanaCliente(a));
@@ -251,16 +248,6 @@ public class ControladorPasaje implements ActionListener{
 	}
 	
 	/*----------------------------------Filtro Cliente------------------------------------*/
-	public void buscarCliente(ActionEvent bc){
-		String filtroSeleccionado = this.ventanaVisualizarClientes.getComboBoxFiltro().getSelectedItem().toString();
-		String dato = this.ventanaVisualizarClientes.getTxtFiltro().getText();
-		if (filtroSeleccionado.equals("Seleccione")){
-			JOptionPane.showMessageDialog(null, "Debe seleccionar una opción", "Mensaje", JOptionPane.ERROR_MESSAGE);		
-		}else if (filtroSeleccionado.equals("DNI")) {
-			buscarDniEnTabla(dato);	
-		}
-	}
-
 	public List<ClienteDTO> filtrarDniSegun(String dniCliente) {
 		List<ClienteDTO> resultado = new ArrayList<ClienteDTO>();
 		this.clientes_en_tabla = cliente.obtenerClientes();
@@ -283,12 +270,6 @@ public class ControladorPasaje implements ActionListener{
 	        tr.setRowFilter(RowFilter.regexFilter(buscarDni));
 	}
 	
-	private void borrarFiltros(ActionEvent bf) {
-		this.ventanaVisualizarClientes.getComboBoxFiltro().setSelectedIndex(0);
-		this.ventanaVisualizarClientes.getTxtFiltro().setText("");
-		this.llenarTablaClientes();
-	}
-
 	/*--------------------------------Fin de Filtro Cliente------------------------------------*/
 	
 	/*El personal administrativo debe seleccionar un cliente*/

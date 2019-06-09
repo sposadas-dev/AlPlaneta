@@ -20,11 +20,7 @@ public class VentanaVisualizarClientes extends JFrame {
 	private String[] nombreColumnasClientes = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento", "Teléfono Fijo","Teléfono Celular","Email"};
 	private JTable tablaClientes;
 	private JButton btnConfirmar;
-	
-	private JComboBox<String>comboBoxFiltro;
 	private JTextField txtFiltro;
-	private JButton btnAplicarFiltro;
-	private JButton btnBorrarFiltro;
 
 	public static VentanaVisualizarClientes getInstance(){
 		if(INSTANCE == null)
@@ -83,28 +79,15 @@ public class VentanaVisualizarClientes extends JFrame {
 			btnConfirmar.setBounds(485, 442, 136, 54);
 			getContentPane().add(btnConfirmar);
 			
-			JLabel lblFiltro = new JLabel("Filtrar por:");
-			lblFiltro.setBounds(156, 117, 98, 14);
-			getContentPane().add(lblFiltro);
-			
-			comboBoxFiltro = new JComboBox<String>();
-			comboBoxFiltro.setBounds(244, 114, 210, 20);
-			comboBoxFiltro.addItem("Seleccione");
-			comboBoxFiltro.addItem("DNI");
-			getContentPane().add(comboBoxFiltro);
-			
 			txtFiltro = new JTextField();
 			txtFiltro.setBounds(472, 114, 238, 20);
 			getContentPane().add(txtFiltro);
 			txtFiltro.setColumns(10);
 			
-			btnAplicarFiltro = new JButton("Aplicar");
-			btnAplicarFiltro.setBounds(724, 113, 158, 23);
-			getContentPane().add(btnAplicarFiltro);
-			
-			btnBorrarFiltro = new JButton("Borrar filtro");
-			btnBorrarFiltro.setBounds(900, 113, 158, 23);
-			getContentPane().add(btnBorrarFiltro);
+			JLabel lblFiltro = new JLabel("Filtro");
+			lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			lblFiltro.setBounds(429, 116, 33, 13);
+			getContentPane().add(lblFiltro);
 
 	}
 	
@@ -124,20 +107,8 @@ public class VentanaVisualizarClientes extends JFrame {
 		return btnConfirmar;
 	}
 
-	public JComboBox<String> getComboBoxFiltro() {
-		return comboBoxFiltro;
-	}
-
 	public JTextField getTxtFiltro() {
 		return txtFiltro;
-	}
-
-	public JButton getBtnAplicarFiltro() {
-		return btnAplicarFiltro;
-	}
-	
-	public JButton getBtnBorrarFiltro() {
-		return btnBorrarFiltro;
 	}
 
 	public void mostrarVentana(boolean visibilidad){
