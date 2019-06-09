@@ -1,10 +1,14 @@
 package presentacion.controlador;
 
 import java.util.Random;
+import java.util.regex.Pattern;
 
-public class Validador {
+public abstract class Validador {
 
-	
+	public static boolean contieneSoloNumeros(String text) {
+		return Pattern.matches("[0-9]\\d*", text);
+	}
+
 	public static String getNumeroComprobante(int longitud) {
 		String cadenaAleatoria = "";
 		long milis = new java.util.GregorianCalendar().getTimeInMillis();

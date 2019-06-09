@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import java.awt.Color;
+import java.awt.Font;
 
 public class VentanaCargaPasajero extends JFrame {
 
@@ -26,6 +28,8 @@ public class VentanaCargaPasajero extends JFrame {
 	private JButton btnConfirmar;
 	private JButton btnAtras;
 	private String[] nombreColumnas = {"Nombre","Apellido","DNI","Fecha de nacimiento","Teléfono","Email"};
+	private JPanel panel;
+	private JLabel labelPasajero;
 
 	
 	public static VentanaCargaPasajero getInstance(){
@@ -52,7 +56,7 @@ public class VentanaCargaPasajero extends JFrame {
 		contentPane.add(btnAgregarPasajero);
 		
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(10, 42, 692, 258);
+		spPasajeros.setBounds(10, 66, 692, 234);
 		contentPane.add(spPasajeros);
 		
 		modelPasajeros = new DefaultTableModel(null,nombreColumnas){
@@ -79,6 +83,18 @@ public class VentanaCargaPasajero extends JFrame {
 		lblPasajerosCargados = new JLabel("");
 		lblPasajerosCargados.setBounds(571, 331, 261, 14);
 		contentPane.add(lblPasajerosCargados);
+		
+		panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(new Color(9, 132, 227));
+		panel.setBounds(0, 0, 894, 53);
+		contentPane.add(panel);
+		
+		labelPasajero = new JLabel("Pasajeros");
+		labelPasajero.setForeground(Color.WHITE);
+		labelPasajero.setFont(new Font("Tahoma", Font.BOLD, 24));
+		labelPasajero.setBounds(371, 0, 241, 53);
+		panel.add(labelPasajero);
 		
 		this.setVisible(false);
 	}

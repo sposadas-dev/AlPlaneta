@@ -152,8 +152,7 @@ public class ControladorCliente implements ActionListener{
 		this.ventanaRegistrarCliente.limpiarCampos();
 		this.ventanaRegistrarCliente.cerrarVentana();
 	}
-
-
+	
 	private boolean camposLlenos(){
 		if (ventanaRegistrarCliente.getTxtNombre().getText().isEmpty() ||
 				ventanaRegistrarCliente.getTxtApellido().getText().isEmpty() ||
