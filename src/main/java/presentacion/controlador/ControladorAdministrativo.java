@@ -66,6 +66,7 @@ public class ControladorAdministrativo implements ActionListener {
 	private int filaSeleccionada;
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
+	private controladorDatosLogin controladorDatosLogin;
 
 	private static ControladorAdministrativo INSTANCE;
 	
@@ -96,7 +97,8 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getItemEditarCliente().addActionListener(mve->mostrarVentanaEditarCliente(mve));
 		this.vista.getItemActivarCliente().addActionListener(acc->activarCliente(acc));
 		this.vista.getItemDesactivarCliente().addActionListener(dc->desactivarCliente(dc));
-		
+        this.vista.getItemRestablecerContrasena().addActionListener(r->restablecerContrasena(r));
+
 		this.vista.getItemVisualizarPasajes().addActionListener(ap->mostrarPasajes(ap));
 		this.vista.getItemAgregarPasaje().addActionListener(ap->mostrarVentanaAgregarPasaje(ap));
 		this.vista.getItemEditarPasaje().addActionListener(ep->mostrarVentanaEditarPasaje(ep));
@@ -142,7 +144,13 @@ public class ControladorAdministrativo implements ActionListener {
 
 		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado, this.eventos_en_tabla);
 		
-		controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
+        controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
+        controladorDatosLogin = new controladorDatosLogin();
+
+	}
+
+	private void restablecerContrasena(ActionEvent r) {
+		controladorDatosLogin.restablecerContrasena();
 	}
 
 	public void cargarCancelados(ActionEvent ccb) {
@@ -320,7 +328,8 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorEvento.llenarComboEstados();
 		controladorEvento.llenarComboHora();
 		controladorEvento.llenarComboMinutos();
-		controladorEvento.setEventoSeleccionado(this.eventos_en_tabla.get(filaSeleccionada));
+        controladorEvento.setEventoSeleccionado(this.eventos_en_tabla.get(filaSeleccionada));
+        System.out.println(this.eventos_en_tabla.get(filaSeleccionada).getMotivoReprogramacion()+"DATO VIEJO");
 		//controladorEvento.llenarMotivos(this.eventos_en_tabla.get(filaSeleccionada));
 		if (filaSeleccionada != -1){
 			
@@ -844,5 +853,5 @@ public class ControladorAdministrativo implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		
-	}
+    }
 }

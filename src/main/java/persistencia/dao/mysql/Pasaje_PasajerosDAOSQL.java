@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dto.PaisDTO;
 import dto.PasajeDTO;
 import dto.Pasaje_PasajerosDTO;
 import dto.PasajeroDTO;
 import persistencia.conexion.Conexion;
-import persistencia.dao.interfaz.PasajeDAO;
 import persistencia.dao.interfaz.Pasaje_PasajerosDAO;
 
 public class Pasaje_PasajerosDAOSQL implements Pasaje_PasajerosDAO {
@@ -126,4 +126,14 @@ public class Pasaje_PasajerosDAOSQL implements Pasaje_PasajerosDAO {
 		}
 		return pasaje_pasajeros;
 	}
+	
+	public static void main(String[] args) {
+		Pasaje_PasajerosDAOSQL adm = new Pasaje_PasajerosDAOSQL();
+		
+		List<PasajeroDTO> administratives = adm.traerPasajerosDePasaje(1);
+		for(PasajeroDTO ad: administratives) {
+			System.out.println(ad.getNombre());			
+		}
+	}
+	
 }

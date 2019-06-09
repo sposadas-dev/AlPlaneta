@@ -23,4 +23,12 @@ private CoordinadorDAO coordinador;
 	public CoordinadorDTO getByLoginId(int idLogin) {
 		return this.coordinador.getByLoginId(idLogin);
 	}
+
+	public CoordinadorDTO buscarPorEmail(String mailDeRecuperacion) {
+		return this.coordinador.getByMail(mailDeRecuperacion);
+	}
+
+	public void actualizar(CoordinadorDTO coordinador) {
+		this.coordinador.update(coordinador);
+	}
 }

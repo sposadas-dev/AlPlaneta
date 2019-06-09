@@ -55,7 +55,7 @@ public class VentanaClaveOlvidada extends JFrame {
 		lblMail.setBounds(30, 42, 189, 14);
 		contentPane.add(lblMail);
 		
-		btnRecuperarContraseña = new JButton("Recuperar mi contraseña");
+		btnRecuperarContraseña = new JButton("Recuperar contraseña");
 		btnRecuperarContraseña.setBounds(30, 114, 209, 23);
 		contentPane.add(btnRecuperarContraseña);
 		this.setVisible(false);
