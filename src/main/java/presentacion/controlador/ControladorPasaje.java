@@ -146,6 +146,7 @@ public class ControladorPasaje implements ActionListener{
 		this.pasajeros_en_reserva = new ArrayList<PasajeroDTO>();
 		this.pasajes_en_tabla = modeloPasaje.obtenerPasajes();
 		
+		
 		this.ventanaVisualizarClientes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 					char letra = e.getKeyChar();
@@ -184,6 +185,16 @@ public class ControladorPasaje implements ActionListener{
 		                }
 		            }
 		    }
+		});
+		
+		this.ventanaPasajero.getTxtFiltroDni().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+			}
 		});
 		
 		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
@@ -468,6 +479,7 @@ public class ControladorPasaje implements ActionListener{
 
 	/*Cargamos los datos del pasajero*/
 	private void cargarDatosPasajero(ActionEvent cd) {
+		if(validarCamposRegistrarPasajero()){
 		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
 		java.util.Date dateFechaNacimiento = ventanaPasajero.getDateFechaNacimiento().getDate();
 		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
@@ -484,7 +496,34 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPasajero.limpiarCampos();
 		this.ventanaPasajero.dispose();
 		llenarTablaDePasajeros();
+		}else{
+			JOptionPane.showMessageDialog(null, "Verifique los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
 	}
+	
+	private boolean validarCamposRegistrarPasajero(){
+		if (camposLlenosRegistrarPasajero()) {
+			this.ventanaPasajero.getTxtNombre().setText(Validador.validarCampo(this.ventanaPasajero.getTxtNombre().getText()));
+			this.ventanaPasajero.getTxtApellido().setText(Validador.validarCampo(this.ventanaPasajero.getTxtApellido().getText()));
+			return Validador.esSoloLetras(this.ventanaPasajero.getTxtNombre().getText()) &&
+				Validador.esSoloLetras(this.ventanaPasajero.getTxtApellido().getText()) &&
+				Validador.esDniValido(this.ventanaPasajero.getTxtDni().getText()) &&
+				(Validador.esTelefonoCelularValido(this.ventanaPasajero.getTxtTelefono().getText()) || this.ventanaPasajero.getTxtTelefono().getText().isEmpty()) &&	
+				(Validador.esMailValido(this.ventanaPasajero.getTxtEmail().getText()) || this.ventanaPasajero.getTxtEmail().getText().isEmpty());
+		}
+		return camposLlenosRegistrarPasajero() ? true : false;
+	}
+	
+	private boolean camposLlenosRegistrarPasajero(){
+		if (ventanaPasajero.getTxtNombre().getText().isEmpty() ||
+				ventanaPasajero.getTxtApellido().getText().isEmpty() ||
+				ventanaPasajero.getTxtDni().getText().isEmpty() ||				
+				(ventanaPasajero.getDateFechaNacimiento().getDate()== null) 
+			){
+				return false;
+			}
+			return true;
+		}
 	
 	/*Elimina el pasajero de la carga de pasajeros*/
 	private void eliminarPasajero(ActionEvent ep) {
