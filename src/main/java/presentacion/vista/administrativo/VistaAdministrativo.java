@@ -4,7 +4,9 @@ import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -188,8 +190,13 @@ public class VistaAdministrativo{
 		itemEditarEstadoPromocion = new JMenuItem("Modificar estado");
 		itemEditarEstadoPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPromociones.add(itemEditarEstadoPromocion);
+	
+		JLabel labelMarcaDeAgua = new JLabel("");
+		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
+		labelMarcaDeAgua.setBounds(47, 0, 1313, 674);
+		frame.getContentPane().add(labelMarcaDeAgua);
 	}
-
+	
 	public JFrame getFrame() {
 		return frame;
 	}

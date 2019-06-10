@@ -22,7 +22,6 @@ import javax.swing.JCheckBox;
 public class PanelCliente extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JButton btnRecargarTabla;
 	private DefaultTableModel modelClientes;
 	private String[] nombreColumnasClientes = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento", "Teléfono Fijo","Teléfono Celular","Email", "Estado"};
 	private JTable tablaClientes;
@@ -42,14 +41,10 @@ public class PanelCliente extends JPanel {
 		setLayout(null);
 
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(32, 91, 1302, 393);
+		spPasajeros.setBounds(32, 91, 1302, 574);
 		add(spPasajeros);
 		tablaClientes = new JTable(modelClientes);
 		spPasajeros.setViewportView(tablaClientes);
-		
-//		btnRecargarTabla = new JButton("Recargar");
-//		btnRecargarTabla.setBounds(421, 495, 165, 54);
-//		add(btnRecargarTabla);
 		
 		btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(661, 495, 136, 54);
@@ -77,7 +72,6 @@ public class PanelCliente extends JPanel {
 		add(inactivos);
 	
 		btnConfirmar.setVisible(false);
-//		btnRecargarTabla.setVisible(false);
 	}
 
 	public void mostrarPanelCliente(boolean visibilidad){

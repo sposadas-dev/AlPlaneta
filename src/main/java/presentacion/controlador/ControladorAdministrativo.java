@@ -259,7 +259,7 @@ public class ControladorAdministrativo implements ActionListener {
 	// ------------------------------------------- Desactivar Cliente ------------------------
 
 	private void editarCliente(ActionEvent ec) {
-
+		if(controladorCliente.validarCamposEditarCliente()){
 		java.util.Date dateFechaNacimiento = this.ventanaEditarCliente.getDateFechaNacimiento().getDate();
 		java.sql.Date fechaNacimientoCliente = new java.sql.Date(dateFechaNacimiento.getTime());
 		
@@ -292,7 +292,9 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorCliente.editarCliente(clienteEditable);
 		
 		this.llenarTablaClientes();
-		
+		}else{
+			JOptionPane.showMessageDialog(null, "Verifique los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void mostrarVentanaEditarCliente(ActionEvent mve) {

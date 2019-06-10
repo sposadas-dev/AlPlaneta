@@ -12,6 +12,8 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JSeparator;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaRegistrarCliente extends JFrame {
 
@@ -157,7 +159,6 @@ public class VentanaRegistrarCliente extends JFrame {
 		txtUsuario.setBounds(96, 209, 155, 20);
 		contentPane.add(txtUsuario);
 		txtUsuario.setColumns(10);
-		
 	}
 	
 	public void mostrarVentana(){

@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import java.awt.Color;
 
 public class VentanaTablaViajes extends JFrame {
 
@@ -48,7 +49,7 @@ public class VentanaTablaViajes extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(10, 95, 928, 281);
+		spPasajeros.setBounds(10, 149, 928, 227);
 		contentPane.add(spPasajeros);
 		
 		modelViajes = new DefaultTableModel(null,nombreColumnas){
@@ -69,14 +70,26 @@ public class VentanaTablaViajes extends JFrame {
 		contentPane.add(btnAtras);
 		
 		txtFiltro = new JTextField();
-		txtFiltro.setBounds(326, 43, 200, 19);
+		txtFiltro.setBounds(444, 106, 200, 19);
 		contentPane.add(txtFiltro);
 		txtFiltro.setColumns(10);
 		
 		lblFiltro = new JLabel("Filtro");
 		lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblFiltro.setBounds(278, 45, 38, 13);
+		lblFiltro.setBounds(276, 109, 38, 13);
 		contentPane.add(lblFiltro);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(new Color(60, 179, 113));
+		panel.setBounds(0, 0, 969, 68);
+		contentPane.add(panel);
+		
+		JLabel lblViaje = new JLabel("Viajes");
+		lblViaje.setForeground(Color.WHITE);
+		lblViaje.setFont(new Font("Tahoma", Font.BOLD, 26));
+		lblViaje.setBounds(425, 0, 271, 64);
+		panel.add(lblViaje);
 		
 		this.setVisible(false);
 	}
