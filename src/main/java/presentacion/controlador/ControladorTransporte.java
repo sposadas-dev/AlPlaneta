@@ -62,12 +62,16 @@ public class ControladorTransporte implements ActionListener {
 
 	public void agregarTransporte(ActionEvent rc) {
 		obtenerTransportesActualizado();
-		TransporteDTO nuevoTransporte = new TransporteDTO();
-		nuevoTransporte.setNombre(this.ventanaAgregarTransporte.getTxtNombreTransporte().getText());
-		transporte.agregarTransporte(nuevoTransporte);
-		llenarTablaTransportes();
-		this.ventanaAgregarTransporte.limpiarCampos();
-		this.ventanaAgregarTransporte.cerrarVentana();
+		if(!ventanaAgregarTransporte.getTxtNombreTransporte().getText().isEmpty()){
+			TransporteDTO nuevoTransporte = new TransporteDTO();
+			nuevoTransporte.setNombre(Validador.validarCampo(this.ventanaAgregarTransporte.getTxtNombreTransporte().getText()));
+			transporte.agregarTransporte(nuevoTransporte);
+			llenarTablaTransportes();
+			this.ventanaAgregarTransporte.limpiarCampos();
+			this.ventanaAgregarTransporte.cerrarVentana();
+		}else{
+			JOptionPane.showMessageDialog(null, "Verifique el campo ingresado", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void cancelarVentanaAgregarTransporte(ActionEvent c) {
@@ -82,12 +86,16 @@ public class ControladorTransporte implements ActionListener {
 	}
 	
 	public void editarTransporte(ActionEvent ac) {
-		obtenerTransportesActualizado();
-		String nombreTransporte = this.ventanaEditarTransporte.getTxtNombreTransporte().getText();
-		this.transporte.editarTransporte(new TransporteDTO(transportes_en_tabla.get(this.filaSeleccionada).getIdTransporte(),nombreTransporte));
-		llenarTablaTransportes();
-		ventanaEditarTransporte.limpiarCampos();
-		ventanaEditarTransporte.dispose();
+		if(!ventanaEditarTransporte.getTxtNombreTransporte().getText().isEmpty()){
+			obtenerTransportesActualizado();
+			String nombreTransporte = this.ventanaEditarTransporte.getTxtNombreTransporte().getText();
+			this.transporte.editarTransporte(new TransporteDTO(transportes_en_tabla.get(this.filaSeleccionada).getIdTransporte(),Validador.validarCampo(nombreTransporte)));
+			llenarTablaTransportes();
+			ventanaEditarTransporte.limpiarCampos();
+			ventanaEditarTransporte.dispose();
+		}else{
+			JOptionPane.showMessageDialog(null, "Verifique el campo ingresado", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void cancelarVentanaEditarTransporte(ActionEvent c) {
