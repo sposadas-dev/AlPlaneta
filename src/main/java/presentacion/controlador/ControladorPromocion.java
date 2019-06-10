@@ -1,5 +1,6 @@
 package presentacion.controlador;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -69,6 +70,7 @@ public class ControladorPromocion {
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
 			}
@@ -83,6 +85,7 @@ public class ControladorPromocion {
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
 			}
