@@ -488,6 +488,7 @@ public class ControladorPasaje implements ActionListener{
 			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
 	
 			if (editarPago){
+				System.out.println("editaPago");
 				this.ventanaPago.setVisible(false);
 				mostrarVentanaConfirmacionPasaje();
 			}else{
@@ -546,7 +547,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaComprobante.getTxtOrigenViaje().setText(" "+ viajeSeleccionado.getPaisOrigen().getNombre()+ ", "+viajeSeleccionado.getProvinciaOrigen().getNombre()+", "+viajeSeleccionado.getCiudadOrigen().getNombre());
 		this.ventanaComprobante.getTxtDestinoViaje().setText(" "+ viajeSeleccionado.getPaisDestino().getNombre()+ ", "+viajeSeleccionado.getProvinciaDestino().getNombre()+", "+viajeSeleccionado.getCiudadDestino().getNombre());
 		this.ventanaComprobante.getTxtImportePagado().setText(" "+ pagoDTO.getMonto());
-		this.ventanaComprobante.getTxtValorViaje().setText(""+ calcularMontoDePasaje());
+		this.ventanaComprobante.getTxtValorViaje().setText(""+calcularMontoDePasaje());
 	}
 	
 	

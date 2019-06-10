@@ -24,9 +24,9 @@ public class VentanaCancelacionPasaje extends JFrame {
 
 	private JPanel contentPane;
 	private JButton btnAceptar;
+	private JEditorPane txtMotivoCancelacion;
 
 	private static VentanaCancelacionPasaje INSTANCE;
-	private JTextField txtMotivoCancelacion;
 	
 	public static VentanaCancelacionPasaje getInstance(){
 		if(INSTANCE == null)
@@ -39,7 +39,7 @@ public class VentanaCancelacionPasaje extends JFrame {
 		setTitle("Cancelación del pasaje");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 520, 298);
+		setBounds(100, 100, 520, 361);
 		setLocationRelativeTo(null); 
 		
 		contentPane = new JPanel();
@@ -53,7 +53,7 @@ public class VentanaCancelacionPasaje extends JFrame {
 		contentPane.add(lblMotivoDeLa);
 		
 		btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(176, 177, 130, 55);
+		btnAceptar.setBounds(176, 252, 130, 55);
 		contentPane.add(btnAceptar);
 		
 		JPanel panel = new JPanel();
@@ -68,14 +68,13 @@ public class VentanaCancelacionPasaje extends JFrame {
 		lblCancelacion.setBounds(110, 0, 301, 53);
 		panel.add(lblCancelacion);
 		
-		txtMotivoCancelacion = new JTextField();
-		txtMotivoCancelacion.setBounds(20, 99, 467, 55);
+		txtMotivoCancelacion = new JEditorPane();
+		txtMotivoCancelacion.setBounds(10, 94, 492, 147);
 		contentPane.add(txtMotivoCancelacion);
-		txtMotivoCancelacion.setColumns(10);
 	}
 
 
-	public JTextField getTxtMotivoCancelacion() {
+	public JEditorPane getTxtMotivoCancelacion() {
 		return txtMotivoCancelacion;
 	}
 
