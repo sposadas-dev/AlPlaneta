@@ -253,6 +253,31 @@ this.controladorAdministrador_ventanaAgregarPais = VentanaAgregarPais.getInstanc
 		this.ventanaCliente.getBtnCancelar().addActionListener(bc->salirVentanaCliente(bc));
 		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaViaje(aV));
 	
+		this.ventanaCargarViaje.getTextCapacidad().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaCargarViaje.getTextHorasEstimadas().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaCargarViaje.getTextPrecioViaje().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		
 		//this.ventanaCargarViaje.getBtnOK().addActionListener(v->mostrarDatosViaje(v));
 		this.ventanaCargarViaje.getComboBoxPaisOrigen().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisOrigen(e);}});

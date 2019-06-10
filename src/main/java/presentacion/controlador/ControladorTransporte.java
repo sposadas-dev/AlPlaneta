@@ -59,7 +59,7 @@ public class ControladorTransporte implements ActionListener {
 		this.ventanaEditarTransporte.limpiarCampos();
 		this.ventanaEditarTransporte.mostrarVentana();
 	}
-	
+
 	public void agregarTransporte(ActionEvent rc) {
 		obtenerTransportesActualizado();
 		TransporteDTO nuevoTransporte = new TransporteDTO();

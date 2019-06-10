@@ -2,6 +2,8 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,6 +112,49 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelCliente().getInactivos().addActionListener(si->cargarInactivos(si));
 		
 		this.ventanaEditarCliente.getBtnEditar().addActionListener(ec->editarCliente(ec));
+		
+		/* Filtros */
+		this.ventanaEditarCliente.getTxtNombre().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						e.consume();
+					}
+			}
+		});
+		this.ventanaEditarCliente.getTxtApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaEditarCliente.getTxtDni().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaEditarCliente.getTxtTelefonoFijo().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaEditarCliente.getTxtTelefonoCelular().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		
 //		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
 		
 		this.vista.getPanelPasaje().getCancelCheckBox().addActionListener(ccb->cargarCancelados(ccb));
