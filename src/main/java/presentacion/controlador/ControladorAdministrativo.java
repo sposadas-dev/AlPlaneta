@@ -1,5 +1,6 @@
 package presentacion.controlador;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -118,6 +119,7 @@ public class ControladorAdministrativo implements ActionListener {
 			public void keyTyped(KeyEvent e){
 					char letra = e.getKeyChar();
 					if(Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
 						e.consume();
 					}
 			}
@@ -126,6 +128,7 @@ public class ControladorAdministrativo implements ActionListener {
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
 				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
 			}
@@ -134,6 +137,7 @@ public class ControladorAdministrativo implements ActionListener {
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
 			}
@@ -142,6 +146,7 @@ public class ControladorAdministrativo implements ActionListener {
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
 			}
@@ -150,6 +155,7 @@ public class ControladorAdministrativo implements ActionListener {
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
 			}
