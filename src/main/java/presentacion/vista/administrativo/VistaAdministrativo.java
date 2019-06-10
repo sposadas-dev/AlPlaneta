@@ -155,6 +155,10 @@ public class VistaAdministrativo{
 		menuEventos.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuEventos);
 		
+		itemVisualizarEvento = new JMenuItem("Visualizar eventos");
+		itemVisualizarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuEventos.add(itemVisualizarEvento);
+
 		itemAgregarEvento = new JMenuItem("Agregar evento");
 		itemAgregarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuEventos.add(itemAgregarEvento);
@@ -163,9 +167,6 @@ public class VistaAdministrativo{
 		itemEditarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuEventos.add(itemEditarEvento);
 		
-		itemVisualizarEvento = new JMenuItem("Visualizar eventos");
-		itemVisualizarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuEventos.add(itemVisualizarEvento);
 		
 		menuPromociones = new JMenu("Promociones");
 		menuPromociones.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -183,9 +184,6 @@ public class VistaAdministrativo{
 		itemEditarPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPromociones.add(itemEditarPromocion);
 		
-		itemVisualizarPromociones = new JMenuItem("Visualizar promociones");
-		itemVisualizarPromociones.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuPromociones.add(itemVisualizarPromociones);
 		
 		itemEditarEstadoPromocion = new JMenuItem("Modificar estado");
 		itemEditarEstadoPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));

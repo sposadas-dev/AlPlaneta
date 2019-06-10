@@ -55,12 +55,14 @@ import presentacion.vista.administrativo.VentanaTablaViajes;
 import presentacion.vista.administrativo.VentanaTarjeta;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
+import presentacion.vista.administrativo.VistaAdministrativo;
 
 public class ControladorPasaje implements ActionListener{
 	
 	private EnvioDeCorreo envioCorreo;		
 	private GeneratePDF pdf;
 	
+	private VistaAdministrativo vistaAdministrativo;
 	private VentanaVisualizarClientes ventanaVisualizarClientes;
 	private VentanaTablaViajes ventanaTablaViajes;
 	private VentanaCargaPasajero ventanaCargaPasajero;
@@ -122,6 +124,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaTablaPagos = VentanaTablaPagos.getInstance();
 		this.ventanaTarjeta = VentanaTarjeta.getInstance();
 		this.ventanaCancelacionPasaje = VentanaCancelacionPasaje.getInstance();
+		this.vistaAdministrativo = VistaAdministrativo.getInstance();
 		
 		java.util.Date fecha = new java.util.Date(); 
 		this.fechaActual = new java.sql.Date(fecha.getTime());	
@@ -193,6 +196,42 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaCargaPasajero.getBtnAtras().addActionListener(a->volverVentanaViaje(a));
 	
 		this.ventanaPasajero.getBtnCargarDatos().addActionListener(cd->cargarDatosPasajero(cd));
+		
+		/* Filtros */
+		this.ventanaPasajero.getTxtNombre().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						e.consume();
+					}
+			}
+		});
+		this.ventanaPasajero.getTxtApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaPasajero.getTxtDni().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaPasajero.getTxtTelefono().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		/* Fin Filtrado*/
+		
 		this.ventanaPasajero.getBtnAplicarBusqueda().addActionListener(af->aplicarFiltro(af));
 		
 		this.ventanaPago.getBtnPago().addActionListener(pago->darAltaDelPago(pago));

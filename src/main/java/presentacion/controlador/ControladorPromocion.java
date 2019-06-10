@@ -64,10 +64,29 @@ public class ControladorPromocion {
 		this.modeloViaje_Promocion = new ModeloViaje_Promocion(new DAOSQLFactory());
 
 		this.ventanaPromocion.getBtnRegistrar().addActionListener(rc->registrarPromocion(rc));
+		
+		this.ventanaPromocion.getTxtStock().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		
 		this.ventanaPromocion.getBtnAsociarViaje().addActionListener(r->mostrarViajes(r));
 		this.ventanaPromocion.getBtnCancelar().addActionListener(cv->cerrarVentanaPromocion(cv));
 		
 		this.ventanaEditarPromocion.getBtnEditar().addActionListener(e->editarPromocion(e));
+		
+		this.ventanaEditarPromocion.getTxtStock().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
 		this.ventanaEditarPromocion.getBtnAsociarViaje().addActionListener(e->mostrarViajesEditarPromo(e));
 		this.ventanaEditarPromocion.getBtnCancelar().addActionListener(e->cerrarVentanaEditarPromocion(e));
 

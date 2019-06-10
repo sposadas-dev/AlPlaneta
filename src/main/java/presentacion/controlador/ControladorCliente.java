@@ -2,6 +2,8 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +52,50 @@ public class ControladorCliente implements ActionListener{
 		this.panelCliente = new PanelCliente();
 		this.ventanaRegistrarCliente.getBtnRegistrar().addActionListener(rc->registrarCliente(rc));
 		this.ventanaRegistrarCliente.getBtnCancelar().addActionListener(cv->cerrarVentanaCliente(cv));
+		
+		/* Filtros */
+		this.ventanaRegistrarCliente.getTxtNombre().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						e.consume();
+					}
+			}
+		});
+		this.ventanaRegistrarCliente.getTxtApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaRegistrarCliente.getTxtDni().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaRegistrarCliente.getTxtTelefonoFijo().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		this.ventanaRegistrarCliente.getTxtTelefonoCelular().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					e.consume();
+				}
+			}
+		});
+		
+		/*Final Filtros*/
 		
 		this.ventanaEditarCliente.getBtnCancelar().addActionListener(ce->cancelarEditar());
 		this.vistaAdministrativo = VistaAdministrativo.getInstance();

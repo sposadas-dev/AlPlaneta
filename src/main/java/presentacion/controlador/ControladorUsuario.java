@@ -144,7 +144,6 @@ public class ControladorUsuario implements ActionListener {
 		this.ventanaVisualizarDatos.mostrarVentana(false);
 	}
 
-	
 	private void mostrarVentanaCambiarContrasenia(ActionEvent c) {
 		this.ventanaCambiarContrasenia.limpiarCampos();
 		this.ventanaCambiarContrasenia.mostrarVentana(true);
