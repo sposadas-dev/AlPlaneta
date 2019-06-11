@@ -33,6 +33,7 @@ import presentacion.vista.cliente.VentanaReservas;
 import presentacion.vista.cliente.VentanaViajes;
 import presentacion.vista.cliente.VentanaVisualizarDatos;
 import presentacion.vista.cliente.VistaCliente;
+import recursos.Mapper;
 
 public class ControladorUsuario implements ActionListener {
 
@@ -42,7 +43,8 @@ public class ControladorUsuario implements ActionListener {
 	private Pasaje pasaje;
 	private Login login;
 	private Pagos_Pasaje pagos_pasaje;
-
+	private Mapper mapper;
+	
 	private List<PasajeDTO> pasajes_en_tabla;
 	private VentanaViajes ventanaViajes;
 	private VentanaReservas ventanaReservas;
@@ -54,12 +56,12 @@ public class ControladorUsuario implements ActionListener {
 	private DefaultTableModel dm;
 	
 	private StringBuilder cad = new StringBuilder();
-	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	public ControladorUsuario(VistaCliente vistaCliente, ClienteDTO cliente){
 		this.vistaCliente = vistaCliente;
 		this.cliente = cliente;
-		
+		this.mapper = new Mapper();
 		this.ventanaReservas = VentanaReservas.getInstance();
 		this.ventanaViajes = VentanaViajes.getInstance();
 		this.ventanaVisualizarDatos = VentanaVisualizarDatos.getInstance();
@@ -174,7 +176,7 @@ public class ControladorUsuario implements ActionListener {
 		if (filaSeleccionada != -1){
 			this.ventanaTablaPagos.mostrarVentana(true);
 			pasajeSeleccionado = pasajes_en_tabla.get(filaSeleccionada);
-			llenarTablaPagos();
+			llenarTablaPagos(pasajeSeleccionado.getIdPasaje());
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
@@ -231,9 +233,9 @@ public class ControladorUsuario implements ActionListener {
 			Object[] fila = {
 					this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 					this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-					this.pasajes_en_tabla.get(i).getFechaVencimiento(),
-					this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-					this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getFechaVencimiento()),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 					this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
 					this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
 					"$" +this.pasajes_en_tabla.get(i).getValorViaje().subtract(this.pasajes_en_tabla.get(i).getMontoAPagar()),
@@ -241,31 +243,41 @@ public class ControladorUsuario implements ActionListener {
 					BUTTON_NAME_VER
 			};
 			this.ventanaReservas.getModelReservas().addRow(fila);
-			System.out.println(this.pasajes_en_tabla.get(i).getIdPasaje());
+			}
+		}
 			new ButtonColumn(this.ventanaReservas.getTablaReservas(), verPagos(), 9);
 			this.ventanaReservas.getTablaReservas().getColumnModel().getColumn(9).setMinWidth(50);
 			this.ventanaReservas.getTablaReservas().getColumnModel().getColumn(9).setMaxWidth(50);
-			}}		
+					
 	}
 	
 	public Action verPagos() {
 		Action verPago = new AbstractAction() {
 		private static final long serialVersionUID = 1L;
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			System.out.println("mica");
 			JTable table = (JTable) e.getSource();
-			try {
-				ventanaTablaPagos.mostrarVentana(true);
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
+
+			
+			PasajeDTO sc = obtenerScSeleccionada((int) table.getModel().getValueAt(table.getSelectedRow(), 0));
+			System.out.println((int) table.getModel().getValueAt(table.getSelectedRow(),0));
+			if (sc != null)
+//				new ControladorPasaje(vp, sc);
+				llenarTablaPagos(sc.getIdPasaje());
+			
 		}
-	};
+			private PasajeDTO obtenerScSeleccionada(int id) {
+				for (PasajeDTO s : pasajes_en_tabla)
+					if (s.getIdPasaje() == id)
+						return s;
+				return null;
+			}
+		};
 		return verPago;
 	}
 
-	private void llenarTablaPagos(){
+	private void llenarTablaPagos(int idPasaje){
 		this.ventanaTablaPagos.getModelPagos().setRowCount(0);
 		this.ventanaTablaPagos.getModelPagos().setColumnCount(0);
 		this.ventanaTablaPagos.getModelPagos().setColumnIdentifiers(this.ventanaTablaPagos.getNombreColumnas());
@@ -273,9 +285,9 @@ public class ControladorUsuario implements ActionListener {
 		Pagos_Pasaje pago_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
 		List<Pagos_PasajeDTO> pagos = pago_pasaje.obtenerPagosPasaje();
 		for(int i=0; i < pagos.size();i++){
-			if(pagos.get(i).getPasaje().getIdPasaje() == pasajeSeleccionado.getIdPasaje()){
+			if(pagos.get(i).getPasaje().getIdPasaje() == idPasaje){
 				Object[] fila = { 
-						pagos.get(i).getPago().getFechaPago(),
+						mapper.parseToString(pagos.get(i).getPago().getFechaPago()),
 						pagos.get(i).getPago().getMonto(),
 						pagos.get(i).getPago().getIdFormaPago().getTipo(),
 						pagos.get(i).getPago().getAdministrativo().getNombre() 
@@ -302,8 +314,8 @@ public class ControladorUsuario implements ActionListener {
 					this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 					this.pasajes_en_tabla.get(i).getViaje().getPaisDestino().getNombre()+ ","+ 
 					this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-					this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-					this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 					this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
 					"$ "+this.pasajes_en_tabla.get(i).getViaje().getPrecio()
 			};

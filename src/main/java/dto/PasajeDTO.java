@@ -2,6 +2,7 @@ package dto;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class PasajeDTO {
@@ -17,6 +18,7 @@ public class PasajeDTO {
 	private List<PasajeroDTO> pasajeros;
 	private String motivoCancelacion;
 	private Date dateCancelacion;
+	private SimpleDateFormat formatFecha;
 
 	public PasajeDTO(int idPasaje, String numeroComprobante,ViajeDTO viaje, AdministrativoDTO administrativo,
 			ClienteDTO cliente, Date fechaVencimiento, BigDecimal valorViaje,
@@ -35,6 +37,7 @@ public class PasajeDTO {
 		this.pasajeros = pasajeros;
 		this.motivoCancelacion = motivoCancelacion;
 		this.dateCancelacion = dateCancelacion;
+		formatFecha = new SimpleDateFormat("dd-MM-yyyy");
 	}
 
 	public PasajeDTO() {
@@ -137,4 +140,15 @@ public class PasajeDTO {
 		this.dateCancelacion = dateCancelacion;
 	}
 	
+	public String getFechaVencimientoParseada(){
+		return formatFecha.format(this.fechaVencimiento);
+	}
+	
+	public String getFechaSalidaParseada(){
+		return formatFecha.format(this.viaje.getFechaSalida() );
+	}
+	
+	public String getFechaLlegadaParseada(){
+		return formatFecha.format(this.viaje.getFechaLlegada());
+	}
 }

@@ -29,6 +29,7 @@ import presentacion.vista.administrativo.PanelCliente;
 import presentacion.vista.administrativo.VentanaEditarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import recursos.Mapper;
 
 public class ControladorCliente implements ActionListener{
 	private VistaAdministrativo vistaAdministrativo;
@@ -43,6 +44,7 @@ public class ControladorCliente implements ActionListener{
 	private MedioContacto medioContacto; 
 	private Login Modelologin;
 	private EnvioDeCorreo enviodeCorreo;
+	private Mapper mapper;
 	
 	public ControladorCliente() {
 		super();
@@ -54,6 +56,7 @@ public class ControladorCliente implements ActionListener{
 		this.cliente = cliente;
 		this.contrasenaProvisoria = null;
 		this.enviodeCorreo = new EnvioDeCorreo();
+		this.mapper = new Mapper();
 		
 		this.medioContacto =  new MedioContacto(new DAOSQLFactory());
 		this.Modelologin = new Login(new DAOSQLFactory());
@@ -121,7 +124,7 @@ public class ControladorCliente implements ActionListener{
 		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
 		java.util.Date dateFechaNacimiento = ventanaRegistrarCliente.getDateFechaNacimiento().getDate();
 		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
-	
+		
 		/*Obtenemos el medio de contacto del cliente*/
 		MedioContactoDTO mContacto = new MedioContactoDTO();
 		mContacto.setTelefonoFijo(this.ventanaRegistrarCliente.getTxtTelefonoFijo().getText());
@@ -312,7 +315,7 @@ public class ControladorCliente implements ActionListener{
 			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
 							 this.clientes_en_tabla.get(i).getApellido(),
 							 this.clientes_en_tabla.get(i).getDni(),
-							 this.clientes_en_tabla.get(i).getFechaNacimiento(),
+							 mapper.parseToString(this.clientes_en_tabla.get(i).getFechaNacimiento()),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getEmail(),

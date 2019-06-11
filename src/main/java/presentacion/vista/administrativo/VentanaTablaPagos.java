@@ -25,7 +25,7 @@ public class VentanaTablaPagos extends JFrame {
 	private JTable tablaPagos;
 	private DefaultTableModel modelPagos;
 	private String[] nombreColumnas = {"Fecha de pago","Monto pagado","Forma de pago","Atendido por"};
-	
+	private JButton btnImprimirComprobante;
 	private static VentanaTablaPagos ventanaTablaPagos;
 	
 	public static VentanaTablaPagos getInstance(){
@@ -73,9 +73,18 @@ public class VentanaTablaPagos extends JFrame {
 		lblPagos.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblPagos.setBounds(288, 0, 121, 53);
 		panel.add(lblPagos);
+		
+		btnImprimirComprobante = new JButton("Imprimir comprobante");
+		btnImprimirComprobante.setBounds(270, 325, 150, 55);
+		btnImprimirComprobante.setVisible(false);
+		contentPane.add(btnImprimirComprobante);
 	
 	}
 	
+	public JButton getBtnImprimirComprobante() {
+		return btnImprimirComprobante;
+	}
+
 	public JTable getTablaPagos() {
 		return tablaPagos;
 	}

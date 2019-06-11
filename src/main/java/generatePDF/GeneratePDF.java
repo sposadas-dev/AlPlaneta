@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import recursos.Mapper;
+
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.Chapter;
 import com.itextpdf.text.Chunk;
@@ -31,7 +33,7 @@ public class GeneratePDF {
     private static final Font chapterFont = FontFactory.getFont(FontFactory.HELVETICA, 30, Font.BOLDITALIC);
     private static final Font paragraphFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Font.NORMAL);
         
-
+    Mapper mapper = new Mapper();
     private static final Font subcategoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     
 //    private static final Font categoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);    
@@ -64,7 +66,7 @@ public class GeneratePDF {
             document.addCreator("Administrador");
             
             
-            Chunk chunk = new Chunk(" Voucher Al Planeta ", chapterFont);
+            Chunk chunk = new Chunk("Voucher Al Planeta ", chapterFont);
 //            chunk.setBackground(BaseColor.GRAY);
             // Creamos el primer capitulo
             Chapter chapter = new Chapter(new Paragraph(chunk), 1);
@@ -81,11 +83,11 @@ public class GeneratePDF {
 //                System.out.println("Image IOException " +  ex);
 //            }
             
-            chapter.add(new Paragraph("Este Voucher correspondiente al Cliente: \n Nombre: "
-            		+ cliente.getNombre()+"\n Apellido: "+ cliente.getApellido()+"\n Mail: "+
+            chapter.add(new Paragraph("Este Voucher corresponde al cliente: \n Nombre: "
+            		+ cliente.getNombre()+"\n Apellido: "+ cliente.getApellido()+"\n Email: "+
             		cliente.getMail()+"\n DNI: "+cliente.getDni()+"\n ", paragraphFont));
 
-            Paragraph paragraphS = new Paragraph("Datos correspondientes al Pasaje", subcategoryFont);
+            Paragraph paragraphS = new Paragraph("Datos correspondientes al pasaje", subcategoryFont);
             Section paragraphMoreS = chapter.addSection(paragraphS);
 
             String text = String.valueOf("Código de pasaje: "+pasaje.getNumeroComprobante()); 
@@ -94,12 +96,12 @@ public class GeneratePDF {
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
             
-            text ="Fecha y hora de salida: "+ pasaje.getViaje().getFechaSalida()+" - Horario: "+pasaje.getViaje().getHoraSalida()+"hs";// "Fecha y Hora de Salida: 15-5-2019, 20:00 hs  \n ";
+            text ="Fecha y hora de salida: "+ mapper.parseToString(pasaje.getViaje().getFechaSalida())+" - Horario: "+pasaje.getViaje().getHoraSalida()+" hs";// "Fecha y Hora de Salida: 15-5-2019, 20:00 hs  \n ";
             item = new ListItem(text);
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
            
-            text = "Fecha de llegada: " + String.valueOf(pasaje.getViaje().getFechaLlegada());//"Hora de Llegada: 13:30 hs \n";
+            text = "Fecha de llegada: " + mapper.parseToString(pasaje.getViaje().getFechaLlegada());//"Hora de Llegada: 13:30 hs \n";
             item = new ListItem(text);
             item.setAlignment(Element.ALIGN_JUSTIFIED);
             list.add(item);
@@ -117,9 +119,9 @@ public class GeneratePDF {
             list.add(item);
             
             
-           Paragraph paragraphPasajeros = new Paragraph("Pasajeros incluidos en el Pasaje", subcategoryFont);
+           Paragraph paragraphPasajeros = new Paragraph("Datos de los pasajeros:", subcategoryFont);
            Section paragraphMorePasajeros = chapter.addSection(paragraphPasajeros);
-       
+         
            Integer numColumns = 4;
            Integer numRows = pasaje.getPasajeros().size();
            // We create the table (Creamos la tabla).
@@ -134,7 +136,7 @@ public class GeneratePDF {
                columnHeader = new PdfPCell(new Phrase("Apellido"));
                columnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
                table.addCell(columnHeader);
-               columnHeader = new PdfPCell(new Phrase("Fecha de Nacimiento"));
+               columnHeader = new PdfPCell(new Phrase("Fecha de nacimiento"));
                columnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
                table.addCell(columnHeader);
                columnHeader = new PdfPCell(new Phrase("DNI"));
@@ -146,7 +148,7 @@ public class GeneratePDF {
                for (int row = 0; row < numRows; row++) {
                    table.addCell(pasajeros.get(row).getNombre().toString());
                    table.addCell(pasajeros.get(row).getApellido().toString());
-                   table.addCell(pasajeros.get(row).getFechaNacimiento().toString());
+                   table.addCell(mapper.parseToString(pasajeros.get(row).getFechaNacimiento()));
                    table.addCell(pasajeros.get(row).getDni().toString());
                }
            
