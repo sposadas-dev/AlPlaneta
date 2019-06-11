@@ -21,4 +21,7 @@ private Pagos_PasajeDAO pagos_pasaje;
 		return this.pagos_pasaje.readAll();		
 	}
 	
+	public Pagos_PasajeDTO getPasajeById(int id){
+		return this.pagos_pasaje.getPasajeById(id);
+	}
 }

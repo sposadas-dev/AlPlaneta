@@ -111,7 +111,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	private DefaultTableModel dm;
 	private StringBuilder cad= new StringBuilder();
-	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	public ControladorPasaje(VentanaVisualizarClientes ventanaVisualizarClientes, Cliente cliente, AdministrativoDTO administrativoLogueado){
 		this.ventanaVisualizarClientes = ventanaVisualizarClientes;
@@ -260,7 +260,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaComprobante.getBtnPdfPago().addActionListener(cp->mostrarComprobantePago(cp));
 	
 		//Ventana Edición de Pasaje
-		this.ventanaVisualizarPasaje.getBtnAceptar().addActionListener(s->salirVentanaVisualizarPasaje(s));
+		this.ventanaVisualizarPasaje.getBtnImprimirComprobante().addActionListener(s->imprimirComprobantePasaje(s));
 		this.ventanaVisualizarPasaje.getBtnVerPagos().addActionListener(vp->verTablaPagos(vp));
 		this.ventanaVisualizarPasaje.getBtnPagar().addActionListener(p->pagarPasaje(p));
 
@@ -300,6 +300,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	public void iniciar(){
 		this.llenarTablaClientes();
+		this.llenarTablaPasajes();
 	}
 	
 	/*----------------------------------Filtro Cliente------------------------------------*/
@@ -447,6 +448,7 @@ public class ControladorPasaje implements ActionListener{
 					pasajeros_en_reserva.get(i).getNombre(),
 					pasajeros_en_reserva.get(i).getApellido(),
 					pasajeros_en_reserva.get(i).getDni(),
+					pasajeros_en_reserva.get(i).getFechaNacimiento()
 			};
 			this.ventanaConfirmacionPasaje.getModelPasajeros().addRow(fila);
 		}
@@ -590,12 +592,13 @@ public class ControladorPasaje implements ActionListener{
 // SUMAMOS LOS PUNTOS DEL CLIENTE
 			if(pasajeAEditar.getEstadoDelPasaje().getDescripcion().equals("Vendido"))
 				calcularPuntos(pasajeAEditar.getCliente(),pasajeAEditar.getMontoAPagar());
-			
+				
 			this.ventanaPago.limpiarCampos();
 			this.ventanaPago.mostrarVentana(false);
 			this.ventanaVisualizarPasaje.mostrarVentana(false);
 				
-				reportePago();
+			reportePago();
+			this.llenarTablaPasajes();
 			}
 	}
 	
@@ -682,6 +685,7 @@ public class ControladorPasaje implements ActionListener{
 		this.llenarTablaDePasajeros();
 		this.ventanaPago.limpiarCampos();
 		mostrarVentanaComprobante();
+		this.llenarTablaPasajes();
 		
 	}
 
@@ -827,6 +831,17 @@ public class ControladorPasaje implements ActionListener{
 				this.ventanaVisualizarPasaje.getTxtMotivoCancelacion().setVisible(true);
 				this.ventanaVisualizarPasaje.getLblMotivoCancelacion().setVisible(true);
 				this.ventanaVisualizarPasaje.getTxtMotivoCancelacion().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getMotivoCancelacion());
+				this.ventanaVisualizarPasaje.getLblMontoAPagar().setVisible(false);
+				this.ventanaVisualizarPasaje.getTxtImporteDebePasaje().setVisible(false);
+				this.ventanaVisualizarPasaje.getBtnPagar().setVisible(false);
+				this.ventanaVisualizarPasaje.getBtnVerPagos().setVisible(false);
+				this.ventanaVisualizarPasaje.getBtnImprimirComprobante().setVisible(false);
+			}else{
+				this.ventanaVisualizarPasaje.getLblMontoAPagar().setVisible(true);
+				this.ventanaVisualizarPasaje.getTxtImporteDebePasaje().setVisible(true);
+				this.ventanaVisualizarPasaje.getBtnPagar().setVisible(true);
+				this.ventanaVisualizarPasaje.getBtnVerPagos().setVisible(true);
+				this.ventanaVisualizarPasaje.getBtnImprimirComprobante().setVisible(true);
 			}
 			
 			if(this.pasajes_en_tabla.get(filaSeleccionada).getEstadoDelPasaje().getIdEstadoPasaje()==1){
@@ -852,8 +867,11 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaTablaPagos.mostrarVentana(true);
 	}
 			
-	private void salirVentanaVisualizarPasaje(ActionEvent s) {
-		this.ventanaVisualizarPasaje.mostrarVentana(false);
+	private void imprimirComprobantePasaje(ActionEvent s) {
+		Reporte reporte = new Reporte();
+		Pagos_PasajeDTO pagoDTO = modeloPagos_pasaje.getPasajeById(pasajeAEditar.getIdPasaje());
+		reporte.reporteReserva(pagoDTO);
+		reporte.mostrar();
 	}
 
 	
@@ -875,7 +893,38 @@ public class ControladorPasaje implements ActionListener{
 		pasajeACancelar.setDateCancelacion(new Date(currenttime.getTime().getTime()));
 		modeloPasaje.editarPasaje(pasajeACancelar);
 		this.ventanaCancelacionPasaje.mostrarVentana(false);
+		this.llenarTablaPasajes();
 	}
+	
+	
+	
+	private void llenarTablaPasajes(){
+		this.vistaAdministrativo.getPanelPasaje().getModelReservas().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrativo.getPanelPasaje().getModelReservas().setColumnCount(0);
+		this.vistaAdministrativo.getPanelPasaje().getModelReservas().setColumnIdentifiers(this.vistaAdministrativo.getPanelPasaje().getNombreColumnasReservas());
+
+		this.pasajes_en_tabla = modeloPasaje.obtenerPasajes();
+			
+		for (int i = 0; i < this.pasajes_en_tabla.size(); i++){
+
+			Object[] fila = {
+							this.pasajes_en_tabla.get(i).getCliente().getDni(),
+							this.pasajes_en_tabla.get(i).getCliente().getNombre(),
+							this.pasajes_en_tabla.get(i).getCliente().getApellido(),
+							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
+							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
+							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
+							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
+							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
+							this.pasajes_en_tabla.get(i).getValorViaje(),
+							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
+							this.pasajes_en_tabla.get(i).getEstadoDelPasaje().getNombre()
+			};
+							this.vistaAdministrativo.getPanelPasaje().getModelReservas().addRow(fila);
+		}		
+	}
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

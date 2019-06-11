@@ -2,6 +2,9 @@ package presentacion.vista.administrativo;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -86,7 +89,7 @@ public class VentanaVisualizarClientes extends JFrame {
 			
 			JLabel lblFiltro = new JLabel("Filtro");
 			lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			lblFiltro.setBounds(429, 116, 33, 13);
+			lblFiltro.setBounds(392, 102, 70, 50);
 			getContentPane().add(lblFiltro);
 
 	}

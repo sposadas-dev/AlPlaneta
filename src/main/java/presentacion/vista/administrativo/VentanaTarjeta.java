@@ -19,7 +19,9 @@ public class VentanaTarjeta extends JFrame {
 
 	private JPanel contentPane;
 	private static VentanaTarjeta INSTANCE;
-	private JTextField textField;
+	private JTextField txtNumeroTarjeta;
+	private JMonthChooser mesChooser; 
+	private JYearChooser anioChooser;
 	
 	public static VentanaTarjeta getInstance(){
 		if(INSTANCE == null){	
@@ -43,30 +45,17 @@ public class VentanaTarjeta extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public VentanaTarjeta() {
 		setTitle("Ingreso de tarjeta");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 397, 326);
 		setLocationRelativeTo(null);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JMonthChooser monthChooser = new JMonthChooser();
-		monthChooser.getSpinner().setBounds(0, 0, 99, 20);
-		monthChooser.setBounds(23, 82, 99, 20);
-		contentPane.add(monthChooser);
-		monthChooser.setLayout(null);
-		
-		JYearChooser yearChooser = new JYearChooser();
-		yearChooser.setBounds(144, 82, 47, 20);
-		contentPane.add(yearChooser);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -77,20 +66,46 @@ public class VentanaTarjeta extends JFrame {
 		JLabel lblTarjeta = new JLabel("Tarjeta");
 		lblTarjeta.setForeground(Color.WHITE);
 		lblTarjeta.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblTarjeta.setBounds(156, 0, 128, 53);
+		lblTarjeta.setBounds(137, 0, 128, 53);
 		panel.add(lblTarjeta);
 		
-		textField = new JTextField();
-		textField.setBounds(23, 164, 227, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		txtNumeroTarjeta = new JTextField();
+		txtNumeroTarjeta.setBounds(23, 99, 227, 20);
+		contentPane.add(txtNumeroTarjeta);
+		txtNumeroTarjeta.setColumns(10);
 		
-		JLabel lblIngreseNumeroDe = new JLabel("Ingrese numero de tarjeta:");
-		lblIngreseNumeroDe.setBounds(23, 139, 202, 14);
+		JLabel lblIngreseNumeroDe = new JLabel("Ingrese número de tarjeta:");
+		lblIngreseNumeroDe.setBounds(23, 74, 202, 14);
 		contentPane.add(lblIngreseNumeroDe);
 		
 		JButton btnCargarDatos = new JButton("Cargar datos");
-		btnCargarDatos.setBounds(112, 211, 89, 23);
+		btnCargarDatos.setBounds(98, 233, 190, 34);
 		contentPane.add(btnCargarDatos);
+		
+		mesChooser = new JMonthChooser();
+		mesChooser.setBounds(33, 160, 135, 25);
+		contentPane.add(mesChooser);
+		
+		JLabel lblFechaVencimiento = new JLabel("Fecha de vencimiento:");
+		lblFechaVencimiento.setBounds(23, 141, 202, 14);
+		contentPane.add(lblFechaVencimiento);
+		
+		anioChooser = new JYearChooser();
+		anioChooser.setStartYear(2019);
+		anioChooser.setEndYear(2039);
+		anioChooser.setBounds(178, 160, 47, 25);
+		contentPane.add(anioChooser);
+	}
+	
+	public JTextField getTxtNumeroTarjeta() {
+		return txtNumeroTarjeta;
+	}
+
+	public JMonthChooser getMesChooser() {
+		return mesChooser;
+	}
+
+	public JYearChooser getAnioChooser() {
+		return anioChooser;
 	}
 }

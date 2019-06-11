@@ -43,7 +43,7 @@ import persistencia.dao.interfaz.ViajeDAO;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.VentanaClaveOlvidada;
 
-public class controladorDatosLogin {
+public class ControladorDatosLogin {
 	private VentanaClaveOlvidada ventanaClaveOlvidada;
 	private String mailRecuperacion;
 	private String mailDeRecuperacion;
@@ -56,7 +56,7 @@ public class controladorDatosLogin {
 	private Coordinador modeloCoordinador;
 	private EnvioDeCorreo envioDeCorreo;
 
-	public controladorDatosLogin() {
+	public ControladorDatosLogin() {
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
 		this.ventanaClaveOlvidada.getBtnRecuperarContrasena().addActionListener(r -> recuperarContrasena(r));
 
@@ -78,9 +78,9 @@ public class controladorDatosLogin {
 	private void recuperarContrasena(ActionEvent r) {
 		obtenerDatosDeRecuperacion();
 		if (cambioDeContrasena()) {
-			System.out.println("Se cambio la contrasena");
+			System.out.println("Se cambio la contraseña");
 			enviarContrasenaViaMail();
-			JOptionPane.showMessageDialog(null, "Se le ha enviado la nueva contrasena al mail", "Mensaje",
+			JOptionPane.showMessageDialog(null, "Se le ha enviado la nueva contraseña al mail", "Mensaje",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
@@ -123,7 +123,7 @@ public class controladorDatosLogin {
 	}
 
 	private void enviarContrasenaViaMail() {
-		this.envioDeCorreo.enviarNuevaContrasena(mailDeRecuperacion, contrasenaProvisoria,"Recuperacion de Contrasena");
+		this.envioDeCorreo.enviarNuevaContrasena(mailDeRecuperacion, contrasenaProvisoria,"Recuperación de contraseña");
 		this.ventanaClaveOlvidada.setVisible(false);
 	}
 

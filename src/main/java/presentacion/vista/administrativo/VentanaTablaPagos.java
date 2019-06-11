@@ -15,6 +15,8 @@ import java.awt.Color;
 
 import javax.swing.JLabel;
 
+import presentacion.vista.cliente.VentanaReservas;
+
 import java.awt.Font;
 
 public class VentanaTablaPagos extends JFrame {
@@ -24,14 +26,14 @@ public class VentanaTablaPagos extends JFrame {
 	private DefaultTableModel modelPagos;
 	private String[] nombreColumnas = {"Fecha de pago","Monto pagado","Forma de pago","Atendido por"};
 	
-	private static VentanaTablaPagos INSTANCE;
+	private static VentanaTablaPagos ventanaTablaPagos;
 	
 	public static VentanaTablaPagos getInstance(){
-		if(INSTANCE == null){	
-			INSTANCE = new VentanaTablaPagos();
-			return INSTANCE;
-		}else{
-			return INSTANCE;
+		if (ventanaTablaPagos == null) {
+			ventanaTablaPagos = new VentanaTablaPagos();
+			return ventanaTablaPagos;
+		} else {
+			return ventanaTablaPagos;
 		}
 	}
 	
@@ -87,6 +89,7 @@ public class VentanaTablaPagos extends JFrame {
 	}
 	
 	public void mostrarVentana(boolean visibilidad){
+		System.out.println("mostrar");
 		this.setVisible(visibilidad);
 	}
 }

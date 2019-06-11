@@ -70,7 +70,7 @@ public class ControladorAdministrativo implements ActionListener {
 	private int filaSeleccionada;
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
-	private controladorDatosLogin controladorDatosLogin;
+	private ControladorDatosLogin controladorDatosLogin;
 
 	private static ControladorAdministrativo INSTANCE;
 	
@@ -205,7 +205,7 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado, this.eventos_en_tabla);
 		
         controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
-        controladorDatosLogin = new controladorDatosLogin();
+        controladorDatosLogin = new ControladorDatosLogin();
 
 	}
 
@@ -244,6 +244,7 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	public void inicializar(){
 		this.vista.mostrarVentana();
+		this.llenarTablaClientes();
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 		controladorEvento.controlarNotificacionesInicioSesion();
 		controladorEvento.controlarNotificacionesContinuo();
@@ -290,7 +291,6 @@ public class ControladorAdministrativo implements ActionListener {
 				);
 		ClienteDTO clienteEditable = new ClienteDTO(idCliente, nombreCliente, apellidoCliente, dniCliente, fechaNacimientoCliente, medioContactoCliente, loginCliente);
 		controladorCliente.editarCliente(clienteEditable);
-		
 		this.llenarTablaClientes();
 		}else{
 			JOptionPane.showMessageDialog(null, "Verifique los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
@@ -348,9 +348,10 @@ public class ControladorAdministrativo implements ActionListener {
 	private void mostrarVentanaAgregarPasaje(ActionEvent ap) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
+		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
 		this.ventanaVisualizarCliente.mostrarVentana(true);
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
-		
 		controladorPasaje.iniciar();
 	}
 	
@@ -518,6 +519,8 @@ public class ControladorAdministrativo implements ActionListener {
 	private void mostrarVentanaAgregarCliente(ActionEvent ac)  {
 		this.vista.getPanelCliente().mostrarPanelCliente(true);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
+		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
 		this.llenarTablaClientes();
 		this.ventanaRegistrarCliente.limpiarCampos();
 		this.ventanaCliente.limpiarCampos();
@@ -541,6 +544,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelPromocion().mostrarPanelPromocion(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
 		this.llenarTablaPromociones();
 		this.ventanaPromocion.limpiarCampos();
 		this.ventanaPromocion.mostrarVentana();
