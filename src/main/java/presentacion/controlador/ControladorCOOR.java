@@ -5,37 +5,33 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import dto.AdministrativoDTO;
 import dto.CoordinadorDTO;
-import dto.PuntoDTO;
+import dto.RegimenPuntoDTO;
 import modelo.Coordinador;
-import modelo.Punto;
-
-
+import modelo.modeloRegimenPunto;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.coordinador.VistaCoordinador;
 
 public class ControladorCOOR {
 	
 	private VistaCoordinador vistaCoordinador;
-	private List<PuntoDTO> puntos_en_tabla;
+	
+	private List<RegimenPuntoDTO> puntos_en_tabla;
 	
 	private CoordinadorDTO coordinadorLogueado;
 	private Coordinador coordinador;
-	private Punto punto;
+	private modeloRegimenPunto punto;
 	
 	private ControladorRegimenPuntos controladorRegimenPuntos;
 	
-	
-	//________________________________________
-	
-	
 	public ControladorCOOR(VistaCoordinador vistaCoordinador,CoordinadorDTO coordinadorLogueado){
+
 		this.vistaCoordinador = vistaCoordinador;
-//INSTANCES		
+
+//INSTANCES
+		
 
 //MENU ITEMS		
-
 		this.vistaCoordinador.getItemAgregarRegimenPuntos().addActionListener(a->agregarPanelRegimenPuntos(a));
 		this.vistaCoordinador.getItemVisualizarRegimenPuntos().addActionListener(vRP->visualizarRegimenPuntos(vRP));
 		this.vistaCoordinador.getItemEditarRegimenPuntos().addActionListener(eRP->editarRegimenPuntos(eRP));
@@ -45,7 +41,7 @@ public class ControladorCOOR {
 	
 
 		this.coordinador = new Coordinador(new DAOSQLFactory());
-		this.punto = new Punto(new DAOSQLFactory()); 
+		this.punto = new modeloRegimenPunto(new DAOSQLFactory()); 
 		this.coordinadorLogueado = coordinadorLogueado;
 	
 //CONTROLADORES		
@@ -62,14 +58,17 @@ public class ControladorCOOR {
 	//------------------------------REgimen Puntos-------------------------------------------------
 	
 	private void visualizarRegimenPuntos(ActionEvent vfp) {
-		this.vistaCoordinador.getPanelRegimenPuntos().mostrarPanelRegimenPuntos(true);
-	
-		this.llenarTablaRegimenPuntos();
+		mostrarVentanaPuntosConValores();
+		
 	}
+	private void mostrarVentanaPuntosConValores() {
+		this.controladorRegimenPuntos.mostrarVentanaRegimenPuntos();
+	}
+
 	/*Agrega el panel de RegimenPuntos en la vistaPrinciapal del coordinador*/ 
 	private void agregarPanelRegimenPuntos(ActionEvent afp) {
 		this.vistaCoordinador.getPanelRegimenPuntos().mostrarPanelRegimenPuntos(true);
-		controladorRegimenPuntos.mostrarVentanaRegistroRegimenPuntos();
+		controladorRegimenPuntos.mostrarVentanaRegistroRegimenPuntosConDarAlta();
 	}
 	
 	private void editarRegimenPuntos(ActionEvent efp) {

@@ -39,7 +39,7 @@ import modelo.Pagos_Pasaje;
 import modelo.Pasaje;
 import modelo.Pasaje_Pasajeros;
 import modelo.Pasajero;
-import modelo.Punto;
+import modelo.modeloRegimenPunto;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.reportes.Reporte;
 import presentacion.vista.administrativo.VentanaCancelacionPasaje;
@@ -488,53 +488,64 @@ public class ControladorPasaje implements ActionListener{
 	}
 	
 	private void darAltaDelPago(ActionEvent cp)  {
+// Validar que se haya seleccionado una forma de pago 
 			FormaPago f = new FormaPago(new DAOSQLFactory());
 			this.ventanaPago.getRadioReservaSinPagar().setVisible(true);
 			
 			FormaPagoDTO formaPago = f.getFormaPagoByName(ventanaPago.getComboBoxFormaPago().getSelectedItem().toString());
 			Calendar currenttime = Calendar.getInstance();
+			
 			pagoDTO = new PagoDTO();	
 			pagoDTO.setIdFormaPago(formaPago);
 			pagoDTO.setAdministrativo(administrativoLogueado);
-			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));
+			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
 			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
+			
+			
 	
 			if (editarPago){
 				this.ventanaPago.setVisible(false);
 				mostrarVentanaConfirmacionPasaje();
-			}else{
+			}else{ 
+
 				modeloPago.agregarPago(pagoDTO);
-			
-			pagos_pasajeDTO = new Pagos_PasajeDTO();
-			PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
-			pagos_pasajeDTO.setPago(pagoPasaje);
-			pagos_pasajeDTO.setPasaje(pasajeAEditar);
-			modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
-	
-			pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
-			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
-			
-			modeloPasaje.editarPasaje(pasajeAEditar);
-// SUMAMOS LOS PUNTOS DEL CLIENTE
-			if(pasajeAEditar.getEstadoDelPasaje().getDescripcion().equals("Vendido"))
-				calcularPuntos(pasajeAEditar.getCliente(),pasajeAEditar.getMontoAPagar());
-			
-			this.ventanaPago.limpiarCampos();
-			this.ventanaPago.mostrarVentana(false);
-			this.ventanaVisualizarPasaje.mostrarVentana(false);
+
+				pagos_pasajeDTO = new Pagos_PasajeDTO();
+				PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
+				pagos_pasajeDTO.setPago(pagoPasaje);
+				pagos_pasajeDTO.setPasaje(pasajeAEditar);
+				modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
+		
+				pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
+				pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
 				
+				modeloPasaje.editarPasaje(pasajeAEditar);
+
+				this.ventanaPago.limpiarCampos();
+				this.ventanaPago.mostrarVentana(false);
+				this.ventanaVisualizarPasaje.mostrarVentana(false);
 				reportePago();
 			}
 	}
 	
-	private void calcularPuntos(ClienteDTO cliente2, BigDecimal montoAPagar) {
-		Punto modeloPuntos = new Punto(new DAOSQLFactory());
+	private void calcularPuntos(ClienteDTO cliente, BigDecimal montoAPagar) {
+		modeloRegimenPunto modeloPuntos = new modeloRegimenPunto(new DAOSQLFactory());
         String[] parts = montoAPagar.toString().split("\\.");
         Integer parteEntera= Integer.parseInt(parts[0]);
         Integer parteDecimal= Integer.parseInt(parts[1]);
-		
-//		cliente2.setPuntos(parteEntera*modeloPuntos.get);
-        //TODO: calcular puntos S
+        Calendar calendar = Calendar.getInstance();
+        java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
+        System.out.println(ourJavaDateObject.toString());
+        //TODO:http://javaeefuncional.blogspot.com/2015/11/sumar-dias-una-fecha-date-in-java.html
+        /*
+         * Calendar cal = Calendar.getInstance(); 
+                 cal.setTime(yourDAte); 
+                 cal.add(Calendar.MONTH, 5);
+                 nuevaFecha = cal.getTime();
+         */
+        
+        
+        
 	}
 
 
@@ -571,7 +582,6 @@ public class ControladorPasaje implements ActionListener{
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
 		
 		viajeDTO.setCapacidad(viajeSeleccionado.getCapacidad()-pasajeros.size()); //Restamos la capacidad del viaje segun la cantidad de pasajeros
-		//Modelo viaje
 		modeloViaje.editarViaje(viajeDTO);
 		modeloPago.agregarPago(pagoDTO);
 		
@@ -603,6 +613,8 @@ public class ControladorPasaje implements ActionListener{
 			
 			modeloPasajes_pasajeros.agregarPasajePasajero(pasaje_pasajeros);
 		}
+		verificarSumaDePuntosDeCliente(pasajeDTO);
+		
 		
 		generarVoucherMail(pasajeDTO,cliente);
 		this.ventanaConfirmacionPasaje.setVisible(false);
@@ -611,6 +623,11 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPago.limpiarCampos();
 		mostrarVentanaComprobante();
 		
+	}
+
+	private void verificarSumaDePuntosDeCliente(PasajeDTO pasajeDTO2) {
+		if(pasajeDTO.getEstadoDelPasaje().getDescripcion().equals("Vendido"))
+			calcularPuntos(pasajeDTO.getCliente(),pasajeDTO.getMontoAPagar());		
 	}
 
 	public Date calcularFechaReserva(Date fechaSalida){
@@ -701,8 +718,8 @@ public class ControladorPasaje implements ActionListener{
 	
 	private void generarVoucherMail(PasajeDTO pasaje,ClienteDTO cliente){			
 		this.pdf.createPDF(pasaje, cliente);//(pasaje,cliente); // se crea el pdf en resource				
-		//	TODO: this.envioCorreo.enviarAdjunto(cliente.getMail());				
-//		this.envioCorreo.enviarAdjunto(cliente.getMail());				
+//			TODO: this.envioCorreo.enviarAdjunto(cliente.getMail());				
+		this.envioCorreo.enviarAdjunto(cliente.getMail());				
 	}
 	
 	private void reportePago(){
@@ -738,6 +755,7 @@ public class ControladorPasaje implements ActionListener{
 			this.ventanaVisualizarPasaje.getTxtImporteDebePasaje().setText(""+this.pasajes_en_tabla.get(filaSeleccionada).getMontoAPagar());
 			this.ventanaVisualizarPasaje.getTxtMotivoCancelacion().setVisible(false);
 			this.ventanaVisualizarPasaje.getLblMotivoCancelacion().setVisible(false);
+		
 			llenarTablaPagos(pasajes_en_tabla.get(filaSeleccionada).getIdPasaje());
 			pagarPasaje(filaSeleccionada);
 			

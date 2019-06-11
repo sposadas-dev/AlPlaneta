@@ -2,47 +2,31 @@ package dto;
 import java.sql.Date;
 public class PuntoDTO {
 	
-	private int idPuntos;
-	private int punto;
-	private int ARS;
+	private int idPunto;
+	private int puntos;
 	private Date vencimiento;
 
-	public PuntoDTO(int idPunto, int punto, int ARS, Date vencimiento) {
+	public PuntoDTO(int idPunto, int puntos, Date vencimiento) {
 		super();
-		this.idPuntos = idPunto;
-		this.punto = punto;
-		this.ARS = ARS;
+		this.idPunto = idPunto;
+		this.puntos = puntos;
 		this.vencimiento = vencimiento;
-		
-	}
-
-
-	public int getPunto() {
-		return punto;
-	}
-
-	public void setPunto(int punto) {
-		this.punto = punto;
-	}
-
-	public PuntoDTO() {
-		super();
 	}
 
 	public int getIdPunto() {
-		return idPuntos;
+		return idPunto;
 	}
 
 	public void setIdPunto(int idPunto) {
-		this.idPuntos = idPunto;
+		this.idPunto = idPunto;
 	}
 
-	public int getARS() {
-		return ARS;
+	public int getPuntos() {
+		return puntos;
 	}
 
-	public void setARS(int aRS) {
-		ARS = aRS;
+	public void setPuntos(int puntos) {
+		this.puntos = puntos;
 	}
 
 	public Date getVencimiento() {
@@ -52,7 +36,4 @@ public class PuntoDTO {
 	public void setVencimiento(Date vencimiento) {
 		this.vencimiento = vencimiento;
 	}
-
-	
-
 }

@@ -16,31 +16,27 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-public class VentanaRegistroRegimenPuntos  extends JFrame {
-	
-	
-	/**
-	 * 
-	 */
+public class VentanaMostrarRegimenPuntos  extends JFrame {
+
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtCantPuntos;
 	private JTextField textARS;
-	private JButton btnRegistrar;
+	private JButton btnModificar;
 	private JButton btnCancelar;
-	private static VentanaRegistroRegimenPuntos INSTANCE;
+	private static VentanaMostrarRegimenPuntos INSTANCE;
 	private JTextField vencimiento;
 	
 	
 
-	public static VentanaRegistroRegimenPuntos getInstance(){
+	public static VentanaMostrarRegimenPuntos getInstance(){
 		if(INSTANCE == null)
-			return new VentanaRegistroRegimenPuntos();
+			return new VentanaMostrarRegimenPuntos();
 		else
 			return INSTANCE;
 	}
 	
-	public VentanaRegistroRegimenPuntos() {
+	public VentanaMostrarRegimenPuntos() {
 		
 		setTitle("Registro de Regimen de Puntos");
 		setResizable(false);
@@ -74,6 +70,7 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 		txtCantPuntos.setBounds(119, 64, 86, 20);
 		contentPane.add(txtCantPuntos);
 		txtCantPuntos.setColumns(10);
+		txtCantPuntos.setEditable(false);
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setForeground(Color.WHITE);
@@ -82,12 +79,12 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 		btnCancelar.setBounds(206, 177, 131, 42);
 		contentPane.add(btnCancelar);
 		
-		btnRegistrar = new JButton("Registrar ");
-		btnRegistrar.setForeground(Color.WHITE);
-		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnRegistrar.setBackground(new Color(5, 196, 107));
-		btnRegistrar.setBounds(47, 177, 131, 42);
-		contentPane.add(btnRegistrar);
+		btnModificar = new JButton("Modificar");
+		btnModificar.setForeground(Color.WHITE);
+		btnModificar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnModificar.setBackground(new Color(5, 196, 107));
+		btnModificar.setBounds(47, 177, 131, 42);
+		contentPane.add(btnModificar);
 		
 		JLabel lblARS = new JLabel("ARS");
 		lblARS.setFont(new Font("Times New Roman", Font.BOLD, 13));
@@ -98,6 +95,7 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 		textARS.setBounds(119, 89, 86, 20);
 		contentPane.add(textARS);
 		textARS.setColumns(10);
+		textARS.setEditable(false);
 		
 		JLabel lblVencimiento = new JLabel("Vencimiento");
 		lblVencimiento.setFont(new Font("Times New Roman", Font.BOLD, 13));
@@ -108,6 +106,9 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 		vencimiento.setColumns(10);
 		vencimiento.setBounds(119, 111, 86, 20);
 		contentPane.add(vencimiento);
+		vencimiento.setEditable(false);
+		
+		
 	}
 
 	public JTextField getVencimiento() {
@@ -119,7 +120,7 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 	}
 
 	public JButton getBtnRegistrar() {
-		return btnRegistrar;
+		return btnModificar;
 	}
 
 	public JTextField getTxtCantPuntos() {
@@ -139,7 +140,7 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 	}
 
 	public void setBtnRegistrar(JButton btnRegistrar) {
-		this.btnRegistrar = btnRegistrar;
+		this.btnModificar = btnRegistrar;
 	}
 
 	public void setBtnCancelar(JButton btnCancelar) {
@@ -155,7 +156,7 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 	}
 	
 	public JButton getBtnAgregar() {
-		return btnRegistrar;
+		return btnModificar;
 	}
 
 	public JButton getBtnCancelar() {

@@ -2,18 +2,18 @@ package persistencia.dao.interfaz;
 
 import java.util.List;
 
-import dto.PuntoDTO;
+import dto.RegimenPuntoDTO;
 
 public interface PuntoDAO {
 	
-	public boolean insert(PuntoDTO punto);
+	public boolean insert(RegimenPuntoDTO punto);
 
-	public boolean delete(PuntoDTO punto_a_eliminar);
+	public boolean delete(RegimenPuntoDTO punto_a_eliminar);
 	
-	public List<PuntoDTO> readAll();
+	public List<RegimenPuntoDTO> readAll();
 
-	public boolean update(PuntoDTO punto);
+	public boolean update(RegimenPuntoDTO punto);
 	
-	public PuntoDTO getPuntoById(int id);
+	public RegimenPuntoDTO getPuntoById(int id);
 
 }

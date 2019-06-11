@@ -8,13 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dto.PuntoDTO;
+import dto.RegimenPuntoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.PuntoDAO;
 
 public class PuntoDAOSQL implements PuntoDAO{
-	
-	
 	
 	private static final String insert = "INSERT INTO punto(idPunto, punto, ARS, vencimiento ) VALUES (?,?, ?, ?)";
 	private static final String delete = "DELETE FROM punto WHERE idPunto = ?";
@@ -23,7 +21,7 @@ public class PuntoDAOSQL implements PuntoDAO{
 	private static final String browse = "SELECT * FROM punto WHERE idPunto = ?";
 	
 	@Override
-	public boolean insert(PuntoDTO punto) {
+	public boolean insert(RegimenPuntoDTO punto) {
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
@@ -31,7 +29,7 @@ public class PuntoDAOSQL implements PuntoDAO{
 			statement.setInt(1, punto.getIdPunto());
 			statement.setInt(2, punto.getPunto());
 			statement.setInt(3, punto.getARS());
-			statement.setDate(4, punto.getVencimiento());
+			statement.setInt(4, punto.getVencimiento());
 
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -43,7 +41,7 @@ public class PuntoDAOSQL implements PuntoDAO{
 	}
 	
 	@Override
-	public boolean delete(PuntoDTO punto_a_eliminar) {
+	public boolean delete(RegimenPuntoDTO punto_a_eliminar) {
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
@@ -60,20 +58,20 @@ public class PuntoDAOSQL implements PuntoDAO{
 		return false;
 	}
 	@Override
-	public List<PuntoDTO> readAll() {
+	public List<RegimenPuntoDTO> readAll() {
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
 		Conexion conexion = Conexion.getConexion();
-		ArrayList<PuntoDTO> puntos = new ArrayList<PuntoDTO>();
+		ArrayList<RegimenPuntoDTO> puntos = new ArrayList<RegimenPuntoDTO>();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-				puntos.add(new PuntoDTO(resultSet.getInt("idPunto"),
+				puntos.add(new RegimenPuntoDTO(resultSet.getInt("idPunto"),
 												  resultSet.getInt("punto"),
 												  resultSet.getInt("ARS"),
-												  resultSet.getDate("vencimiento")));
+												  resultSet.getInt("vencimiento")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -81,7 +79,7 @@ public class PuntoDAOSQL implements PuntoDAO{
 		return puntos;
 	}
 	@Override
-	public boolean update(PuntoDTO punto_a_editar) {
+	public boolean update(RegimenPuntoDTO punto_a_editar) {
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
@@ -89,7 +87,7 @@ public class PuntoDAOSQL implements PuntoDAO{
 			statement = conexion.getSQLConexion().prepareStatement(update);
 			statement.setInt(1, punto_a_editar.getPunto());
 			statement.setInt(2,punto_a_editar.getARS());
-			statement.setDate(3, punto_a_editar.getVencimiento());
+			statement.setInt(3, punto_a_editar.getVencimiento());
 			statement.setInt(4, punto_a_editar.getIdPunto()); 
 			
 			
@@ -103,22 +101,22 @@ public class PuntoDAOSQL implements PuntoDAO{
 		return false; 
 	}
 	@Override
-	public PuntoDTO getPuntoById(int idPunto ){
+	public RegimenPuntoDTO getPuntoById(int idPunto ){
 		
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
-		PuntoDTO punto;
+		RegimenPuntoDTO punto;
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browse);
 			statement.setInt(1, idPunto);
 			resultSet = statement.executeQuery();
 			
 			if(resultSet.next()){
-				punto = new PuntoDTO(resultSet.getInt("idPunto"),
+				punto = new RegimenPuntoDTO(resultSet.getInt("idPunto"),
 											   resultSet.getInt("punto"),
 											   resultSet.getInt("ARS"),
-											   resultSet.getDate("vencimiento")
+											   resultSet.getInt("vencimiento")
 											   );
 				return punto;
 			}

@@ -26,20 +26,7 @@ public class VentanaModificarRegimenPuntos extends JFrame{
 	private JLabel lblArs;
 	private JTextField textARS;
 	private JLabel lblVencimiento;
-	
-	private JDateChooser dateVencimiento;
-
-	public JDateChooser getDateVencimiento() {
-		return dateVencimiento;
-	}
-
-	public void setDateVencimiento(JDateChooser dateVencimiento) {
-		this.dateVencimiento = dateVencimiento;
-	}
-
-	public void setTxtcantPuntos(JTextField txtcantPuntos) {
-		this.txtCantPuntos = txtcantPuntos;
-	}
+	private JTextField vencimiento;
 
 	public static VentanaModificarRegimenPuntos getInstance(){
 		if(INSTANCE == null)
@@ -111,9 +98,10 @@ public class VentanaModificarRegimenPuntos extends JFrame{
 		lblVencimiento.setBounds(20, 114, 74, 14);
 		contentPane.add(lblVencimiento);
 		
-		dateVencimiento = new JDateChooser();
-		dateVencimiento.setBounds(114, 117, 114, 20);
-		contentPane.add(dateVencimiento);
+		vencimiento = new JTextField();
+		vencimiento.setColumns(10);
+		vencimiento.setBounds(114, 111, 86, 20);
+		contentPane.add(vencimiento);
 	}
 	
 	
@@ -140,6 +128,14 @@ public class VentanaModificarRegimenPuntos extends JFrame{
 
 	public void setTextARS(JTextField textARS) {
 		this.textARS = textARS;
+	}
+
+	public JTextField getVencimiento() {
+		return vencimiento;
+	}
+
+	public void setVencimiento(JTextField vencimiento) {
+		this.vencimiento = vencimiento;
 	}
 
 	public JLabel getLblVencimiento() {
@@ -174,6 +170,10 @@ public class VentanaModificarRegimenPuntos extends JFrame{
 
 	public void setBtnModificar(JButton btnModificar) {
 		this.btnModificar = btnModificar;
+	}
+	
+	public void setTxtcantPuntos(JTextField txtcantPuntos) {
+		this.txtCantPuntos = txtcantPuntos;
 	}
 
 	public void limpiarCampos(){
