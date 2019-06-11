@@ -36,11 +36,12 @@ import presentacion.vista.administrativo.VentanaRegistrarPromocion;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import recursos.Mapper;
 
 public class ControladorAdministrativo implements ActionListener {
 
 	private VistaAdministrativo vista;
-
+	private Mapper mapper;
 	private VentanaRegistrarCliente ventanaCliente;
 	private VentanaRegistrarEvento ventanaEvento;
 	private VentanaRegistrarPromocion ventanaPromocion;
@@ -84,6 +85,7 @@ public class ControladorAdministrativo implements ActionListener {
 	public ControladorAdministrativo(VistaAdministrativo vista,AdministrativoDTO administrativoLogueado) {
 	
 		this.vista = vista;
+		this.mapper = new Mapper();
 		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaEvento = VentanaRegistrarEvento.getInstance(); 
 		this.ventanaEditarEvento = VentanaEditarEvento.getInstance();
@@ -670,7 +672,7 @@ public class ControladorAdministrativo implements ActionListener {
 			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
 							 this.clientes_en_tabla.get(i).getApellido(),
 							 this.clientes_en_tabla.get(i).getDni(),
-							 this.clientes_en_tabla.get(i).getFechaNacimiento(),
+							 this.mapper.parseToString(this.clientes_en_tabla.get(i).getFechaNacimiento()),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getEmail(),
@@ -699,8 +701,8 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+							this.mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+							this.mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
 							this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
@@ -726,8 +728,8 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+							this.mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+							this.mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
 							this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
@@ -747,8 +749,8 @@ public class ControladorAdministrativo implements ActionListener {
 		for (int i = 0; i < tabla.size(); i++){
 
 			Object[] fila = {
-							tabla.get(i).getFechaIngreso(),
-							tabla.get(i).getFechaEvento(),
+							this.mapper.parseToString(tabla.get(i).getFechaIngreso()),
+							this.mapper.parseToString(tabla.get(i).getFechaEvento()),
 							tabla.get(i).getHoraEvento(),
 							tabla.get(i).getDescripcion(),
 							tabla.get(i).getCliente().getApellido(),
@@ -780,7 +782,7 @@ public class ControladorAdministrativo implements ActionListener {
 			Object[] fila = {
 							this.promociones_en_tabla.get(i).getPorcentaje()+" %",
 							this.promociones_en_tabla.get(i).getStock(),
-							this.promociones_en_tabla.get(i).getFechaVencimiento(),
+							this.mapper.parseToString(this.promociones_en_tabla.get(i).getFechaVencimiento()),
 							this.promociones_en_tabla.get(i).getEstado()
 			};
 							this.vista.getPanelPromocion().getModelPromocion().addRow(fila);
