@@ -64,7 +64,6 @@ public class VentanaLogin extends JFrame {
 	public VentanaLogin() {
 		setTitle("Login");
 		setResizable(false);
-//		setIconImage(Toolkit.getDefaultToolkit().getImage(VentanaLogin.class.getResource("/recursos/viaje.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 420, 420);
 		setLocationRelativeTo(null);

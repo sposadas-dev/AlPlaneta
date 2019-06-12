@@ -333,6 +333,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	/*El personal administrativo debe seleccionar un cliente*/
 	private void confirmarSeleccionCliente(ActionEvent c) {
+		this.pasajeros_en_reserva.clear();
 		int filaSeleccionada = this.ventanaVisualizarClientes.getTablaClientes().getSelectedRow();
 		if (filaSeleccionada != -1){
 			this.ventanaVisualizarClientes.mostrarVentana(false);

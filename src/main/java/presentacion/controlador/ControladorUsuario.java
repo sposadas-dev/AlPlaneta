@@ -288,7 +288,7 @@ public class ControladorUsuario implements ActionListener {
 			if(pagos.get(i).getPasaje().getIdPasaje() == idPasaje){
 				Object[] fila = { 
 						mapper.parseToString(pagos.get(i).getPago().getFechaPago()),
-						pagos.get(i).getPago().getMonto(),
+						"$ "+pagos.get(i).getPago().getMonto(),
 						pagos.get(i).getPago().getIdFormaPago().getTipo(),
 						pagos.get(i).getPago().getAdministrativo().getNombre() 
 				
