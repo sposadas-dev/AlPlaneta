@@ -14,6 +14,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import persistencia.conexion.Conexion;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class VistaAdministrativo{
 	
@@ -50,6 +52,10 @@ public class VistaAdministrativo{
 	
 	private static VistaAdministrativo vistaAdministrativo;
 	private JMenuItem itemRestablecerContrasena;
+	private Component horizontalGlue;
+	private JMenu menuUsuarioLogueado;
+	private JMenuItem itemDatosPersonales;
+	private JMenuItem itemSalir;
 
 	public static VistaAdministrativo getInstance(){
 		if(vistaAdministrativo == null){	
@@ -119,15 +125,15 @@ public class VistaAdministrativo{
 		itemEditarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemEditarCliente);
 
-		itemActivarCliente = new JMenuItem("Activar Cliente");
+		itemActivarCliente = new JMenuItem("Activar cliente");
 		itemActivarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemActivarCliente);
 
-		itemDesactivarClientes = new JMenuItem("Desactivar Cliente");
+		itemDesactivarClientes = new JMenuItem("Desactivar cliente");
 		itemDesactivarClientes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemDesactivarClientes);
 		
-		itemRestablecerContrasena = new JMenuItem("Restablecer Contraseña");
+		itemRestablecerContrasena = new JMenuItem("Restablecer contraseña");
 		itemRestablecerContrasena.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemRestablecerContrasena);
 		
@@ -188,6 +194,18 @@ public class VistaAdministrativo{
 		itemEditarEstadoPromocion = new JMenuItem("Modificar estado");
 		itemEditarEstadoPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPromociones.add(itemEditarEstadoPromocion);
+		
+		horizontalGlue = Box.createHorizontalGlue();
+		menuBar.add(horizontalGlue);
+		
+		menuUsuarioLogueado = new JMenu(" ");
+		menuBar.add(menuUsuarioLogueado);
+		
+		itemDatosPersonales = new JMenuItem("Mis datos");
+		menuUsuarioLogueado.add(itemDatosPersonales);
+		
+		itemSalir = new JMenuItem("Salir");
+		menuUsuarioLogueado.add(itemSalir);
 	
 		JLabel labelMarcaDeAgua = new JLabel("");
 		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
@@ -195,6 +213,18 @@ public class VistaAdministrativo{
 		frame.getContentPane().add(labelMarcaDeAgua);
 	}
 	
+	public JMenu getMenuUsuarioLogueado() {
+		return menuUsuarioLogueado;
+	}
+
+	public JMenuItem getItemDatosPersonales() {
+		return itemDatosPersonales;
+	}
+
+	public JMenuItem getItemSalir() {
+		return itemSalir;
+	}
+
 	public JFrame getFrame() {
 		return frame;
 	}

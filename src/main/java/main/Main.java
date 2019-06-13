@@ -24,5 +24,4 @@ public class Main {
 		ControladorLogin controladorLogin = new ControladorLogin(ventanaLogin, login);
 		controladorLogin.iniciar();
 	}
-	
 }		

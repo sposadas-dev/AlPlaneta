@@ -68,13 +68,14 @@ public class ControladorCliente implements ActionListener{
 		/* Filtros */
 		this.ventanaRegistrarCliente.getTxtNombre().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
-					char letra = e.getKeyChar();
+				char letra = e.getKeyChar();
 					if(Character.isDigit(letra)) {
 						Toolkit.getDefaultToolkit().beep();
 						e.consume();
 					}
 			}
 		});
+	
 		this.ventanaRegistrarCliente.getTxtApellido().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
