@@ -5,6 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +29,7 @@ import presentacion.vista.administrativo.PanelCliente;
 import presentacion.vista.administrativo.VentanaEditarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import recursos.Mapper;
 
 public class ControladorCliente implements ActionListener{
 	private VistaAdministrativo vistaAdministrativo;
@@ -30,12 +37,14 @@ public class ControladorCliente implements ActionListener{
 	private VentanaEditarCliente ventanaEditarCliente;
 	private PanelCliente panelCliente;
 	private List<ClienteDTO> clientes_en_tabla;
+	private List<ClienteDTO> clientes_aux;
 	private String contrasenaProvisoria;
 
 	private Cliente cliente;
 	private MedioContacto medioContacto; 
 	private Login Modelologin;
 	private EnvioDeCorreo enviodeCorreo;
+	private Mapper mapper;
 	
 	public ControladorCliente() {
 		super();
@@ -47,12 +56,14 @@ public class ControladorCliente implements ActionListener{
 		this.cliente = cliente;
 		this.contrasenaProvisoria = null;
 		this.enviodeCorreo = new EnvioDeCorreo();
+		this.mapper = new Mapper();
 		
 		this.medioContacto =  new MedioContacto(new DAOSQLFactory());
 		this.Modelologin = new Login(new DAOSQLFactory());
 		this.panelCliente = new PanelCliente();
 		this.ventanaRegistrarCliente.getBtnRegistrar().addActionListener(rc->registrarCliente(rc));
 		this.ventanaRegistrarCliente.getBtnCancelar().addActionListener(cv->cerrarVentanaCliente(cv));
+		this.vistaAdministrativo = VistaAdministrativo.getInstance();
 		
 		/* Filtros */
 		this.ventanaRegistrarCliente.getTxtNombre().addKeyListener(new KeyAdapter(){            
@@ -113,7 +124,7 @@ public class ControladorCliente implements ActionListener{
 		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
 		java.util.Date dateFechaNacimiento = ventanaRegistrarCliente.getDateFechaNacimiento().getDate();
 		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
-	
+		
 		/*Obtenemos el medio de contacto del cliente*/
 		MedioContactoDTO mContacto = new MedioContactoDTO();
 		mContacto.setTelefonoFijo(this.ventanaRegistrarCliente.getTxtTelefonoFijo().getText());
@@ -270,27 +281,70 @@ public class ControladorCliente implements ActionListener{
 		}
 	/*------------------------------Fin de validaciones al editar cliente-------------------------------------------/*/
 
-	
-	
-	private void llenarTablaClientes(){
-		panelCliente.getModelClientes().setRowCount(0); //Para vaciar la tabla
-		panelCliente.getModelClientes().setColumnCount(0);
-		panelCliente.getModelClientes().setColumnIdentifiers(this.panelCliente.getNombreColumnasClientes());
+	public void llenarTablaClientes(){
+		System.out.println("registrooo");
+		boolean activos = this.vistaAdministrativo.getPanelCliente().getActivos().isSelected();
+		boolean inactivos = this.vistaAdministrativo.getPanelCliente().getInactivos().isSelected();
+		
+		this.vistaAdministrativo.getPanelCliente().getModelClientes().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrativo.getPanelCliente().getModelClientes().setColumnCount(0);
+		this.vistaAdministrativo.getPanelCliente().getModelClientes().setColumnIdentifiers(this.vistaAdministrativo.getPanelCliente().getNombreColumnasClientes());
 			
-		this.clientes_en_tabla = cliente.obtenerClientes();
-			
+		this.clientes_en_tabla = new ArrayList<ClienteDTO>();
+		this.clientes_aux = cliente.obtenerClientes();
+
+		if(activos == true && inactivos == false) {
+			for (ClienteDTO cliente : this.clientes_aux) {
+				if (cliente.getLogin().getEstado().equals("activo")) {
+					this.clientes_en_tabla.add(cliente);
+				}
+			}
+		}else if(inactivos == true && activos == false) {
+			for(ClienteDTO cliente : this.clientes_aux) {
+				if(cliente.getLogin().getEstado().equals("inactivo")) {
+					this.clientes_en_tabla.add(cliente);
+				}
+			}
+		} else if(activos && inactivos) {
+			for (ClienteDTO cliente: this.clientes_aux) {
+				this.clientes_en_tabla.add(cliente);
+			}
+		}
+		
 		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
 			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
-							this.clientes_en_tabla.get(i).getApellido(),
-							this.clientes_en_tabla.get(i).getDni(),
-							this.clientes_en_tabla.get(i).getFechaNacimiento(),
-							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
-							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
-							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()	
-			};
-			this.panelCliente.getModelClientes().addRow(fila);
+							 this.clientes_en_tabla.get(i).getApellido(),
+							 this.clientes_en_tabla.get(i).getDni(),
+							 mapper.parseToString(this.clientes_en_tabla.get(i).getFechaNacimiento()),
+							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
+							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
+							 this.clientes_en_tabla.get(i).getMedioContacto().getEmail(),
+							 this.clientes_en_tabla.get(i).getLogin().getEstado()
+							};
+			this.vistaAdministrativo.getPanelCliente().getModelClientes().addRow(fila);
 		}		
 	}
+	
+	
+//	private void llenarTablaClientes(){
+//		panelCliente.getModelClientes().setRowCount(0); //Para vaciar la tabla
+//		panelCliente.getModelClientes().setColumnCount(0);
+//		panelCliente.getModelClientes().setColumnIdentifiers(this.panelCliente.getNombreColumnasClientes());
+//			
+//		this.clientes_en_tabla = cliente.obtenerClientes();
+//			
+//		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
+//			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
+//							this.clientes_en_tabla.get(i).getApellido(),
+//							this.clientes_en_tabla.get(i).getDni(),
+//							this.clientes_en_tabla.get(i).getFechaNacimiento(),
+//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
+//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
+//							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()	
+//			};
+//			this.panelCliente.getModelClientes().addRow(fila);
+//		}		
+//	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

@@ -2,57 +2,77 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.RowFilter;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import dto.ClienteDTO;
 import dto.LoginDTO;
+import dto.PagoDTO;
+import dto.Pagos_PasajeDTO;
 import dto.PasajeDTO;
 import modelo.Login;
+import modelo.Pagos_Pasaje;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.administrativo.VentanaTablaPagos;
 import presentacion.vista.cliente.VentanaCambiarContrasena;
 import presentacion.vista.cliente.VentanaReservas;
 import presentacion.vista.cliente.VentanaViajes;
 import presentacion.vista.cliente.VentanaVisualizarDatos;
 import presentacion.vista.cliente.VistaCliente;
+import recursos.Mapper;
 
 public class ControladorUsuario implements ActionListener {
 
+	private static final String BUTTON_NAME_VER = "Ver";
 	private VistaCliente vistaCliente;
 	private ClienteDTO cliente;
 	private Pasaje pasaje;
 	private Login login;
+	private Pagos_Pasaje pagos_pasaje;
+	private Mapper mapper;
+	
 	private List<PasajeDTO> pasajes_en_tabla;
 	private VentanaViajes ventanaViajes;
 	private VentanaReservas ventanaReservas;
 	private VentanaVisualizarDatos ventanaVisualizarDatos;
 	private VentanaCambiarContrasena ventanaCambiarContrasenia;
+	private VentanaTablaPagos ventanaTablaPagos;
+	private PasajeDTO pasajeSeleccionado;
 	
 	private DefaultTableModel dm;
-	private StringBuilder cad= new StringBuilder();
-	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
+	
+	private StringBuilder cad = new StringBuilder();
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	public ControladorUsuario(VistaCliente vistaCliente, ClienteDTO cliente){
 		this.vistaCliente = vistaCliente;
 		this.cliente = cliente;
-		
+		this.mapper = new Mapper();
 		this.ventanaReservas = VentanaReservas.getInstance();
 		this.ventanaViajes = VentanaViajes.getInstance();
 		this.ventanaVisualizarDatos = VentanaVisualizarDatos.getInstance();
 		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
+		this.ventanaTablaPagos = VentanaTablaPagos.getInstance();
 		
 		this.vistaCliente.getItemVisualizarReservas().addActionListener(vr->mostrarVentanaReservas(vr));
 		this.vistaCliente.getItemVisualizarViajesHistoricos().addActionListener(vr->mostrarVentanaViajes(vr));
 		this.vistaCliente.getItemVisualizarDatos().addActionListener(vd->mostrarVentanaVisualizarDatos(vd));
 		this.vistaCliente.getItemCambiarContrasenia().addActionListener(c->mostrarVentanaCambiarContrasenia(c));
-
+		
 		this.ventanaViajes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
 		    public void keyTyped(KeyEvent e){
 		            char letra = e.getKeyChar();
@@ -94,13 +114,16 @@ public class ControladorUsuario implements ActionListener {
 		});
 		
 		this.ventanaReservas.getBtnAceptar().addActionListener(vd->cerrarVentanaReserva(vd));
+		this.ventanaReservas.getBtnVerPagos().addActionListener(v->verPagos(v));
 		this.ventanaViajes.getBtnAceptar().addActionListener(vd->cerrarVentanaViajes(vd));
 		this.ventanaVisualizarDatos.getBtnAceptar().addActionListener(vd->cerrarVentana(vd));
 		this.ventanaCambiarContrasenia.getBtnAceptar().addActionListener(c->cambiarContrasenia(c));
 		this.ventanaCambiarContrasenia.getBtnCancelar().addActionListener(c->salirVentanaCambiarContrasenia(c));
 
+		
 		this.login = new Login(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
+		this.pagos_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
 	}
 
 
@@ -112,7 +135,6 @@ public class ControladorUsuario implements ActionListener {
 	private void mostrarVentanaReservas(ActionEvent vr) {
 		this.ventanaReservas.mostrarVentana(true);
 		llenarTablaReservas();
-		
 	}
 	
 	private void cerrarVentanaReserva(ActionEvent vd) {
@@ -147,9 +169,19 @@ public class ControladorUsuario implements ActionListener {
 	private void mostrarVentanaCambiarContrasenia(ActionEvent c) {
 		this.ventanaCambiarContrasenia.limpiarCampos();
 		this.ventanaCambiarContrasenia.mostrarVentana(true);
-		
 	}
 	
+	private void verPagos(ActionEvent v) {
+		int filaSeleccionada = this.ventanaReservas.getTablaReservas().getSelectedRow();
+		if (filaSeleccionada != -1){
+			this.ventanaTablaPagos.mostrarVentana(true);
+			pasajeSeleccionado = pasajes_en_tabla.get(filaSeleccionada);
+			llenarTablaPagos(pasajeSeleccionado.getIdPasaje());
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 	private void cambiarContrasenia(ActionEvent c) {
 		String passwordActual = new String(this.ventanaCambiarContrasenia.getPassActual().getPassword());
 		
@@ -184,6 +216,7 @@ public class ControladorUsuario implements ActionListener {
 	}
 
 
+	@SuppressWarnings("serial")
 	public void llenarTablaReservas(){
 		this.ventanaReservas.getModelReservas().setRowCount(0); //Para vaciar la tabla
 		this.ventanaReservas.getModelReservas().setColumnCount(0);
@@ -198,20 +231,72 @@ public class ControladorUsuario implements ActionListener {
 					|| pasajes_en_tabla.get(i).getEstadoDelPasaje().getIdEstadoPasaje()== 3){
 				
 			Object[] fila = {
-					this.pasajes_en_tabla.get(i).getViaje().getPaisOrigen().getNombre()+ ","+ 
 					this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
-					this.pasajes_en_tabla.get(i).getViaje().getPaisDestino().getNombre()+ ","+ 
 					this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-					this.pasajes_en_tabla.get(i).getFechaVencimiento(),
-					this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-					this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getFechaVencimiento()),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 					this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
-					this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre()
+					this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
+					"$" +this.pasajes_en_tabla.get(i).getValorViaje().subtract(this.pasajes_en_tabla.get(i).getMontoAPagar()),
+					"$" +this.pasajes_en_tabla.get(i).getMontoAPagar(),
+					BUTTON_NAME_VER
 			};
 			this.ventanaReservas.getModelReservas().addRow(fila);
-		}}		
+			}
+		}
+			new ButtonColumn(this.ventanaReservas.getTablaReservas(), verPagos(), 9);
+			this.ventanaReservas.getTablaReservas().getColumnModel().getColumn(9).setMinWidth(50);
+			this.ventanaReservas.getTablaReservas().getColumnModel().getColumn(9).setMaxWidth(50);
+					
 	}
 	
+	public Action verPagos() {
+		Action verPago = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("mica");
+			JTable table = (JTable) e.getSource();
+
+			
+			PasajeDTO sc = obtenerScSeleccionada((int) table.getModel().getValueAt(table.getSelectedRow(), 0));
+			System.out.println((int) table.getModel().getValueAt(table.getSelectedRow(),0));
+			if (sc != null)
+//				new ControladorPasaje(vp, sc);
+				llenarTablaPagos(sc.getIdPasaje());
+			
+		}
+			private PasajeDTO obtenerScSeleccionada(int id) {
+				for (PasajeDTO s : pasajes_en_tabla)
+					if (s.getIdPasaje() == id)
+						return s;
+				return null;
+			}
+		};
+		return verPago;
+	}
+
+	private void llenarTablaPagos(int idPasaje){
+		this.ventanaTablaPagos.getModelPagos().setRowCount(0);
+		this.ventanaTablaPagos.getModelPagos().setColumnCount(0);
+		this.ventanaTablaPagos.getModelPagos().setColumnIdentifiers(this.ventanaTablaPagos.getNombreColumnas());
+		
+		Pagos_Pasaje pago_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
+		List<Pagos_PasajeDTO> pagos = pago_pasaje.obtenerPagosPasaje();
+		for(int i=0; i < pagos.size();i++){
+			if(pagos.get(i).getPasaje().getIdPasaje() == idPasaje){
+				Object[] fila = { 
+						mapper.parseToString(pagos.get(i).getPago().getFechaPago()),
+						"$ "+pagos.get(i).getPago().getMonto(),
+						pagos.get(i).getPago().getIdFormaPago().getTipo(),
+						pagos.get(i).getPago().getAdministrativo().getNombre() 
+				
+			};
+			this.ventanaTablaPagos.getModelPagos().addRow(fila);
+			}
+		}
+	}
 	public void llenarTablaViajes(){
 		this.ventanaViajes.getModelViajes().setRowCount(0); //Para vaciar la tabla
 		this.ventanaViajes.getModelViajes().setColumnCount(0);
@@ -229,10 +314,10 @@ public class ControladorUsuario implements ActionListener {
 					this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 					this.pasajes_en_tabla.get(i).getViaje().getPaisDestino().getNombre()+ ","+ 
 					this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-					this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-					this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+					mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 					this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
-					this.pasajes_en_tabla.get(i).getViaje().getPrecio()
+					"$ "+this.pasajes_en_tabla.get(i).getViaje().getPrecio()
 			};
 			this.ventanaViajes.getModelViajes().addRow(fila);
 		}}		

@@ -48,7 +48,7 @@ public class VentanaEditarTransporte extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(96, 163, 188));
-		panel.setBounds(0, 0, 407, 53);
+		panel.setBounds(0, 0, 417, 53);
 		contentPane.add(panel);
 		
 		JLabel lblAgregarTransporte = new JLabel("Editar transporte");
@@ -58,11 +58,11 @@ public class VentanaEditarTransporte extends JFrame {
 		panel.add(lblAgregarTransporte);
 		
 		JLabel lblNewLabel = new JLabel("Nombre del transporte:");
-		lblNewLabel.setBounds(47, 111, 131, 14);
+		lblNewLabel.setBounds(47, 111, 159, 14);
 		contentPane.add(lblNewLabel);
 		
 		txtNombreTransporte = new JTextField();
-		txtNombreTransporte.setBounds(181, 108, 170, 20);
+		txtNombreTransporte.setBounds(216, 108, 170, 20);
 		contentPane.add(txtNombreTransporte);
 		txtNombreTransporte.setColumns(10);
 		

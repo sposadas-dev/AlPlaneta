@@ -16,7 +16,7 @@ public class PanelPasaje extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel modelReservas;
-	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor unitario", "Transporte","Estado"};
+	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor", "Transporte","Estado"};
 	private JTable tablaReservas;
 	private JCheckBox cancelCheckBox;
 	private JCheckBox pendCheckBox;

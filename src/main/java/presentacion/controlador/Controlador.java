@@ -65,6 +65,7 @@ import presentacion.vista.administrativo.VentanaPago;
 import presentacion.vista.administrativo.VentanaPasajero;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VentanaTablaViajes;
+import recursos.Mapper;
 
 public class Controlador implements ActionListener {
 	
@@ -74,7 +75,7 @@ private ModeloCiudad controladorAdministrador_modeloCiudad;
 private ModeloProvincia controladorAdministrador_modeloProvincia;
 private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 	
-	
+	private Mapper mapper;
 	private List<ViajeDTO> viajes_en_tabla;
 	private List<ClienteDTO> clientes_en_tabla;
 	private Vista vista;
@@ -163,7 +164,7 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 //		this.vista.getBtnPasajes().addActionListener(ap->agregarPanelPasajes(ap));
 //		this.vista.getBtnAgregarCliente().addActionListener(c->agregarCliente(c));
 //		this.vista.getBtnAgregarReserva().addActionListener(p->agregarPasaje(p));
-		
+		this.mapper = new Mapper();
 		this.ventanaReserva = VentanaReserva.getInstance();
 		this.ventanaFormaDePagos = VentanaPago.getInstance();
 //		this.ventanaPagoTarjeta = VentanaPagoTarjeta.getInstance();
@@ -930,8 +931,8 @@ private void agregarPais(ActionEvent agP) {
 			Object[] fila = { 
 					viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
 					viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
-					viajes_en_tabla.get(i).getFechaSalida(),
-					viajes_en_tabla.get(i).getFechaLlegada(),
+					mapper.parseToString(viajes_en_tabla.get(i).getFechaSalida()),
+					mapper.parseToString(viajes_en_tabla.get(i).getFechaLlegada()),
 					viajes_en_tabla.get(i).getPrecio(),
 					viajes_en_tabla.get(i).getHoraSalida(),
 					viajes_en_tabla.get(i).getCapacidad(),
@@ -1117,8 +1118,8 @@ private void agregarPais(ActionEvent agP) {
 			Object[] fila = { 
 					viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
 					viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
-					viajes_en_tabla.get(i).getFechaSalida(),
-					viajes_en_tabla.get(i).getFechaLlegada(),
+					mapper.parseToString(viajes_en_tabla.get(i).getFechaSalida()),
+					mapper.parseToString(viajes_en_tabla.get(i).getFechaLlegada()),
 					viajes_en_tabla.get(i).getPrecio(),
 					viajes_en_tabla.get(i).getHoraSalida()
 			};

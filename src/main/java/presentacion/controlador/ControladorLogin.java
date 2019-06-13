@@ -57,8 +57,7 @@ public class ControladorLogin {
 		this.ventanaLogin = ventanaLogin;
 		this.vistaAdministrador = VistaAdministrador.getInstance();
 		this.vistaAdministrativo = VistaAdministrativo.getInstance();
-
-		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance()
+		
 		this.vistaCoordinador = VistaCoordinador.getInstance();
 		
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
@@ -74,8 +73,6 @@ public class ControladorLogin {
 		this.contrasenaProvisoria = null;
 		this.idMedioContactoBuscado = null;
 		this.envioDeCorreo = new EnvioDeCorreo();
-		
-		this.vistaAdministrativo = new VistaAdministrativo(); //cambiar esto por getInstance() 
 
 		this.vistaCliente = VistaCliente.getInstance();
 		

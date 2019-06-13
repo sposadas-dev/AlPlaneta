@@ -21,19 +21,21 @@ public class VentanaViajes extends JFrame {
 	private DefaultTableModel modelViajes;
 	private String[] columnasViajes = {"Origen","Destino","Fecha de salida", "Fecha de llegada","Transporte","Precio"};
 	private JButton btnAceptar;
-	private static VentanaViajes instance;
+	private static VentanaViajes ventanaViajes;
 	private JTextField txtFiltro;
 	
-	public static VentanaViajes  getInstance() {
-		if (instance == null)
-			return new VentanaViajes();
-		else
-			return instance;
+	public static VentanaViajes getInstance(){
+		if (ventanaViajes == null) {
+			ventanaViajes = new VentanaViajes();
+			return ventanaViajes;
+		} else {
+			return ventanaViajes;
+		}
 	}
 	
 	public VentanaViajes() {
 		setTitle("Mis viajes históricos");
-		setBounds(100, 100, 928, 465);
+		setBounds(100, 100, 1044, 465);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -42,27 +44,17 @@ public class VentanaViajes extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(30, 144, 255));
-		panel.setBounds(0, 0, 922, 53);
+		panel.setBounds(0, 0, 1038, 53);
 		getContentPane().add(panel);
 		
 		JLabel lblViajes = new JLabel("Mis viajes históricos");
 		lblViajes.setForeground(Color.WHITE);
 		lblViajes.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblViajes.setBounds(10, 0, 253, 53);
+		lblViajes.setBounds(20, 0, 253, 53);
 		panel.add(lblViajes);
 		
-		txtFiltro = new JTextField();
-		txtFiltro.setBounds(389, 23, 168, 19);
-		panel.add(txtFiltro);
-		txtFiltro.setColumns(10);
-		
-		JLabel lblFiltro = new JLabel("Filtro");
-		lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblFiltro.setBounds(351, 26, 35, 13);
-		panel.add(lblFiltro);
-		
 		JScrollPane spViajes = new JScrollPane();
-		spViajes.setBounds(10, 64, 902, 262);
+		spViajes.setBounds(10, 115, 1018, 246);
 		getContentPane().add(spViajes);
 		
 		modelViajes = new DefaultTableModel(null,columnasViajes){
@@ -72,14 +64,25 @@ public class VentanaViajes extends JFrame {
 				}
 			};
 		tablaViajes = new JTable(modelViajes);
+		
 		spViajes.setViewportView(tablaViajes);
 		
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setForeground(Color.WHITE);
 		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnAceptar.setBackground(new Color(30, 144, 255));
-		btnAceptar.setBounds(351, 359, 131, 42);
+		btnAceptar.setBounds(437, 372, 131, 42);
 		getContentPane().add(btnAceptar);
+		
+		txtFiltro = new JTextField();
+		txtFiltro.setBounds(418, 73, 168, 19);
+		getContentPane().add(txtFiltro);
+		txtFiltro.setColumns(10);
+		
+		JLabel lblFiltro = new JLabel("Filtro");
+		lblFiltro.setBounds(351, 76, 35, 13);
+		getContentPane().add(lblFiltro);
+		lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 	}
 

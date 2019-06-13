@@ -7,6 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -36,11 +37,12 @@ import presentacion.vista.administrativo.VentanaRegistrarPromocion;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import recursos.Mapper;
 
 public class ControladorAdministrativo implements ActionListener {
 
 	private VistaAdministrativo vista;
-
+	private Mapper mapper;
 	private VentanaRegistrarCliente ventanaCliente;
 	private VentanaRegistrarEvento ventanaEvento;
 	private VentanaRegistrarPromocion ventanaPromocion;
@@ -70,7 +72,7 @@ public class ControladorAdministrativo implements ActionListener {
 	private int filaSeleccionada;
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
-	private controladorDatosLogin controladorDatosLogin;
+	private ControladorDatosLogin controladorDatosLogin;
 
 	private static ControladorAdministrativo INSTANCE;
 	
@@ -96,7 +98,7 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		this.ventanaPromocion = VentanaRegistrarPromocion.getInstance();
 		this.ventanaEditarPromocion = VentanaEditarPromocion.getInstance();
-		
+		this.mapper = new Mapper();
 		this.vista.getItemRegistrarCliente().addActionListener(ac->mostrarVentanaAgregarCliente(ac));
 		this.vista.getItemVisualizarClientes().addActionListener(ac->agregarPanelClientes(ac));
 		this.vista.getItemEditarCliente().addActionListener(mve->mostrarVentanaEditarCliente(mve));
@@ -205,7 +207,7 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado, this.eventos_en_tabla);
 		
         controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
-        controladorDatosLogin = new controladorDatosLogin();
+        controladorDatosLogin = new ControladorDatosLogin();
 
 	}
 
@@ -244,6 +246,7 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	public void inicializar(){
 		this.vista.mostrarVentana();
+		this.llenarTablaClientes();
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 		controladorEvento.controlarNotificacionesInicioSesion();
 		controladorEvento.controlarNotificacionesContinuo();
@@ -290,7 +293,6 @@ public class ControladorAdministrativo implements ActionListener {
 				);
 		ClienteDTO clienteEditable = new ClienteDTO(idCliente, nombreCliente, apellidoCliente, dniCliente, fechaNacimientoCliente, medioContactoCliente, loginCliente);
 		controladorCliente.editarCliente(clienteEditable);
-		
 		this.llenarTablaClientes();
 		}else{
 			JOptionPane.showMessageDialog(null, "Verifique los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
@@ -348,9 +350,10 @@ public class ControladorAdministrativo implements ActionListener {
 	private void mostrarVentanaAgregarPasaje(ActionEvent ap) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
+		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
 		this.ventanaVisualizarCliente.mostrarVentana(true);
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
-		
 		controladorPasaje.iniciar();
 	}
 	
@@ -518,6 +521,8 @@ public class ControladorAdministrativo implements ActionListener {
 	private void mostrarVentanaAgregarCliente(ActionEvent ac)  {
 		this.vista.getPanelCliente().mostrarPanelCliente(true);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
+		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
 		this.llenarTablaClientes();
 		this.ventanaRegistrarCliente.limpiarCampos();
 		this.ventanaCliente.limpiarCampos();
@@ -531,7 +536,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
 		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
-//		this.llenarTablaEventos(evento.obtenerEvento());
+		this.llenarTablaEventos(evento.obtenerEvento());
 		this.ventanaEvento.limpiarCampos();
 		this.ventanaEvento.mostrarVentana();
 	}
@@ -541,6 +546,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelPromocion().mostrarPanelPromocion(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
 		this.llenarTablaPromociones();
 		this.ventanaPromocion.limpiarCampos();
 		this.ventanaPromocion.mostrarVentana();
@@ -556,14 +562,14 @@ public class ControladorAdministrativo implements ActionListener {
 					if(filtro.equals("Fecha de Ingreso")) {
 						datos.clear();
 			 			for(EventoDTO x : eventos_en_tabla)
-			 				if(!datos.contains(x.getFechaIngreso().toString()))
-			 					datos.add(x.getFechaIngreso().toString());
+			 				if(!datos.contains(mapper.parseToString(x.getFechaIngreso())))
+			 					datos.add(mapper.parseToString(x.getFechaIngreso()));
 					}
 					if(filtro.equals("Fecha del Evento")) {
 						datos.clear();
 			 			for(EventoDTO x : eventos_en_tabla)
-			 				if(!datos.contains(x.getFechaEvento().toString()))
-			 					datos.add(x.getFechaEvento().toString());
+			 				if(!datos.contains(mapper.parseToString(x.getFechaIngreso())))
+			 					datos.add(mapper.parseToString(x.getFechaEvento()));
 					}
 					if(filtro.equals("Apellido del Cliente")) {
 						datos.clear();
@@ -670,7 +676,7 @@ public class ControladorAdministrativo implements ActionListener {
 			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
 							 this.clientes_en_tabla.get(i).getApellido(),
 							 this.clientes_en_tabla.get(i).getDni(),
-							 this.clientes_en_tabla.get(i).getFechaNacimiento(),
+							 mapper.parseToString(this.clientes_en_tabla.get(i).getFechaNacimiento()),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getEmail(),
@@ -699,8 +705,8 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
 							this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
@@ -726,10 +732,10 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
-							this.pasajes_en_tabla.get(i).getValorViaje(),
+							"$ "+this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
 							this.pasajes_en_tabla.get(i).getEstadoDelPasaje().getNombre()
 			};
@@ -747,8 +753,8 @@ public class ControladorAdministrativo implements ActionListener {
 		for (int i = 0; i < tabla.size(); i++){
 
 			Object[] fila = {
-							tabla.get(i).getFechaIngreso(),
-							tabla.get(i).getFechaEvento(),
+							mapper.parseToString(tabla.get(i).getFechaIngreso()),
+							mapper.parseToString(tabla.get(i).getFechaEvento()),
 							tabla.get(i).getHoraEvento(),
 							tabla.get(i).getDescripcion(),
 							tabla.get(i).getCliente().getApellido(),
@@ -780,7 +786,7 @@ public class ControladorAdministrativo implements ActionListener {
 			Object[] fila = {
 							this.promociones_en_tabla.get(i).getPorcentaje()+" %",
 							this.promociones_en_tabla.get(i).getStock(),
-							this.promociones_en_tabla.get(i).getFechaVencimiento(),
+							mapper.parseToString(this.promociones_en_tabla.get(i).getFechaVencimiento()),
 							this.promociones_en_tabla.get(i).getEstado()
 			};
 							this.vista.getPanelPromocion().getModelPromocion().addRow(fila);

@@ -16,27 +16,33 @@ import java.awt.Color;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+
 import javax.swing.JTextField;
+
+import presentacion.vista.administrativo.VentanaConfirmacionPasaje;
 
 public class VentanaReservas extends JFrame {
 
 	private JTable tablaReservas;
 	private DefaultTableModel modelReservas;
-	private  String[] columnasReservas = {"Origen","Destino","Fecha de vencimiento","Fecha de salida", "Fecha de llegada","Hora de salida","Transporte"};
+	private  String[] columnasReservas = {"Origen","Destino","Fecha de vencimiento","Fecha de salida", "Fecha de llegada","Hora de salida","Transporte","Monto pagado","Importe a pagar","Pagos"};
 	private JButton btnAceptar;
-	private static VentanaReservas instance;
+	private static VentanaReservas ventanaReservas;
 	private JTextField txtFiltro;
+	private JButton btnVerPagos;
 	
-	public static VentanaReservas  getInstance() {
-		if (instance == null)
-			return new VentanaReservas();
-		else
-			return instance;
+	public static VentanaReservas getInstance(){
+		if (ventanaReservas == null) {
+			ventanaReservas = new VentanaReservas();
+			return ventanaReservas;
+		} else {
+			return ventanaReservas;
+		}
 	}
 	
 	public VentanaReservas() {
 		setTitle("Mis reservas");
-		setBounds(100, 100, 948, 465);
+		setBounds(100, 100, 1246, 465);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -45,7 +51,7 @@ public class VentanaReservas extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(128, 0, 128));
-		panel.setBounds(0, 0, 942, 53);
+		panel.setBounds(0, 0, 1240, 53);
 		getContentPane().add(panel);
 		
 		JLabel lblReservas = new JLabel("Mis reservas");
@@ -54,18 +60,8 @@ public class VentanaReservas extends JFrame {
 		lblReservas.setBounds(33, 0, 253, 53);
 		panel.add(lblReservas);
 		
-		txtFiltro = new JTextField();
-		txtFiltro.setBounds(374, 23, 154, 19);
-		panel.add(txtFiltro);
-		txtFiltro.setColumns(10);
-		
-		JLabel lblFiltro = new JLabel("Filtro");
-		lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblFiltro.setBounds(318, 26, 46, 13);
-		panel.add(lblFiltro);
-		
 		JScrollPane spReservas = new JScrollPane();
-		spReservas.setBounds(10, 64, 922, 262);
+		spReservas.setBounds(10, 109, 1220, 252);
 		getContentPane().add(spReservas);
 		
 		modelReservas = new DefaultTableModel(null,columnasReservas){
@@ -81,8 +77,22 @@ public class VentanaReservas extends JFrame {
 		btnAceptar.setForeground(Color.WHITE);
 		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnAceptar.setBackground(new Color(30, 144, 255));
-		btnAceptar.setBounds(349, 360, 131, 42);
+		btnAceptar.setBounds(347, 372, 131, 42);
 		getContentPane().add(btnAceptar);
+		
+		txtFiltro = new JTextField();
+		txtFiltro.setBounds(457, 79, 154, 19);
+		getContentPane().add(txtFiltro);
+		txtFiltro.setColumns(10);
+		
+		JLabel lblFiltro = new JLabel("Filtro");
+		lblFiltro.setBounds(401, 85, 46, 13);
+		getContentPane().add(lblFiltro);
+		lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		
+		btnVerPagos = new JButton("Ver pagos");
+		btnVerPagos.setBounds(549, 372, 131, 42);
+		getContentPane().add(btnVerPagos);
 		
 	}
 	
@@ -105,6 +115,11 @@ public class VentanaReservas extends JFrame {
 	public JButton getBtnAceptar() {
 		return btnAceptar;
 	}
+	
+	public JButton getBtnVerPagos() {
+		return btnVerPagos;
+	}
+
 
 	public void mostrarVentana(boolean visibilidad){
 		this.setVisible(visibilidad);

@@ -1,6 +1,7 @@
 package presentacion.vista.administrativo;
 
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -47,22 +48,19 @@ public class VistaAdministrativo{
 	private JMenuItem itemEditarPromocion;
 	private JMenuItem itemVisualizarPromociones;
 	
-	private static VistaAdministrativo INSTANCE;
+	private static VistaAdministrativo vistaAdministrativo;
 	private JMenuItem itemRestablecerContrasena;
 
 	public static VistaAdministrativo getInstance(){
-		if(INSTANCE == null)
-			return new VistaAdministrativo();
-		else
-			return INSTANCE;
+		if(vistaAdministrativo == null){	
+			vistaAdministrativo = new VistaAdministrativo();
+			return vistaAdministrativo;
+		}else{
+			return vistaAdministrativo;
+		}
 	}
 
-	public VistaAdministrativo() {
-		super();
-		initialize();
-	}
-	
-	private void initialize() {
+	private VistaAdministrativo() {
 		frame = new JFrame();
 		frame.setLocationRelativeTo(null);
 		frame.setTitle("Al Planeta Project");

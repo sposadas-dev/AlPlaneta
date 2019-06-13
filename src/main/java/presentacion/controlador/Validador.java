@@ -1,10 +1,16 @@
 package presentacion.controlador;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Validador {
+
 
 	public static boolean esDniValido(String text) {
 		return Pattern.matches("[0-9]{8}", text);
