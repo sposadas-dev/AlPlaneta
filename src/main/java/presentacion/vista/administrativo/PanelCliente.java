@@ -3,6 +3,7 @@ package presentacion.vista.administrativo;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,6 +19,9 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JCheckBox;
+import java.awt.SystemColor;
+import javax.swing.SwingConstants;
+
 
 public class PanelCliente extends JPanel {
 
@@ -27,8 +31,11 @@ public class PanelCliente extends JPanel {
 	private JTable tablaClientes;
 	private JButton btnConfirmar;
 	private JLabel lblClientes;
+	private JButton btnAgregar;
+	private JButton btnEditar;
 	private JCheckBox activos;
 	private JCheckBox inactivos;
+	private JTextField txtFiltro;
 	
 	public PanelCliente() {
 		
@@ -41,7 +48,7 @@ public class PanelCliente extends JPanel {
 		setLayout(null);
 
 		JScrollPane spPasajeros = new JScrollPane();
-		spPasajeros.setBounds(32, 91, 1302, 574);
+		spPasajeros.setBounds(10, 127, 1337, 527);
 		add(spPasajeros);
 		tablaClientes = new JTable(modelClientes);
 		spPasajeros.setViewportView(tablaClientes);
@@ -52,7 +59,7 @@ public class PanelCliente extends JPanel {
 		
 		JPanel panelClientes = new JPanel();
 		panelClientes.setBackground(new Color(39, 174, 96));
-		panelClientes.setBounds(32, 32, 1302, 64);
+		panelClientes.setBounds(10, 0, 1353, 61);
 		add(panelClientes);
 		panelClientes.setLayout(null);
 		
@@ -63,13 +70,36 @@ public class PanelCliente extends JPanel {
 		panelClientes.add(lblClientes);
 		
 		activos = new JCheckBox("Activos");
-		activos.setBounds(70, 6, 95, 21);
+		activos.setBounds(1142, 83, 95, 21);
 		activos.setSelected(true);
 		add(activos);
 		
 		inactivos = new JCheckBox("Inactivos");
-		inactivos.setBounds(167, 5, 95, 21);
+		inactivos.setBounds(1239, 82, 95, 21);
 		add(inactivos);
+		
+		btnAgregar = new JButton("");
+		btnAgregar.setVerticalAlignment(SwingConstants.TOP);
+		btnAgregar.setToolTipText("Registrar cliente");
+		btnAgregar.setIcon(new ImageIcon(PanelCliente.class.getResource("/recursos/agregarCliente.png")));
+		btnAgregar.setBounds(10, 61, 68, 54);
+		add(btnAgregar);
+		
+		
+	    btnEditar = new JButton("");
+		btnEditar.setIcon(new ImageIcon(PanelCliente.class.getResource("/recursos/editarCliente.png")));
+		btnEditar.setBounds(77, 61, 68, 54);
+		add(btnEditar);
+		
+		txtFiltro = new JTextField();
+		txtFiltro.setBounds(553, 83, 266, 20);
+		add(txtFiltro);
+		txtFiltro.setColumns(10);
+		
+		JLabel lblFiltro = new JLabel("");
+		lblFiltro.setIcon(new ImageIcon(PanelCliente.class.getResource("/recursos/filtroCliente.png")));
+		lblFiltro.setBounds(489, 61, 75, 54);
+		add(lblFiltro);
 	
 		btnConfirmar.setVisible(false);
 	}
@@ -110,6 +140,18 @@ public class PanelCliente extends JPanel {
 		this.tablaClientes = tablaClientes;
 	}
 	
+	public JButton getBtnAgregar() {
+		return btnAgregar;
+	}
+	
+	public JButton getBtnEditar() {
+		return btnEditar;
+	}
+
+	public JTextField getTxtFiltro() {
+		return txtFiltro;
+	}
+
 	public JButton getBtnConfirmar() {
 		return btnConfirmar;
 	}

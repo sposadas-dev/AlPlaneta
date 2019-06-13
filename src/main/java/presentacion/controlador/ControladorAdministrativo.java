@@ -12,6 +12,9 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
@@ -73,6 +76,10 @@ public class ControladorAdministrativo implements ActionListener {
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
 	private ControladorDatosLogin controladorDatosLogin;
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private DefaultTableModel tableModel;
+	private StringBuilder cad = new StringBuilder();
+
 
 	private static ControladorAdministrativo INSTANCE;
 	
@@ -113,10 +120,33 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		this.vista.getPanelCliente().getActivos().addActionListener(sa->cargarActivos(sa));
 		this.vista.getPanelCliente().getInactivos().addActionListener(si->cargarInactivos(si));
+		this.vista.getPanelCliente().getBtnAgregar().addActionListener(a->mostrarVentanaAgregarCliente(a));
+		this.vista.getPanelCliente().getBtnEditar().addActionListener(a->mostrarVentanaEditarCliente(a));
 		
 		this.ventanaEditarCliente.getBtnEditar().addActionListener(ec->editarCliente(ec));
 		
 		/* Filtros */
+		
+		this.vista.getPanelCliente().getTxtFiltro().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					tableModel = (DefaultTableModel) vista.getPanelCliente().getModelClientes();
+					TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(tableModel);
+					vista.getPanelCliente().getTablaClientes().setRowSorter(tr);
+					if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+						if (letra == KeyEvent.VK_BACK_SPACE){
+							if(cad.length() != 0) {
+								cad.deleteCharAt(cad.length()-1);
+						        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+							}
+						} else{
+							cad.append(String.valueOf(letra));
+			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+						}
+					}
+			}
+		});
+		
 		this.ventanaEditarCliente.getTxtNombre().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 					char letra = e.getKeyChar();
@@ -246,6 +276,7 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	public void inicializar(){
 		this.vista.mostrarVentana();
+		this.vista.getMenuUsuarioLogueado().setText(""+ administrativoLogueado.getNombre());
 		this.llenarTablaClientes();
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 		controladorEvento.controlarNotificacionesInicioSesion();
