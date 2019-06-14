@@ -9,4 +9,6 @@ public interface Pagos_PasajeDAO {
 	public boolean insert(Pagos_PasajeDTO nuevoPagoPasaje);
 
 	public List<Pagos_PasajeDTO> readAll();
+
+	public Pagos_PasajeDTO getPasajeById(int id);
 }

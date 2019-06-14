@@ -26,10 +26,13 @@ public class VentanaVisualizarPasaje extends JFrame {
 	private JTextField txtMontoDelPasaje;
 	private JTextField txtImporteDebePasaje;
 	private JButton btnPagar;
-	private JButton btnAceptar;
+	private JButton btnImprimirComprobante;
 	private JButton btnVerPagos;
 	private static VentanaVisualizarPasaje INSTANCE;
 	private JLabel lblCodigoPasaje;
+	private JLabel lblMontoAPagar; 
+
+	
 
 	private JLabel lblMotivoCancelacion;
 	private JTextField txtMotivoCancelacion;
@@ -48,7 +51,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 	public VentanaVisualizarPasaje() {
 		setTitle("Visualizar pasaje");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 660, 514);
+		setBounds(100, 100, 708, 514);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		
@@ -60,7 +63,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(95, 158, 160));
-		panel.setBounds(0, 0, 654, 53);
+		panel.setBounds(0, 0, 702, 53);
 		contentPane.add(panel);
 		
 		JLabel lblVisualizarPasaje = new JLabel("Visualizar pasaje");
@@ -104,7 +107,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 		lblMonto.setBounds(27, 294, 95, 14);
 		contentPane.add(lblMonto);
 		
-		JLabel lblMontoAPagar = new JLabel("Importe restante a pagar: $");
+		lblMontoAPagar = new JLabel("Importe restante a pagar: $");
 		lblMontoAPagar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblMontoAPagar.setBounds(303, 294, 183, 14);
 		contentPane.add(lblMontoAPagar);
@@ -175,7 +178,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 		
 		btnPagar = new JButton("Pagar");
 		btnPagar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnPagar.setBounds(440, 412, 150, 51);
+		btnPagar.setBounds(521, 412, 150, 51);
 		btnPagar.setBackground(new Color(5, 196, 107));
 		btnPagar.setForeground(Color.WHITE);
 		
@@ -188,12 +191,12 @@ public class VentanaVisualizarPasaje extends JFrame {
 		btnVerPagos.setBounds(61, 412, 150, 51);
 		contentPane.add(btnVerPagos);
 		
-		btnAceptar = new JButton("Aceptar");
-		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAceptar.setBounds(249, 413, 143, 49);
-		btnAceptar.setBackground(new Color(52, 152, 219));
-		btnAceptar.setForeground(Color.WHITE);
-		contentPane.add(btnAceptar);
+		btnImprimirComprobante = new JButton("Imprimir comprobante");
+		btnImprimirComprobante.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnImprimirComprobante.setBounds(255, 413, 221, 49);
+		btnImprimirComprobante.setBackground(new Color(52, 152, 219));
+		btnImprimirComprobante.setForeground(Color.WHITE);
+		contentPane.add(btnImprimirComprobante);
 		
 		lblCodigoPasaje = new JLabel("Código del pasaje:");
 		lblCodigoPasaje.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -258,8 +261,8 @@ public class VentanaVisualizarPasaje extends JFrame {
 		return txtImporteDebePasaje;
 	}
 	
-	public JButton getBtnAceptar() {
-		return btnAceptar;
+	public JButton getBtnImprimirComprobante() {
+		return btnImprimirComprobante;
 	}
 	
 	public JButton getBtnPagar() {
@@ -270,7 +273,10 @@ public class VentanaVisualizarPasaje extends JFrame {
 		return btnVerPagos;
 	}
 	
-
+	public JLabel getLblMontoAPagar() {
+		return lblMontoAPagar;
+	}
+	
 	public JLabel getLblMotivoCancelacion() {
 		return lblMotivoCancelacion;
 	}

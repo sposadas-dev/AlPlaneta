@@ -1,6 +1,9 @@
 package presentacion.controlador;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,6 +97,15 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemAgregarViaje().addActionListener(v->mostrarVentanaViaje(v));
 //BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
+		this.ventanaAgregarEmpleado.getTxtNombre().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
+						e.consume();
+					}
+			}
+		});
 //		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
 		
 		this.ventanaEditarCuenta.getBtnRegistrar().addActionListener(ec->editarCuenta(ec));
@@ -209,7 +221,6 @@ public class ControladorAdministrador {
 	}
 	
 //	------------------------------------------- Empleados Cuenta -----------------------------------------
-	
 	//TERMINA METODO AGREGADO
 		/*Método para agregar a un empleado según el item que selecciona en el comboBox*/
 	private void agregarCuentaEmpleado(ActionEvent ac) {

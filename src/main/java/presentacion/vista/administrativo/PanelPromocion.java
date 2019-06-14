@@ -7,14 +7,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 public class PanelPromocion extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel modelPromocion;
-	private String[] nombreColumnasPromocion = {"Porcentaje", "Stock", "Fecha de Vencimiento","Origen del viaje","Destino del viaje","Fecha salida","Fecha llegada","Estado"};
+	private String[] nombreColumnasPromocion = {"Porcentaje", "Stock", "Fecha de Vencimiento","Estado"};
 	private JTable tablaPromociones;
 
 	public PanelPromocion() {

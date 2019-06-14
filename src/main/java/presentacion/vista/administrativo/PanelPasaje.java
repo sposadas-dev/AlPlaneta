@@ -16,7 +16,7 @@ public class PanelPasaje extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel modelReservas;
-	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor unitario", "Transporte","Estado"};
+	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor", "Transporte","Estado"};
 	private JTable tablaReservas;
 	private JCheckBox cancelCheckBox;
 	private JCheckBox pendCheckBox;
@@ -52,19 +52,19 @@ public class PanelPasaje extends JPanel {
 		panelPasajes.add(lblPasajes);
 		
 		cancelCheckBox = new JCheckBox("Cancelados");
-		cancelCheckBox.setBounds(463, 100, 95, 21);
+		cancelCheckBox.setBounds(415, 99, 114, 21);
 		add(cancelCheckBox);
 
 		pendCheckBox = new JCheckBox("Pendientes");
-		pendCheckBox.setBounds(592, 100, 95, 21);
+		pendCheckBox.setBounds(544, 99, 114, 21);
 		add(pendCheckBox);
 		
 		reserCheckBox = new JCheckBox("Reservados");
-		reserCheckBox.setBounds(731, 100, 95, 21);
+		reserCheckBox.setBounds(683, 99, 114, 21);
 		add(reserCheckBox);
 		
 		vendCheckBox = new JCheckBox("Vendidos");
-		vendCheckBox.setBounds(857, 100, 95, 21);
+		vendCheckBox.setBounds(820, 99, 95, 21);
 		add(vendCheckBox);
 		
 	}

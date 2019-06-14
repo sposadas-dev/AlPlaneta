@@ -10,11 +10,13 @@ import modelo.Pagos_Pasaje;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.Pagos_PasajeDAO;
 import dto.Pagos_PasajeDTO;
+import dto.TransporteDTO;
 
 public class Pagos_PasajeDAOSQL implements Pagos_PasajeDAO{
 
 	private static final String insert = "INSERT INTO pagos_pasaje (idPagoPasaje, idPago, idPasaje) VALUES (?,?,?)";
 	private static final String readall = "SELECT * FROM pagos_pasaje";
+	private static final String browseByIdPasaje = "SELECT * FROM pagos_pasaje WHERE idPasaje=?";
 //	private static final String browse = "SELECT * FROM pagos_pasaje WHERE idPagoPasaje=?";
 
 	
@@ -70,5 +72,31 @@ public class Pagos_PasajeDAOSQL implements Pagos_PasajeDAO{
 		for(Pagos_PasajeDTO pago : e){
 			System.out.println(pago.getPago().getMonto() + " "+ pago.getPasaje().getValorViaje());
 		}		
+	}
+
+	@Override
+	public Pagos_PasajeDTO getPasajeById(int idPasaje) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		Pagos_PasajeDTO pagos_pasaje;
+		PasajeDAOSQL pasajeDAOSQL = new PasajeDAOSQL();
+		PagoDAOSQL pagoDAOSQL = new PagoDAOSQL();
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browseByIdPasaje);
+			statement.setInt(1, idPasaje);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				pagos_pasaje = new Pagos_PasajeDTO(resultSet.getInt("idPagoPasaje"),
+						  pagoDAOSQL.getPagoById(resultSet.getInt("idPago")),
+						  pasajeDAOSQL.getPasajeById(resultSet.getInt("idPasaje")));
+				return pagos_pasaje;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
 	}
 }

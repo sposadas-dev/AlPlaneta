@@ -20,7 +20,7 @@ public class VentanaConfirmacionPasaje extends JFrame {
 
 	private JPanel contentPane;
 	private DefaultTableModel modelPasajeros;
-	private  String[] nombreColumnas = {"Nombre" , "Apellido", "DNI"};
+	private  String[] nombreColumnas = {"Nombre" , "Apellido", "DNI","Fecha de nacimiento"};
 	
 	private JTable tablaPasajeros;
 	private JTextField txtCliente;
@@ -32,13 +32,15 @@ public class VentanaConfirmacionPasaje extends JFrame {
 	private JTextField txtTotal;
 	private JButton btnGenerarPasaje;
 	private JButton btnAtras;
-	private static VentanaConfirmacionPasaje INSTANCE;
+	private static VentanaConfirmacionPasaje ventanaConfirmacionPasaje;
 	
 	public static VentanaConfirmacionPasaje getInstance(){
-		if(INSTANCE == null)
-			return new VentanaConfirmacionPasaje();
-		else
-			return INSTANCE;
+		if (ventanaConfirmacionPasaje == null) {
+			ventanaConfirmacionPasaje = new VentanaConfirmacionPasaje();
+			return ventanaConfirmacionPasaje;
+		} else {
+			return ventanaConfirmacionPasaje;
+		}
 	}
 	
 	public VentanaConfirmacionPasaje() {

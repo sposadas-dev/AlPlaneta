@@ -25,6 +25,7 @@ import persistencia.dao.interfaz.RegimenPuntoDAO;
 import persistencia.dao.interfaz.RolDAO;
 import persistencia.dao.interfaz.TransporteDAO;
 import persistencia.dao.interfaz.ViajeDAO;
+import persistencia.dao.interfaz.Viaje_PromocionDAO;
 
 public class DAOSQLFactory implements DAOAbstractFactory {
 	

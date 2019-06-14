@@ -1,16 +1,21 @@
 package presentacion.vista.administrativo;
 
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import persistencia.conexion.Conexion;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class VistaAdministrativo{
 	
@@ -41,25 +46,27 @@ public class VistaAdministrativo{
 	 
 	private JMenu menuPromociones;
 	private JMenuItem itemAgregarPromocion;
-	private JMenuItem itemDarBajaPromocion;
+	private JMenuItem itemEditarEstadoPromocion;
+	private JMenuItem itemEditarPromocion;
 	private JMenuItem itemVisualizarPromociones;
 	
-	private static VistaAdministrativo INSTANCE;
+	private static VistaAdministrativo vistaAdministrativo;
 	private JMenuItem itemRestablecerContrasena;
+	private Component horizontalGlue;
+	private JMenu menuUsuarioLogueado;
+	private JMenuItem itemDatosPersonales;
+	private JMenuItem itemSalir;
 
 	public static VistaAdministrativo getInstance(){
-		if(INSTANCE == null)
-			return new VistaAdministrativo();
-		else
-			return INSTANCE;
+		if(vistaAdministrativo == null){	
+			vistaAdministrativo = new VistaAdministrativo();
+			return vistaAdministrativo;
+		}else{
+			return vistaAdministrativo;
+		}
 	}
 
-	public VistaAdministrativo() {
-		super();
-		initialize();
-	}
-	
-	private void initialize() {
+	private VistaAdministrativo() {
 		frame = new JFrame();
 		frame.setLocationRelativeTo(null);
 		frame.setTitle("Al Planeta Project");
@@ -118,15 +125,15 @@ public class VistaAdministrativo{
 		itemEditarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemEditarCliente);
 
-		itemActivarCliente = new JMenuItem("Activar Cliente");
+		itemActivarCliente = new JMenuItem("Activar cliente");
 		itemActivarCliente.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemActivarCliente);
 
-		itemDesactivarClientes = new JMenuItem("Desactivar Cliente");
+		itemDesactivarClientes = new JMenuItem("Desactivar cliente");
 		itemDesactivarClientes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemDesactivarClientes);
 		
-		itemRestablecerContrasena = new JMenuItem("Restablecer Contraseña");
+		itemRestablecerContrasena = new JMenuItem("Restablecer contraseña");
 		itemRestablecerContrasena.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuClientes.add(itemRestablecerContrasena);
 		
@@ -154,6 +161,10 @@ public class VistaAdministrativo{
 		menuEventos.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuEventos);
 		
+		itemVisualizarEvento = new JMenuItem("Visualizar eventos");
+		itemVisualizarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuEventos.add(itemVisualizarEvento);
+
 		itemAgregarEvento = new JMenuItem("Agregar evento");
 		itemAgregarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuEventos.add(itemAgregarEvento);
@@ -162,9 +173,6 @@ public class VistaAdministrativo{
 		itemEditarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuEventos.add(itemEditarEvento);
 		
-		itemVisualizarEvento = new JMenuItem("Visualizar eventos");
-		itemVisualizarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuEventos.add(itemVisualizarEvento);
 		
 		menuPromociones = new JMenu("Promociones");
 		menuPromociones.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -178,12 +186,44 @@ public class VistaAdministrativo{
 		itemAgregarPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuPromociones.add(itemAgregarPromocion);
 		
-		itemDarBajaPromocion = new JMenuItem("Dar de baja promoción");
-		itemDarBajaPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuPromociones.add(itemDarBajaPromocion);
+		itemEditarPromocion = new JMenuItem("Editar promoción");
+		itemEditarPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPromociones.add(itemEditarPromocion);
 		
+		
+		itemEditarEstadoPromocion = new JMenuItem("Modificar estado");
+		itemEditarEstadoPromocion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuPromociones.add(itemEditarEstadoPromocion);
+		
+		horizontalGlue = Box.createHorizontalGlue();
+		menuBar.add(horizontalGlue);
+		
+		menuUsuarioLogueado = new JMenu(" ");
+		menuBar.add(menuUsuarioLogueado);
+		
+		itemDatosPersonales = new JMenuItem("Mis datos");
+		menuUsuarioLogueado.add(itemDatosPersonales);
+		
+		itemSalir = new JMenuItem("Salir");
+		menuUsuarioLogueado.add(itemSalir);
+	
+		JLabel labelMarcaDeAgua = new JLabel("");
+		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
+		labelMarcaDeAgua.setBounds(47, 0, 1313, 674);
+		frame.getContentPane().add(labelMarcaDeAgua);
 	}
 	
+	public JMenu getMenuUsuarioLogueado() {
+		return menuUsuarioLogueado;
+	}
+
+	public JMenuItem getItemDatosPersonales() {
+		return itemDatosPersonales;
+	}
+
+	public JMenuItem getItemSalir() {
+		return itemSalir;
+	}
 
 	public JFrame getFrame() {
 		return frame;
@@ -271,8 +311,8 @@ public class VistaAdministrativo{
 		return itemAgregarPromocion;
 	}
 
-	public JMenuItem getItemDarBajaPromocion() {
-		return itemDarBajaPromocion;
+	public JMenuItem getItemEditarEstadoPromocion() {
+		return itemEditarEstadoPromocion;
 	}
 	
 	public JMenuItem getItemVisualizarPromociones() {
@@ -307,5 +347,9 @@ public class VistaAdministrativo{
 
 	public JMenuItem getItemVisualizarEventos() {
 		return itemVisualizarEvento;
+	}
+
+	public JMenuItem getItemEditarPromocion() {
+		return itemEditarPromocion;
 	}
 }

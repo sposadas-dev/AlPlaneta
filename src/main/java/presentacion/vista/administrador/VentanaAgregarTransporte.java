@@ -61,11 +61,11 @@ public class VentanaAgregarTransporte extends JFrame {
 		panel.add(lblAgregarTransporte);
 		
 		JLabel lblNewLabel = new JLabel("Nombre del transporte:");
-		lblNewLabel.setBounds(47, 111, 131, 14);
+		lblNewLabel.setBounds(47, 111, 147, 14);
 		contentPane.add(lblNewLabel);
 		
 		txtNombreTransporte = new JTextField();
-		txtNombreTransporte.setBounds(193, 108, 170, 20);
+		txtNombreTransporte.setBounds(204, 108, 170, 20);
 		contentPane.add(txtNombreTransporte);
 		txtNombreTransporte.setColumns(10);
 		

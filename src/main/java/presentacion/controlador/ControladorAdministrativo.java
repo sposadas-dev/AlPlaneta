@@ -1,11 +1,13 @@
 package presentacion.controlador;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Time;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -25,24 +27,29 @@ import dto.RolDTO;
 import modelo.Cliente;
 import modelo.ModeloEvento;
 import modelo.ModeloPromocion;
+import modelo.ModeloViaje;
+import modelo.ModeloViaje_Promocion;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrativo.VentanaEditarCliente;
 import presentacion.vista.administrativo.VentanaEditarEvento;
+import presentacion.vista.administrativo.VentanaEditarPromocion;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
 import presentacion.vista.administrativo.VentanaRegistrarPromocion;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import recursos.Mapper;
 
 public class ControladorAdministrativo implements ActionListener {
 
 	private VistaAdministrativo vista;
-
+	private Mapper mapper;
 	private VentanaRegistrarCliente ventanaCliente;
 	private VentanaRegistrarEvento ventanaEvento;
 	private VentanaRegistrarPromocion ventanaPromocion;
+	private VentanaEditarPromocion ventanaEditarPromocion;
 	private VentanaEditarEvento ventanaEditarEvento;
 	private VentanaVisualizarClientes ventanaVisualizarCliente;
 	private VentanaRegistrarCliente ventanaRegistrarCliente;
@@ -62,11 +69,17 @@ public class ControladorAdministrativo implements ActionListener {
 	private ModeloEvento evento;
 	private ControladorPasaje controladorPasaje;
 	private ModeloPromocion promocion;
+	private ModeloViaje viaje;
+	private ModeloViaje_Promocion viaje_promocion;
 	private ControladorCliente controladorCliente;
 	private int filaSeleccionada;
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
-	private controladorDatosLogin controladorDatosLogin;
+	private ControladorDatosLogin controladorDatosLogin;
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private DefaultTableModel tableModel;
+	private StringBuilder cad = new StringBuilder();
+
 
 	private static ControladorAdministrativo INSTANCE;
 	
@@ -91,7 +104,8 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaVisualizarPasaje = VentanaVisualizarPasaje.getInstance();
 		
 		this.ventanaPromocion = VentanaRegistrarPromocion.getInstance();
-		
+		this.ventanaEditarPromocion = VentanaEditarPromocion.getInstance();
+		this.mapper = new Mapper();
 		this.vista.getItemRegistrarCliente().addActionListener(ac->mostrarVentanaAgregarCliente(ac));
 		this.vista.getItemVisualizarClientes().addActionListener(ac->agregarPanelClientes(ac));
 		this.vista.getItemEditarCliente().addActionListener(mve->mostrarVentanaEditarCliente(mve));
@@ -106,8 +120,79 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		this.vista.getPanelCliente().getActivos().addActionListener(sa->cargarActivos(sa));
 		this.vista.getPanelCliente().getInactivos().addActionListener(si->cargarInactivos(si));
+		this.vista.getPanelCliente().getBtnAgregar().addActionListener(a->mostrarVentanaAgregarCliente(a));
+		this.vista.getPanelCliente().getBtnEditar().addActionListener(a->mostrarVentanaEditarCliente(a));
 		
 		this.ventanaEditarCliente.getBtnEditar().addActionListener(ec->editarCliente(ec));
+		
+		/* Filtros */
+		
+		this.vista.getPanelCliente().getTxtFiltro().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					tableModel = (DefaultTableModel) vista.getPanelCliente().getModelClientes();
+					TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(tableModel);
+					vista.getPanelCliente().getTablaClientes().setRowSorter(tr);
+					if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+						if (letra == KeyEvent.VK_BACK_SPACE){
+							if(cad.length() != 0) {
+								cad.deleteCharAt(cad.length()-1);
+						        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+							}
+						} else{
+							cad.append(String.valueOf(letra));
+			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+						}
+					}
+			}
+		});
+		
+		this.ventanaEditarCliente.getTxtNombre().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
+						e.consume();
+					}
+			}
+		});
+		this.ventanaEditarCliente.getTxtApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+			}
+		});
+		this.ventanaEditarCliente.getTxtDni().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+			}
+		});
+		this.ventanaEditarCliente.getTxtTelefonoFijo().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+			}
+		});
+		this.ventanaEditarCliente.getTxtTelefonoCelular().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+			}
+		});
+		
 //		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
 		
 		this.vista.getPanelPasaje().getCancelCheckBox().addActionListener(ccb->cargarCancelados(ccb));
@@ -128,15 +213,22 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelEvento().getBtnBorrarFiltros().addActionListener(bf->borrarFiltrosEvento(bf));
 		
 		this.vista.getItemAgregarPromocion().addActionListener(ac->mostrarVentanaAgregarPromocion(ac));
+		this.vista.getItemEditarPromocion().addActionListener(ac->mostrarVentanaEditarPromocion(ac));
+
 		this.vista.getItemVisualizarPromociones().addActionListener(ac->mostrarPromociones(ac));
-		this.vista.getItemDarBajaPromocion().addActionListener(ac->darBajaPromocion(ac));
+//		this.vista.getItemDarBajaPromocion().addActionListener(ac->darBajaPromocion(ac));
+		this.vista.getItemEditarEstadoPromocion().addActionListener(ac->editarEstadoPromocionUno(ac));
 		this.ventanaPromocion.getBtnRegistrar().addActionListener(ac->actualizarTablaPromocion(ac));
+		this.ventanaEditarPromocion.getBtnEditar().addActionListener(ac->actualizarTablaPromocion(ac));
+
 		
 		this.administrativoLogueado = administrativoLogueado;
 		this.cliente = new Cliente(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
 		this.evento = new ModeloEvento(new DAOSQLFactory());
 		this.promocion = new ModeloPromocion(new DAOSQLFactory());
+		this.viaje_promocion = new ModeloViaje_Promocion(new DAOSQLFactory());
+		this.viaje = new ModeloViaje(new DAOSQLFactory());
 		
 		controladorPasaje = new ControladorPasaje(ventanaVisualizarCliente,cliente,administrativoLogueado);
 
@@ -145,7 +237,7 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado, this.eventos_en_tabla);
 		
         controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
-        controladorDatosLogin = new controladorDatosLogin();
+        controladorDatosLogin = new ControladorDatosLogin();
 
 	}
 
@@ -184,6 +276,8 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	public void inicializar(){
 		this.vista.mostrarVentana();
+		this.vista.getMenuUsuarioLogueado().setText(""+ administrativoLogueado.getNombre());
+		this.llenarTablaClientes();
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 		controladorEvento.controlarNotificacionesInicioSesion();
 		controladorEvento.controlarNotificacionesContinuo();
@@ -199,7 +293,7 @@ public class ControladorAdministrativo implements ActionListener {
 	// ------------------------------------------- Desactivar Cliente ------------------------
 
 	private void editarCliente(ActionEvent ec) {
-
+		if(controladorCliente.validarCamposEditarCliente()){
 		java.util.Date dateFechaNacimiento = this.ventanaEditarCliente.getDateFechaNacimiento().getDate();
 		java.sql.Date fechaNacimientoCliente = new java.sql.Date(dateFechaNacimiento.getTime());
 		
@@ -231,9 +325,10 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		ClienteDTO clienteEditable = new ClienteDTO(idCliente, nombreCliente, apellidoCliente, dniCliente, fechaNacimientoCliente, medioContactoCliente, loginCliente);
 		controladorCliente.editarCliente(clienteEditable);
-		
 		this.llenarTablaClientes();
-		
+		}else{
+			JOptionPane.showMessageDialog(null, "Verifique los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void mostrarVentanaEditarCliente(ActionEvent mve) {
@@ -287,9 +382,10 @@ public class ControladorAdministrativo implements ActionListener {
 	private void mostrarVentanaAgregarPasaje(ActionEvent ap) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
+		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
 		this.ventanaVisualizarCliente.mostrarVentana(true);
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
-		
 		controladorPasaje.iniciar();
 	}
 	
@@ -315,7 +411,8 @@ public class ControladorAdministrativo implements ActionListener {
 		}	
 	}
 	
-	/*private void mostrarVentanaEditarPromocion(ActionEvent ep) {
+	private void mostrarVentanaEditarPromocion(ActionEvent ep) {
+		this.vista.getPanelPromocion().mostrarPanelPromocion(true);
 		int filaSeleccionada = this.vista.getPanelPromocion().getTablaPromocion().getSelectedRow();
 		if (filaSeleccionada != -1){
 			verDatosDeLaPromocion(filaSeleccionada);
@@ -323,7 +420,8 @@ public class ControladorAdministrativo implements ActionListener {
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}	
-	}*/
+	}
+
 	
 	private void verDatosDelEvento(int filaSeleccionada) {
 		controladorEvento.llenarComboEstados();
@@ -361,17 +459,20 @@ public class ControladorAdministrativo implements ActionListener {
 		return horarioString[1];
 	}
 	
-	/*private void verDatosDeLaPromocion(int filaSeleccionada) {
+	private void verDatosDeLaPromocion(int filaSeleccionada) {
+		controladorPromocion.llenarComboPorcentaje();
 		controladorPromocion.setPromocionSeleccionada(this.promociones_en_tabla.get(filaSeleccionada));
 		if (filaSeleccionada != -1){
-			ventanaEditarPromocion.mostrarVentana(true);
-			ventanaEditarPromocion.getComboPorcentaje().setSelectedItem(this.promociones_en_tabla.get(filaSeleccionada).getPorcentaje().toString());
-			ventanaEditarPromocion.get.setText(this.promociones_en_tabla.get(filaSeleccionada).getStock());
+			ventanaEditarPromocion.setVisible(true);
+			ventanaEditarPromocion.getDateFechaVencimiento().setDate(this.promociones_en_tabla.get(filaSeleccionada).getFechaVencimiento());
+			ventanaEditarPromocion.getComboPorcentaje().setSelectedItem(this.promociones_en_tabla.get(filaSeleccionada).getPorcentaje()+"");
+			ventanaEditarPromocion.getTxtStock().setText(this.promociones_en_tabla.get(filaSeleccionada).getStock()+"");
 		}
 		else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-	}*/
+	}
+
 
 	private void cancelarPasaje(ActionEvent cp) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
@@ -411,22 +512,49 @@ public class ControladorAdministrativo implements ActionListener {
 		this.llenarTablaPromociones();
 	}
 	
-	private void darBajaPromocion(ActionEvent v) {
+//	private void darBajaPromocion(ActionEvent v) {
+//		this.vista.getPanelPromocion().mostrarPanelPromocion(true);
+//		int promoSeleccionada = this.vista.getPanelPromocion().getTablaPromocion().getSelectedRow();
+//		if (promoSeleccionada != -1){
+//			controladorPromocion.darBajaPromocion(promoSeleccionada);
+//			llenarTablaPromociones();
+//		}else{
+//			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+//		}
+//		this.llenarTablaClientes();
+//	}
+	
+	private void editarEstadoPromocionUno(ActionEvent ep) {
 		this.vista.getPanelPromocion().mostrarPanelPromocion(true);
-		int promoSeleccionada = this.vista.getPanelPromocion().getTablaPromocion().getSelectedRow();
-		if (promoSeleccionada != -1){
-			controladorPromocion.darBajaPromocion(promoSeleccionada);
-			llenarTablaPromociones();
+		int filaSeleccionada = this.vista.getPanelPromocion().getTablaPromocion().getSelectedRow();
+		if (filaSeleccionada != -1){
+			editarEstadoPromocionDos(filaSeleccionada);
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
-		}
-		this.llenarTablaClientes();
+		}	
 	}
 	
+	private void editarEstadoPromocionDos(int filaSeleccionada) {
+		controladorPromocion.setPromocionSeleccionada(this.promociones_en_tabla.get(filaSeleccionada));
+		if (filaSeleccionada != -1){
+			PromocionDTO seleccionada = this.promociones_en_tabla.get(filaSeleccionada);
+			if(seleccionada.getEstado().equals("inactiva"))
+				seleccionada.setEstado("activa");
+			else
+				if(seleccionada.getEstado().equals("activa"))
+					seleccionada.setEstado("inactiva");
+			promocion.editarEstadoPromocion(seleccionada);
+		}
+		this.llenarTablaPromociones();
+	}
+
+
 
 	private void mostrarVentanaAgregarCliente(ActionEvent ac)  {
 		this.vista.getPanelCliente().mostrarPanelCliente(true);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
+		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
 		this.llenarTablaClientes();
 		this.ventanaRegistrarCliente.limpiarCampos();
 		this.ventanaCliente.limpiarCampos();
@@ -440,7 +568,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
 		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
-//		this.llenarTablaEventos(evento.obtenerEvento());
+		this.llenarTablaEventos(evento.obtenerEvento());
 		this.ventanaEvento.limpiarCampos();
 		this.ventanaEvento.mostrarVentana();
 	}
@@ -450,6 +578,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelPromocion().mostrarPanelPromocion(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
+		this.vista.getPanelEvento().mostrarPanelEvento(false);
 		this.llenarTablaPromociones();
 		this.ventanaPromocion.limpiarCampos();
 		this.ventanaPromocion.mostrarVentana();
@@ -465,14 +594,14 @@ public class ControladorAdministrativo implements ActionListener {
 					if(filtro.equals("Fecha de Ingreso")) {
 						datos.clear();
 			 			for(EventoDTO x : eventos_en_tabla)
-			 				if(!datos.contains(x.getFechaIngreso().toString()))
-			 					datos.add(x.getFechaIngreso().toString());
+			 				if(!datos.contains(mapper.parseToString(x.getFechaIngreso())))
+			 					datos.add(mapper.parseToString(x.getFechaIngreso()));
 					}
 					if(filtro.equals("Fecha del Evento")) {
 						datos.clear();
 			 			for(EventoDTO x : eventos_en_tabla)
-			 				if(!datos.contains(x.getFechaEvento().toString()))
-			 					datos.add(x.getFechaEvento().toString());
+			 				if(!datos.contains(mapper.parseToString(x.getFechaIngreso())))
+			 					datos.add(mapper.parseToString(x.getFechaEvento()));
 					}
 					if(filtro.equals("Apellido del Cliente")) {
 						datos.clear();
@@ -579,7 +708,7 @@ public class ControladorAdministrativo implements ActionListener {
 			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
 							 this.clientes_en_tabla.get(i).getApellido(),
 							 this.clientes_en_tabla.get(i).getDni(),
-							 this.clientes_en_tabla.get(i).getFechaNacimiento(),
+							 mapper.parseToString(this.clientes_en_tabla.get(i).getFechaNacimiento()),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
 							 this.clientes_en_tabla.get(i).getMedioContacto().getEmail(),
@@ -608,8 +737,8 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
 							this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
@@ -635,10 +764,10 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaSalida(),
-							this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada(),
+							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
-							this.pasajes_en_tabla.get(i).getValorViaje(),
+							"$ "+this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
 							this.pasajes_en_tabla.get(i).getEstadoDelPasaje().getNombre()
 			};
@@ -656,8 +785,8 @@ public class ControladorAdministrativo implements ActionListener {
 		for (int i = 0; i < tabla.size(); i++){
 
 			Object[] fila = {
-							tabla.get(i).getFechaIngreso(),
-							tabla.get(i).getFechaEvento(),
+							mapper.parseToString(tabla.get(i).getFechaIngreso()),
+							mapper.parseToString(tabla.get(i).getFechaEvento()),
 							tabla.get(i).getHoraEvento(),
 							tabla.get(i).getDescripcion(),
 							tabla.get(i).getCliente().getApellido(),
@@ -687,14 +816,9 @@ public class ControladorAdministrativo implements ActionListener {
 		for (int i = 0; i < this.promociones_en_tabla.size(); i++){
 
 			Object[] fila = {
-							//this.promociones_en_tabla.get(i).getViaje().getIdViaje(),
 							this.promociones_en_tabla.get(i).getPorcentaje()+" %",
 							this.promociones_en_tabla.get(i).getStock(),
-							this.promociones_en_tabla.get(i).getFechaVencimiento(),
-							this.promociones_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre()+", "+this.promociones_en_tabla.get(i).getViaje().getProvinciaOrigen().getNombre(),
-							this.promociones_en_tabla.get(i).getViaje().getCiudadDestino().getNombre()+", "+this.promociones_en_tabla.get(i).getViaje().getProvinciaDestino().getNombre(),
-							this.promociones_en_tabla.get(i).getViaje().getFechaSalida().toString(),
-							this.promociones_en_tabla.get(i).getViaje().getFechaLlegada().toString(),
+							mapper.parseToString(this.promociones_en_tabla.get(i).getFechaVencimiento()),
 							this.promociones_en_tabla.get(i).getEstado()
 			};
 							this.vista.getPanelPromocion().getModelPromocion().addRow(fila);

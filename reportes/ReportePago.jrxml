@@ -164,7 +164,7 @@
 				<textElement textAlignment="Center">
 					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getFechaSalida().toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getFechaSalidaParseada()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement mode="Opaque" x="360" y="0" width="100" height="50" backcolor="#DBD9D9" uuid="c6eb03ac-14a0-4ae0-bde4-c9a0a3ea37d9"/>
@@ -202,7 +202,7 @@
 				<textElement textAlignment="Center">
 					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getFechaLlegada().toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getFechaLlegadaParseada()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement mode="Opaque" x="181" y="0" width="89" height="50" backcolor="#DBD9D9" uuid="88d6e916-affc-4fe7-bc0b-411604cf5133"/>

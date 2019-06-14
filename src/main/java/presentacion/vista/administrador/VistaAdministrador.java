@@ -3,7 +3,10 @@ package presentacion.vista.administrador;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -12,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import persistencia.conexion.Conexion;
+import presentacion.vista.administrativo.VistaAdministrativo;
 
 public class VistaAdministrador extends JFrame {
 	
@@ -149,7 +153,6 @@ public class VistaAdministrador extends JFrame {
 		panelTransporte.setLocation(0, 0);
 		getContentPane().add(panelTransporte);
 		panelTransporte.setVisible(false);
-//		panelTransporte.getBtnRecargarTabla().setVisible(true);
 
 		
 		panelEmpleados = new PanelEmpleados();
@@ -187,8 +190,12 @@ public class VistaAdministrador extends JFrame {
 		panelFormaPago.setLocation(0, 0);
 		getContentPane().add(panelFormaPago);
 		panelFormaPago.setVisible(false);
-//		panelFormaPago.getBtnRecargarTabla().setVisible(true);
+
 		
+		JLabel labelMarcaDeAgua = new JLabel("");
+		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
+		labelMarcaDeAgua.setBounds(47, 0, 1313, 674);
+		add(labelMarcaDeAgua);
 		this.setVisible(false);
 	}
 	
