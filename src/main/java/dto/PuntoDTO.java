@@ -5,12 +5,18 @@ public class PuntoDTO {
 	private int idPunto;
 	private int puntos;
 	private Date vencimiento;
+	private ClienteDTO cliente;
 
-	public PuntoDTO(int idPunto, int puntos, Date vencimiento) {
+	public PuntoDTO(int idPunto, int puntos, Date vencimiento, ClienteDTO clienteDTO) {
 		super();
 		this.idPunto = idPunto;
 		this.puntos = puntos;
 		this.vencimiento = vencimiento;
+		this.cliente = clienteDTO;
+	}
+
+	public PuntoDTO() {
+		super();
 	}
 
 	public int getIdPunto() {
@@ -36,4 +42,14 @@ public class PuntoDTO {
 	public void setVencimiento(Date vencimiento) {
 		this.vencimiento = vencimiento;
 	}
+
+	public ClienteDTO getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClienteDTO cliente) {
+		this.cliente = cliente;
+	}
+	
+	
 }

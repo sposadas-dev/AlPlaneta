@@ -15,6 +15,8 @@ import java.awt.Font;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import java.awt.SystemColor;
 
 public class VentanaRegistroRegimenPuntos  extends JFrame {
 	
@@ -108,6 +110,15 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 		vencimiento.setColumns(10);
 		vencimiento.setBounds(119, 111, 86, 20);
 		contentPane.add(vencimiento);
+		
+		JEditorPane dtrpnelClienteSumar = new JEditorPane();
+		dtrpnelClienteSumar.setBackground(SystemColor.control);
+		dtrpnelClienteSumar.setFont(new Font("Consolas", Font.PLAIN, 10));
+		dtrpnelClienteSumar.setText("-El Cliente sumará una cantidad de puntos (Cant.Puntos) por unidad gastada.\r\n-La Unidad de medida es pesos argentinos (ARS).\r\n-Los puntos tendran un vencimiento, este sera en cantidad de meses (Vencimiento).");
+		dtrpnelClienteSumar.setBounds(213, 64, 194, 110);
+		dtrpnelClienteSumar.setEditable(false);
+		
+		contentPane.add(dtrpnelClienteSumar);
 	}
 
 	public JTextField getVencimiento() {
@@ -164,6 +175,8 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 
 	public void limpiarCampos() {
 		this.txtCantPuntos.setText(null);
+		this.textARS.setText(null);
+		this.vencimiento.setText(null);
 		
 	}
 }

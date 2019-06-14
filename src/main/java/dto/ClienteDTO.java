@@ -1,6 +1,8 @@
 package dto;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClienteDTO {
 
@@ -12,9 +14,13 @@ public class ClienteDTO {
 	private MedioContactoDTO medioContacto;
 	private LoginDTO login;
 	private String mail;
-	private int puntos;
+	private int totalPuntos;
+	private ArrayList<PuntoDTO> puntos;
+	
+	
 
-	public ClienteDTO(int idCliente, String nombre, String apellido, String dni, Date fechaNacimiento, MedioContactoDTO medioContacto, LoginDTO login){
+	public ClienteDTO(int idCliente, String nombre, String apellido, 
+			String dni, Date fechaNacimiento, MedioContactoDTO medioContacto, LoginDTO login){
 		super();
 		this.idCliente = idCliente;
 		this.nombre = nombre;
@@ -24,7 +30,9 @@ public class ClienteDTO {
 		this.medioContacto = medioContacto;
 		this.login = login;
 		this.mail = medioContacto.getEmail();
-		this.puntos = 0;
+		this.totalPuntos = 0;
+		this.puntos = new ArrayList<PuntoDTO>();
+		
 	}
 
 	public ClienteDTO() {
@@ -52,14 +60,6 @@ public class ClienteDTO {
 
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
-	}
-
-	public int getPuntos() {
-		return puntos;
-	}
-
-	public void setPuntos(int puntos) {
-		this.puntos = puntos;
 	}
 
 	public String getDni() {
@@ -97,5 +97,24 @@ public class ClienteDTO {
 	public String getMail() {
 		return mail;
 	}
-	
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public int getTotalPuntos() {
+		return totalPuntos;
+	}
+
+	public void setTotalPuntos(int totalPuntos) {
+		this.totalPuntos = totalPuntos;
+	}
+
+	public ArrayList<PuntoDTO> getPuntos() {
+		return puntos;
+	}
+
+	public void setPuntos(ArrayList<PuntoDTO> puntos) {
+		this.puntos = puntos;
+	}
 }

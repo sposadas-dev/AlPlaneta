@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import dto.CoordinadorDTO;
 import dto.RegimenPuntoDTO;
 import modelo.Coordinador;
-import modelo.modeloRegimenPunto;
+import modelo.ModeloRegimenPunto;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.coordinador.VistaCoordinador;
 
@@ -20,7 +20,7 @@ public class ControladorCOOR {
 	
 	private CoordinadorDTO coordinadorLogueado;
 	private Coordinador coordinador;
-	private modeloRegimenPunto punto;
+	private ModeloRegimenPunto punto;
 	
 	private ControladorRegimenPuntos controladorRegimenPuntos;
 	
@@ -34,14 +34,14 @@ public class ControladorCOOR {
 //MENU ITEMS		
 		this.vistaCoordinador.getItemAgregarRegimenPuntos().addActionListener(a->agregarPanelRegimenPuntos(a));
 		this.vistaCoordinador.getItemVisualizarRegimenPuntos().addActionListener(vRP->visualizarRegimenPuntos(vRP));
-		this.vistaCoordinador.getItemEditarRegimenPuntos().addActionListener(eRP->editarRegimenPuntos(eRP));
+//		this.vistaCoordinador.getItemEditarRegimenPuntos().addActionListener(eRP->editarRegimenPuntos(eRP));
 		this.vistaCoordinador.getItemEliminarRegimenPuntos().addActionListener(dt->eliminarRegimenPuntos(dt));
 
 //		this.vistaCoordinador.getPanelRegimenPuntos().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 	
 
 		this.coordinador = new Coordinador(new DAOSQLFactory());
-		this.punto = new modeloRegimenPunto(new DAOSQLFactory()); 
+		this.punto = new ModeloRegimenPunto(new DAOSQLFactory()); 
 		this.coordinadorLogueado = coordinadorLogueado;
 	
 //CONTROLADORES		
@@ -67,38 +67,25 @@ public class ControladorCOOR {
 
 	/*Agrega el panel de RegimenPuntos en la vistaPrinciapal del coordinador*/ 
 	private void agregarPanelRegimenPuntos(ActionEvent afp) {
-		this.vistaCoordinador.getPanelRegimenPuntos().mostrarPanelRegimenPuntos(true);
 		controladorRegimenPuntos.mostrarVentanaRegistroRegimenPuntosConDarAlta();
 	}
 	
-	private void editarRegimenPuntos(ActionEvent efp) {
-		this.vistaCoordinador.getPanelRegimenPuntos().mostrarPanelRegimenPuntos(true);
-		int filaSeleccionada = this.vistaCoordinador.getPanelRegimenPuntos().getTablaRegimenPuntos().getSelectedRow();
-		if (filaSeleccionada != -1){
-			controladorRegimenPuntos.ModificarRegimenPuntos(filaSeleccionada);
-			llenarTablaRegimenPuntos(); 
-
-		}else{
-			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
-		}
-		llenarTablaRegimenPuntos();
-	} 
+//	private void editarRegimenPuntos(ActionEvent efp) {
+//		this.vistaCoordinador.getPanelRegimenPuntos().mostrarPanelRegimenPuntos(true);
+//		int filaSeleccionada = this.vistaCoordinador.getPanelRegimenPuntos().getTablaRegimenPuntos().getSelectedRow();
+//		if (filaSeleccionada != -1){
+//			controladorRegimenPuntos.ModificarRegimenPuntos(filaSeleccionada);
+//			llenarTablaRegimenPuntos(); 
+//
+//		}else{
+//			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+//		}
+//		llenarTablaRegimenPuntos();
+//	} 
 	
 	private void eliminarRegimenPuntos(ActionEvent dt) {
-		this.vistaCoordinador.getPanelRegimenPuntos().mostrarPanelRegimenPuntos(true);
-		int filaSeleccionada = this.vistaCoordinador.getPanelRegimenPuntos().getTablaRegimenPuntos().getSelectedRow();
-		if (filaSeleccionada != -1){
-			controladorRegimenPuntos.eliminarPunto(filaSeleccionada);
-			llenarTablaRegimenPuntos();
-		
-		}else{
-			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
-		}
+		controladorRegimenPuntos.eliminarPunto();
 	}
-	
-//	public void recargarTablaRegimenPuntos(ActionEvent r){
-//		llenarTablaFormaPago();
-//	}
  
 	public void llenarTablaRegimenPuntos(){
 		this.vistaCoordinador.getPanelRegimenPuntos().getModelRegimenPuntos().setRowCount(0); //Para vaciar la tabla

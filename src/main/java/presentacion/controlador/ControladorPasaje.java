@@ -27,19 +27,22 @@ import dto.PasajeDTO;
 import dto.Pasaje_PasajerosDTO;
 import dto.PasajeroDTO;
 import dto.PromocionDTO;
+import dto.PuntoDTO;
+import dto.RegimenPuntoDTO;
 import dto.ViajeDTO;
 import generatePDF.GeneratePDF;
 import modelo.Cliente;
 import modelo.EstadoPasaje;
 import modelo.FormaPago;
 import modelo.ModeloPromocion;
+import modelo.ModeloPunto;
+import modelo.ModeloRegimenPunto;
 import modelo.ModeloViaje;
 import modelo.Pago;
 import modelo.Pagos_Pasaje;
 import modelo.Pasaje;
 import modelo.Pasaje_Pasajeros;
 import modelo.Pasajero;
-import modelo.modeloRegimenPunto;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.reportes.Reporte;
 import presentacion.vista.administrativo.VentanaCancelacionPasaje;
@@ -103,6 +106,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	private DefaultTableModel dm;
 	private StringBuilder cad= new StringBuilder();
+	private ModeloPunto modeloPunto;
 	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
 	
 	public ControladorPasaje(VentanaVisualizarClientes ventanaVisualizarClientes, Cliente cliente, AdministrativoDTO administrativoLogueado){
@@ -209,6 +213,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaCancelacionPasaje.getBtnAceptar().addActionListener(cp->cancelarPasaje(cp));
 		this.administrativoLogueado = administrativoLogueado;
 		this.editarPago = true;
+		this.modeloPunto = new ModeloPunto(new DAOSQLFactory());
 	}
 
 	private void pagarPasaje(ActionEvent p) {
@@ -529,13 +534,45 @@ public class ControladorPasaje implements ActionListener{
 	}
 	
 	private void calcularPuntos(ClienteDTO cliente, BigDecimal montoAPagar) {
-		modeloRegimenPunto modeloPuntos = new modeloRegimenPunto(new DAOSQLFactory());
+		
         String[] parts = montoAPagar.toString().split("\\.");
         Integer parteEntera= Integer.parseInt(parts[0]);
         Integer parteDecimal= Integer.parseInt(parts[1]);
+        
+        
+        // BUSCAR EL REGIMEN DE LA BASE
+        ModeloRegimenPunto modeloPuntos = new ModeloRegimenPunto(new DAOSQLFactory());
+        RegimenPuntoDTO regimen = modeloPuntos.obtenerUltimoRegistro();
+        PuntoDTO punto = new PuntoDTO();
+        
+        // MONTO PAGADO X REGIMEN.PUNTO / REGIMEN.ARS
+        punto.setPuntos((parteEntera*regimen.getPunto())/regimen.getARS());
+        
+        //FECHA ACTUAL + DURACION
         Calendar calendar = Calendar.getInstance();
         java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
-        System.out.println(ourJavaDateObject.toString());
+        calendar.setTime(ourJavaDateObject); 
+        calendar.add(Calendar.MONTH, regimen.getVencimiento());
+        Date vencimiento = (Date) calendar.getTime();
+        punto.setVencimiento(vencimiento);
+
+        //SETEAR EL PUNTO AL CLIENTE
+        cliente.getPuntos().add(punto);
+        punto.setCliente(cliente);
+        
+        //CALCULAR EL TOTAL DE PUNTO TENIENDO EN CUENTA EL VENCIMIENTO DE LOS PUNTOS
+        int puntosAux = cliente.getTotalPuntos();
+        for(PuntoDTO p:cliente.getPuntos())
+        		if(!estaVencido(p.getVencimiento()))
+        				puntosAux += p.getPuntos();
+
+        // SET PUNTO AL CLIENTE
+
+        cliente.setTotalPuntos(puntosAux);
+        //GUARDARLO EN MODELO
+        this.modeloPunto.agregarPunto(punto);
+        
+        
         //TODO:http://javaeefuncional.blogspot.com/2015/11/sumar-dias-una-fecha-date-in-java.html
         /*
          * Calendar cal = Calendar.getInstance(); 
@@ -548,6 +585,14 @@ public class ControladorPasaje implements ActionListener{
         
 	}
 
+	private boolean estaVencido(java.sql.Date fechaDePunto) {
+		java.util.Date fecha = new java.util.Date(); 
+		java.sql.Date fechaActual= new java.sql.Date(fecha.getTime());	
+		
+		if(fechaActual.before(fechaDePunto))//es un evento futuro
+			return false;
+		return true;
+	}
 
 	private void mostrarVentanaConfirmacionPasaje(){
 		this.ventanaConfirmacionPasaje.mostrarVentana(true);
@@ -614,7 +659,6 @@ public class ControladorPasaje implements ActionListener{
 			modeloPasajes_pasajeros.agregarPasajePasajero(pasaje_pasajeros);
 		}
 		verificarSumaDePuntosDeCliente(pasajeDTO);
-		
 		
 		generarVoucherMail(pasajeDTO,cliente);
 		this.ventanaConfirmacionPasaje.setVisible(false);

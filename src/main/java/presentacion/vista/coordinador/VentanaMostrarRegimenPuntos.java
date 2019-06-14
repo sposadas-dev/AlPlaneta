@@ -155,7 +155,7 @@ public class VentanaMostrarRegimenPuntos  extends JFrame {
 		this.setVisible(false);
 	}
 	
-	public JButton getBtnAgregar() {
+	public JButton getBtnModificar() {
 		return btnModificar;
 	}
 

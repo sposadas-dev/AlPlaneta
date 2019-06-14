@@ -2,35 +2,35 @@ package modelo;
 
 import java.util.List;
 
-import dto.RegimenPuntoDTO;
+import dto.PuntoDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.PuntoDAO;
 
-public class modeloRegimenPunto {
+public class ModeloPunto {
 	
 private PuntoDAO punto;
 	
-	public modeloRegimenPunto(DAOAbstractFactory metodo_persistencia){
+	public ModeloPunto(DAOAbstractFactory metodo_persistencia){
 		this.punto = metodo_persistencia.createPuntoDAO();
 	}
 	
-	public void agregarPunto(RegimenPuntoDTO nuevoPunto){
+	public void agregarPunto(PuntoDTO nuevoPunto){
 		this.punto.insert(nuevoPunto);
 	}
 	
-	public void borrarPunto(RegimenPuntoDTO punto_a_punto) {
+	public void borrarPunto(PuntoDTO punto_a_punto) {
 		this.punto.delete(punto_a_punto);
 	}
 	
-	public List<RegimenPuntoDTO> obtenerPunto(){
+	public List<PuntoDTO> obtenerPunto(){
 		return this.punto.readAll();	
 	}
 	
-	public void editarPunto(RegimenPuntoDTO punto_a_editar){
+	public void editarPunto(PuntoDTO punto_a_editar){
 		this.punto.update(punto_a_editar);
 	}
 	
-	public RegimenPuntoDTO getPuntoById(int idPunto){
+	public PuntoDTO getPuntoById(int idPunto){
 		return this.punto.getPuntoById(idPunto);
 	}
 

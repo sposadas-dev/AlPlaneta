@@ -228,6 +228,7 @@ public class ControladorAdministrativo implements ActionListener {
 				this.ventanaEditarCliente.getTxtTelefonoCelular().getText(),
 				this.ventanaEditarCliente.getTxtEmail().getText()
 				);
+		
 		ClienteDTO clienteEditable = new ClienteDTO(idCliente, nombreCliente, apellidoCliente, dniCliente, fechaNacimientoCliente, medioContactoCliente, loginCliente);
 		controladorCliente.editarCliente(clienteEditable);
 		
