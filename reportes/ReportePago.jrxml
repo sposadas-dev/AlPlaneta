@@ -32,12 +32,12 @@
 			<frame>
 				<reportElement x="0" y="0" width="630" height="132" uuid="fbf866cd-64dc-4043-b98c-ed8d9f31d19c"/>
 				<staticText>
-					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="170" y="51" width="318" height="30" backcolor="#FFFFFF" uuid="1ced0c3f-a69c-4009-bcad-5dd7c8e371d7"/>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="170" y="51" width="390" height="30" backcolor="#FFFFFF" uuid="1ced0c3f-a69c-4009-bcad-5dd7c8e371d7"/>
 					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 						<pen lineStyle="Dotted"/>
 					</box>
 					<textElement verticalAlignment="Justified" rotation="None">
-						<font fontName="SansSerif" size="22" isBold="true"/>
+						<font fontName="SansSerif" size="23" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Comprobante de pago]]></text>
 				</staticText>
@@ -49,19 +49,33 @@
 					<reportElement x="380" y="2" width="102" height="20" uuid="2db2f65d-fb98-441c-917c-e85f708cb370"/>
 					<text><![CDATA[Fecha de emisión:]]></text>
 				</staticText>
+				<staticText>
+					<reportElement x="280" y="100" width="120" height="19" uuid="89b37f31-0205-4c66-bc63-198820e690b4"/>
+					<textElement>
+						<font size="15" isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[Fecha de pago:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="400" y="100" width="130" height="19" uuid="83188658-1646-47c6-8113-9e9b2ae7b910"/>
+					<textElement>
+						<font size="13"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{pago}.getFechaPagoParseada()]]></textFieldExpression>
+				</textField>
 				<image>
-					<reportElement x="10" y="20" width="150" height="105" uuid="d05d0d4e-1810-43bf-8c48-a74e3f81a5cf"/>
+					<reportElement x="10" y="20" width="150" height="105" uuid="e7387ae9-d24f-45bd-8549-85f437408226"/>
 					<imageExpression><![CDATA["recursos/AlPlaneta.png"]]></imageExpression>
 				</image>
 			</frame>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="50">
+		<band height="102">
 			<staticText>
 				<reportElement x="10" y="0" width="90" height="19" uuid="3db32c9b-bb92-4028-b3d7-fc5cf985d5bf"/>
 				<textElement>
-					<font size="15" isBold="true" isItalic="false"/>
+					<font size="15" isBold="true" isItalic="false" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Cliente]]></text>
 			</staticText>
@@ -99,6 +113,20 @@
 					<font size="12" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Nombre y apellido:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="60" width="181" height="31" uuid="eba50e07-0a3c-47d3-b9d0-9bff5864a158"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pasaje}.getAdministrativo().getNombre()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="60" width="90" height="31" uuid="2c40662a-0907-4860-a5bb-956c6861e18b"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atendido por:]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -151,7 +179,7 @@
 				</staticText>
 			</frame>
 		</band>
-		<band height="63">
+		<band height="55">
 			<textField>
 				<reportElement mode="Opaque" x="0" y="0" width="90" height="50" backcolor="#DBD9D9" uuid="6112edf4-c2f0-4112-9c01-1fc750956bad"/>
 				<box>

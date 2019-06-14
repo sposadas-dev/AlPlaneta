@@ -18,6 +18,12 @@ CREATE TABLE `login` (
   PRIMARY KEY (`idLogin`)
 );
 
+CREATE TABLE `local`(
+ `idLocal` int(11) NOT NULL AUTO_INCREMENT,
+ `nombre` varchar(45) NOT NULL, 
+ `direccion`varchar(45) NOT NULL 
+);
+
 CREATE TABLE `administrador` (
   `idAdministrador` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
@@ -31,6 +37,7 @@ CREATE TABLE `administrativo` (
   `nombre` varchar(45) NOT NULL,
   `idLogin` int(11) NOT NULL,
    `mail` varchar(45) NOT NULL,
+  `idLogin` int(11) NOT NULL,
   PRIMARY KEY (`idAdministrativo`)
 );
 
@@ -39,6 +46,7 @@ CREATE TABLE `coordinador` (
   `nombre` varchar(45) NOT NULL,
   `idLogin` int(11) NOT NULL,
   `mail` varchar(45) NOT NULL,
+  `idLogin` int(11) NOT NULL,
   PRIMARY KEY (`idCoordinador`)
 );
 
@@ -47,6 +55,7 @@ CREATE TABLE `mediocontacto` (
   `numeroFijo` varchar(45) NOT NULL,
   `numeroCelular` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
+  `idLogin` int(11) NOT NULL,
   PRIMARY KEY (`idMedioContacto`)
 );
 
@@ -223,7 +232,10 @@ CREATE TABLE `viaje_promocion` (
   PRIMARY KEY (`idViajePromocion`)
 );
 
+
+
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);
+ALTER TABLE `local` ADD FOREIGN KEY (`idLocal`) references local(`idLocal`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLogin`)  references login(`idLogin`);
 ALTER TABLE `administrativo` ADD FOREIGN KEY (`idLogin`)  references login(`idLogin`);
 ALTER TABLE `coordinador` ADD FOREIGN KEY (`idLogin`)  references login(`idLogin`);

@@ -79,7 +79,6 @@ public class PanelCliente extends JPanel {
 		add(inactivos);
 		
 		btnAgregar = new JButton("");
-		btnAgregar.setVerticalAlignment(SwingConstants.TOP);
 		btnAgregar.setToolTipText("Registrar cliente");
 		btnAgregar.setIcon(new ImageIcon(PanelCliente.class.getResource("/recursos/agregarCliente.png")));
 		btnAgregar.setBounds(10, 61, 68, 54);
@@ -87,11 +86,13 @@ public class PanelCliente extends JPanel {
 		
 		
 	    btnEditar = new JButton("");
+	    btnEditar.setToolTipText("Editar cliente");
 		btnEditar.setIcon(new ImageIcon(PanelCliente.class.getResource("/recursos/editarCliente.png")));
 		btnEditar.setBounds(77, 61, 68, 54);
 		add(btnEditar);
 		
 		txtFiltro = new JTextField();
+		txtFiltro.setToolTipText("Buscar clientes");
 		txtFiltro.setBounds(553, 83, 266, 20);
 		add(txtFiltro);
 		txtFiltro.setColumns(10);

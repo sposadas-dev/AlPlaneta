@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="600" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="284e0c88-a4b2-4ff8-98a2-d67b80bcffaf">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<subDataset name="Dataset1" uuid="545bbc50-215a-460b-ab7d-18166a79bb19">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="Fecha" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[]]>
+	</queryString>
+	<field name="pago" class="dto.PagoDTO">
+		<fieldDescription><![CDATA[pago]]></fieldDescription>
+	</field>
+	<field name="pasaje" class="dto.PasajeDTO">
+		<fieldDescription><![CDATA[pasaje]]></fieldDescription>
+	</field>
+	<title>
+		<band height="133" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="630" height="132" uuid="fbf866cd-64dc-4043-b98c-ed8d9f31d19c"/>
+				<staticText>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="170" y="51" width="400" height="59" backcolor="#FFFFFF" uuid="1ced0c3f-a69c-4009-bcad-5dd7c8e371d7"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<pen lineStyle="Dotted"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Justified" rotation="None">
+						<font fontName="SansSerif" size="22" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Comprobante de cancelación de reserva]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="490" y="0" width="56" height="20" uuid="0706116d-f632-4605-96d8-35fe765b5d67"/>
+					<textFieldExpression><![CDATA[$P{Fecha}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="380" y="0" width="102" height="20" uuid="2db2f65d-fb98-441c-917c-e85f708cb370"/>
+					<text><![CDATA[Fecha de emisión:]]></text>
+				</staticText>
+				<image>
+					<reportElement x="10" y="20" width="150" height="105" uuid="d05d0d4e-1810-43bf-8c48-a74e3f81a5cf"/>
+					<imageExpression><![CDATA["recursos/AlPlaneta.png"]]></imageExpression>
+				</image>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="144">
+			<staticText>
+				<reportElement x="10" y="0" width="90" height="19" uuid="3db32c9b-bb92-4028-b3d7-fc5cf985d5bf"/>
+				<textElement>
+					<font size="13" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="134" y="20" width="130" height="19" uuid="cbb4927a-ec9a-4bd4-b242-fbbee5b430c0"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pasaje}.getCliente().getNombre().concat(" ").concat($F{pasaje}.getCliente().getApellido())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="350" y="20" width="70" height="20" forecolor="#000000" uuid="73471874-579c-4079-a093-3c03ed4c15e5"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[DNI:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="425" y="20" width="120" height="20" backcolor="#FFFFFF" uuid="83751c25-2008-452e-b38a-7390a955c786"/>
+				<box>
+					<pen lineColor="#FFFFFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pasaje}.getCliente().getDni()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="20" width="124" height="20" forecolor="#000000" uuid="a30a3e68-14a7-4447-825e-dbb79df86adb"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Nombre y apellido:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="50" width="100" height="31" uuid="4045ec6a-d18c-42c2-b49f-84ea859386ca"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atendido por:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="50" width="181" height="31" uuid="ffd9be4b-ef8e-4d8a-a16b-b0565bda9f6e"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pasaje}.getAdministrativo().getNombre()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="100" width="131" height="31" uuid="7ac6a6eb-b3aa-4e6a-b969-87d09948d40b"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pasaje}.getFechaVencimientoParseada()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="100" width="72" height="33" forecolor="#000000" uuid="7a22aa2e-82b2-45e8-8cef-1612c1b2a2fb"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de reserva:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="51" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="51" backcolor="#FFFFFF" uuid="8cc8a6cd-a7e5-4a41-9dcd-86b53f6bc1af"/>
+				<staticText>
+					<reportElement x="5" y="72" width="70" height="20" forecolor="#000000" uuid="85d7837e-663a-4fbe-9520-e9903af646c7"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Destino]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="10" width="70" height="20" forecolor="#000000" uuid="7f6228ff-313a-4ff8-b467-d07ae884fd8c"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Origen]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="69" y="0" width="486" height="51" backcolor="#DBD9D9" uuid="c6eb03ac-14a0-4ae0-bde4-c9a0a3ea37d9"/>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getPaisOrigen().getNombre().concat(", ").concat($F{pasaje}.getViaje().getProvinciaOrigen().getNombre()).concat(", ").concat($F{pasaje}.getViaje().getCiudadOrigen().getNombre())]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+		<band height="63">
+			<textField>
+				<reportElement mode="Opaque" x="70" y="10" width="485" height="50" backcolor="#DBD9D9" uuid="8ca2af01-df13-4bc5-8e8d-bfd199204bfb"/>
+				<box>
+					<pen lineStyle="Solid" lineColor="#FFFFFF"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{pasaje}.getViaje().getPaisDestino().getNombre().concat(", ").concat($F{pasaje}.getViaje().getProvinciaDestino().getNombre()).concat(", ").concat($F{pasaje}.getViaje().getCiudadDestino().getNombre())]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="103">
+			<staticText>
+				<reportElement x="0" y="20" width="70" height="20" forecolor="#000000" uuid="30783922-09e5-453b-9b00-8d6abf3921a8"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto total:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="20" width="150" height="20" forecolor="#000000" uuid="005a1940-5d44-46f9-94a0-f29e1740032d"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto pagado:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="60" width="150" height="20" forecolor="#000000" uuid="5e7bd7bf-ef12-4d81-af9f-ac6d54514f0e"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto a reembolsar:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

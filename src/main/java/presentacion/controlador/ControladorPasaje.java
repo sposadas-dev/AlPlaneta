@@ -688,6 +688,7 @@ public class ControladorPasaje implements ActionListener{
 		}
 		
 		generarVoucherMail(pasajeDTO,cliente);
+		
 		this.ventanaConfirmacionPasaje.setVisible(false);
 		this.pasajeros_en_reserva.clear();
 		this.llenarTablaDePasajeros();

@@ -15,7 +15,7 @@ public class PanelEmpleados extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel modelEmpleados;
-	private String[] nombreColumnasEmpleados = {"Usuario","Contraseña","Rol","Estado"};
+	private String[] nombreColumnasEmpleados = {"Nombre","Usuario","Rol","Estado"};
 	private JTable tablaEmpleados;
 	private JButton btnConfirmar;
 	private JLabel lblEmpleados;
