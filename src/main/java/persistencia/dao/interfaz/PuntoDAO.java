@@ -16,4 +16,6 @@ public interface PuntoDAO {
 	
 	public PuntoDTO getPuntoById(int id);
 
+	public PuntoDTO getUltimoRegistroPunto();
+
 }

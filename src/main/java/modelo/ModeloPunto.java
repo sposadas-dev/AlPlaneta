@@ -6,11 +6,11 @@ import dto.PuntoDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.PuntoDAO;
 
-public class Punto {
+public class ModeloPunto {
 	
 private PuntoDAO punto;
 	
-	public Punto(DAOAbstractFactory metodo_persistencia){
+	public ModeloPunto(DAOAbstractFactory metodo_persistencia){
 		this.punto = metodo_persistencia.createPuntoDAO();
 	}
 	

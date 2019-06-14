@@ -36,7 +36,7 @@ import persistencia.dao.interfaz.Pasaje_PasajerosDAO;
 import persistencia.dao.interfaz.PasajeroDAO;
 import persistencia.dao.interfaz.PromocionDAO;
 import persistencia.dao.interfaz.ProvinciaDAO;
-import persistencia.dao.interfaz.PuntoDAO;
+import persistencia.dao.interfaz.RegimenPuntoDAO;
 import persistencia.dao.interfaz.RolDAO;
 import persistencia.dao.interfaz.TransporteDAO;
 import persistencia.dao.interfaz.ViajeDAO;

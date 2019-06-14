@@ -1,34 +1,36 @@
 package persistencia.dao.mysql;
+
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import dto.PuntoDTO;
-import dto.RegimenPuntoDTO;
-import modelo.Cliente;
-import persistencia.conexion.Conexion;
-import persistencia.dao.interfaz.PuntoDAO;
 
-public class PuntoDAOSQL implements PuntoDAO{
+import dto.RegimenPuntoDTO;
+import modelo.ModeloRegimenPunto;
+import persistencia.conexion.Conexion;
+import persistencia.dao.interfaz.RegimenPuntoDAO;
+
+public class RegimenPuntoDAOSQL implements RegimenPuntoDAO{
 	
-	private static final String insert = "INSERT INTO punto(idPunto, punto, vencimiento, idCliente ) VALUES (?,?, ?, ?)";
-	private static final String delete = "DELETE FROM punto WHERE idPunto = ?";
-	private static final String readall = "SELECT * FROM punto";
-	private static final String update = "UPDATE punto SET punto= ?, vencimiento =?, idCLiente=? WHERE idPunto = ?";
-	private static final String browse = "SELECT * FROM punto WHERE idPunto = ?";
-	private static final String ultimoRegistro = "SELECT * FROM punto ORDER BY idPunto desc limit 1";
+	private static final String insert = "INSERT INTO regimenpunto(idRegimenPunto, punto, ARS, vencimiento ) VALUES (?,?, ?, ?)";
+	private static final String delete = "DELETE FROM regimenpunto WHERE idRegimenPunto = ?";
+	private static final String readall = "SELECT * FROM regimenpunto";
+	private static final String update = "UPDATE regimenpunto SET punto= ?, ARS = ?, vencimiento =? WHERE idRegimenPunto = ?";
+	private static final String browse = "SELECT * FROM regimenpunto WHERE idRegimenPunto = ?";
+	private static final String ultimoRegistro = "SELECT * FROM regimenpunto ORDER BY idRegimenPunto desc limit 1";
 	
 	@Override
-	public boolean insert(PuntoDTO punto) {
+	public boolean insert(RegimenPuntoDTO punto) {
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
 			statement.setInt(1, punto.getIdPunto());
-			statement.setInt(2, punto.getPuntos());
-			statement.setDate(3, punto.getVencimiento());
-			statement.setInt(4, punto.getCliente().getIdCliente());
+			statement.setInt(2, punto.getPunto());
+			statement.setInt(3, punto.getARS());
+			statement.setInt(4, punto.getVencimiento());
 
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -40,7 +42,7 @@ public class PuntoDAOSQL implements PuntoDAO{
 	}
 	
 	@Override
-	public boolean delete(PuntoDTO punto_a_eliminar) {
+	public boolean delete(RegimenPuntoDTO punto_a_eliminar) {
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
@@ -56,41 +58,37 @@ public class PuntoDAOSQL implements PuntoDAO{
 		}
 		return false;
 	}
-
 	@Override
-	public List<PuntoDTO> readAll() {
+	public List<RegimenPuntoDTO> readAll() {
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
 		Conexion conexion = Conexion.getConexion();
-		ArrayList<PuntoDTO> puntos = new ArrayList<PuntoDTO>();
-		Cliente modeloCliente = new Cliente(new DAOSQLFactory());
+		ArrayList<RegimenPuntoDTO> puntos = new ArrayList<RegimenPuntoDTO>();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-				puntos.add(new PuntoDTO(resultSet.getInt("idPunto"),
+				puntos.add(new RegimenPuntoDTO(resultSet.getInt("idRegimenPunto"),
 												  resultSet.getInt("punto"),
-												  resultSet.getDate("vencimiento"),
-												  modeloCliente.getByClienteById(resultSet.getInt("idCliente")))
-												  );
+												  resultSet.getInt("ARS"),
+												  resultSet.getInt("vencimiento")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
 		return puntos;
 	}
-	
-@Override
-	public boolean update(PuntoDTO punto_a_editar) {
+	@Override
+	public boolean update(RegimenPuntoDTO punto_a_editar) {
 		PreparedStatement statement;
 		int chequeoUpdate = 0;
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(update);
-			statement.setInt(1, punto_a_editar.getPuntos());
-			statement.setDate(2,punto_a_editar.getVencimiento());
-			statement.setInt(3, punto_a_editar.getCliente().getIdCliente());
+			statement.setInt(1, punto_a_editar.getPunto());
+			statement.setInt(2,punto_a_editar.getARS());
+			statement.setInt(3, punto_a_editar.getVencimiento());
 			statement.setInt(4, punto_a_editar.getIdPunto()); 
 			
 			
@@ -103,25 +101,23 @@ public class PuntoDAOSQL implements PuntoDAO{
 		}
 		return false; 
 	}
-
-@Override
-	public PuntoDTO getPuntoById(int idPunto ){
+	@Override
+	public RegimenPuntoDTO getPuntoById(int idPunto ){
 		
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
-		PuntoDTO punto;
-		Cliente modeloCliente = new Cliente(new DAOSQLFactory());
+		RegimenPuntoDTO punto;
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browse);
 			statement.setInt(1, idPunto);
 			resultSet = statement.executeQuery();
 			
 			if(resultSet.next()){
-				punto = new PuntoDTO(resultSet.getInt("idPunto"),
+				punto = new RegimenPuntoDTO(resultSet.getInt("idRegimenPunto"),
 											   resultSet.getInt("punto"),
-											   resultSet.getDate("vencimiento"),
-											   modeloCliente.getByClienteById(resultSet.getInt("idCliente"))
+											   resultSet.getInt("ARS"),
+											   resultSet.getInt("vencimiento")
 											   );
 				return punto;
 			}
@@ -131,7 +127,6 @@ public class PuntoDAOSQL implements PuntoDAO{
 		}
 		return null;
 	}
-	
 	public RegimenPuntoDTO getUltimoRegistroRegimenPunto() {
 		PreparedStatement statement;
 		ResultSet resultSet;
@@ -156,14 +151,13 @@ public class PuntoDAOSQL implements PuntoDAO{
 		}
 		return null;
 	}
-	
+
+
 	public static void main(String[] args) {
-//		PuntoDAOSQL dao =  new PuntoDAOSQL();
-//		dao.insert(punto)
-//		RegimenPuntoDTO reg = dao.obtenerUltimoRegistro();
-//		System.out.println(reg.getVencimiento());
+		ModeloRegimenPunto dao = new ModeloRegimenPunto(new DAOSQLFactory());
+		RegimenPuntoDTO reg = dao.obtenerUltimoRegistro();
+		System.out.println(reg.getVencimiento());
 //		
-		
 //		List<PuntoDTO> list = dao.obtenerPunto(); 
 //		
 //		for(PuntoDTO elem: list){
@@ -185,12 +179,6 @@ public class PuntoDAOSQL implements PuntoDAO{
 //	        System.out.println("Parte entera: " + parteEntera);
 //	        System.out.println("Parte decimal: " + parteDecimal);
 
-	}
-
-@Override
-	public PuntoDTO getUltimoRegistroPunto() {
-		// TODO Auto-generated method stub
-		return null;
 	} 
 
 }
