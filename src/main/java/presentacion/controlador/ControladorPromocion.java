@@ -24,6 +24,7 @@ import presentacion.vista.administrativo.PanelPromocion;
 import presentacion.vista.administrativo.VentanaEditarPromocion;
 import presentacion.vista.administrativo.VentanaRegistrarPromocion;
 import presentacion.vista.administrativo.VentanaTablaViajes;
+import recursos.Mapper;
 
 public class ControladorPromocion {
 	private VentanaTablaViajes ventanaTablaViajes;
@@ -35,6 +36,7 @@ public class ControladorPromocion {
 	private VentanaEditarPromocion ventanaEditarPromocion;
 	private PanelPromocion panelPromocion;
 	private PromocionDTO promocionSeleccionada;
+	private Mapper mapper;
 	
 	//DATOS PROMOCION:
 	private List<ViajeDTO> viajes;
@@ -56,16 +58,14 @@ public class ControladorPromocion {
 		this.viajes = new ArrayList<ViajeDTO>();
 		this.fechaVencimiento = null;	
 		this.estado = null;
-		
 		this.ventanaPromocion = ventanaPromocion;
 		this.ventanaEditarPromocion = VentanaEditarPromocion.getInstance();
 		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();		
 		this.modeloPromocion = new ModeloPromocion(new DAOSQLFactory());
 		this.modeloViaje = new ModeloViaje(new DAOSQLFactory());
 		this.modeloViaje_Promocion = new ModeloViaje_Promocion(new DAOSQLFactory());
-
 		this.ventanaPromocion.getBtnRegistrar().addActionListener(rc->registrarPromocion(rc));
-		
+		this.mapper = new Mapper();		
 		this.ventanaPromocion.getTxtStock().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
@@ -196,8 +196,8 @@ public class ControladorPromocion {
 			Object[] fila = {
 					tabla.get(i).getCiudadOrigen().getNombre(),
 					tabla.get(i).getCiudadDestino().getNombre(),
-					tabla.get(i).getFechaSalida(),
-					tabla.get(i).getFechaLlegada(),
+					this.mapper.parseToString(tabla.get(i).getFechaSalida()),
+					this.mapper.parseToString(tabla.get(i).getFechaLlegada()),
 					tabla.get(i).getHoraSalida(),
 					tabla.get(i).getHorasEstimadas(),
 					tabla.get(i).getCapacidad(),

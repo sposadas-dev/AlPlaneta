@@ -72,6 +72,7 @@ public class controladorDatosLogin {
 	}
 
 	public void restablecerContrasena() {
+		this.ventanaClaveOlvidada.getTextUsuario().setText("");
 		this.ventanaClaveOlvidada.setVisible(true);
 	}
 

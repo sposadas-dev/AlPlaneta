@@ -57,12 +57,13 @@ import presentacion.vista.administrativo.VentanaTarjeta;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import recursos.Mapper;
 
 public class ControladorPasaje implements ActionListener{
 	
 	private EnvioDeCorreo envioCorreo;		
 	private GeneratePDF pdf;
-	
+	private Mapper mapper;
 	private VistaAdministrativo vistaAdministrativo;
 	private VentanaVisualizarClientes ventanaVisualizarClientes;
 	private VentanaTablaViajes ventanaTablaViajes;
@@ -138,6 +139,7 @@ public class ControladorPasaje implements ActionListener{
 		this.modeloPagos_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
 		this.modeloPasajes_pasajeros = new Pasaje_Pasajeros(new DAOSQLFactory());
 		this.modeloPromocion = new ModeloPromocion(new DAOSQLFactory());
+		this.mapper = new Mapper();
 		this.viaje_promocion = new ModeloViaje_Promocion (new DAOSQLFactory());
 		
 		this.pdf = new GeneratePDF();				
@@ -373,12 +375,13 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaVisualizarClientes.getModelClientes().setColumnIdentifiers(this.ventanaVisualizarClientes.getNombreColumnasClientes());
 	
 		this.clientes_en_tabla = cliente.obtenerClientes();
-		
+		//TODO: cambiar fecha
 		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
+			this.mapper.parseToString(this.clientes_en_tabla.get(i).getFechaNacimiento());
 			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
 							this.clientes_en_tabla.get(i).getApellido(),
 							this.clientes_en_tabla.get(i).getDni(),
-							this.clientes_en_tabla.get(i).getFechaNacimiento(),
+							this.mapper.parseToString(this.clientes_en_tabla.get(i).getFechaNacimiento()),
 							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
 							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
 							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()	
