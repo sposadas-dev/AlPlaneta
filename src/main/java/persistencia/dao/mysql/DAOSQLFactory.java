@@ -144,4 +144,9 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 		return new PuntoDAOSQL();
 	}
 
+	@Override
+	public Viaje_PromocionDAO createViaje_PromocionDAO() {
+		return new Viaje_PromocionDAOSQL();
+	}
+
 }

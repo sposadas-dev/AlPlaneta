@@ -115,12 +115,9 @@ public class ControladorPasaje implements ActionListener{
 	
 	private DefaultTableModel dm;
 	private StringBuilder cad= new StringBuilder();
-<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
+	
 	private ModeloPunto modeloPunto;
-	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
-=======
 	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
->>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 	
 	public ControladorPasaje(VentanaVisualizarClientes ventanaVisualizarClientes, Cliente cliente, AdministrativoDTO administrativoLogueado){
 		this.ventanaVisualizarClientes = ventanaVisualizarClientes;
@@ -599,26 +596,7 @@ public class ControladorPasaje implements ActionListener{
 				mostrarVentanaConfirmacionPasaje();
 			}else{ 
 
-				modeloPago.agregarPago(pagoDTO);
-<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
-
-				pagos_pasajeDTO = new Pagos_PasajeDTO();
-				PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
-				pagos_pasajeDTO.setPago(pagoPasaje);
-				pagos_pasajeDTO.setPasaje(pasajeAEditar);
-				modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
-		
-				pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
-				pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
-				
-				modeloPasaje.editarPasaje(pasajeAEditar);
-
-				this.ventanaPago.limpiarCampos();
-				this.ventanaPago.mostrarVentana(false);
-				this.ventanaVisualizarPasaje.mostrarVentana(false);
-				reportePago();
-=======
-			
+			modeloPago.agregarPago(pagoDTO);
 			pagos_pasajeDTO = new Pagos_PasajeDTO();
 			PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
 			pagos_pasajeDTO.setPago(pagoPasaje);
@@ -629,7 +607,6 @@ public class ControladorPasaje implements ActionListener{
 			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
 			
 			modeloPasaje.editarPasaje(pasajeAEditar);
-// SUMAMOS LOS PUNTOS DEL CLIENTE
 			if(pasajeAEditar.getEstadoDelPasaje().getDescripcion().equals("Vendido"))
 				calcularPuntos(pasajeAEditar.getCliente(),pasajeAEditar.getMontoAPagar());
 				
@@ -639,7 +616,6 @@ public class ControladorPasaje implements ActionListener{
 				
 			reportePago();
 			this.llenarTablaPasajes();
->>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 			}
 	}
 	
@@ -883,11 +859,6 @@ public class ControladorPasaje implements ActionListener{
 	
 	private void generarVoucherMail(PasajeDTO pasaje,ClienteDTO cliente){			
 		this.pdf.createPDF(pasaje, cliente);//(pasaje,cliente); // se crea el pdf en resource				
-<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
-//			TODO: this.envioCorreo.enviarAdjunto(cliente.getMail());				
-=======
-		//	TODO: this.envioCorreo.enviarAdjunto(cliente.getMail());				
->>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 		this.envioCorreo.enviarAdjunto(cliente.getMail());				
 	}
 	
