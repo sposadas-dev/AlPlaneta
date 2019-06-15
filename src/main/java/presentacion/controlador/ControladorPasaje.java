@@ -607,8 +607,8 @@ public class ControladorPasaje implements ActionListener{
 			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
 			
 			modeloPasaje.editarPasaje(pasajeAEditar);
-			if(pasajeAEditar.getEstadoDelPasaje().getDescripcion().equals("Vendido"))
-				calcularPuntos(pasajeAEditar.getCliente(),pasajeAEditar.getMontoAPagar());
+			
+				
 				
 			this.ventanaPago.limpiarCampos();
 			this.ventanaPago.mostrarVentana(false);
@@ -620,42 +620,56 @@ public class ControladorPasaje implements ActionListener{
 	}
 	
 	private void calcularPuntos(ClienteDTO cliente, BigDecimal montoAPagar) {
+		System.out.println("MONTO A PAGAR: "+ montoAPagar);
+		String[] parts;
 		
-        String[] parts = montoAPagar.toString().split("\\.");
-        Integer parteEntera= Integer.parseInt(parts[0]);
-        Integer parteDecimal= Integer.parseInt(parts[1]);
+		Integer parteEntera = montoAPagar.intValue();
+		if(montoAPagar.toString().contains(".")){  //RECORRER Y VER SI CONTIENE @,@ O @.@
+			parts = (montoAPagar+"").split(".");
+			parteEntera = Integer.parseInt(parts[0]);
+		}
+		
+		System.out.println("MONTOA PAGAR"+montoAPagar.toString()+"- PARTE ENTERA: "+parteEntera);
         
-        
-        // BUSCAR EL REGIMEN DE LA BASE
+// BUSCAR EL REGIMEN DE LA BASE
         ModeloRegimenPunto modeloPuntos = new ModeloRegimenPunto(new DAOSQLFactory());
         RegimenPuntoDTO regimen = modeloPuntos.obtenerUltimoRegistro();
         PuntoDTO punto = new PuntoDTO();
+        System.out.println("PARTE ENTERA: "+parteEntera);
+        System.out.println("REGIMEN PUNTO:"+regimen.getPunto());
+        System.out.println("REGIMEN: "+regimen.getARS());
         
-        // MONTO PAGADO X REGIMEN.PUNTO / REGIMEN.ARS
-        punto.setPuntos((parteEntera*regimen.getPunto())/regimen.getARS());
+// MONTO PAGADO X REGIMEN.PUNTO / REGIMEN.ARS
+        int puntoCalculado = (parteEntera*regimen.getPunto())/regimen.getARS();
+        System.out.println("LA CANTIDAD DE PUNTOS QUE GENERO ES :"+ puntoCalculado);
+        punto.setPuntos(puntoCalculado);
         
-        //FECHA ACTUAL + DURACION
+//FECHA ACTUAL + DURACION
         Calendar calendar = Calendar.getInstance();
         java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
         calendar.setTime(ourJavaDateObject); 
         calendar.add(Calendar.MONTH, regimen.getVencimiento());
-        Date vencimiento = (Date) calendar.getTime();
-        punto.setVencimiento(vencimiento);
+        
+        java.util.Date vencimiento = calendar.getTime();
+        System.out.println("FECHA DE VENCIMIENTO DEL PUNTO CALCULADO :"+vencimiento.toString());
+        punto.setVencimiento(convertUtilToSql(vencimiento));
 
-        //SETEAR EL PUNTO AL CLIENTE
+//SETEAR EL PUNTO AL CLIENTE
         cliente.getPuntos().add(punto);
         punto.setCliente(cliente);
         
-        //CALCULAR EL TOTAL DE PUNTO TENIENDO EN CUENTA EL VENCIMIENTO DE LOS PUNTOS
+        System.out.println("CLIENTE DEL PUNTO: "+cliente.getNombre());
+        
+//CALCULAR EL TOTAL DE PUNTO TENIENDO EN CUENTA EL VENCIMIENTO DE LOS PUNTOS
         int puntosAux = cliente.getTotalPuntos();
         for(PuntoDTO p:cliente.getPuntos())
         		if(!estaVencido(p.getVencimiento()))
         				puntosAux += p.getPuntos();
 
-        // SET PUNTO AL CLIENTE
-
+// SET PUNTO AL CLIENTE
         cliente.setTotalPuntos(puntosAux);
-        //GUARDARLO EN MODELO
+
+//GUARDARLO EN MODELO
         this.modeloPunto.agregarPunto(punto);
         
         
@@ -670,6 +684,7 @@ public class ControladorPasaje implements ActionListener{
         
         
 	}
+	
 
 	private boolean estaVencido(java.sql.Date fechaDePunto) {
 		java.util.Date fecha = new java.util.Date(); 
@@ -744,6 +759,7 @@ public class ControladorPasaje implements ActionListener{
 			
 			modeloPasajes_pasajeros.agregarPasajePasajero(pasaje_pasajeros);
 		}
+		System.out.println("ENTRAMOS AL GENERAR PASAJE");
 		verificarSumaDePuntosDeCliente(pasajeDTO);
 		
 		generarVoucherMail(pasajeDTO,cliente);
@@ -757,8 +773,9 @@ public class ControladorPasaje implements ActionListener{
 	}
 
 	private void verificarSumaDePuntosDeCliente(PasajeDTO pasajeDTO2) {
-		if(pasajeDTO.getEstadoDelPasaje().getDescripcion().equals("Vendido"))
-			calcularPuntos(pasajeDTO.getCliente(),pasajeDTO.getMontoAPagar());		
+		System.out.println("Estado del pasaje"+pasajeDTO.getEstadoDelPasaje().getNombre());
+		if(pasajeDTO.getEstadoDelPasaje().getNombre().equals("Vendido"))
+			calcularPuntos(pasajeDTO.getCliente(),totalaPagar);		
 	}
 
 	public Date calcularFechaReserva(Date fechaSalida){
