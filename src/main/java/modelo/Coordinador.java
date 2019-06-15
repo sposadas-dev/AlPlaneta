@@ -27,6 +27,10 @@ private CoordinadorDAO coordinador;
 	public CoordinadorDTO buscarPorEmail(String mailDeRecuperacion) {
 		return this.coordinador.getByMail(mailDeRecuperacion);
 	}
+	
+	public boolean eliminarCoordinador(int idCoordinador) {
+		return this.coordinador.deleteCoordinador(idCoordinador);
+	}
 
 	public void actualizar(CoordinadorDTO coordinador) {
 		this.coordinador.update(coordinador);
