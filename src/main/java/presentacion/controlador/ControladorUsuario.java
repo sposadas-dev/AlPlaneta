@@ -2,10 +2,8 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -13,22 +11,22 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import dto.ClienteDTO;
 import dto.LoginDTO;
-import dto.PagoDTO;
 import dto.Pagos_PasajeDTO;
 import dto.PasajeDTO;
+import dto.PuntoDTO;
 import modelo.Login;
+import modelo.ModeloPunto;
 import modelo.Pagos_Pasaje;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrativo.VentanaTablaPagos;
 import presentacion.vista.cliente.VentanaCambiarContrasena;
+import presentacion.vista.cliente.VentanaPuntos;
 import presentacion.vista.cliente.VentanaReservas;
 import presentacion.vista.cliente.VentanaViajes;
 import presentacion.vista.cliente.VentanaVisualizarDatos;
@@ -41,13 +39,16 @@ public class ControladorUsuario implements ActionListener {
 	private VistaCliente vistaCliente;
 	private ClienteDTO cliente;
 	private Pasaje pasaje;
+	private ModeloPunto modeloPuntos;
 	private Login login;
 	private Pagos_Pasaje pagos_pasaje;
 	private Mapper mapper;
 	
 	private List<PasajeDTO> pasajes_en_tabla;
+	private List<PuntoDTO> puntos_en_tabla;
 	private VentanaViajes ventanaViajes;
 	private VentanaReservas ventanaReservas;
+	private VentanaPuntos ventanaPuntos;
 	private VentanaVisualizarDatos ventanaVisualizarDatos;
 	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	private VentanaTablaPagos ventanaTablaPagos;
@@ -63,12 +64,14 @@ public class ControladorUsuario implements ActionListener {
 		this.cliente = cliente;
 		this.mapper = new Mapper();
 		this.ventanaReservas = VentanaReservas.getInstance();
+		this.ventanaPuntos = VentanaPuntos.getInstance();
 		this.ventanaViajes = VentanaViajes.getInstance();
 		this.ventanaVisualizarDatos = VentanaVisualizarDatos.getInstance();
 		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
 		this.ventanaTablaPagos = VentanaTablaPagos.getInstance();
 		
 		this.vistaCliente.getItemVisualizarReservas().addActionListener(vr->mostrarVentanaReservas(vr));
+		this.vistaCliente.getItemVisualizarPuntos().addActionListener(vr->mostrarVentanaPuntos(vr));
 		this.vistaCliente.getItemVisualizarViajesHistoricos().addActionListener(vr->mostrarVentanaViajes(vr));
 		this.vistaCliente.getItemVisualizarDatos().addActionListener(vd->mostrarVentanaVisualizarDatos(vd));
 		this.vistaCliente.getItemCambiarContrasenia().addActionListener(c->mostrarVentanaCambiarContrasenia(c));
@@ -122,8 +125,37 @@ public class ControladorUsuario implements ActionListener {
 
 		
 		this.login = new Login(new DAOSQLFactory());
+		this.modeloPuntos = new ModeloPunto(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
 		this.pagos_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
+	}
+
+
+	private void mostrarVentanaPuntos(ActionEvent vr) {
+			this.ventanaPuntos.mostrarVentana(true);
+			llenarTablaPuntos();
+	}
+
+
+	private void llenarTablaPuntos() {
+			int puntosAcumulados = 0;
+			this.ventanaPuntos.getPuntosAcumulados().setText(String.valueOf(cliente.getTotalPuntos()));
+			this.ventanaPuntos.getModelPuntos().setRowCount(0); //Para vaciar la tabla
+			this.ventanaPuntos.getModelPuntos().setColumnCount(0);
+			this.ventanaPuntos.getModelPuntos().setColumnIdentifiers(this.ventanaPuntos.getColumnasPuntos());
+			this.puntos_en_tabla = modeloPuntos.getPuntosByClienteID(cliente);
+			
+			for (int i = 0; i < this.puntos_en_tabla .size(); i++){
+					puntosAcumulados += this.puntos_en_tabla.get(i).getPuntos();
+					
+				Object[] fila = {
+						this.puntos_en_tabla.get(i).getPuntos(),
+						this.puntos_en_tabla.get(i).getVencimiento().toString(),
+						BUTTON_NAME_VER 
+						};
+				this.ventanaPuntos.getModelPuntos().addRow(fila);
+			}
+			this.ventanaPuntos.getPuntosAcumulados().setText(String.valueOf(puntosAcumulados));
 	}
 
 

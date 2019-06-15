@@ -1,7 +1,9 @@
 package persistencia.dao.interfaz;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import dto.ClienteDTO;
 import dto.PuntoDTO;
 
 public interface PuntoDAO {
@@ -17,5 +19,7 @@ public interface PuntoDAO {
 	public PuntoDTO getPuntoById(int id);
 
 	public PuntoDTO getUltimoRegistroPunto();
+
+	public ArrayList<PuntoDTO> readAllByClienteID(ClienteDTO cliente);
 
 }

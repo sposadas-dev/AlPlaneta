@@ -25,6 +25,7 @@ public class VistaCliente extends JFrame {
 	private JMenuItem itemCambiarContrasenia;
 
 	private static VistaCliente instance;
+	private JMenuItem itemVisualizarPuntos;
 	
 	public static VistaCliente getInstance() {
 		if (instance == null)
@@ -75,6 +76,10 @@ public class VistaCliente extends JFrame {
 		itemVisualizarDatos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuDatos.add(itemVisualizarDatos);
 		
+		itemVisualizarPuntos = new JMenuItem("Visualizar puntos");
+		itemVisualizarPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuDatos.add(itemVisualizarPuntos);
+		
 		itemCambiarContrasenia = new JMenuItem("Cambiar contraseña");
 		menuDatos.add(itemCambiarContrasenia);
 		itemCambiarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
@@ -82,7 +87,7 @@ public class VistaCliente extends JFrame {
 		JLabel labelMarcaDeAgua = new JLabel("");
 		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
 		labelMarcaDeAgua.setBounds(47, 0, 1313, 674);
-		add(labelMarcaDeAgua);
+		getContentPane().add(labelMarcaDeAgua);
 		this.setVisible(false);
 	}
 	
@@ -121,4 +126,9 @@ public class VistaCliente extends JFrame {
 	public JMenuItem getItemVisualizarViajesHistoricos() {
 		return itemViajesHistoricos;
 	}
+
+	public JMenuItem getItemVisualizarPuntos() {
+		return itemVisualizarPuntos;
+	}
+
 }

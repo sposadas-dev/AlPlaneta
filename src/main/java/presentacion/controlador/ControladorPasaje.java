@@ -93,7 +93,7 @@ public class ControladorPasaje implements ActionListener{
 	private Pagos_PasajeDTO pagos_pasajeDTO;
 	
 	/*Modelos*/
-	private Cliente cliente;
+	private Cliente modeloCliente;
 	private Pasajero modeloPasajero;
 	private ModeloViaje modeloViaje;
 	private Pago modeloPago;
@@ -136,7 +136,7 @@ public class ControladorPasaje implements ActionListener{
 		java.util.Date fecha = new java.util.Date(); 
 		this.fechaActual = new java.sql.Date(fecha.getTime());	
 		
-		this.cliente = cliente;
+		this.modeloCliente = cliente;
 		this.modeloViaje = new ModeloViaje(new DAOSQLFactory());
 		this.modeloPasajero = new Pasajero(new DAOSQLFactory());
 		this.modeloPago = new Pago(new DAOSQLFactory());
@@ -284,8 +284,8 @@ public class ControladorPasaje implements ActionListener{
 
 	private void aplicarFiltro(ActionEvent af) {
 		String dni = ventanaPasajero.getTxtFiltroDni().getText();
-		if(cliente.getClienteByDni(dni)!=null){
-		ClienteDTO clienteDTO = cliente.getClienteByDni(dni);
+		if(modeloCliente.getClienteByDni(dni)!=null){
+		ClienteDTO clienteDTO = modeloCliente.getClienteByDni(dni);
 		this.ventanaPasajero.getTxtNombre().setText(clienteDTO.getNombre());
 		this.ventanaPasajero.getTxtApellido().setText(clienteDTO.getApellido());
 		this.ventanaPasajero.getTxtDni().setText(clienteDTO.getDni());
@@ -315,7 +315,7 @@ public class ControladorPasaje implements ActionListener{
 	/*----------------------------------Filtro Cliente------------------------------------*/
 	public List<ClienteDTO> filtrarDniSegun(String dniCliente) {
 		List<ClienteDTO> resultado = new ArrayList<ClienteDTO>();
-		this.clientes_en_tabla = cliente.obtenerClientes();
+		this.clientes_en_tabla = modeloCliente.obtenerClientes();
 		for (int i = 0; i < clientes_en_tabla.size(); i++) {
 			if (clientes_en_tabla.get(i).getDni().equals(dniCliente)) {
 				resultado.add(clientes_en_tabla.get(i));
@@ -394,7 +394,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaVisualizarClientes.getModelClientes().setColumnCount(0);
 		this.ventanaVisualizarClientes.getModelClientes().setColumnIdentifiers(this.ventanaVisualizarClientes.getNombreColumnasClientes());
 	
-		this.clientes_en_tabla = cliente.obtenerClientes();
+		this.clientes_en_tabla = modeloCliente.obtenerClientes();
 		
 		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
 			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
@@ -658,7 +658,7 @@ public class ControladorPasaje implements ActionListener{
 
 // SET PUNTO AL CLIENTE
         cliente.setTotalPuntos(puntosAux);
-
+        this.modeloCliente.actualizar(cliente);
 //GUARDARLO EN MODELO
         this.modeloPunto.agregarPunto(punto);
         

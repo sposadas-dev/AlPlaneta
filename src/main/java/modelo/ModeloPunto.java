@@ -1,7 +1,9 @@
 package modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import dto.ClienteDTO;
 import dto.PuntoDTO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.PuntoDAO;
@@ -32,6 +34,10 @@ private PuntoDAO punto;
 	
 	public PuntoDTO getPuntoById(int idPunto){
 		return this.punto.getPuntoById(idPunto);
+	}
+	
+	public ArrayList<PuntoDTO> getPuntosByClienteID(ClienteDTO cliente){
+		return this.punto.readAllByClienteID(cliente);
 	}
 
 }
