@@ -11,6 +11,8 @@ public interface DAOAbstractFactory {
 	public AdministrativoDAO createAdministrativoDAO();
 	
 	public PasajeDAO createPasajeDAO();
+	
+	public PuntoDAO createPuntoDAO();
 
 	public CiudadDAO createCiudadDAO();
 
@@ -40,7 +42,7 @@ public interface DAOAbstractFactory {
 	
 	public CoordinadorDAO createCoordinadorDAO();
 	
-	public PuntoDAO createPuntoDAO();
+	public RegimenPuntoDAO createRegimenPuntoDAO();
 
 	public EstadoEventoDAO createEstadoEventoDAO();
 	

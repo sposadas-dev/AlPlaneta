@@ -15,6 +15,8 @@ import java.awt.Font;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import java.awt.SystemColor;
 
 public class VentanaRegistroRegimenPuntos  extends JFrame {
 	
@@ -26,10 +28,10 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtCantPuntos;
 	private JTextField textARS;
-	private JDateChooser dateVencimiento;
 	private JButton btnRegistrar;
 	private JButton btnCancelar;
 	private static VentanaRegistroRegimenPuntos INSTANCE;
+	private JTextField vencimiento;
 	
 	
 
@@ -102,16 +104,29 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 		JLabel lblVencimiento = new JLabel("Vencimiento");
 		lblVencimiento.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		lblVencimiento.setBounds(41, 114, 78, 14);
-		contentPane.add(lblVencimiento);dateVencimiento = new JDateChooser();
-		dateVencimiento.setBounds(119, 114, 120, 20);
-		contentPane.add(dateVencimiento);
+		contentPane.add(lblVencimiento);
+		
+		vencimiento = new JTextField();
+		vencimiento.setColumns(10);
+		vencimiento.setBounds(119, 111, 86, 20);
+		contentPane.add(vencimiento);
+		
+		JEditorPane dtrpnelClienteSumar = new JEditorPane();
+		dtrpnelClienteSumar.setBackground(SystemColor.control);
+		dtrpnelClienteSumar.setFont(new Font("Consolas", Font.PLAIN, 10));
+		dtrpnelClienteSumar.setText("-El Cliente sumará una cantidad de puntos (Cant.Puntos) por unidad gastada.\r\n-La Unidad de medida es pesos argentinos (ARS).\r\n-Los puntos tendran un vencimiento, este sera en cantidad de meses (Vencimiento).");
+		dtrpnelClienteSumar.setBounds(213, 64, 194, 110);
+		dtrpnelClienteSumar.setEditable(false);
+		
+		contentPane.add(dtrpnelClienteSumar);
 	}
-	public JDateChooser getDateVencimiento() {
-		return dateVencimiento;
+
+	public JTextField getVencimiento() {
+		return vencimiento;
 	}
-	
-	public void setDateVencimiento(JDateChooser dateVencimiento) {
-		this.dateVencimiento = dateVencimiento;
+
+	public void setVencimiento(JTextField vencimiento) {
+		this.vencimiento = vencimiento;
 	}
 
 	public JButton getBtnRegistrar() {
@@ -160,8 +175,8 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 
 	public void limpiarCampos() {
 		this.txtCantPuntos.setText(null);
+		this.textARS.setText(null);
+		this.vencimiento.setText(null);
 		
 	}
-	
-	
 }
