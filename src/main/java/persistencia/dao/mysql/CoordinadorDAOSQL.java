@@ -6,9 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dto.AdministradorDTO;
-import dto.AdministrativoDTO;
-import dto.ClienteDTO;
 import dto.CoordinadorDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.CoordinadorDAO;
@@ -21,7 +18,7 @@ public class CoordinadorDAOSQL implements CoordinadorDAO {
 	private static final String browse = "SELECT * FROM coordinador WHERE idCoordinador = ?";
 	private static final String browseLogin = "SELECT * FROM coordinador WHERE idLogin = ?";
 	private static final String browseByMail = "SELECT * FROM coordinador WHERE mail = ?";
-
+	private static final String delete = "DELETE FROM coordinador WHERE idCoordinador = ?";
 	@Override
 	public boolean insert(CoordinadorDTO coordinador) {
 		PreparedStatement statement;
@@ -187,5 +184,21 @@ public class CoordinadorDAOSQL implements CoordinadorDAO {
 			}
 			return null;
 	}
-
+	
+	public boolean deleteCoordinador(int idCoordinador) {
+		PreparedStatement statement;
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(delete);
+			
+			statement.setInt(1, idCoordinador);
+			if(statement.executeUpdate() > 0) {
+				return true;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 }

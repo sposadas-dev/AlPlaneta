@@ -10,8 +10,11 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
+import org.eclipse.jdt.internal.compiler.ast.ThisReference;
+
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
+import dto.ClienteDTO;
 import dto.CoordinadorDTO;
 import dto.FormaPagoDTO;
 import dto.LoginDTO;
@@ -19,6 +22,7 @@ import dto.RolDTO;
 import dto.TransporteDTO;
 import modelo.Administrador;
 import modelo.Administrativo;
+import modelo.Cliente;
 import modelo.Coordinador;
 import modelo.FormaPago;
 import modelo.Login;
@@ -44,9 +48,14 @@ public class ControladorAdministrador {
 	
 	private Administrador administrador;
 	private Administrativo administrativo;
-//	private Cliente cliente;
-//	private Coordinador coordinador;
+	private Cliente cliente;
+	private Coordinador coordinador;
 //	private Contador contador;
+	
+	private AdministradorDTO administradorEdit;
+	private AdministrativoDTO administrativoEdit;
+	private CoordinadorDTO coordinadorEdit;
+//	private ContadotDTO contadorEdit;
 	
 	private Transporte transporte;
 	private FormaPago formapago;
@@ -113,7 +122,7 @@ public class ControladorAdministrador {
 
 		this.administrador = new Administrador(new DAOSQLFactory());
 		this.administrativo = new Administrativo(new DAOSQLFactory());
-//		this.coordinador = new Coordinador(new DAOSQLFactory());
+		this.coordinador = new Coordinador(new DAOSQLFactory());
 //		this.contador = new Contador(new DAOSQLFactory());
 		
 		this.transporte = new Transporte(new DAOSQLFactory());
@@ -289,26 +298,88 @@ public class ControladorAdministrador {
 			String estado = "activo";
 			String rolNombre = this.ventanaEditarCuenta.getComboBoxRoles().getSelectedItem().toString();
 			int idLogin = this.logins_en_tabla.get(this.filaSeleccionada).getIdDatosLogin();
+			
+			//TODO: Necesario eliminar el empleado antes de insertarlo al nuevo.
+			if( administradorEdit != null ) {
+				administrador.eliminarAdministrador(administradorEdit.getIdAdministrador());
+			} else if ( administrativoEdit != null ) {
+				administrativo.delete(administrativoEdit.getIdAdministrativo());
+			} else if ( coordinadorEdit != null ) {
+				coordinador.eliminarCoordinador(coordinadorEdit.getIdCoordinador());
+			} 
+//			else if ( contadorEdit != null) {
+//				contador.eliminarContador(contadorEdit.getIdContador());
+//				login.deleteLogin(idLogin);
+//				contadorEdit = null;
+//			}
+			
 			int idRol = 0;
 			switch(rolNombre) {
 				case "administrador":
 					idRol = 1;
+					
+					String usuarioLogin = this.ventanaEditarCuenta.getTxtUsuario().getText();
+					String contrasenaLogin = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
+					RolDTO rol = new RolDTO(idRol, rolNombre);
+					LoginDTO login = new LoginDTO(idLogin, usuarioLogin, contrasenaLogin, rol, estado);
+					this.login.editarLogin(login);
+
+					administradorEdit = new AdministradorDTO();
+					administradorEdit.setDatosLogin(login);
+					administradorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
+					administradorEdit.setMail(this.ventanaEditarCuenta.getTxtMail().getText());
+					this.administrador.agregarAdministrador(administradorEdit);
+					
 					break;
 				case "administrativo":
 					idRol = 2;
+					
+					String usuarioLogin2 = this.ventanaEditarCuenta.getTxtUsuario().getText();
+					String contrasenaLogin2 = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
+					RolDTO rol2 = new RolDTO(idRol, rolNombre);
+					LoginDTO login2 = new LoginDTO(idLogin, usuarioLogin2, contrasenaLogin2, rol2, estado);
+					this.login.editarLogin(login2);
+					
+					administrativoEdit = new AdministrativoDTO();
+					administrativoEdit.setDatosLogin(login2);
+					administrativoEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
+					administrativoEdit.setMail(this.ventanaEditarCuenta.getTxtMail().getText());
+					this.administrativo.agregarAdministrativo(administrativoEdit);
+					
 					break;
 				case "coordinador":
 					idRol = 3;
+					
+					String usuarioLogin3 = this.ventanaEditarCuenta.getTxtUsuario().getText();
+					String contrasenaLogin3 = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
+					RolDTO rol3 = new RolDTO(idRol, rolNombre);
+					LoginDTO login3 = new LoginDTO(idLogin, usuarioLogin3, contrasenaLogin3, rol3, estado);
+					this.login.editarLogin(login3);
+					
+					coordinadorEdit = new CoordinadorDTO();
+					coordinadorEdit.setDatosLogin(login3);
+					coordinadorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
+					coordinadorEdit.setMail(this.ventanaEditarCuenta.getTxtMail().getText());
+					this.coordinador.agregarCoordinador(coordinadorEdit);
+					
 					break;
 				case "contador":
 					idRol = 4;
+//					
+//					String usuarioLogin4 = this.ventanaEditarCuenta.getTxtUsuario().getText();
+//					String contrasenaLogin4 = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
+//					RolDTO rol4 = new RolDTO(idRol, rolNombre);
+//					LoginDTO login4 = new LoginDTO(idLogin, usuarioLogin4, contrasenaLogin4, rol4, estado);
+//					this.login.editarLogin(login4);
+//					
+//					contadorEdit = new ContadorDTO();
+//					contadorEdit.setDatosLogin(login4);
+//					contadorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
+//					contadorEdit.setMail(this.ventanaEditarCuenta.getTxtMail().getText());
+//					this.contador.agregarContador(contadorEdit);
+//					
 					break;
 			}
-			String usuarioLogin = this.ventanaEditarCuenta.getTxtUsuario().getText();
-			String contrasenaLogin = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
-			RolDTO rol = new RolDTO(idRol, rolNombre);
-			LoginDTO login = new LoginDTO(idLogin, usuarioLogin, contrasenaLogin, rol, estado);
-			this.login.editarLogin(login);
 			llenarTablaEmpleados();
 			this.ventanaEditarCuenta.setVisible(false);
 	}
@@ -316,11 +387,44 @@ public class ControladorAdministrador {
 	private void mostrarCuenta(int filaSeleccionada){
 		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarCuenta.mostrarVentana(true);
+		obtenerEmpleado(this.filaSeleccionada);
+		
+		if( administradorEdit != null ) {
+			ventanaEditarCuenta.getTxtNombre().setText(administradorEdit.getNombre());
+			ventanaEditarCuenta.getTxtMail().setText(administradorEdit.getMail());
+		} else if ( administrativoEdit != null ) {
+			ventanaEditarCuenta.getTxtNombre().setText(administrativoEdit.getNombre());
+			ventanaEditarCuenta.getTxtMail().setText(administrativoEdit.getMail());
+		} else if ( coordinadorEdit != null ) {
+			ventanaEditarCuenta.getTxtNombre().setText(coordinadorEdit.getNombre());
+			ventanaEditarCuenta.getTxtMail().setText(coordinadorEdit.getMail());
+		} 
+//		else if ( contadorEdit != null) {
+//			ventanaEditarCuenta.getTxtNombre().setText(contadorEdit.getNombre());
+//			ventanaEditarCuenta.getTxtMail().setText(contadorEdit.getMail());
+//		}
 		ventanaEditarCuenta.getTxtUsuario().setText(this.logins_en_tabla.get(this.filaSeleccionada).getUsuario());
 		ventanaEditarCuenta.getTxtContrasena().setText(this.logins_en_tabla.get(this.filaSeleccionada).getContrasena());
 	}
 	
+	public void obtenerEmpleado(int seleccionado) {
+		if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("administrador")) {
+			this.administradorEdit = administrador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("administrativo")) {
+			this.administrativoEdit = administrativo.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("coordinador")) {
+			this.coordinadorEdit = coordinador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("contador")) {
+//			this.contadorEdit = contador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+		}
+	}
+	
 	private void cancelarEditarCuenta(ActionEvent can) {
+		this.administradorEdit = null;
+		this.administrativoEdit = null;
+		this.coordinadorEdit = null;
+//		this.contadorEdit = null;
+		
 		this.ventanaEditarCuenta.limpiarCampos();
 		this.ventanaEditarCuenta.mostrarVentana(false);
 	}

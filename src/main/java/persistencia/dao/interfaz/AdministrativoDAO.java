@@ -20,5 +20,7 @@ public interface AdministrativoDAO {
 	public AdministrativoDTO getByMail(String email);
 
 	public boolean updateContrasena(AdministrativoDTO administrativo);
+	
+	public boolean delete(int idAdministrativo);
 
 }

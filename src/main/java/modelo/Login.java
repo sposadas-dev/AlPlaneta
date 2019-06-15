@@ -18,6 +18,10 @@ public class Login {
 		this.login.insert(login);
 	}
 	
+	public boolean deleteLogin(int idLogin) {
+		return this.login.delete(idLogin);
+	}
+	
 	public void editarLogin(LoginDTO login){
 		this.login.update(login);
 	}

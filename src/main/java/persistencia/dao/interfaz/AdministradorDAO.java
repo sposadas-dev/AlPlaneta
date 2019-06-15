@@ -9,7 +9,7 @@ public interface AdministradorDAO {
 
 	public boolean insert(AdministradorDTO administrador);
 
-	public boolean delete(AdministradorDTO administrador_a_eliminar);
+	public boolean delete(int idAdministrador);
 	
 	public List<AdministradorDTO> readAll();
 

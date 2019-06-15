@@ -16,6 +16,9 @@ public class CoordinadorDTO {
 		this.mail = mail;
 	}
 
+	public CoordinadorDTO() {
+	}
+
 	public int getIdCoordinador() {
 		return idCoordinador;
 	}
