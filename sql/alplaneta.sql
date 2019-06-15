@@ -199,13 +199,24 @@ CREATE TABLE `evento`(
   PRIMARY KEY (`idEvento`)
 );
 
-CREATE TABLE `punto`(
-`idPunto` int(11) NOT NULL AUTO_INCREMENT,
+
+CREATE TABLE `regimenpunto`(
+`idRegimenPunto` int(11) NOT NULL AUTO_INCREMENT,
  `punto` int(11) NOT NULL,
 `ARS`  int(11) NOT NULL,
-`vencimiento` date NOT NULL,
- PRIMARY KEY (`idPunto`)
+`vencimiento` int(11) NOT NULL,
+ PRIMARY KEY (`idRegimenPunto`)
 );
+
+CREATE TABLE `punto` (
+  `idPunto` int(11) NOT NULL AUTO_INCREMENT,
+  `punto` int(11) NOT NULL,
+  `vencimiento` date NOT NULL,  
+  `idCliente` int(11) NOT NULL,
+  PRIMARY KEY (`idPunto`),
+  FOREIGN KEY (`idCliente`)  references cliente(`idCliente`)
+);
+
 
 CREATE TABLE `promocion`(
 `idPromocion` int(11) NOT NULL AUTO_INCREMENT,
@@ -284,7 +295,7 @@ INSERT INTO viaje VALUES (1,'2019-05-01','2019-05-02',500,2,1,1818,1818,5,5,'12:
 INSERT INTO estadoevento VALUES (1,'pendiente','el evento aún no se realizó'), (2,'realizado','el evento ya se realizó'),(3,'cancelado','el evento fue cancelado'), (4,'vencido','el evento está vencido');
 
 INSERT INTO evento VALUES (1,'2019-05-27','2019-05-30','15:00:00','Consulta sobre reserva de viaje',1,1,2,'',1), (2,'2019-05-28','2019-06-04','18:00:00','Llamar a cliente por reclamo',2,1,1,'',0), (3,'2019-05-28','2019-06-04','19:15:00','Llamar al cliente por viaje a San Juan, Argentina',1,1,1,'',0), (4,'2019-05-29','2019-06-06','15:00:00','Llamar al cliente por reclamo de un viaje',2,1,1,'',0);
-INSERT INTO punto VALUES (1,1,100,'2019-07-25');
+INSERT INTO regimenpunto VALUES (1,1,100,4);
 
 INSERT INTO promocion VALUES (1,15,200,'2019-10-04','activa');
 INSERT INTO viaje_promocion VALUES (1,2,1);

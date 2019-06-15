@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import dto.ClienteDTO;
 import dto.PuntoDTO;
 import dto.RegimenPuntoDTO;
 import modelo.Cliente;
@@ -15,6 +17,7 @@ public class PuntoDAOSQL implements PuntoDAO{
 	private static final String insert = "INSERT INTO punto(idPunto, punto, vencimiento, idCliente ) VALUES (?,?, ?, ?)";
 	private static final String delete = "DELETE FROM punto WHERE idPunto = ?";
 	private static final String readall = "SELECT * FROM punto";
+	private static final String readallByIdCliente = "SELECT * FROM punto WHERE idCliente = ?";
 	private static final String update = "UPDATE punto SET punto= ?, vencimiento =?, idCLiente=? WHERE idPunto = ?";
 	private static final String browse = "SELECT * FROM punto WHERE idPunto = ?";
 	private static final String ultimoRegistro = "SELECT * FROM punto ORDER BY idPunto desc limit 1";
@@ -80,6 +83,31 @@ public class PuntoDAOSQL implements PuntoDAO{
 		} 
 		return puntos;
 	}
+	
+	public ArrayList<PuntoDTO> readAllByClienteID(ClienteDTO cliente) {
+		PreparedStatement statement;
+		ResultSet resultSet; // Guarda el resultado de la query
+		Conexion conexion = Conexion.getConexion();
+		ArrayList<PuntoDTO> puntos = new ArrayList<PuntoDTO>();
+		Cliente modeloCliente = new Cliente(new DAOSQLFactory());
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(readallByIdCliente);
+			statement.setInt(1, cliente.getIdCliente());
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				puntos.add(new PuntoDTO(resultSet.getInt("idPunto"),
+												  resultSet.getInt("punto"),
+												  resultSet.getDate("vencimiento"),
+												  cliente)
+												  );
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return puntos;
+	}
+
 	
 @Override
 	public boolean update(PuntoDTO punto_a_editar) {
