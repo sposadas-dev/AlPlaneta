@@ -10,6 +10,7 @@ import persistencia.dao.interfaz.EstadoEventoDAO;
 import persistencia.dao.interfaz.EstadoPasajeDAO;
 import persistencia.dao.interfaz.EventoDAO;
 import persistencia.dao.interfaz.FormaPagoDAO;
+import persistencia.dao.interfaz.LocalDAO;
 import persistencia.dao.interfaz.LoginDAO;
 import persistencia.dao.interfaz.MedioContactoDAO;
 import persistencia.dao.interfaz.PagoDAO;
@@ -147,6 +148,11 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	@Override
 	public Viaje_PromocionDAO createViaje_PromocionDAO() {
 		return new Viaje_PromocionDAOSQL();
+	}
+
+	@Override
+	public LocalDAO createLocalDAO() {
+		return new LocalDAOSQL();
 	}
 
 }
