@@ -1,15 +1,18 @@
 package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import dto.CoordinadorDTO;
+import dto.EstadoPasajeDTO;
 import dto.PasajeDTO;
 import dto.RegimenPuntoDTO;
 import modelo.Administrativo;
 import modelo.Coordinador;
+import modelo.EstadoPasaje;
 import modelo.ModeloRegimenPunto;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
@@ -48,10 +51,11 @@ public class ControladorCOOR {
 		this.vistaCoordinador.getItemListaEmpleados().addActionListener(l->visualizarReporteEmpleados(l));
 		this.vistaCoordinador.getItemVentas().addActionListener(l->visualizarVentanaGenerarReporte(l));
 		this.vistaCoordinador.getItemPasajes().addActionListener(l->visualizarVentanaGenerarReportePasajes(l));
-//		this.vistaCoordinador.getPanelRegimenPuntos().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
+		
 		this.ventanaGenerarReporte.getBtnGenerarReporte().addActionListener(gv->generarReporteVentas(gv));
-//		this.ventanaGenerarReporte.getBtnGenerarReportePasajes().addActionListener(gv->generarReportePasajes(gv));
-
+		
+		this.ventanaGenerarReporte.getBtnGenerarReportePasajes().addActionListener(gv->generarReportePasajes(gv));
+		this.ventanaGenerarReporte.getComboBoxFiltro().addActionListener(f->activarFiltroFechas(f));
 		
 		this.coordinador = new Coordinador(new DAOSQLFactory());
 		this.administrativo = new Administrativo(new DAOSQLFactory());
@@ -64,13 +68,35 @@ public class ControladorCOOR {
 	
 	} 
 
-
+	private void activarFiltroFechas(ActionEvent f) {
+		if(ventanaGenerarReporte.getComboBoxFiltro().getSelectedIndex()!=0){
+			this.ventanaGenerarReporte.getLblFiltroPasajes().setVisible(true);
+			this.ventanaGenerarReporte.getComboBoxFiltro().setVisible(true);
+			this.ventanaGenerarReporte.getLblDesde().setVisible(true);
+			this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(true);
+			this.ventanaGenerarReporte.getLblHasta().setVisible(true);
+			this.ventanaGenerarReporte.getDateHastaChooser().setVisible(true);
+		}else{
+			this.ventanaGenerarReporte.getLblFiltroPasajes().setVisible(true);
+			this.ventanaGenerarReporte.getComboBoxFiltro().setVisible(true);
+			this.ventanaGenerarReporte.getLblDesde().setVisible(false);
+			this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(false);
+			this.ventanaGenerarReporte.getLblHasta().setVisible(false);
+			this.ventanaGenerarReporte.getDateHastaChooser().setVisible(false);
+		}
+	}
 
 	private void visualizarVentanaGenerarReportePasajes(ActionEvent l) {
 		this.ventanaGenerarReporte.mostrarVentana(true);
 		this.ventanaGenerarReporte.getBtnGenerarReportePasajes().setVisible(true);
 		this.ventanaGenerarReporte.getBtnGenerarReporte().setVisible(false);
-
+		
+		this.ventanaGenerarReporte.getLblFiltroPasajes().setVisible(true);
+		this.ventanaGenerarReporte.getComboBoxFiltro().setVisible(true);
+		this.ventanaGenerarReporte.getLblDesde().setVisible(false);
+		this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(false);
+		this.ventanaGenerarReporte.getLblHasta().setVisible(false);
+		this.ventanaGenerarReporte.getDateHastaChooser().setVisible(false);
 	}
 
 	public void inicializar(){
@@ -140,6 +166,14 @@ public class ControladorCOOR {
 		this.ventanaGenerarReporte.mostrarVentana(true);
 		this.ventanaGenerarReporte.getBtnGenerarReportePasajes().setVisible(false);
 		this.ventanaGenerarReporte.getBtnGenerarReporte().setVisible(true);
+		
+		this.ventanaGenerarReporte.getLblFiltroPasajes().setVisible(false);
+		this.ventanaGenerarReporte.getComboBoxFiltro().setVisible(false);
+		this.ventanaGenerarReporte.getLblDesde().setVisible(true);
+		this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(true);
+		this.ventanaGenerarReporte.getLblHasta().setVisible(true);
+		this.ventanaGenerarReporte.getDateHastaChooser().setVisible(true);
+		
 	}
 	
 	private void generarReporteVentas(ActionEvent gv){
@@ -167,4 +201,65 @@ public class ControladorCOOR {
 			}
 		}
 	}
+	
+	private void generarReportePasajes(ActionEvent gv) {
+		String estado = this.ventanaGenerarReporte.getComboBoxFiltro().getSelectedItem().toString();
+		java.util.Date dateDesde = ventanaGenerarReporte.getDateDesdeChooser().getDate();
+		java.sql.Date fechaDesde = new java.sql.Date(dateDesde.getTime());
+		
+		java.util.Date dateHasta = ventanaGenerarReporte.getDateHastaChooser().getDate();
+		java.sql.Date fechaHasta = new java.sql.Date(dateHasta.getTime());
+		
+		Reporte reporte = new Reporte();
+		if(this.ventanaGenerarReporte.getDateDesdeChooser().getDate().before(this.ventanaGenerarReporte.getDateHastaChooser().getDate())){
+			EstadoPasaje estadoPasaje = new EstadoPasaje(new DAOSQLFactory());
+			if(estado.equals("Todos")){
+				List<PasajeDTO> pasajes = pasaje.obtenerPasajesEntreFechas(fechaDesde, fechaHasta);
+					if(pasajes.size()!=0){
+						reporte.reportePasajes(pasajes);
+						reporte.mostrar();
+						this.ventanaGenerarReporte.limpiarCampos();
+					}else{
+						JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+
+				}
+			}else if(estado.equals("Reservados")){
+				List<PasajeDTO> pasajesReservados = pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Reservado"), fechaDesde, fechaHasta);
+					if(pasajesReservados.size()!=0){
+						reporte.reportePasajes(pasajesReservados);
+						reporte.mostrar();
+						this.ventanaGenerarReporte.limpiarCampos();
+					}else{
+						JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+					}
+			}else if(estado.equals("Vendidos")){
+				List<PasajeDTO> pasajesVendidos= pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Vendido"), fechaDesde, fechaHasta);
+				if(pasajesVendidos.size()!=0){
+					reporte.reportePasajes(pasajesVendidos);		
+					reporte.mostrar();
+					this.ventanaGenerarReporte.limpiarCampos();
+				}else{
+					JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+				}
+			}
+		}else{
+			JOptionPane.showMessageDialog(null, "Error en el ingreso de fechas", "Error", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	
+//	private List<PasajeDTO> obtenerPasajesVendidosYReservados(java.sql.Date fechaDesde, java.sql.Date fechaHasta){
+//		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
+//		
+//		EstadoPasaje estadoPasaje = new EstadoPasaje(new DAOSQLFactory());
+//		List<PasajeDTO> pasajesVendidos = pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Vendido"), fechaDesde, fechaHasta);
+//		List<PasajeDTO> pasajesReservados = pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Reservado"), fechaDesde, fechaHasta);
+//
+//		for(PasajeDTO reservado : pasajesReservados){
+//			for(PasajeDTO vendido : pasajesVendidos){
+//				pasajes.add(reservado);
+//				pasajes.add(vendido);
+//			}
+//		}
+//		return pasajes;
+//	}
 }

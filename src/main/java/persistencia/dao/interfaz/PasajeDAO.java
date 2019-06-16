@@ -3,6 +3,7 @@ package persistencia.dao.interfaz;
 import java.sql.Date;
 import java.util.List;
 
+import dto.EstadoPasajeDTO;
 import dto.PasajeDTO;
 
 public interface PasajeDAO {
@@ -22,5 +23,7 @@ public interface PasajeDAO {
 //	public List<PasajeDTO> listarPasajesEntreFechas();
 
 	public List<PasajeDTO> listarPasajesEntreFechas(Date desde, Date hasta);
+
+	public List<PasajeDTO> obtenerPasajesEstado(EstadoPasajeDTO estado, Date desde, Date hasta);
 }
 

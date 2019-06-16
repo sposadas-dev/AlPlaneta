@@ -41,7 +41,7 @@
 		<groupHeader>
 			<band height="37">
 				<frame>
-					<reportElement mode="Opaque" x="0" y="0" width="555" height="37" backcolor="#F0943E" uuid="92de61ad-73c1-4fe2-bdb2-24c5ab21012d"/>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="37" backcolor="#CFCFCF" uuid="92de61ad-73c1-4fe2-bdb2-24c5ab21012d"/>
 					<box>
 						<pen lineColor="#FFFFFF"/>
 					</box>
