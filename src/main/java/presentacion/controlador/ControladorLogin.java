@@ -171,7 +171,7 @@ public class ControladorLogin {
 	private String obtenerContrasenaProvisoria() {
 		return UUID.randomUUID().toString().toUpperCase().substring(0, 8);
 	}
-	
+	//TODO: Realizar el logueo de Contador.
 	private void loguearse(ActionEvent log) {
 		String usuario = ventanaLogin.getTextUsuario().getText();
 		String password = new String(ventanaLogin.getPasswordField().getPassword());

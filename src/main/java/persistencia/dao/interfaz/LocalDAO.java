@@ -15,6 +15,7 @@ public interface LocalDAO {
 	public boolean update(LocalDTO local);
 	
 	public LocalDTO getById(int idLocal);
-
+	
+	public LocalDTO readOne(String local);
 	
 }

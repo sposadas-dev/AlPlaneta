@@ -3,15 +3,21 @@ package dto;
 public class AdministrativoDTO {
 	private int idAdministrativo;
 	private String nombre;
+	private String apellido;
+	private String dni;
 	private LoginDTO datosLogin;
 	private String mail;
+	private LocalDTO local;
 
-	public AdministrativoDTO(int idAdministrativo, String nombre, LoginDTO datosLogin, String mail) {
+	public AdministrativoDTO(int idAdministrativo, String nombre, String apellido, String dni, LoginDTO datosLogin, String mail, LocalDTO local) {
 		super();
 		this.idAdministrativo = idAdministrativo;
 		this.nombre = nombre;
+		this.apellido = apellido;
+		this.dni = dni;
 		this.datosLogin = datosLogin;
 		this.mail = mail;
+		this.local = local;
 	}
 	
 	public AdministrativoDTO() {
@@ -50,5 +56,28 @@ public class AdministrativoDTO {
 		this.mail = mail;
 	}
 
-	
+	public String getApellido() {
+		return apellido;
+	}
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+
+	public String getDni() {
+		return dni;
+	}
+
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	public LocalDTO getLocal() {
+		return local;
+	}
+
+	public void setLocal(LocalDTO local) {
+		this.local = local;
+	}
+
 }

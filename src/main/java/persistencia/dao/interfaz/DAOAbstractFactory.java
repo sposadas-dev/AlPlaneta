@@ -6,6 +6,8 @@ public interface DAOAbstractFactory {
 	
 	public AdministradorDAO createAdministradorDAO();
 	
+	public ContadorDAO createContadorDAO();
+	
 	public AdministrativoDAO createAdministrativoDAO();
 	
 	public PasajeDAO createPasajeDAO();

@@ -3,11 +3,16 @@ package modelo;
 import java.util.List;
 
 import dto.LocalDTO;
+import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.LocalDAO;
 
 public class Local {
 
 	private LocalDAO local;
+	
+	public Local(DAOAbstractFactory metodo_persistencia){
+		this.local = metodo_persistencia.createLocalDAO();
+	}
 	
 	public boolean insert(LocalDTO local) {
 		return this.local.insert(local);
@@ -27,6 +32,10 @@ public class Local {
 	
 	public LocalDTO getById(int idLocal) {
 		return this.local.getById(idLocal);
+	}
+	
+	public LocalDTO obtenerLocal(String nombreLocal) {
+		return this.local.readOne(nombreLocal);
 	}
 	
 }

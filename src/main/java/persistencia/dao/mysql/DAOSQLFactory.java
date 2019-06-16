@@ -4,6 +4,7 @@ import persistencia.dao.interfaz.AdministradorDAO;
 import persistencia.dao.interfaz.AdministrativoDAO;
 import persistencia.dao.interfaz.CiudadDAO;
 import persistencia.dao.interfaz.ClienteDAO;
+import persistencia.dao.interfaz.ContadorDAO;
 import persistencia.dao.interfaz.CoordinadorDAO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
 import persistencia.dao.interfaz.EstadoEventoDAO;
@@ -153,6 +154,11 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	@Override
 	public LocalDAO createLocalDAO() {
 		return new LocalDAOSQL();
+	}
+
+	@Override
+	public ContadorDAO createContadorDAO() {
+		return new ContadorDAOSQL();
 	}
 
 }

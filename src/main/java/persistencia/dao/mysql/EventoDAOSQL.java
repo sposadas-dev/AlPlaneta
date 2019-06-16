@@ -11,6 +11,7 @@ import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EstadoEventoDTO;
 import dto.EventoDTO;
+import dto.LocalDTO;
 import dto.LoginDTO;
 import dto.MedioContactoDTO;
 import dto.RolDTO;
@@ -184,7 +185,8 @@ public class EventoDAOSQL implements EventoDAO {
 		
 		RolDTO rol2 = new RolDTO(2,"administrativo");
 		LoginDTO login2 = new LoginDTO (1,"sol","sol123",rol2,"activo");
-		AdministrativoDTO administrativo = new AdministrativoDTO(1,"soladministrativa",login2,"sol@gmail.com");
+		LocalDTO local = new LocalDTO(1, "AlPlaneta", "Belt 991");
+		AdministrativoDTO administrativo = new AdministrativoDTO(0, "Sol", "Hoyos", "38957744", login2,"sol@gmail.com", local);
 		
 		EstadoEventoDTO estado = new EstadoEventoDTO(1,"pendiente","el evento aún no se realizó");
 		

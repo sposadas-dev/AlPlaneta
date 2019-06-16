@@ -12,9 +12,9 @@ import persistencia.dao.interfaz.AdministradorDAO;
 
 public class AdministradorDAOSQL implements AdministradorDAO {
 
-	private static final String insert = "INSERT INTO administrador(idAdministrador, nombre, idLogin, mail)" + " VALUES (?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO administrador(nombre, apellido, dni, idLogin, mail, idLocal)" + " VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String readall = "SELECT * FROM administrador";
-	private static final String update = "UPDATE administrador SET nombre = ? WHERE idAdministrador = ?";
+	private static final String update = "UPDATE administrador SET nombre = ?, apellido = ?, dni = ? WHERE idAdministrador = ?";
 	private static final String updateMail = "UPDATE administrador SET mail = ? WHERE idAdministrador = ?";
 	private static final String browse = "SELECT * FROM administrador WHERE idAdministrador = ?";
 	private static final String browseLogin = "SELECT * FROM administrador WHERE idLogin = ?";
@@ -27,10 +27,12 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
-			statement.setInt(1, administrador.getIdAdministrador());
-			statement.setString(2, administrador.getNombre());
-			statement.setInt(3, administrador.getDatosLogin().getIdDatosLogin());
-			statement.setString(4, administrador.getMail());
+			statement.setString(1, administrador.getNombre());
+			statement.setString(2, administrador.getApellido());
+			statement.setString(3, administrador.getDni());
+			statement.setInt(4, administrador.getDatosLogin().getIdDatosLogin());
+			statement.setString(5, administrador.getMail());
+			statement.setInt(6, administrador.getLocal().getIdLocal());
 
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -48,8 +50,8 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		Conexion conexion = Conexion.getConexion();
 
 		ArrayList<AdministradorDTO> administrador = new ArrayList<AdministradorDTO>();
-		LoginDAOSQL dao = new LoginDAOSQL();
-		
+		LoginDAOSQL login = new LoginDAOSQL();
+		LocalDAOSQL local = new LocalDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
@@ -59,8 +61,11 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 						new AdministradorDTO(
 								resultSet.getInt("idAdministrador"),
 								resultSet.getString("nombre"),
-								dao.getById(resultSet.getInt("idLogin")),
-								resultSet.getString("mail" )));
+								resultSet.getString("apellido"),
+								resultSet.getString("dni"),
+								login.getById(resultSet.getInt("idLogin")),
+								resultSet.getString("mail" ),
+								local.getById(resultSet.getInt("idLocal"))));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -77,9 +82,9 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 			statement = conexion.getSQLConexion().prepareStatement(update);
 
 			statement.setString(1, administrador.getNombre());
-			statement.setInt(2, administrador.getIdAdministrador()); // deberia
-			statement.setInt(3, administrador.getDatosLogin().getIdDatosLogin());
-			statement.setString(4, administrador.getMail());
+			statement.setString(2, administrador.getApellido());
+			statement.setString(3, administrador.getDni());
+			statement.setInt(4, administrador.getIdAdministrador()); 
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
@@ -110,15 +115,6 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		return false;
 	}
 	
-
-//	public AdministradorDTO getByDatosLogin(String usuario, String constrasena) {
-//		ArrayList<AdministradorDTO> personales = (ArrayList<AdministradorDTO>) readAll();
-//		for(AdministradorDTO adm: personales)
-//			if(adm.getDatosLogin().getUsuario().equals(usuario)&&
-//					adm.getDatosLogin().getContrasena().equals(constrasena))
-//						return adm;
-//		return null;
-//	}
 	@Override
 	public AdministradorDTO getById(int id ){
 		PreparedStatement statement;
@@ -126,7 +122,8 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		Conexion conexion = Conexion.getConexion();
 		AdministradorDTO dto;
 		
-		LoginDAOSQL dao = new LoginDAOSQL();
+		LoginDAOSQL login = new LoginDAOSQL();
+		LocalDAOSQL local = new LocalDAOSQL();
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browse);
 			statement.setInt(1, id);
@@ -136,8 +133,11 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 				dto = new AdministradorDTO(
 						resultSet.getInt("idAdministrador"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")),
-						resultSet.getString("mail"));
+						resultSet.getString("apellido"),
+						resultSet.getString("dni"),
+						login.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"),
+						local.getById(resultSet.getInt("idLocal")));
 				return dto;
 			}
 			
@@ -154,7 +154,8 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		Conexion conexion = Conexion.getConexion();
 		AdministradorDTO dto;
 		
-		LoginDAOSQL dao = new LoginDAOSQL();
+		LoginDAOSQL login = new LoginDAOSQL();
+		LocalDAOSQL local = new LocalDAOSQL();
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browseLogin);
 			statement.setInt(1, id);
@@ -164,8 +165,11 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 				dto = new AdministradorDTO(
 						resultSet.getInt("idAdministrador"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")),
-						resultSet.getString("mail"));
+						resultSet.getString("apellido"),
+						resultSet.getString("dni"),
+						login.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"),
+						local.getById(resultSet.getInt("idLocal")));
 				return dto;
 			}
 			
@@ -181,7 +185,8 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		Conexion conexion = Conexion.getConexion();
 		AdministradorDTO dto;
 		
-		LoginDAOSQL dao = new LoginDAOSQL();
+		LoginDAOSQL login = new LoginDAOSQL();
+		LocalDAOSQL local = new LocalDAOSQL();
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browseByMail);
 			statement.setString(1, mail);
@@ -191,8 +196,11 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 				dto = new AdministradorDTO(
 						resultSet.getInt("idAdministrador"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")),
-						resultSet.getString("mail"));
+						resultSet.getString("apellido"),
+						resultSet.getString("dni"),
+						login.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail"),
+						local.getById(resultSet.getInt("idLocal")));
 				return dto;
 			}
 			

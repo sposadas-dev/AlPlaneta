@@ -13,9 +13,9 @@ import persistencia.dao.interfaz.AdministrativoDAO;
 
 public class AdministrativoDAOSQL implements AdministrativoDAO {
 
-	private static final String insert = "INSERT INTO administrativo(idAdministrativo, nombre, idLogin, mail)" + " VALUES (?, ?, ?, ?)";
+	private static final String insert = "INSERT INTO administrativo(nombre, apellido, dni, idLogin, mail, idLocal)" + " VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String readall = "SELECT * FROM administrativo";
-	private static final String update = "UPDATE administrativo SET nombre = ? WHERE idAdministrativo = ?";
+	private static final String update = "UPDATE administrativo SET nombre = ?, apellido = ?, dni = ? WHERE idAdministrativo = ?";
 	private static final String updateConstrasena = "UPDATE administrativo SET Login = ? WHERE idAdministrativo = ?";
 	private static final String browse = "SELECT * FROM administrativo WHERE idAdministrativo = ?";
 	private static final String browseLogin = "SELECT * FROM administrativo WHERE idLogin = ?";
@@ -28,10 +28,12 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
-			statement.setInt(1, administrativo.getIdAdministrativo());
-			statement.setString(2, administrativo.getNombre());
-			statement.setInt(3, administrativo.getDatosLogin().getIdDatosLogin());
-			statement.setString(4, administrativo.getMail());
+			statement.setString(1, administrativo.getNombre());
+			statement.setString(2, administrativo.getApellido());
+			statement.setString(3, administrativo.getDni());
+			statement.setInt(4, administrativo.getDatosLogin().getIdDatosLogin());
+			statement.setString(5, administrativo.getMail());
+			statement.setInt(6, administrativo.getLocal().getIdLocal());
 
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -50,8 +52,8 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		Conexion conexion = Conexion.getConexion();
 
 		ArrayList<AdministrativoDTO> administrativos = new ArrayList<AdministrativoDTO>();
-		LoginDAOSQL dao = new LoginDAOSQL();
-		
+		LoginDAOSQL login = new LoginDAOSQL();
+		LocalDAOSQL local = new LocalDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
@@ -61,8 +63,11 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 						new AdministrativoDTO(
 								resultSet.getInt("idAdministrativo"),
 								resultSet.getString("nombre"),
-								dao.getById(resultSet.getInt("idLogin")),
-								resultSet.getString("mail")));
+								resultSet.getString("apellido"),
+								resultSet.getString("dni"),
+								login.getById(resultSet.getInt("idLogin")),
+								resultSet.getString("mail" ),
+								local.getById(resultSet.getInt("idLocal"))));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -79,6 +84,8 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 			statement = conexion.getSQLConexion().prepareStatement(update);
 
 			statement.setString(1, administrativo.getNombre());
+			statement.setString(2, administrativo.getApellido());
+			statement.setString(3, administrativo.getDni());
 			statement.setInt(2, administrativo.getIdAdministrativo()); // deberia
 
 			chequeoUpdate = statement.executeUpdate();
@@ -127,7 +134,8 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		Conexion conexion = Conexion.getConexion();
 		AdministrativoDTO dto;
 		
-		LoginDAOSQL dao = new LoginDAOSQL();
+		LoginDAOSQL login = new LoginDAOSQL();
+		LocalDAOSQL local = new LocalDAOSQL();
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browse);
 			statement.setInt(1, id);
@@ -137,8 +145,11 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 				dto = new AdministrativoDTO(
 						resultSet.getInt("idAdministrativo"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")),
-						resultSet.getString("mail"));
+						resultSet.getString("apellido"),
+						resultSet.getString("dni"),
+						login.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail" ),
+						local.getById(resultSet.getInt("idLocal")));
 				return dto;
 			}
 			
@@ -155,7 +166,8 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		Conexion conexion = Conexion.getConexion();
 		AdministrativoDTO dto;
 		
-		LoginDAOSQL dao = new LoginDAOSQL();
+		LoginDAOSQL login = new LoginDAOSQL();
+		LocalDAOSQL local = new LocalDAOSQL();
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browseLogin);
 			statement.setInt(1, id);
@@ -165,8 +177,11 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 				dto = new AdministrativoDTO(
 						resultSet.getInt("idAdministrativo"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")),
-						resultSet.getString("mail"));
+						resultSet.getString("apellido"),
+						resultSet.getString("dni"),
+						login.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail" ),
+						local.getById(resultSet.getInt("idLocal")));
 				return dto;
 			}
 			
@@ -182,7 +197,8 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		Conexion conexion = Conexion.getConexion();
 		AdministrativoDTO dto;
 		
-		LoginDAOSQL dao = new LoginDAOSQL();
+		LoginDAOSQL login = new LoginDAOSQL();
+		LocalDAOSQL local = new LocalDAOSQL();
 		try{
 			statement = conexion.getSQLConexion().prepareStatement(browseByMail);
 			statement.setString(1, mail);
@@ -192,8 +208,11 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 				dto = new AdministrativoDTO(
 						resultSet.getInt("idAdministrativo"),
 						resultSet.getString("nombre"),
-						dao.getById(resultSet.getInt("idLogin")),
-						resultSet.getString("mail"));
+						resultSet.getString("apellido"),
+						resultSet.getString("dni"),
+						login.getById(resultSet.getInt("idLogin")),
+						resultSet.getString("mail" ),
+						local.getById(resultSet.getInt("idLocal")));
 				return dto;
 			}
 			
