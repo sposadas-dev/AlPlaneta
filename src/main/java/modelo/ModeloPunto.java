@@ -39,5 +39,9 @@ private PuntoDAO punto;
 	public ArrayList<PuntoDTO> getPuntosByClienteID(ClienteDTO cliente){
 		return this.punto.readAllByClienteID(cliente);
 	}
+	
+	public ArrayList<PuntoDTO> getPuntosAscendente(int idCliente){
+		return this.punto.readAllASC(idCliente);
+	}
 
 }
