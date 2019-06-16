@@ -37,4 +37,8 @@ public class Administrativo {
 	public AdministrativoDTO buscarPorEmail(String email) {
 		return this.administrativo.getByMail(email);
 	}
+	
+	public boolean delete(int idAdministrativo) {
+		return this.administrativo.delete(idAdministrativo);
+	}
 }

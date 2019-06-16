@@ -20,6 +20,14 @@ private AdministradorDAO administrador;
 		this.administrador.insert(nuevoAdministrador);
 	}
 	
+	public boolean eliminarAdministrador(int idAdministrador) {
+		return this.administrador.delete(idAdministrador);
+	}
+	
+	public boolean updateAdministrador(AdministradorDTO updateAdministrador) {
+		return this.administrador.update(updateAdministrador);
+	}
+	
 	public List<AdministradorDTO> obtenerAdministradores(){
 		return this.administrador.readAll();		
 	}

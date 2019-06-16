@@ -168,5 +168,22 @@ public class LoginDAOSQL implements LoginDAO{
 		
 		System.out.println(dao.getById(1).getRol().getNombre());
 	}
+
+	@Override
+	public boolean delete(int idLogin) {
+		PreparedStatement statement;
+		Conexion conexion = Conexion.getConexion();
+		
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(delete);
+			statement.setInt(1, idLogin);
+			if(statement.executeUpdate() > 0) {
+				return true;
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 }

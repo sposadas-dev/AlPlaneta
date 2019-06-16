@@ -10,6 +10,8 @@ public interface LoginDAO {
 	public boolean insert(LoginDTO datos);
 
 	public boolean delete(LoginDTO datos_a_eliminar);
+	
+	public boolean delete(int idLogin);
 
 	public List<LoginDTO> readAll();
 

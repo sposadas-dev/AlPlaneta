@@ -114,6 +114,13 @@ public class ControladorPasaje implements ActionListener{
 	private boolean editarPago;
 	private ViajeDTO viajeDTO;
 	private java.util.Date fechaActual;
+<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
+=======
+	
+	//Aux
+	private BigDecimal valorFinal;
+
+>>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 	private DefaultTableModel dm;
 	private StringBuilder cad= new StringBuilder();
 	private ModeloPunto modeloPunto;
@@ -772,7 +779,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaComprobante.getTxtOrigenViaje().setText(" "+ viajeSeleccionado.getPaisOrigen().getNombre()+ ", "+viajeSeleccionado.getProvinciaOrigen().getNombre()+", "+viajeSeleccionado.getCiudadOrigen().getNombre());
 		this.ventanaComprobante.getTxtDestinoViaje().setText(" "+ viajeSeleccionado.getPaisDestino().getNombre()+ ", "+viajeSeleccionado.getProvinciaDestino().getNombre()+", "+viajeSeleccionado.getCiudadDestino().getNombre());
 		this.ventanaComprobante.getTxtImportePagado().setText("$ "+ pagoDTO.getMonto());
-		this.ventanaComprobante.getTxtValorViaje().setText("$ "+calcularMontoDePasaje());
+		this.ventanaComprobante.getTxtValorViaje().setText("$ "+this.valorFinal);
 	}
 	
 	private void darAltaDeUnPasaje(ActionEvent dp) {
@@ -848,7 +855,6 @@ public class ControladorPasaje implements ActionListener{
     }
 	
 	private BigDecimal calcularMontoDePasaje() {
-		BigDecimal valorFinal;
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
 		totalaPagar = Valor1;
 		valorFinal = totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));

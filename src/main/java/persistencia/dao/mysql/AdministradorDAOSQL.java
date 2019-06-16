@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.AdministradorDTO;
-import dto.AdministrativoDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.AdministradorDAO;
 
@@ -20,6 +19,7 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 	private static final String browse = "SELECT * FROM administrador WHERE idAdministrador = ?";
 	private static final String browseLogin = "SELECT * FROM administrador WHERE idLogin = ?";
 	private static final String browseByMail = "SELECT * FROM administrador WHERE mail = ?";
+	private static final String delete = "DELETE FROM administrador WHERE idAdministrador = ?";
 
 	@Override
 	public boolean insert(AdministradorDTO administrador) {
@@ -202,6 +202,24 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 		return null;
 	}
 	
+	@Override
+	public boolean delete( int idAdministrador ) {
+		PreparedStatement statement;
+		Conexion conexion = Conexion.getConexion();
+		
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(delete);
+			statement.setInt(1, idAdministrador);
+			
+			if(statement.executeUpdate() > 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 	
 	public static void main(String[] args) {
 		AdministradorDAOSQL dao = new AdministradorDAOSQL();
@@ -222,9 +240,5 @@ public class AdministradorDAOSQL implements AdministradorDAO {
 //		System.out.println(dao.getByLoginId(5).getNombre());
 	}
 
-	@Override
-	public boolean delete(AdministradorDTO administrador_a_eliminar) {
-		return false;
-	}
 	
 }
