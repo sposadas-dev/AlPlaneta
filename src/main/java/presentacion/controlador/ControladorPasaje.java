@@ -284,9 +284,6 @@ public class ControladorPasaje implements ActionListener{
 	
 
 	private void pagarConPuntos(ActionEvent p) {
-		System.out.println("VALOR DEL VIAJE EN PUNTOS: "+ valorDelViajeEnPuntos);
-		System.out.println("PUNTOS DEL CLIENTE: "+clienteSeleccionado.getTotalPuntos());
-		
 		if(valorDelViajeEnPuntos<=clienteSeleccionado.getTotalPuntos()){
 			darAltaDelPagoConPuntos();
 		}
@@ -629,32 +626,24 @@ public class ControladorPasaje implements ActionListener{
 				this.ventanaPago.setVisible(false);
 				mostrarVentanaConfirmacionPasaje();
 			}else{ 
-
 			modeloPago.agregarPago(pagoDTO);
 			pagos_pasajeDTO = new Pagos_PasajeDTO();
 			PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
 			pagos_pasajeDTO.setPago(pagoPasaje);
 			pagos_pasajeDTO.setPasaje(pasajeAEditar);
 			modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
-	
 			pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
 			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
-			
 			modeloPasaje.editarPasaje(pasajeAEditar);
-			
-				
-				
 			this.ventanaPago.limpiarCampos();
 			this.ventanaPago.mostrarVentana(false);
 			this.ventanaVisualizarPasaje.mostrarVentana(false);
-				
 			reportePago();
 			this.llenarTablaPasajes();
 			}
 	}
 	
 	private void darAltaDelPagoConPuntos()  {
-		
 		restarPuntosViejosDelCliente();
 		this.ventanaPagoPuntos.setVisible(false);
 
@@ -672,23 +661,22 @@ public class ControladorPasaje implements ActionListener{
 			this.ventanaPagoPuntos.setVisible(false);
 			mostrarVentanaConfirmacionPasaje();
 		}else{ 
-
-		modeloPago.agregarPago(pagoDTO);
-		pagos_pasajeDTO = new Pagos_PasajeDTO();
-		PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
-		pagos_pasajeDTO.setPago(pagoPasaje);
-		pagos_pasajeDTO.setPasaje(pasajeAEditar);
-		modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
-			
-		pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
-		pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
-					
-		modeloPasaje.editarPasaje(pasajeAEditar);
-		this.ventanaPago.limpiarCampos();
-		this.ventanaPago.mostrarVentana(false);
-		this.ventanaVisualizarPasaje.mostrarVentana(false);
-		reportePago();
-		this.llenarTablaPasajes();
+			modeloPago.agregarPago(pagoDTO);
+			pagos_pasajeDTO = new Pagos_PasajeDTO();
+			PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
+			pagos_pasajeDTO.setPago(pagoPasaje);
+			pagos_pasajeDTO.setPasaje(pasajeAEditar);
+			modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
+				
+			pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
+			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
+						
+			modeloPasaje.editarPasaje(pasajeAEditar);
+			this.ventanaPago.limpiarCampos();
+			this.ventanaPago.mostrarVentana(false);
+			this.ventanaVisualizarPasaje.mostrarVentana(false);
+			reportePago();
+			this.llenarTablaPasajes();
 		}
 	}
 	
