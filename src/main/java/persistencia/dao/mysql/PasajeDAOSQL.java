@@ -17,7 +17,7 @@ import persistencia.dao.interfaz.PasajeDAO;
 
 public class PasajeDAOSQL implements PasajeDAO {
 	
-	private static final String insert = "INSERT INTO pasaje(idPasaje, numeroComprobante,fechaVencimiento, valorViaje, montoAPagar, idCliente, idViaje, idAdministrativo, idEstadoPasaje,motivoCancelacion, fechaCancelacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+	private static final String insert = "INSERT INTO pasaje(idPasaje, fechaEmision, numeroComprobante,fechaVencimiento, valorViaje, montoAPagar, idCliente, idViaje, idAdministrativo, idEstadoPasaje,motivoCancelacion, fechaCancelacion) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 	private static final String delete = "DELETE FROM pasaje  WHERE idPasaje = ?";
 	private static final String readall = "SELECT * FROM pasaje";
 	private static final String update = "UPDATE pasaje SET idEstadoPasaje=?, montoAPagar=?, motivoCancelacion=?, fechaCancelacion=? WHERE idPasaje = ?;";
@@ -33,16 +33,17 @@ public class PasajeDAOSQL implements PasajeDAO {
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
 			statement.setInt(1, pasaje.getIdPasaje());
-			statement.setString(2, pasaje.getNumeroComprobante());
-			statement.setDate(3, pasaje.getFechaVencimiento());
-			statement.setBigDecimal(4, pasaje.getValorViaje());
-			statement.setBigDecimal(5, pasaje.getMontoAPagar());
-			statement.setInt(6, pasaje.getCliente().getIdCliente());
-			statement.setInt(7, pasaje.getViaje().getIdViaje());
-			statement.setInt(8, pasaje.getAdministrativo().getIdAdministrativo());
-			statement.setInt(9, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());
-			statement.setString(10, pasaje.getMotivoCancelacion());
-			statement.setDate(11, pasaje.getDateCancelacion());
+			statement.setDate(2, pasaje.getFechaEmision());
+			statement.setString(3, pasaje.getNumeroComprobante());
+			statement.setDate(4, pasaje.getFechaVencimiento());
+			statement.setBigDecimal(5, pasaje.getValorViaje());
+			statement.setBigDecimal(6, pasaje.getMontoAPagar());
+			statement.setInt(7, pasaje.getCliente().getIdCliente());
+			statement.setInt(8, pasaje.getViaje().getIdViaje());
+			statement.setInt(9, pasaje.getAdministrativo().getIdAdministrativo());
+			statement.setInt(10, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());
+			statement.setString(11, pasaje.getMotivoCancelacion());
+			statement.setDate(12, pasaje.getDateCancelacion());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -91,6 +92,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 				pasajes.add(
 						new PasajeDTO(
 						resultSet.getInt("idPasaje"),
+						resultSet.getDate("fechaEmision"),
 						resultSet.getString("numeroComprobante"),
 						viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
 						administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),

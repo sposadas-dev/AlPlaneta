@@ -140,6 +140,7 @@ CREATE TABLE `viaje` (
 
 CREATE TABLE `pasaje` (
   `idPasaje` int(11) AUTO_INCREMENT,
+  `fechaEmision` date,
   `numeroComprobante` varchar(11) NOT NULL,
   `fechaVencimiento` date,
   `valorViaje` decimal(11,0) NOT NULL,

@@ -7,6 +7,7 @@ import java.util.List;
 
 public class PasajeDTO {
 	private int idPasaje;
+	private Date fechaEmision;
 	private String numeroComprobante;
 	private ViajeDTO viaje;
 	private AdministrativoDTO administrativo;
@@ -20,12 +21,13 @@ public class PasajeDTO {
 	private Date dateCancelacion;
 	private SimpleDateFormat formatFecha;
 
-	public PasajeDTO(int idPasaje, String numeroComprobante,ViajeDTO viaje, AdministrativoDTO administrativo,
+	public PasajeDTO(int idPasaje, Date fechaEmision, String numeroComprobante,ViajeDTO viaje, AdministrativoDTO administrativo,
 			ClienteDTO cliente, Date fechaVencimiento, BigDecimal valorViaje,
 			BigDecimal montoAPagar,EstadoPasajeDTO estadoDelPasaje, List<PasajeroDTO> pasajeros,
 			String motivoCancelacion, Date dateCancelacion) {
 		super();
 		this.idPasaje = idPasaje;
+		this.fechaEmision = fechaEmision;
 		this.numeroComprobante = numeroComprobante;
 		this.viaje = viaje;
 		this.administrativo = administrativo;
@@ -38,6 +40,10 @@ public class PasajeDTO {
 		this.motivoCancelacion = motivoCancelacion;
 		this.dateCancelacion = dateCancelacion;
 		formatFecha = new SimpleDateFormat("dd-MM-yyyy");
+	}
+
+	public Date getFechaEmision() {
+		return fechaEmision;
 	}
 
 	public PasajeDTO() {

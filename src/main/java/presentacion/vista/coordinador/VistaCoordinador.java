@@ -5,20 +5,22 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import persistencia.conexion.Conexion;
-
 import presentacion.vista.administrador.VentanaPanelGeneral;
+
 
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Frame;
 
@@ -37,14 +39,21 @@ public class VistaCoordinador extends JFrame {
 	
 	
 	
-	private static VistaCoordinador INSTANCE;
+	private static VistaCoordinador vistaCoordinador;
+	private JMenu menuReportes;
+	private JMenuItem itemListaEmpleados;
+	private JMenuItem itemPasajes;
+	private JMenuItem itemVentas;
+	
 	public static VistaCoordinador getInstance(){
-		if(INSTANCE == null)
-			return new VistaCoordinador();
-		else
-			return INSTANCE;
+		if(vistaCoordinador== null){	
+			vistaCoordinador = new VistaCoordinador();
+			return vistaCoordinador;
+		}else{
+			return vistaCoordinador;
+		}
 	}
-
+	
 	public VistaCoordinador() {
 		super();
 		setTitle("Coordinador");
@@ -66,7 +75,7 @@ public class VistaCoordinador extends JFrame {
 		
 			
 		JMenu menuRegimenPuntos = new JMenu("Regimen puntos");
-		menuRegimenPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		menuRegimenPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuBar.add(menuRegimenPuntos);
 		
 		itemVisualizarRegimenPuntos = new JMenuItem("Visualizar RegimenPuntos");
@@ -85,6 +94,21 @@ public class VistaCoordinador extends JFrame {
 		itemEliminarRegimenPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuRegimenPuntos.add(itemEliminarRegimenPuntos);
 		
+		menuReportes = new JMenu("Reportes");
+		menuReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuBar.add(menuReportes);
+		
+		itemListaEmpleados = new JMenuItem("Listado de empleados");
+		itemListaEmpleados.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuReportes.add(itemListaEmpleados);
+		
+		itemPasajes = new JMenuItem("Pasajes");
+		itemPasajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuReportes.add(itemPasajes);
+		
+		itemVentas = new JMenuItem("Ventas");
+		itemVentas.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuReportes.add(itemVentas);
 		
 		panelRegimenPuntos = new PanelRegimenPuntos();
 		panelRegimenPuntos.getLblRegimenPuntos().setText("Regimen de puntos");
@@ -100,7 +124,18 @@ public class VistaCoordinador extends JFrame {
 	}
 	
 
-//-------------------------RegimenPuntos-----------------------------------//
+	public JMenuItem getItemPasajes() {
+		return itemPasajes;
+	}
+
+	public JMenuItem getItemListaEmpleados() {
+		return itemListaEmpleados;
+	}
+	
+	public JMenuItem getItemVentas() {
+		return itemVentas;
+	}
+	//-------------------------RegimenPuntos-----------------------------------//
 	public void setPanelRegimenPuntos(PanelRegimenPuntos panelRegimenPuntos) {
 		this.panelRegimenPuntos = panelRegimenPuntos;
 	}
@@ -169,8 +204,4 @@ public class VistaCoordinador extends JFrame {
 		});
 		setVisible(true);
 	}
-	
-	
-
-	
 }
