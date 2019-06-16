@@ -21,6 +21,7 @@ public class PuntoDAOSQL implements PuntoDAO{
 	private static final String update = "UPDATE punto SET punto= ?, vencimiento =?, idCLiente=? WHERE idPunto = ?";
 	private static final String browse = "SELECT * FROM punto WHERE idPunto = ?";
 	private static final String ultimoRegistro = "SELECT * FROM punto ORDER BY idPunto desc limit 1";
+	private static final String getAllAscendente = "SELECT * FROM punto WHERE idCliente = ? ORDER BY idPunto asc";
 	
 	@Override
 	public boolean insert(PuntoDTO punto) {
@@ -184,9 +185,40 @@ public class PuntoDAOSQL implements PuntoDAO{
 		}
 		return null;
 	}
+
+	public ArrayList<PuntoDTO> readAllASC(int idCliente) {
+		PreparedStatement statement;
+		ResultSet resultSet; // Guarda el resultado de la query
+		Conexion conexion = Conexion.getConexion();
+		ArrayList<PuntoDTO> puntos = new ArrayList<PuntoDTO>();
+		Cliente modeloCliente = new Cliente(new DAOSQLFactory());
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(getAllAscendente);
+			statement.setInt(1, idCliente);
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				puntos.add(new PuntoDTO(resultSet.getInt("idPunto"),
+												  resultSet.getInt("punto"),
+												  resultSet.getDate("vencimiento"),
+												  modeloCliente.getByClienteById(idCliente))
+												  );
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return puntos;
+	}
+	
+	
+	
 	
 	public static void main(String[] args) {
-//		PuntoDAOSQL dao =  new PuntoDAOSQL();
+		PuntoDAOSQL dao =  new PuntoDAOSQL();
+		ArrayList<PuntoDTO> puntos = dao.readAllASC(1);
+		for(int i=0; i<puntos.size(); i++){
+			System.out.println(puntos.get(i).getIdPunto());
+		}
 //		dao.insert(punto)
 //		RegimenPuntoDTO reg = dao.obtenerUltimoRegistro();
 //		System.out.println(reg.getVencimiento());
