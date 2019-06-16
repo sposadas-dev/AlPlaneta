@@ -14,18 +14,13 @@ import persistencia.dao.interfaz.AdministrativoDAO;
 public class AdministrativoDAOSQL implements AdministrativoDAO {
 
 	private static final String insert = "INSERT INTO administrativo(idAdministrativo, nombre, idLogin, mail)" + " VALUES (?, ?, ?, ?)";
-
 	private static final String readall = "SELECT * FROM administrativo";
-
 	private static final String update = "UPDATE administrativo SET nombre = ? WHERE idAdministrativo = ?";
-	
 	private static final String updateConstrasena = "UPDATE administrativo SET Login = ? WHERE idAdministrativo = ?";
-
 	private static final String browse = "SELECT * FROM administrativo WHERE idAdministrativo = ?";
-	
 	private static final String browseLogin = "SELECT * FROM administrativo WHERE idLogin = ?";
-	
 	private static final String browseByMail = "SELECT * FROM administrativo WHERE mail = ?";
+	private static final String delete = "DELETE FROM administrativo WHERE idAdministrativo = ?";
 
 	@Override
 	public boolean insert(AdministrativoDTO administrativo) {
@@ -208,7 +203,21 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 		return null;
 	}
 	
-	
+	@Override
+	public boolean delete(int idAdministrativo) {
+		PreparedStatement statement;
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(delete);
+			statement.setInt(1, idAdministrativo);
+			if (statement.executeUpdate() > 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	public static void main(String[] args) {
 		AdministrativoDAOSQL dao = new AdministrativoDAOSQL();
@@ -227,5 +236,6 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 //		System.out.println(dao.getByLoginId(3).getNombre());
 //		System.out.println(dao.getByMail("sol@gmail.com").getNombre());
 	}
+
 	
 }

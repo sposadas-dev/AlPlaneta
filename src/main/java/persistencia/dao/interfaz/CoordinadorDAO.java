@@ -2,7 +2,6 @@ package persistencia.dao.interfaz;
 
 import java.util.List;
 
-import dto.AdministrativoDTO;
 import dto.CoordinadorDTO;
 
 public interface CoordinadorDAO {
@@ -18,5 +17,7 @@ public interface CoordinadorDAO {
 	public CoordinadorDTO getByLoginId(int idLogin);
 	
 	public CoordinadorDTO getById(int id );
+	
+	public boolean deleteCoordinador(int idCoordinador);
 
 }

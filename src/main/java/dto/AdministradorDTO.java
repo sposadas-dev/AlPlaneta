@@ -14,6 +14,9 @@ public class AdministradorDTO {
 		this.mail = mail;
 	}
 	
+	public AdministradorDTO() {
+	}
+
 	public String getMail() {
 		return mail;
 	}
