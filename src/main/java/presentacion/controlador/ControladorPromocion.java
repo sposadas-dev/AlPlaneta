@@ -20,6 +20,7 @@ import modelo.ModeloPromocion;
 import modelo.ModeloViaje;
 import modelo.ModeloViaje_Promocion;
 import persistencia.dao.mysql.DAOSQLFactory;
+import persistencia.dao.mysql.Viaje_PromocionDAOSQL;
 import presentacion.vista.administrativo.PanelPromocion;
 import presentacion.vista.administrativo.VentanaEditarPromocion;
 import presentacion.vista.administrativo.VentanaRegistrarPromocion;
@@ -172,15 +173,40 @@ public class ControladorPromocion {
 	private void mostrarViajes(ActionEvent r) {
 		ventanaPromocion.setVisible(false);
 		ventanaTablaViajes.setVisible(true);
-		llenarTablaViajes(modeloViaje.obtenerViajes());
+		ventanaTablaViajes.getBtnConfirmar().setVisible(true);
+		ventanaTablaViajes.getBtnAtras().setVisible(true);
+		ventanaTablaViajes.getTxtMensajeCtrl().setVisible(true);
+		llenarTablaViajes(obtenerViajesSinPromo());
 	}
 	
+	private List<ViajeDTO> obtenerViajesSinPromo() {
+		List<ViajeDTO> sinPromo = new ArrayList<>();
+		for(ViajeDTO v : modeloViaje.obtenerViajes()) {
+			boolean tienePromo = false;
+			for(Viaje_PromocionDTO x : modeloViaje_Promocion.obtenerViajePromocion())
+				if(x.getIdViaje()==v.getIdViaje())
+					tienePromo = true;
+			if(!tienePromo)
+				sinPromo.add(v);
+		}
+		return sinPromo;
+	}
+	
+//	public static void main(String[] args) {
+//		
+//		VentanaRegistrarPromocion vp = new VentanaRegistrarPromocion();
+//		ModeloPromocion mp = new ModeloPromocion(new DAOSQLFactory());
+//		ControladorPromocion c = new ControladorPromocion(vp,mp,null);
+//		for(ViajeDTO v : c.obtenerViajesSinPromo())
+//			System.out.println(v.getIdViaje());
+//	}
 	
 	private void mostrarViajesEditarPromo(ActionEvent r) {
 		ventanaPromocion.setVisible(false);
 		ventanaTablaViajes.setVisible(true);
 		ventanaTablaViajes.getBtnAtras().setVisible(false);
 		ventanaTablaViajes.getBtnConfirmar().setVisible(false);
+		ventanaTablaViajes.getTxtMensajeCtrl().setVisible(false);
 		llenarTablaViajes(modeloViaje_Promocion.obtenerViajesEnPromo(promocionSeleccionada.getIdPromocion()));
 	}
 	

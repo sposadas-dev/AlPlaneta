@@ -14,4 +14,6 @@ public interface EventoDAO {
 	public boolean updateVisto(EventoDTO evento);
 
 	public EventoDTO getEventoById(int id);
+
+	List<EventoDTO> readBetween(String i, String j);
 }

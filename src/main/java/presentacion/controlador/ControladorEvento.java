@@ -1,8 +1,11 @@
 package presentacion.controlador;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.font.TextAttribute;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.AttributedString;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,8 +32,8 @@ import presentacion.vista.administrativo.VentanaEditarEvento;
 import presentacion.vista.administrativo.VentanaMotivosReprogramacionEvento;
 import presentacion.vista.administrativo.VentanaRegistrarEvento;
 import presentacion.vista.administrativo.VentanaTablaClientes;
-import presentacion.vista.administrativo.VistaAdministrativo;
 import presentacion.vista.administrativo.VistaNotificacionDeEvento;
+import recursos.Mapper;
 
 public class ControladorEvento {
 
@@ -58,9 +61,11 @@ public class ControladorEvento {
 	private EstadoEventoDTO estado; 	
 	private String motivoReprogramacion;
 	private EventoDTO eventoRegistrado;
-	
 
 	private EventoDTO eventoAsociado;
+
+	private Mapper mapper;
+	
 
 	public ControladorEvento(VentanaRegistrarEvento ventanaEvento, ModeloEvento evento, AdministrativoDTO administrativoLogueado, List<EventoDTO> eventos_en_tabla){
 		//DATOS EVENTO:
@@ -75,7 +80,7 @@ public class ControladorEvento {
 		this.motivoReprogramacion="";
 		this.eventoRegistrado = null;
 		
-		
+		this.mapper = new Mapper();
 		this.ventanaEvento = ventanaEvento;
 		this.ventanaEditarEvento = VentanaEditarEvento.getInstance();
 		this.ventanaTablaClientes = VentanaTablaClientes.getInstance();
@@ -104,7 +109,7 @@ public class ControladorEvento {
 		
 		this.notificacion.getBtnVerNotificacion().addActionListener(v->mostrarEvento(v));
 		
-		this.administrativoLogueado= administrativoLogueado;
+		this.administrativoLogueado= administrativoLogueado;		
 	}
 
 
@@ -123,6 +128,7 @@ public class ControladorEvento {
 		}	
 		this.ventanaEvento.getComboEstadoEvento().setModel(new DefaultComboBoxModel<String>(nombresEstados));
 		this.ventanaEditarEvento.getComboEstadoEvento().setModel(new DefaultComboBoxModel<String>(nombresEstados));
+		this.panelEvento.getComboFiltros().setModel(new DefaultComboBoxModel<String>(nombresEstados));
 	}
 	
 	public void llenarComboHora() {
@@ -161,11 +167,13 @@ public class ControladorEvento {
 	public void editarEvento(ActionEvent rc){
 		Date fechaEvento = convertUtilToSql(this.ventanaEditarEvento.getDateFechaEvento().getDate());
 		Time horaEvento = obtenerHora(this.ventanaEditarEvento.getComboHora().getSelectedItem().toString(),this.ventanaEditarEvento.getComboMinutos().getSelectedItem().toString());
-		String motivoReprogramacion;
+		String prefijo = "("+mapper.parseToString(fechaIngreso)+") "+administrativoLogueado.getNombre()+":\n";
+		String motivoReprogramacion = "";
+		
 		if(eventoSeleccionado.getMotivoReprogramacion().equals(""))
-			motivoReprogramacion = "- "+this.ventanaEditarEvento.getTxtReprogramacion().getText();	
+			motivoReprogramacion += prefijo+this.ventanaEditarEvento.getTxtReprogramacion().getText()+"\n";	
 		else
-			motivoReprogramacion = eventoSeleccionado.getMotivoReprogramacion()+"\n- "+this.ventanaEditarEvento.getTxtReprogramacion().getText();	
+			motivoReprogramacion += eventoSeleccionado.getMotivoReprogramacion()+"\n"+prefijo.toString()+this.ventanaEditarEvento.getTxtReprogramacion().getText()+"\n";	
 		EstadoEventoDTO estado = obtenerEstadoEventoPorNombre(this.ventanaEditarEvento.getComboEstadoEvento().getSelectedItem().toString());
 		
 		EventoDTO nuevoEvento = new EventoDTO(eventoSeleccionado.getIdEvento(),fechaIngreso,fechaEvento,horaEvento,descripcion,eventoSeleccionado.getCliente(),administrativoLogueado,estado,motivoReprogramacion,0);
@@ -330,7 +338,7 @@ public class ControladorEvento {
 			int espera=0;
 		    public void run() {
 		    	espera++;
-		    	if (espera>5) {
+		    	if (espera>120) {
 		    		notificacion.mostrarVentana(false);
 		    		this.cancel();
 		    	}
