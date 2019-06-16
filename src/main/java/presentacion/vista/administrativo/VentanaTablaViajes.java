@@ -29,6 +29,7 @@ public class VentanaTablaViajes extends JFrame {
 	private  String[] nombreColumnas = {"Origen","Destino","Fecha de salida","Fecha de llegada","Hora de salida","Horas estimadas","Capacidad","Transporte","Precio"};
 	private JTextField txtFiltro;
 	private JLabel lblFiltro;
+	private JLabel lblPresioneLaTecla;
 
 	public static VentanaTablaViajes getInstance(){
 		if(INSTANCE == null)
@@ -91,6 +92,12 @@ public class VentanaTablaViajes extends JFrame {
 		lblViaje.setBounds(425, 0, 271, 64);
 		panel.add(lblViaje);
 		
+		lblPresioneLaTecla = new JLabel("Consejo: Mantenga la tecla ctrl presionada para seleccionar más de un viaje.");
+		lblPresioneLaTecla.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblPresioneLaTecla.setBounds(12, 378, 704, 13);
+		contentPane.add(lblPresioneLaTecla);
+		lblPresioneLaTecla.setVisible(false);
+		
 		this.setVisible(false);
 	}
 
@@ -98,6 +105,9 @@ public class VentanaTablaViajes extends JFrame {
 		return txtFiltro;
 	}
 	
+	public JLabel getTxtMensajeCtrl() {
+		return lblPresioneLaTecla;
+	}
 	public void mostrarVentana(boolean b) {
 		this.setVisible(b);
 	}

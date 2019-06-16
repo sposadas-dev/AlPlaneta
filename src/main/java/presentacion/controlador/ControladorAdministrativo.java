@@ -5,12 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -147,6 +147,82 @@ public class ControladorAdministrativo implements ActionListener {
 			}
 		});
 		
+		this.vista.getPanelEvento().getFiltroApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					tableModel = (DefaultTableModel) vista.getPanelEvento().getModelEventos();
+					TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(tableModel);
+					vista.getPanelEvento().getTablaEventos().setRowSorter(tr);
+					if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+						if (letra == KeyEvent.VK_BACK_SPACE){
+							if(cad.length() != 0) {
+								cad.deleteCharAt(cad.length()-1);
+						        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+							}
+						} else{
+							cad.append(String.valueOf(letra));
+			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+						}
+					}
+			}
+		});
+		
+		this.vista.getPanelEvento().getFiltroDesde().addPropertyChangeListener( new PropertyChangeListener() {
+		    @Override
+		    public void propertyChange(PropertyChangeEvent e) {
+		    	String desde = obtenerFecha(e.getNewValue().toString());
+		    	if(vista.getPanelEvento().getFiltroHasta().getDate() != null){
+		    		String hasta = obtenerFecha(vista.getPanelEvento().getFiltroHasta().getDate().toString());
+		    		llenarTablaEventos(evento.obtenerBetween(desde, hasta));
+		    	}
+		    }
+		});
+		
+		this.vista.getPanelEvento().getFiltroHasta().addPropertyChangeListener( new PropertyChangeListener() {
+		    @Override
+		    public void propertyChange(PropertyChangeEvent e) {
+		    	String hasta = obtenerFecha(e.getNewValue().toString());
+		    	if(vista.getPanelEvento().getFiltroDesde().getDate() != null){
+		    		String desde = obtenerFecha(vista.getPanelEvento().getFiltroDesde().getDate().toString());
+		    		llenarTablaEventos(evento.obtenerBetween(desde, hasta));
+		    	}
+		    }
+		});		
+		
+		this.vista.getPanelEvento().getComboFiltros().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String filtro = vista.getPanelEvento().getComboFiltros().getSelectedItem().toString();
+				if(!filtro.equals("Todos"))
+					llenarTablaEventos(filtrarEventoSegun(filtro));		
+				else {					
+					limpiarFiltrosEvento();
+					llenarTablaEventos(evento.obtenerEvento());
+				}
+			}
+		});
+		
+		this.vista.getPanelEvento().getFiltroNombre().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					tableModel = (DefaultTableModel) vista.getPanelEvento().getModelEventos();
+					TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(tableModel);
+					vista.getPanelEvento().getTablaEventos().setRowSorter(tr);
+					if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+						if (letra == KeyEvent.VK_BACK_SPACE){
+							if(cad.length() != 0) {
+								cad.deleteCharAt(cad.length()-1);
+						        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+							}
+						} else{
+							cad.append(String.valueOf(letra));
+			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+						}
+					}
+			}
+		});
+		
+		
+		
 		this.ventanaEditarCliente.getTxtNombre().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 					char letra = e.getKeyChar();
@@ -193,6 +269,7 @@ public class ControladorAdministrativo implements ActionListener {
 			}
 		});
 		
+
 //		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
 		
 		this.vista.getPanelPasaje().getCancelCheckBox().addActionListener(ccb->cargarCancelados(ccb));
@@ -209,8 +286,6 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getItemEditarEvento().addActionListener(ac->mostrarVentanaEditarEvento(ac));
 		this.ventanaEditarEvento.getBtnEditar().addActionListener(ac->actualizarTablaEventos(ac));
 		this.ventanaEvento.getBtnRegistrar().addActionListener(ac->actualizarTablaEventos(ac));
-		this.vista.getPanelEvento().getBtnBuscar().addActionListener(b->filtrarEvento(b));
-		this.vista.getPanelEvento().getBtnBorrarFiltros().addActionListener(bf->borrarFiltrosEvento(bf));
 		
 		this.vista.getItemAgregarPromocion().addActionListener(ac->mostrarVentanaAgregarPromocion(ac));
 		this.vista.getItemEditarPromocion().addActionListener(ac->mostrarVentanaEditarPromocion(ac));
@@ -240,6 +315,8 @@ public class ControladorAdministrativo implements ActionListener {
         controladorDatosLogin = new ControladorDatosLogin();
 
 	}
+
+
 
 	private void restablecerContrasena(ActionEvent r) {
 		controladorDatosLogin.restablecerContrasena();
@@ -428,8 +505,6 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorEvento.llenarComboHora();
 		controladorEvento.llenarComboMinutos();
         controladorEvento.setEventoSeleccionado(this.eventos_en_tabla.get(filaSeleccionada));
-        System.out.println(this.eventos_en_tabla.get(filaSeleccionada).getMotivoReprogramacion()+"DATO VIEJO");
-		//controladorEvento.llenarMotivos(this.eventos_en_tabla.get(filaSeleccionada));
 		if (filaSeleccionada != -1){
 			
 			ventanaEditarEvento.mostrarVentana(true);
@@ -584,70 +659,12 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaPromocion.mostrarVentana();
 	}
 	
-	public void llenarComboFiltroEvento(){
-		ArrayList<String> datos = new ArrayList<String>();
-		this.vista.getPanelEvento().getComboFiltros().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String filtro = vista.getPanelEvento().getComboFiltros().getSelectedItem().toString();
-				if(!filtro.equals("Seleccione")) {
-		 			vista.getPanelEvento().getComboOpcionesFiltros().setEnabled(true);
-					if(filtro.equals("Fecha de Ingreso")) {
-						datos.clear();
-			 			for(EventoDTO x : eventos_en_tabla)
-			 				if(!datos.contains(mapper.parseToString(x.getFechaIngreso())))
-			 					datos.add(mapper.parseToString(x.getFechaIngreso()));
-					}
-					if(filtro.equals("Fecha del Evento")) {
-						datos.clear();
-			 			for(EventoDTO x : eventos_en_tabla)
-			 				if(!datos.contains(mapper.parseToString(x.getFechaIngreso())))
-			 					datos.add(mapper.parseToString(x.getFechaEvento()));
-					}
-					if(filtro.equals("Apellido del Cliente")) {
-						datos.clear();
-			 			for(EventoDTO x : eventos_en_tabla)
-			 				if(!datos.contains(x.getCliente().getApellido()))
-			 					datos.add(x.getCliente().getApellido());
-					}
-					if(filtro.equals("Estado")) {
-						datos.clear();
-			 			for(EventoDTO x : eventos_en_tabla)
-			 				if(!datos.contains(x.getEstadoEvento().getNombre()))
-			 					datos.add(x.getEstadoEvento().getNombre());
-					}
-					String [] datosCombo = new String[datos.size()];
-		 			vista.getPanelEvento().getComboOpcionesFiltros().setModel(new DefaultComboBoxModel<String>(datos.toArray(datosCombo)));
-				}
-				else {					
-					limpiarFiltrosEvento();
-					llenarTablaEventos(evento.obtenerEvento());
-				}
-			}
-		});
-	}
-	
-	public void filtrarEvento(ActionEvent e) {
-		if(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedIndex() !=-1)
-			llenarTablaEventos(filtrarEventoSegun(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedItem().toString()));
-		else
-			JOptionPane.showMessageDialog(vista.getPanelEvento(), "No se ha seleccionado ningún filtro");
-	}
-	
 	public List<EventoDTO> filtrarEventoSegun(String datoCombo){
 		List<EventoDTO> ret = new ArrayList<EventoDTO>();
-		for(EventoDTO x : evento.obtenerEvento()) {
-			if(this.vista.getPanelEvento().getComboFiltros().getSelectedItem().equals("Fecha de Ingreso"))
-				if(x.getFechaIngreso().toString().equals(datoCombo))
-					ret.add(x);
-			if(this.vista.getPanelEvento().getComboFiltros().getSelectedItem().equals("Fecha del Evento"))
-				if(x.getFechaEvento().toString().equals(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedItem()))
-					ret.add(x);
-			if(this.vista.getPanelEvento().getComboFiltros().getSelectedItem().equals("Apellido del Cliente"))
-				if(x.getCliente().getApellido().equals(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedItem()))
-					ret.add(x);
-			if(this.vista.getPanelEvento().getComboFiltros().getSelectedItem().equals("Estado"))
-				if(x.getEstadoEvento().getNombre().equals(this.vista.getPanelEvento().getComboOpcionesFiltros().getSelectedItem()))
-					ret.add(x);
+		for (int i = 0; i < eventos_en_tabla.size(); i++) {
+			if (eventos_en_tabla.get(i).getEstadoEvento().getNombre().compareTo(datoCombo)==0) {
+				ret.add(eventos_en_tabla.get(i));
+			}
 		}
 		return ret;
 	}
@@ -668,11 +685,6 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	public void llenarTabla() {
 		this.llenarTablaClientes();
-	}
-	
-	private void borrarFiltrosEvento(ActionEvent e) {
-		llenarTablaEventos(evento.obtenerEvento());
-		limpiarFiltrosEvento();
 	}
 		
 	private void llenarTablaClientes(){
@@ -797,11 +809,11 @@ public class ControladorAdministrativo implements ActionListener {
 			};
 							this.vista.getPanelEvento().getModelEventos().addRow(fila);
 		}	
-		this.llenarComboFiltroEvento();
+		controladorEvento.llenarComboEstados();
 	}
 	
 	private void actualizarTablaEventos(ActionEvent e) {
-		llenarComboFiltroEvento();
+		controladorEvento.llenarComboEstados();
 		limpiarFiltrosEvento();
 		llenarTablaEventos(evento.obtenerEvento());
 	}
@@ -838,8 +850,6 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	private void limpiarFiltrosEvento() {
 		this.vista.getPanelEvento().getComboFiltros().setSelectedIndex(0);
-		this.vista.getPanelEvento().getComboOpcionesFiltros().setSelectedIndex(-1);
-		this.vista.getPanelEvento().getComboOpcionesFiltros().setEnabled(false);
 	}
 	
 	private ArrayList<PasajeDTO> obtenerPasajesFiltrados(List<PasajeDTO> pasajes_aux){
@@ -961,7 +971,49 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		return pasajes;
 	}
+
 	
+	protected String obtenerFecha(String string) {
+		String [] aux = string.split(" ");
+		String ret="";	
+		for(int i=0; i<aux.length; i++) {
+
+			if(i==5)	//año
+				ret= aux[5] + ret;
+			
+			if(i==2)
+				ret = ret + aux[2] ; //dia;
+			
+			if(i==1) {
+				if(aux[1].equals("Jan")) //mes
+					ret += "01";
+				if(aux[1].equals("Feb"))
+					ret += "02";
+				if(aux[1].equals("Mar"))
+					ret += "03";
+				if(aux[1].equals("Apr"))
+					ret += "04";
+				if(aux[1].equals("May"))
+					ret += "05";
+				if(aux[1].equals("Jun"))
+					ret += "06";
+				if(aux[1].equals("Jul"))
+					ret += "07";
+				if(aux[1].equals("Aug"))
+					ret += "08";
+				if(aux[1].equals("Sep"))
+					ret += "09";
+				if(aux[1].equals("Oct"))
+					ret += "10";
+				if(aux[1].equals("Nov"))
+					ret += "11";
+				if(aux[1].equals("Dec"))
+					ret += "12";
+			}
+		}	
+		return ret;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		

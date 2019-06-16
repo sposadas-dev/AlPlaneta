@@ -108,6 +108,7 @@ public class ControladorPasaje implements ActionListener{
 	private Integer valorDelViajeEnPuntos;
 	private BigDecimal totalaPagar;
 	private BigDecimal precioOriginal;
+	private BigDecimal valorFinal;
 	private int porcentajeDescuento;
 	private AdministrativoDTO administrativoLogueado;
 	private PagoDTO pagoDTO;
@@ -783,9 +784,9 @@ public class ControladorPasaje implements ActionListener{
 	private void darAltaDeUnPasaje(ActionEvent dp) {
 		viajeDTO = viajeSeleccionado;
 		BigDecimal valorViaje = calcularMontoDePasaje();
-
 		ClienteDTO cliente = clienteSeleccionado;
 		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
+		System.out.println(estadoPasaje.getNombre()+" ACA");
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
 		
 		viajeDTO.setCapacidad(viajeSeleccionado.getCapacidad()-pasajeros.size()); //Restamos la capacidad del viaje segun la cantidad de pasajeros
@@ -853,11 +854,16 @@ public class ControladorPasaje implements ActionListener{
     }
 	
 	private BigDecimal calcularMontoDePasaje() {
+<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
+		//BigDecimal valorFinal;
+=======
+>>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
 		totalaPagar = Valor1;
-		valorFinal = totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
-		this.precioOriginal = valorFinal;
+		this.valorFinal = totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
+		this.precioOriginal = this.valorFinal;
 		
+		//si hay promo
 		for(Viaje_PromocionDTO vp : viaje_promocion.obtenerViajePromocion()) {
 			if(vp.getIdViaje() == viajeSeleccionado.getIdViaje()) {
 				for(PromocionDTO p : modeloPromocion.obtenerPromocion()) {
@@ -867,13 +873,14 @@ public class ControladorPasaje implements ActionListener{
 							this.ventanaPago.setLblDatoMontoOriginal("$ "+this.precioOriginal.toString());
 							this.porcentajeDescuento = p.getPorcentaje();
 							this.ventanaPago.setLblDatoPorcentajeDescuento("-"+this.porcentajeDescuento+""+" %");
-							valorFinal = calcularMontoDePasajeConDescuento(valorFinal, p.getPorcentaje());
+							this.valorFinal = calcularMontoDePasajeConDescuento(this.valorFinal, p.getPorcentaje());
+//							hayPromo = true;
 						}
 					}
 				}
 			}
 		}	
-		return valorFinal;
+		return this.valorFinal;
 	}
 	
 	public boolean promocionActiva(PromocionDTO p) {
@@ -903,7 +910,19 @@ public class ControladorPasaje implements ActionListener{
 	private EstadoPasajeDTO calcularEstadoPasaje() {
 		EstadoPasaje estado = new EstadoPasaje(new DAOSQLFactory());
 		EstadoPasajeDTO ret;
-		if(totalaPagar.compareTo(pagoDTO.getMonto())==0){ 
+//			if(totalaPagar.compareTo(pagoDTO.getMonto())==0){ 
+//				ret = estado.getFormaPagoByName("Vendido");
+//			}
+//			else {
+//				if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
+//					ret = estado.getFormaPagoByName("Pendiente");
+//				}
+//				else{
+//					ret = estado.getFormaPagoByName("Reservado");		
+//				}
+//			}
+//			return ret;
+		if(this.valorFinal.compareTo(pagoDTO.getMonto())==0){ 
 			ret = estado.getFormaPagoByName("Vendido");
 		}
 		else {
@@ -920,6 +939,7 @@ public class ControladorPasaje implements ActionListener{
 	private EstadoPasajeDTO estadoPasaje(BigDecimal monto){
 		EstadoPasaje estado = new EstadoPasaje(new DAOSQLFactory());
 		EstadoPasajeDTO ret;
+		//ACA
 		if(monto.compareTo(new BigDecimal(0))==0){ 
 			ret = estado.getFormaPagoByName("Vendido");
 		}
@@ -961,6 +981,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	private void verDatosDelPasaje(int filaSeleccionada) {
 		if (filaSeleccionada != -1){
+			this.ventanaPago.limpiarCampos();
 			this.ventanaVisualizarPasaje.getBtnPagar().setVisible(true);
 			this.ventanaVisualizarPasaje.getTxtClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
 			this.ventanaVisualizarPasaje.getTxtCodigoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getNumeroComprobante());

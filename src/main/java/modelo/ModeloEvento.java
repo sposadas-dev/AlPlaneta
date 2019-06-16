@@ -29,4 +29,8 @@ public class ModeloEvento {
 		return this.evento.readAll();		
 	}
 	
+	public List<EventoDTO> obtenerBetween(String dateA, String dateB){
+		return this.evento.readBetween(dateA, dateB);
+	}
+	
 }

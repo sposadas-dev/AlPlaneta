@@ -3,14 +3,16 @@ package presentacion.vista.administrativo;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 
 public class PanelEvento extends JPanel {
 
@@ -19,9 +21,11 @@ public class PanelEvento extends JPanel {
 	private String[] nombreColumnasEventos = {"Fecha de Ingreso", "Fecha del Evento", "Hora del Evento", "Descripción" , "Apellido Cliente","Nombre Cliente", "Administrativo", "Estado del Evento","Reprogramado" };
 	private JTable tablaEventos;
 	private JComboBox<String> comboFiltros;
-	private JComboBox<String> comboOpcionesFiltro;
-	private JButton btnBuscar;
-	private JButton btnBorrarFiltros;
+	private JTextField txtNombre;
+	private JDateChooser dateDesde;
+	private JDateChooser dateHasta;
+	private JTextField txtApellido;
+	private JLabel lblApellido;
 
 	public PanelEvento() {
 		
@@ -53,32 +57,61 @@ public class PanelEvento extends JPanel {
 		lblEventos.setBounds(589, 0, 219, 65);
 		panelEventos.add(lblEventos);
 	
-		JLabel lblFiltro = new JLabel("Filtrar por:");
-		lblFiltro.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblFiltro.setBounds(235, 106, 100, 14);
+		JLabel lblFiltro = new JLabel("Estado:");
+		lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblFiltro.setBounds(57, 107, 100, 14);
 		add(lblFiltro);
 		
 		comboFiltros = new JComboBox<String>();
-		comboFiltros.setBounds(306, 102, 207, 20);
-		comboFiltros.addItem("Seleccione");
-		comboFiltros.addItem("Fecha de Ingreso");
-		comboFiltros.addItem("Fecha del Evento");
-		comboFiltros.addItem("Apellido del Cliente");
-		comboFiltros.addItem("Estado");
+		comboFiltros.setBounds(107, 104, 130, 20);
+		comboFiltros.addItem("Todos");
+		comboFiltros.addItem("pendiente");
+		comboFiltros.addItem("realizado");
+		comboFiltros.addItem("vencido");
+		comboFiltros.addItem("cancelado");
 		add(comboFiltros);
 		
-		btnBuscar = new JButton("Aplicar");
-		btnBuscar.setBounds(754, 91, 139, 38);
-		add(btnBuscar);
+		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblNombre.setBounds(249, 107, 100, 14);
+		add(lblNombre);
 		
-		btnBorrarFiltros = new JButton("Borrar Filtros");
-		btnBorrarFiltros.setBounds(913, 91, 130, 38);
-		add(btnBorrarFiltros);
+		txtNombre = new JTextField();
+		txtNombre.setBounds(308, 103, 139, 22);
+		add(txtNombre);
+		txtNombre.setColumns(10);
 		
-		comboOpcionesFiltro = new JComboBox<String>();
-		comboOpcionesFiltro.setBounds(525, 101, 207, 20);
-		comboOpcionesFiltro.setEnabled(false);
-		add(comboOpcionesFiltro);
+		dateDesde = new JDateChooser();
+		dateDesde.setBounds(860, 103, 131, 20);
+		JTextFieldDateEditor editor = (JTextFieldDateEditor) dateDesde.getDateEditor();
+		editor.setEditable(false);
+		add(dateDesde);
+		
+		JLabel lblFechaDelEvento = new JLabel("Fecha del Evento: Desde");
+		lblFechaDelEvento.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblFechaDelEvento.setBounds(712, 107, 183, 14);
+		add(lblFechaDelEvento);
+		
+		dateHasta = new JDateChooser();
+		JTextFieldDateEditor editor2 = (JTextFieldDateEditor) dateHasta.getDateEditor();
+		editor2.setEditable(false);
+		dateHasta.setBounds(1032, 103, 131, 20);
+		add(dateHasta);
+		
+		JLabel lblHasta = new JLabel("Hasta");
+		lblHasta.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblHasta.setBounds(995, 107, 78, 14);
+		add(lblHasta);
+		
+		txtApellido = new JTextField();
+		txtApellido.setColumns(10);
+		txtApellido.setBounds(517, 103, 139, 22);
+		add(txtApellido);
+		
+		lblApellido = new JLabel("Apellido:");
+		lblApellido.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblApellido.setBounds(458, 107, 100, 14);
+		add(lblApellido);
 	}
 	
 	public void mostrarPanelEvento(boolean visibilidad){
@@ -112,18 +145,20 @@ public class PanelEvento extends JPanel {
 	public JComboBox<String> getComboFiltros() {
 		return comboFiltros;
 	}
-
-	public JComboBox<String> getComboOpcionesFiltros() {
-		return comboOpcionesFiltro;
-	}
-
-	public JButton getBtnBuscar() {
-		return btnBuscar;
-	}
-
-	public JButton getBtnBorrarFiltros() {
-		return btnBorrarFiltros;
+	
+	public JTextField getFiltroNombre(){
+		return txtNombre;
 	}
 	
+	public JTextField getFiltroApellido(){
+		return txtApellido;
+	}
 	
+	public JDateChooser getFiltroDesde() {
+		return dateDesde;	
+	}
+	
+	public JDateChooser getFiltroHasta() {
+		return dateHasta;	
+	}
 }
