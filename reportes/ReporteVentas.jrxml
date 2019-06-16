@@ -62,13 +62,13 @@
 		<groupFooter>
 			<band height="62">
 				<frame>
-					<reportElement mode="Opaque" x="0" y="0" width="555" height="37" backcolor="#C3D2E3" uuid="8b0f4190-e3bd-4345-961d-9992a3f0aacc"/>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="40" backcolor="#C3D2E3" uuid="8b0f4190-e3bd-4345-961d-9992a3f0aacc"/>
 					<box>
 						<pen lineColor="#FFFFFF"/>
 					</box>
 					<textField>
-						<reportElement x="190" y="10" width="365" height="27" uuid="c046a9e2-6006-46c2-a73f-2cf36b348378"/>
-						<textElement>
+						<reportElement x="200" y="10" width="355" height="27" uuid="c046a9e2-6006-46c2-a73f-2cf36b348378"/>
+						<textElement textAlignment="Right">
 							<font size="12" isBold="true" isItalic="true"/>
 						</textElement>
 						<textFieldExpression><![CDATA["Cantidad de ventas realizadas: " + $V{GroupVentas_COUNT}]]></textFieldExpression>
