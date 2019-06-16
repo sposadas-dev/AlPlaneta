@@ -724,11 +724,14 @@ public class ControladorPasaje implements ActionListener{
 		modeloViaje.editarViaje(viajeDTO);
 		modeloPago.agregarPago(pagoDTO);
 		
+		Calendar fecha = Calendar.getInstance();
+		java.sql.Date fechaEmision = convertUtilToSql(fecha.getTime()); 
+		
 		PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
 		BigDecimal montoAPagar = valorViaje.subtract(pagoDTO.getMonto());
 		String numeroComprobante = Validador.getNumeroComprobante(6);
 		
-		pasajeDTO = new PasajeDTO(0,numeroComprobante,viajeDTO,administrativoLogueado,cliente,calcularFechaReserva(viajeDTO.getFechaSalida()),valorViaje,montoAPagar,estadoPasaje,
+		pasajeDTO = new PasajeDTO(0,fechaEmision,numeroComprobante,viajeDTO,administrativoLogueado,cliente,calcularFechaReserva(viajeDTO.getFechaSalida()),valorViaje,montoAPagar,estadoPasaje,
 				pasajeros_en_reserva,"",null);
 		
 		modeloPasaje.agregarPasaje(pasajeDTO);

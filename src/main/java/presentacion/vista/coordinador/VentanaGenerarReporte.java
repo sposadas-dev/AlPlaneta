@@ -9,12 +9,17 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 
 import presentacion.vista.administrativo.VistaAdministrativo;
+
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
+
 import javax.swing.JLabel;
 
 public class VentanaGenerarReporte extends JFrame {
 
 	private JPanel contentPane;
+	private JDateChooser dateDesdeChooser;
+	private JDateChooser dateHastaChooser;
 	private JButton btnGenerarReporteVentas;
 	private JButton btnGenerarReportePasajes;
 	
@@ -46,11 +51,15 @@ public class VentanaGenerarReporte extends JFrame {
 		btnGenerarReporteVentas.setBounds(211, 168, 145, 51);
 		contentPane.add(btnGenerarReporteVentas);
 		
-		JDateChooser dateDesdeChooser = new JDateChooser();
+		dateDesdeChooser = new JDateChooser();
+		JTextFieldDateEditor editorDesde = (JTextFieldDateEditor) dateDesdeChooser.getDateEditor();
+		editorDesde.setEditable(false);
 		dateDesdeChooser.setBounds(114, 52, 145, 20);
 		contentPane.add(dateDesdeChooser);
 		
-		JDateChooser dateHastaChooser = new JDateChooser();
+		dateHastaChooser = new JDateChooser();
+		JTextFieldDateEditor editorHasta = (JTextFieldDateEditor) dateHastaChooser.getDateEditor();
+		editorHasta.setEditable(false);
 		dateHastaChooser.setBounds(371, 52, 145, 20);
 		contentPane.add(dateHastaChooser);
 		
@@ -71,6 +80,14 @@ public class VentanaGenerarReporte extends JFrame {
 		this.setVisible(visibilidad);
 	}
 	
+	public JDateChooser getDateDesdeChooser() {
+		return dateDesdeChooser;
+	}
+
+	public JDateChooser getDateHastaChooser() {
+		return dateHastaChooser;
+	}
+
 	public JButton getBtnGenerarReporte() {
 		return btnGenerarReporteVentas;
 	}
@@ -78,5 +95,9 @@ public class VentanaGenerarReporte extends JFrame {
 	public JButton getBtnGenerarReportePasajes() {
 		return btnGenerarReportePasajes;
 	}
-
+	
+	public void limpiarCampos(){
+		this.dateDesdeChooser.setDate(null);
+		this.dateHastaChooser.setDate(null);
+	}
 }

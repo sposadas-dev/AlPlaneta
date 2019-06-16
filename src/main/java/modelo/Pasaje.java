@@ -39,4 +39,8 @@ import persistencia.dao.interfaz.PasajeDAO;
 	public PasajeDTO getUltimoRegistroPasaje() {
 		return this.pasaje.getUltimoRegistroPasaje();
 	}
+	
+	public List<PasajeDTO> obtenerPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta) {
+		return this.pasaje.listarPasajesEntreFechas(desde, hasta);
+	}
 }

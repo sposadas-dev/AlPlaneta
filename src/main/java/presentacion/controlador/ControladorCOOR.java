@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import dto.CoordinadorDTO;
+import dto.PasajeDTO;
 import dto.RegimenPuntoDTO;
 import modelo.Administrativo;
 import modelo.Coordinador;
@@ -135,15 +136,35 @@ public class ControladorCOOR {
 	}
 	
 	private void visualizarVentanaGenerarReporte(ActionEvent l) {
+		this.ventanaGenerarReporte.limpiarCampos();
 		this.ventanaGenerarReporte.mostrarVentana(true);
 		this.ventanaGenerarReporte.getBtnGenerarReportePasajes().setVisible(false);
 		this.ventanaGenerarReporte.getBtnGenerarReporte().setVisible(true);
 	}
 	
 	private void generarReporteVentas(ActionEvent gv){
-		Reporte reporte = new Reporte();
-		reporte.reporteVentas(pasaje.obtenerPasajes());
-		reporte.mostrar();
+		if (this.ventanaGenerarReporte.getDateDesdeChooser().getDate() == null || this.ventanaGenerarReporte.getDateHastaChooser() == null) {
+			JOptionPane.showMessageDialog(null, "Debe seleccionar ambas fechas para poder visualizar el reporte", "Error", JOptionPane.WARNING_MESSAGE);
+		}else{	
+			java.util.Date dateDesde = ventanaGenerarReporte.getDateDesdeChooser().getDate();
+			java.sql.Date fechaDesde = new java.sql.Date(dateDesde.getTime());
+			
+			java.util.Date dateHasta = ventanaGenerarReporte.getDateHastaChooser().getDate();
+			java.sql.Date fechaHasta = new java.sql.Date(dateHasta.getTime());
+			
+			List<PasajeDTO> pasajes = pasaje.obtenerPasajesEntreFechas(fechaDesde, fechaHasta);
+			if(this.ventanaGenerarReporte.getDateDesdeChooser().getDate().before(this.ventanaGenerarReporte.getDateHastaChooser().getDate())){
+				if(pasajes.size()!=0){
+					Reporte reporte = new Reporte();
+					reporte.reporteVentas(pasajes);
+					reporte.mostrar();
+					ventanaGenerarReporte.limpiarCampos();
+				}else{
+					JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+				}
+			}else{
+				JOptionPane.showMessageDialog(null, "Error en el ingreso de fechas", "Error", JOptionPane.WARNING_MESSAGE);
+			}
+		}
 	}
-
 }
