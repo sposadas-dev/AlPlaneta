@@ -116,10 +116,6 @@ public class ControladorPasaje implements ActionListener{
 	private ViajeDTO viajeDTO;
 	private java.util.Date fechaActual;
 
-	
-	//Aux
-	private BigDecimal valorFinal;
-
 	private DefaultTableModel dm;
 	private StringBuilder cad= new StringBuilder();
 	private ModeloPunto modeloPunto;
@@ -854,10 +850,8 @@ public class ControladorPasaje implements ActionListener{
     }
 	
 	private BigDecimal calcularMontoDePasaje() {
-<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
+
 		//BigDecimal valorFinal;
-=======
->>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
 		totalaPagar = Valor1;
 		this.valorFinal = totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
