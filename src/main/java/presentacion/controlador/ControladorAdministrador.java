@@ -4,10 +4,13 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.eclipse.jdt.internal.compiler.ast.ThisReference;
@@ -29,6 +32,7 @@ import modelo.Login;
 import modelo.Rol;
 import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.administrador.LoadingWorker;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
 import presentacion.vista.administrador.VentanaEditarCuenta;
 import presentacion.vista.administrador.VistaAdministrador;
@@ -119,6 +123,12 @@ public class ControladorAdministrador {
 		
 		this.ventanaEditarCuenta.getBtnRegistrar().addActionListener(ec->editarCuenta(ec));
 		this.ventanaEditarCuenta.getBtnCancelar().addActionListener(can->cancelarEditarCuenta(can));
+		
+		
+		
+		this.vistaAdministrador.getItemBackup().addActionListener(b -> crearBackup(b));
+		this.vistaAdministrador.getItemRestore().addActionListener(r -> cargarRestore(r));
+
 
 		this.administrador = new Administrador(new DAOSQLFactory());
 		this.administrativo = new Administrativo(new DAOSQLFactory());
@@ -138,6 +148,71 @@ public class ControladorAdministrador {
 		this.controladorCiudad = ControladorCiudad.getInstance();
 		this.controlador = Controlador.getInstance();
 	}
+	
+	private void crearBackup(ActionEvent b) {
+		try {
+			JFileChooser f = new JFileChooser();
+			f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			f.showSaveDialog(null);
+			
+			
+			
+			String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysqldump -uroot -ppass alplaneta > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
+
+			final File file = new File("backup.bat");
+			file.createNewFile();
+			PrintWriter writer = new PrintWriter(file, "UTF-8");
+			writer.println(bat);
+			writer.close();
+
+			Process p = Runtime.getRuntime().exec("cmd /c backup.bat");
+			p.waitFor();
+			file.delete();
+
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "No se creó el backup. " + ex.getMessage());
+		}
+	}
+	
+	private void cargarRestore(ActionEvent r) {
+		JFileChooser f = new JFileChooser();
+		f.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		f.showOpenDialog(null);
+
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysql -uroot -ppass alplaneta < " + f.getSelectedFile().toString();
+
+				try {
+					final File file = new File("backup.bat");
+					file.createNewFile();
+					PrintWriter writer = new PrintWriter(file, "UTF-8");
+					writer.println(bat);
+					writer.close();
+
+					Process p = Runtime.getRuntime().exec("cmd /c backup.bat");
+					p.waitFor();
+					file.delete();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "No se cargó el backup correctamente. "+ ex.getMessage() );
+				}
+			}
+		});
+		try {
+			generarThread(thread);
+		} catch (InterruptedException ex1) {
+			JOptionPane.showMessageDialog(null, "No se cargó el backup correctamente. " + ex1.getMessage());
+		}
+	}
+	
+	private void generarThread(Thread thread) throws InterruptedException {
+		LoadingWorker work = new LoadingWorker(vistaAdministrador, "Por favor aguarde mientras se realiza la restauración de datos .", thread,"/recursos/loading.gif");
+		work.mostrar();
+	    inicializar();
+	
+	}
+
 	
 	public void cargarInactivos(ActionEvent si) {
 		this.llenarTablaEmpleados();

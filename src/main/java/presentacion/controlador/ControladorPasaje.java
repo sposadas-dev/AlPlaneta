@@ -114,13 +114,11 @@ public class ControladorPasaje implements ActionListener{
 	private boolean editarPago;
 	private ViajeDTO viajeDTO;
 	private java.util.Date fechaActual;
-<<<<<<< src/main/java/presentacion/controlador/ControladorPasaje.java
-=======
+
 	
 	//Aux
 	private BigDecimal valorFinal;
 
->>>>>>> src/main/java/presentacion/controlador/ControladorPasaje.java
 	private DefaultTableModel dm;
 	private StringBuilder cad= new StringBuilder();
 	private ModeloPunto modeloPunto;
