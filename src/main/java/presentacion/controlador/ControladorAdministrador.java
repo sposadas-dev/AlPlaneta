@@ -34,9 +34,11 @@ import modelo.Rol;
 import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.LoadingWorker;
+import presentacion.vista.administrador.PanelEmpleados;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
 import presentacion.vista.administrador.VentanaAgregarLocal;
 import presentacion.vista.administrador.VentanaEditarCuenta;
+import presentacion.vista.administrador.VentanaEditarViaje;
 import presentacion.vista.administrador.VistaAdministrador;
 
 public class ControladorAdministrador {
@@ -45,7 +47,9 @@ public class ControladorAdministrador {
 	private VentanaAgregarEmpleado ventanaAgregarEmpleado;
 	private VentanaEditarCuenta ventanaEditarCuenta;
 	private VentanaAgregarLocal ventanaAgregarLocal;
+	private VentanaEditarViaje ventanaEditarViaje;
 	private int filaSeleccionada;
+	private PanelEmpleados panel;
 	
 	private List<TransporteDTO> transportes_en_tabla;
 	private List<FormaPagoDTO> fpago_en_tabla;
@@ -85,6 +89,7 @@ public class ControladorAdministrador {
 		this.ventanaEditarCuenta = VentanaEditarCuenta.getInstance();
 		this.ventanaAgregarLocal = VentanaAgregarLocal.getInstance();
 
+		this.ventanaEditarViaje = VentanaEditarViaje.getInstance();
 //MENU ITEMS		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
 		this.vistaAdministrador.getItemEditarCuenta().addActionListener(mve->mostrarVentanaEditarCuenta(mve));
@@ -117,9 +122,10 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemProvincia().addActionListener(p->mostrarVentanaAgregarProvincia(p));
 		this.vistaAdministrador.getItemCiudad().addActionListener(p->mostrarVentanaAgregarCiudad(p));
 //ITEM VIAJES
-
+		this.vistaAdministrador.getItemVisualizarViajes().addActionListener(v->mostrarPanelDeViajes(v));
 		this.vistaAdministrador.getItemAgregarViaje().addActionListener(v->mostrarVentanaViaje(v));
-//BTN.LISTENER		
+		this.vistaAdministrador.getItemEditarViaje().addActionListener(v->mostrarVentanaEditarViaje(v));
+		//		BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
 		this.ventanaAgregarEmpleado.getTxtNombre().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
@@ -135,8 +141,6 @@ public class ControladorAdministrador {
 		
 		this.ventanaEditarCuenta.getBtnRegistrar().addActionListener(ec->editarCuenta(ec));
 		this.ventanaEditarCuenta.getBtnCancelar().addActionListener(can->cancelarEditarCuenta(can));
-		
-		
 		
 		this.vistaAdministrador.getItemBackup().addActionListener(b -> crearBackup(b));
 		this.vistaAdministrador.getItemRestore().addActionListener(r -> cargarRestore(r));
@@ -162,6 +166,14 @@ public class ControladorAdministrador {
 		this.controlador = Controlador.getInstance();
 	}
 	
+	private void mostrarPanelDeViajes(ActionEvent v) {
+		this.controlador.mostrarPanelDeViajes();
+	}
+
+	private void mostrarVentanaEditarViaje(ActionEvent v) {
+		this.controlador.mostrarPanelEditarViaje();
+	}
+
 	private void crearBackup(ActionEvent b) {
 		try {
 			JFileChooser f = new JFileChooser();
@@ -225,7 +237,6 @@ public class ControladorAdministrador {
 	    inicializar();
 	
 	}
-
 	
 	public void cargarInactivos(ActionEvent si) {
 		this.llenarTablaEmpleados();
@@ -575,7 +586,7 @@ public class ControladorAdministrador {
 	}
 	
 	private void mostrarVentanaViaje(ActionEvent ac) { //METODO AGREGADO!!
-		this.controlador.llenarCiudadesEnCargaViajes();
+//	TODO:	this.controlador.llenarCiudadesEnCargaViajes();
 		this.controlador.mostrarVentanaCargarViaje();
 	}
 	
