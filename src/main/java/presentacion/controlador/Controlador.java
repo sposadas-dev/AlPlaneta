@@ -314,6 +314,7 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		
 		llenarViajesEnPanelViajesInactivos();
 	}
+
 	private void mostrarViajesActivos(ActionEvent mv) {
 		
 		llenarViajesEnPanelViajesActivos();
@@ -372,9 +373,6 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 			}
 		}	
 }
-
-
-	
 
 	private void accionEditarViaje(ActionEvent ed) {
 		this.viajeSeleccionado.setHoraSalida(this.ventanaEditarViaje.getComboBoxHorarioSalida().getSelectedItem().toString());
@@ -593,6 +591,19 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 			return true;
 		return false;
 	}
+	
+//	private boolean origenDestinoValido() {
+//		if(this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().equals("-Seleccione ciudad-") || this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().equals("-Seleccione ciudad-"))
+//			return false;
+//		if (this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedIndex()==-1 || this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedIndex()==-1)
+//			return false;
+//		String ciudadOrigenElegida = quitarIdDeCombo(this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().toString());
+//		String ciudadDestinoElegida = quitarIdDeCombo(this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().toString());
+//		if(!(ciudadOrigenElegida.equals(ciudadDestinoElegida)))
+//			return true;
+//		return false;
+//	}
+	
 	private boolean origenDestinoValido() {
 		if(this.ventanaCargarViaje.getComboBoxCiudadOrigen().getSelectedItem().equals("-Seleccione ciudad-") || this.ventanaCargarViaje.getComboBoxCiudadDestino().getSelectedItem().equals("-Seleccione ciudad-"))
 			return false;
@@ -840,7 +851,6 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 	private void darAltaViaje(ActionEvent aV) {//throws Exception {
 //		mostrarDatosViaje();
 		if(mostrarDatosViaje()){
-			System.out.println("Dar de alta el viaje");
 			
 			this.fechaSalida = convertUtilToSql(this.ventanaCargarViaje.getDateChooserFechaOrigen().getDate());
 			this.horarioSalida = this.ventanaCargarViaje.getComboBoxHorarioSalida().getSelectedItem().toString();
@@ -907,7 +917,8 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 			
 			//Agrego el viaje
 			modeloViaje.agregarViaje(this.viajeSeleccionado);
-			llenarViajesEnTabla();
+//			llenarViajesEnTabla();
+			llenarViajesEnPanelViajes();
 			limpiarVentana();
 			this.ventanaCargarViaje.setVisible(false);
 			
@@ -1012,29 +1023,29 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		llenarComboTransporte();
 		llenarCombroHorarioSalida();
 
-		this.ventanaTablaViajes.getModelViajes().setRowCount(0);
-		this.ventanaTablaViajes.getModelViajes().setColumnCount(0);
-		this.ventanaTablaViajes.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
-		
-		
-		viajes_en_tabla = (ArrayList<ViajeDTO>) modeloViaje.obtenerViajes();
-		for(int i=0; i< viajes_en_tabla.size();i++){
-			Object[] fila = { 
-					viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
-					viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
-					mapper.parseToString(viajes_en_tabla.get(i).getFechaSalida()),
-					mapper.parseToString(viajes_en_tabla.get(i).getFechaLlegada()),
-					viajes_en_tabla.get(i).getPrecio(),
-					viajes_en_tabla.get(i).getHoraSalida(),
-					viajes_en_tabla.get(i).getCapacidad(),
-					viajes_en_tabla.get(i).getTransporte().getNombre(),
-					viajes_en_tabla.get(i).getPrecio()
-			};
-			this.ventanaTablaViajes.getModelViajes().addRow(fila);
-		}
-		this.ventanaTablaViajes.setVisible(true);
-		this.ventanaTablaViajes.getBtnConfirmar().setVisible(false);
-		this.ventanaTablaViajes.getBtnAtras().setVisible(false);
+//		this.ventanaTablaViajes.getModelViajes().setRowCount(0);
+//		this.ventanaTablaViajes.getModelViajes().setColumnCount(0);
+//		this.ventanaTablaViajes.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
+//		
+//		
+//		viajes_en_tabla = (ArrayList<ViajeDTO>) modeloViaje.obtenerViajes();
+//		for(int i=0; i< viajes_en_tabla.size();i++){
+//			Object[] fila = { 
+//					viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
+//					viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
+//					mapper.parseToString(viajes_en_tabla.get(i).getFechaSalida()),
+//					mapper.parseToString(viajes_en_tabla.get(i).getFechaLlegada()),
+//					viajes_en_tabla.get(i).getPrecio(),
+//					viajes_en_tabla.get(i).getHoraSalida(),
+//					viajes_en_tabla.get(i).getCapacidad(),
+//					viajes_en_tabla.get(i).getTransporte().getNombre(),
+//					viajes_en_tabla.get(i).getPrecio()
+//			};
+//			this.ventanaTablaViajes.getModelViajes().addRow(fila);
+//		}
+//		this.ventanaTablaViajes.setVisible(true);
+//		this.ventanaTablaViajes.getBtnConfirmar().setVisible(false);
+//		this.ventanaTablaViajes.getBtnAtras().setVisible(false);
 		
 	}
 	
