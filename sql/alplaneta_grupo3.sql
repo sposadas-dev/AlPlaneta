@@ -177,6 +177,7 @@ CREATE TABLE `pasaje` (
   `idEstadoPasaje` int(11) NOT NULL,
   `motivoCancelacion` varchar(45),
   `fechaCancelacion` date,
+  `montoAReembolsar` decimal(11,0),
   PRIMARY KEY (`idPasaje`)
 ); 
 

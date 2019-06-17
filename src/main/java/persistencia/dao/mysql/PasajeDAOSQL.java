@@ -20,10 +20,10 @@ import persistencia.dao.interfaz.PasajeDAO;
 
 public class PasajeDAOSQL implements PasajeDAO {
 	
-	private static final String insert = "INSERT INTO pasaje(idPasaje, fechaEmision, numeroComprobante,fechaVencimiento, valorViaje, montoAPagar, idCliente, idViaje, idAdministrativo, idEstadoPasaje,motivoCancelacion, fechaCancelacion) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+	private static final String insert = "INSERT INTO pasaje(idPasaje, fechaEmision, numeroComprobante,fechaVencimiento, valorViaje, montoAPagar, idCliente, idViaje, idAdministrativo, idEstadoPasaje,motivoCancelacion, fechaCancelacion,montoAReembolsar) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 	private static final String delete = "DELETE FROM pasaje  WHERE idPasaje = ?";
 	private static final String readall = "SELECT * FROM pasaje";
-	private static final String update = "UPDATE pasaje SET idEstadoPasaje=?, montoAPagar=?, motivoCancelacion=?, fechaCancelacion=? WHERE idPasaje = ?;";
+	private static final String update = "UPDATE pasaje SET idEstadoPasaje=?, montoAPagar=?, motivoCancelacion=?, fechaCancelacion=?, montoAReembolsar=? WHERE idPasaje = ?;";
 	private static final String browse = "SELECT * FROM pasaje WHERE idPasaje=?";
 	private static final String ultimoRegistro = "SELECT * FROM pasaje ORDER BY idPasaje desc limit 1";
 	
@@ -50,6 +50,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 			statement.setInt(10, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());
 			statement.setString(11, pasaje.getMotivoCancelacion());
 			statement.setDate(12, pasaje.getDateCancelacion());
+			statement.setBigDecimal(13, pasaje.getMontoAReembolsar());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -109,7 +110,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
-						resultSet.getDate("fechaCancelacion")
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
 						));							
 			}
 		} catch (SQLException e) {
@@ -129,7 +131,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 			statement.setBigDecimal(2, pasaje_editar.getMontoAPagar());
 			statement.setString(3, pasaje_editar.getMotivoCancelacion());
 			statement.setDate(4, pasaje_editar.getDateCancelacion());
-			statement.setInt(5, pasaje_editar.getIdPasaje());
+			statement.setBigDecimal(5, pasaje_editar.getMontoAReembolsar());
+			statement.setInt(6, pasaje_editar.getIdPasaje());
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
@@ -169,7 +172,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 							estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 							pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 							resultSet.getString("motivoCancelacion"),
-							resultSet.getDate("fechaCancelacion")
+							resultSet.getDate("fechaCancelacion"),
+							resultSet.getBigDecimal("montoAReembolsar")
 							);
 										
 				return pasaje;
@@ -208,7 +212,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
-						resultSet.getDate("fechaCancelacion")
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
 						);
 			return pasaje;
 			}
@@ -253,7 +258,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
-						resultSet.getDate("fechaCancelacion")
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
 						));							
 			}
 		} catch (SQLException e) {
@@ -295,7 +301,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
-						resultSet.getDate("fechaCancelacion")
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
 						));							
 			}
 		} catch (SQLException e) {

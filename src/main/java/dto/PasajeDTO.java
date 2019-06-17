@@ -19,12 +19,13 @@ public class PasajeDTO {
 	private List<PasajeroDTO> pasajeros;
 	private String motivoCancelacion;
 	private Date dateCancelacion;
+	private BigDecimal montoAReembolsar;
 	private SimpleDateFormat formatFecha;
 
 	public PasajeDTO(int idPasaje, Date fechaEmision, String numeroComprobante,ViajeDTO viaje, AdministrativoDTO administrativo,
 			ClienteDTO cliente, Date fechaVencimiento, BigDecimal valorViaje,
 			BigDecimal montoAPagar,EstadoPasajeDTO estadoDelPasaje, List<PasajeroDTO> pasajeros,
-			String motivoCancelacion, Date dateCancelacion) {
+			String motivoCancelacion, Date dateCancelacion,BigDecimal montoAReembolsar) {
 		super();
 		this.idPasaje = idPasaje;
 		this.fechaEmision = fechaEmision;
@@ -39,7 +40,16 @@ public class PasajeDTO {
 		this.pasajeros = pasajeros;
 		this.motivoCancelacion = motivoCancelacion;
 		this.dateCancelacion = dateCancelacion;
+		this.montoAReembolsar = montoAReembolsar;
 		formatFecha = new SimpleDateFormat("dd-MM-yyyy");
+	}
+
+	public BigDecimal getMontoAReembolsar() {
+		return montoAReembolsar;
+	}
+
+	public void setMontoAReembolsar(BigDecimal montoAReembolsar) {
+		this.montoAReembolsar = montoAReembolsar;
 	}
 
 	public Date getFechaEmision() {
@@ -156,5 +166,9 @@ public class PasajeDTO {
 	
 	public String getFechaLlegadaParseada(){
 		return formatFecha.format(this.viaje.getFechaLlegada());
+	}
+	
+	public String getFechaCancelacionParseada(){
+		return formatFecha.format(this.dateCancelacion);
 	}
 }
