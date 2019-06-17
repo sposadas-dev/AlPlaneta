@@ -54,7 +54,6 @@ public class PanelLocales extends JPanel {
 		panelLocales.add(lblLocales);
 	
 		btnConfirmar.setVisible(false);
-//		btnRecargarTabla.setVisible(false);
 	}
 
 	public void mostrarPanelLocales(boolean visibilidad){

@@ -15,7 +15,7 @@ public class Conexion {
 		try{
 			Class.forName("com.mysql.jdbc.Driver"); 
 			//
-			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/alplaneta","root","pass");
+			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/alplaneta_grupo3","root","pass");
 			log.info("Conexion exitosa");
 		}
 		catch(Exception e)
