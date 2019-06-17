@@ -260,6 +260,12 @@ CREATE TABLE `viaje_promocion` (
   PRIMARY KEY (`idViajePromocion`)
 );
 
+CREATE TABLE `tarjeta` (
+	`idtarjeta` int(11)  NOT NULL AUTO_INCREMENT,
+	`nrotarjeta`  char(16),
+	`vencimiento`  char(6), --e.g 202506
+);
+
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLogin`)  references login(`idLogin`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLocal`)  references local(`idLocal`);

@@ -1,10 +1,8 @@
 package persistencia.dao.interfaz;
 
 import java.util.List;
-
-import dto.AdministrativoDTO;
 import dto.ClienteDTO;
-import dto.TransporteDTO;
+
 
 public interface ClienteDAO {
 	
