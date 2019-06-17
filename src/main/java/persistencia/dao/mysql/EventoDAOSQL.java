@@ -25,6 +25,7 @@ public class EventoDAOSQL implements EventoDAO {
 	private static final String update = "UPDATE evento SET fechaEvento=?, horaEvento=?, idEstadoEvento=?, motivoReprogramacion=?, visto=? WHERE idEvento= ?";//VER
 	private static final String updateVisto = "UPDATE evento SET visto=? WHERE idEvento= ?";//VER
 	private static final String browse = "SELECT * FROM evento WHERE idEvento = ?";
+	private static final String readbetween = "SELECT * FROM evento WHERE fechaEvento BETWEEN ? AND ?";
 
 	@Override
 	public boolean insert(EventoDTO evento) {
@@ -87,6 +88,43 @@ public class EventoDAOSQL implements EventoDAO {
 		return eventos;
 	}
 
+	@Override
+	public List<EventoDTO> readBetween(String i, String j) {
+		PreparedStatement statement;
+		ResultSet resultSet; 
+		ArrayList<EventoDTO> eventos = new ArrayList<EventoDTO>();
+		Conexion conexion = Conexion.getConexion();
+	
+		ClienteDAOSQL cliente = new ClienteDAOSQL();
+		AdministrativoDAOSQL administrativo = new AdministrativoDAOSQL();
+		EstadoEventoDAOSQL estadoEvento = new EstadoEventoDAOSQL();
+	
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(readbetween);
+			statement.setString(1, i);
+			statement.setString(2, j);			
+			resultSet = statement.executeQuery();
+			
+			while(resultSet.next()){
+				eventos.add(new EventoDTO(resultSet.getInt("idEvento"),
+				resultSet.getDate("fechaIngreso"),
+				resultSet.getDate("fechaEvento"),
+				resultSet.getTime("horaEvento"),
+				resultSet.getString("descripcion"),
+				cliente.getClienteById(resultSet.getInt("idCliente")),
+				administrativo.getById(resultSet.getInt("idAdministrativo")),
+				estadoEvento.getEstadoEventoById(resultSet.getInt("idEstadoEvento")),
+				resultSet.getString("motivoReprogramacion"),
+						resultSet.getInt("visto"))
+				);
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return eventos;
+	}
+	
 	@Override
 	public boolean update(EventoDTO evento) {
 		PreparedStatement statement;
@@ -172,7 +210,7 @@ public class EventoDAOSQL implements EventoDAO {
 	
 	public static void main(String[] args) {
 		EventoDAOSQL eventoDAOSQL = new EventoDAOSQL();
-		
+		/*
 		java.util.Date fecha = new java.util.Date(); java.sql.Date fechaIngreso = new java.sql.Date(fecha.getTime());
 		Date fechaEvento = new java.sql.Date(2019,05,06);
 		java.sql.Time horaEvento = new java.sql.Time(16, 30, 0);
@@ -192,13 +230,14 @@ public class EventoDAOSQL implements EventoDAO {
 		
 		EventoDTO nuevoEvento = new EventoDTO(0,fechaIngreso,fechaEvento,horaEvento,descripcion,cliente,administrativo,estado,"",0);
 				
-		eventoDAOSQL.insert(nuevoEvento);
-		List<EventoDTO> EVENTOS = eventoDAOSQL.readAll();
-		
-		for(EventoDTO e: EVENTOS)
-			System.out.println(e.getDescripcion());
+		eventoDAOSQL.insert(nuevoEvento);*/
+		List<EventoDTO> EVENTOS = eventoDAOSQL.readBetween("20190621","20190628");
+		int i = 1;
+		for(EventoDTO e: EVENTOS) {
+			System.out.println(i+". "+e.getDescripcion()+" "+e.getFechaEvento());
+			i++;
+		}
 		System.out.println("-- FIN EVENTOS --");
-		System.out.println(fechaIngreso.toString());
 	}
 		
 }

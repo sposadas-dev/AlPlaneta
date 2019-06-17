@@ -22,4 +22,6 @@ public interface PuntoDAO {
 
 	public ArrayList<PuntoDTO> readAllByClienteID(ClienteDTO cliente);
 
+	public ArrayList<PuntoDTO> readAllASC(int idCliente);
+	
 }

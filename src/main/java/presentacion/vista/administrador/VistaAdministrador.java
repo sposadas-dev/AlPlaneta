@@ -56,6 +56,8 @@ public class VistaAdministrador extends JFrame {
 	private JMenuItem itemAgregarLocal;
 	private JMenuItem itemEditarLocal;
 	private JMenuItem itemEliminarLocal;
+	JMenuItem itemBackup;
+	JMenuItem itemRestore;
 	
 	private static VistaAdministrador INSTANCE;
 	
@@ -87,8 +89,20 @@ public class VistaAdministrador extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
+		JMenu mnConfiguraciones = new JMenu("Configuraciones");
+		mnConfiguraciones.setFont(new Font("Segoe UI", Font.BOLD, 16));
+		menuBar.add(mnConfiguraciones);
+		
+		itemBackup = new JMenuItem("Backup");
+		itemBackup.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		mnConfiguraciones.add(itemBackup);
+		
+		itemRestore = new JMenuItem("Restore");
+		itemRestore.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		mnConfiguraciones.add(itemRestore);
+		
 		JMenu menuCuentas = new JMenu("Cuentas");
-		menuCuentas.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		menuCuentas.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		menuBar.add(menuCuentas);
 		
 		itemAgregarCuenta = new JMenuItem("Agregar cuenta");
@@ -108,7 +122,7 @@ public class VistaAdministrador extends JFrame {
 		menuCuentas.add(itemEliminarCuenta);
 		
 		JMenu menuViajes = new JMenu("Viajes");
-		menuViajes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		menuViajes.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		menuBar.add(menuViajes);
 		
 		itemAgregarViaje = new JMenuItem("Agregar viaje");
@@ -116,7 +130,7 @@ public class VistaAdministrador extends JFrame {
 		menuViajes.add(itemAgregarViaje);
 		
 		JMenu mnDestinos = new JMenu("Destinos");
-		mnDestinos.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		mnDestinos.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		menuBar.add(mnDestinos);
 		
 		itemPais = new JMenuItem("Menu de Pais");
@@ -133,7 +147,7 @@ public class VistaAdministrador extends JFrame {
 		
 		
 		JMenu menuTransporte = new JMenu("Transportes");
-		menuTransporte.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		menuTransporte.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		menuBar.add(menuTransporte);
 		
 		itemVisualizarTransportes = new JMenuItem("Visualizar transportes");
@@ -171,7 +185,7 @@ public class VistaAdministrador extends JFrame {
 	//--------------------FormaPago-----------------------------------//	
 		
 		JMenu menuFormaPago = new JMenu("Formas de pago");
-		menuFormaPago.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		menuFormaPago.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		menuBar.add(menuFormaPago);
 		
 		itemVisualizarFormaPago = new JMenuItem("Visualizar formas de pago");
@@ -189,6 +203,8 @@ public class VistaAdministrador extends JFrame {
 		itemEliminarFormaPago = new JMenuItem("Eliminar forma de pago");
 		itemEliminarFormaPago.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuFormaPago.add(itemEliminarFormaPago);
+		
+		
 				
 		panelFormaPago = new PanelFormaPago();
 		panelFormaPago.getTablaFormaPago().setSize(1114, 900);
@@ -200,7 +216,7 @@ public class VistaAdministrador extends JFrame {
 		JLabel labelMarcaDeAgua = new JLabel("");
 		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
 		labelMarcaDeAgua.setBounds(47, 0, 1313, 674);
-		add(labelMarcaDeAgua);
+		getContentPane().add(labelMarcaDeAgua);
 		this.setVisible(false);
 		
 		//Locales
@@ -271,6 +287,21 @@ public class VistaAdministrador extends JFrame {
 
 	public void setItemEliminarLocal(JMenuItem itemEliminarLocal) {
 		this.itemEliminarLocal = itemEliminarLocal;
+	}
+	public JMenuItem getItemBackup() {
+		return itemBackup;
+	}
+
+	public void setItemBackup(JMenuItem itemBackup) {
+		this.itemBackup = itemBackup;
+	}
+
+	public JMenuItem getItemRestore() {
+		return itemRestore;
+	}
+
+	public void setItemRestore(JMenuItem itemRestore) {
+		this.itemRestore = itemRestore;
 	}
 
 	public PanelEmpleados getPanelEmpleados() {
@@ -473,5 +504,4 @@ public class VistaAdministrador extends JFrame {
 		});
 		setVisible(true);
 	}
-	
 }

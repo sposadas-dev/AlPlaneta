@@ -103,7 +103,10 @@ public class ClienteDTO {
 	}
 
 	public int getTotalPuntos() {
-		return totalPuntos;
+		int sum = 0;
+		for(PuntoDTO p: puntos)
+			sum+= p.getPuntos();
+		return sum;
 	}
 
 	public void setTotalPuntos(int totalPuntos) {

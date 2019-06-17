@@ -53,6 +53,7 @@ import presentacion.vista.administrativo.VentanaCargaPasajero;
 import presentacion.vista.administrativo.VentanaComprobante;
 import presentacion.vista.administrativo.VentanaConfirmacionPasaje;
 import presentacion.vista.administrativo.VentanaPago;
+import presentacion.vista.administrativo.VentanaPagoPuntos;
 import presentacion.vista.administrativo.VentanaPasajero;
 import presentacion.vista.administrativo.VentanaTablaPagos;
 import presentacion.vista.administrativo.VentanaTablaViajes;
@@ -79,6 +80,7 @@ public class ControladorPasaje implements ActionListener{
 	private VentanaTablaPagos ventanaTablaPagos;
 	private VentanaTarjeta ventanaTarjeta;
 	private VentanaCancelacionPasaje ventanaCancelacionPasaje;
+	private VentanaPagoPuntos ventanaPagoPuntos;
 	
 	private List<ClienteDTO> clientes_en_tabla;
 	private List <ViajeDTO> viajes_en_tabla;
@@ -103,23 +105,21 @@ public class ControladorPasaje implements ActionListener{
 	private ModeloPromocion modeloPromocion;
 	private ModeloViaje_Promocion viaje_promocion;
 	/*Fin de modelos*/
-	
+	private Integer valorDelViajeEnPuntos;
 	private BigDecimal totalaPagar;
 	private BigDecimal precioOriginal;
+	private BigDecimal valorFinal;
 	private int porcentajeDescuento;
 	private AdministrativoDTO administrativoLogueado;
 	private PagoDTO pagoDTO;
 	private boolean editarPago;
 	private ViajeDTO viajeDTO;
 	private java.util.Date fechaActual;
-	
-	//Aux
-	private BigDecimal valorFinal;
 
 	private DefaultTableModel dm;
 	private StringBuilder cad= new StringBuilder();
-	
 	private ModeloPunto modeloPunto;
+	private ModeloRegimenPunto modeloRegimenPunto;
 	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	public ControladorPasaje(VentanaVisualizarClientes ventanaVisualizarClientes, Cliente cliente, AdministrativoDTO administrativoLogueado){
@@ -135,6 +135,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaTarjeta = VentanaTarjeta.getInstance();
 		this.ventanaCancelacionPasaje = VentanaCancelacionPasaje.getInstance();
 		this.vistaAdministrativo = VistaAdministrativo.getInstance();
+		this.ventanaPagoPuntos = VentanaPagoPuntos.getInstance();
 		
 		java.util.Date fecha = new java.util.Date(); 
 		this.fechaActual = new java.sql.Date(fecha.getTime());	
@@ -147,6 +148,7 @@ public class ControladorPasaje implements ActionListener{
 		this.modeloPagos_pasaje = new Pagos_Pasaje(new DAOSQLFactory());
 		this.modeloPasajes_pasajeros = new Pasaje_Pasajeros(new DAOSQLFactory());
 		this.modeloPromocion = new ModeloPromocion(new DAOSQLFactory());
+		this.modeloRegimenPunto = new ModeloRegimenPunto(new DAOSQLFactory());
 		this.viaje_promocion = new ModeloViaje_Promocion (new DAOSQLFactory());
 		
 		this.pdf = new GeneratePDF();				
@@ -175,7 +177,6 @@ public class ControladorPasaje implements ActionListener{
 					}
 			}
 		});
-		
 		this.ventanaTablaViajes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
 		    public void keyTyped(KeyEvent e){
 		            char letra = e.getKeyChar();
@@ -195,7 +196,6 @@ public class ControladorPasaje implements ActionListener{
 		            }
 		    }
 		});
-		
 		this.ventanaPasajero.getTxtFiltroDni().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
@@ -205,12 +205,11 @@ public class ControladorPasaje implements ActionListener{
 				}
 			}
 		});
-		
 		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
 		
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(cv->confirmarSeleccionViaje(cv));
 		this.ventanaTablaViajes.getBtnAtras().addActionListener(a->volverVentanaCliente(a));
-		
+
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(ap->mostrarVentanaAgregarPasajero(ap));
 		this.ventanaCargaPasajero.getBtnEliminarPasajero().addActionListener(ep->eliminarPasajero(ep));
 		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(ap->confirmarPasajeros(ap));
@@ -235,8 +234,7 @@ public class ControladorPasaje implements ActionListener{
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
-			}
-		});
+			}});
 		this.ventanaPasajero.getTxtDni().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
@@ -276,10 +274,45 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaTablaPagos.getBtnImprimirComprobante().addActionListener(i->imprimirComprobante(i));
 		this.ventanaCancelacionPasaje.getBtnAceptar().addActionListener(cp->cancelarPasaje(cp));
 		this.administrativoLogueado = administrativoLogueado;
+		
+//		this.ventanaPago.getPanelPasaje().getCancelCheckBox().addActionListener(ccb->cargarCancelados(ccb));
+		this.ventanaPago.getComboBoxFormaPago().addActionListener(fp->verFormaDePago(fp));
+		this.ventanaPagoPuntos.getBtnPago().addActionListener(p->pagarConPuntos(p));
+		this.ventanaPagoPuntos.getBtnAtras().addActionListener(a->volverVentanaPago(a));
+		
 		this.editarPago = true;
 		this.modeloPunto = new ModeloPunto(new DAOSQLFactory());
 	}
 	
+
+	private void pagarConPuntos(ActionEvent p) {
+		if(valorDelViajeEnPuntos<=clienteSeleccionado.getTotalPuntos()){
+			darAltaDelPagoConPuntos();
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "No tiene los puntos suficientes ", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void verFormaDePago(ActionEvent fp) {
+		String formaDePago = ventanaPago.getComboBoxFormaPago().getSelectedItem().toString();
+		clienteSeleccionado.setPuntos(modeloPunto.getPuntosByClienteID(clienteSeleccionado));
+
+		if(formaDePago.equals("Puntos")){ // 1: Pago
+			this.ventanaPagoPuntos.setVisible(true);
+			this.ventanaPago.setVisible(false);
+			this.ventanaPagoPuntos.getLblPuntosDelCliente().setText(String.valueOf(clienteSeleccionado.getTotalPuntos()));
+			this.ventanaPagoPuntos.getLblCostoDelPasajeEnPuntos().setText(String.valueOf(calcularValorDeViajeEnPuntos(viajeSeleccionado.getPrecio())));
+		}
+	}
+
+	private Integer calcularValorDeViajeEnPuntos(BigDecimal precio) {
+		RegimenPuntoDTO regimen = this.modeloRegimenPunto.obtenerUltimoRegistro();
+		int integerPrecio = precio.intValue();
+		int valorDelRegimen = regimen.getARS();
+		this.valorDelViajeEnPuntos = integerPrecio/valorDelRegimen;
+		return valorDelViajeEnPuntos;
+	}
 
 	private void pagarPasaje(ActionEvent p) {
 		this.ventanaPago.mostrarVentana(true);
@@ -386,6 +419,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	private void volverVentanaPago(ActionEvent dp) {
 		this.ventanaConfirmacionPasaje.mostrarVentana(false);
+		this.ventanaPagoPuntos.setVisible(false);
 		this.ventanaPago.mostrarVentana(true);
 	}
 	/*Fin de métodos - Boton Atras*/
@@ -554,7 +588,6 @@ public class ControladorPasaje implements ActionListener{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
 	/*Se confirma la carga de pasajeros*/
 	private void confirmarPasajeros(ActionEvent ap) {
 		this.ventanaCargaPasajero.setVisible(false);
@@ -562,7 +595,6 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPago.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
 		this.ventanaPago.setVisible(true);
 	}
-	
 	
 	private void cargarComboBoxFormaDePago(){
 		ventanaPago.getComboBoxFormaPago().removeAllItems();
@@ -590,47 +622,90 @@ public class ControladorPasaje implements ActionListener{
 			pagoDTO.setAdministrativo(administrativoLogueado);
 			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
 			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
-			
-			
 	
 			if (editarPago){
 				System.out.println("editaPago");
 				this.ventanaPago.setVisible(false);
 				mostrarVentanaConfirmacionPasaje();
 			}else{ 
-
 			modeloPago.agregarPago(pagoDTO);
 			pagos_pasajeDTO = new Pagos_PasajeDTO();
 			PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
 			pagos_pasajeDTO.setPago(pagoPasaje);
 			pagos_pasajeDTO.setPasaje(pasajeAEditar);
 			modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
-	
 			pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
 			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
-			
 			modeloPasaje.editarPasaje(pasajeAEditar);
-			
-				
-				
 			this.ventanaPago.limpiarCampos();
 			this.ventanaPago.mostrarVentana(false);
 			this.ventanaVisualizarPasaje.mostrarVentana(false);
-				
 			reportePago();
 			this.llenarTablaPasajes();
 			}
 	}
 	
+	private void darAltaDelPagoConPuntos()  {
+		restarPuntosViejosDelCliente();
+		this.ventanaPagoPuntos.setVisible(false);
+
+		FormaPago f = new FormaPago(new DAOSQLFactory());
+		FormaPagoDTO formaPago = f.getFormaPagoByName("Puntos");
+		Calendar currenttime = Calendar.getInstance();
+			
+		pagoDTO = new PagoDTO();	
+		pagoDTO.setIdFormaPago(formaPago);
+		pagoDTO.setAdministrativo(administrativoLogueado);
+		pagoDTO.setMonto(viajeSeleccionado.getPrecio());	
+		pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
+			
+		if (editarPago){
+			this.ventanaPagoPuntos.setVisible(false);
+			mostrarVentanaConfirmacionPasaje();
+		}else{ 
+			modeloPago.agregarPago(pagoDTO);
+			pagos_pasajeDTO = new Pagos_PasajeDTO();
+			PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
+			pagos_pasajeDTO.setPago(pagoPasaje);
+			pagos_pasajeDTO.setPasaje(pasajeAEditar);
+			modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
+				
+			pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
+			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
+						
+			modeloPasaje.editarPasaje(pasajeAEditar);
+			this.ventanaPago.limpiarCampos();
+			this.ventanaPago.mostrarVentana(false);
+			this.ventanaVisualizarPasaje.mostrarVentana(false);
+			reportePago();
+			this.llenarTablaPasajes();
+		}
+	}
+	
+	private void restarPuntosViejosDelCliente() {
+		ArrayList<PuntoDTO> puntosDelCliente = modeloPunto.getPuntosAscendente(this.clienteSeleccionado.getIdCliente());
+		Integer precioViajeEnPuntos = calcularValorDeViajeEnPuntos(viajeSeleccionado.getPrecio());
+
+		for(PuntoDTO p: puntosDelCliente){
+			if(precioViajeEnPuntos >0 && p.getPuntos()<=precioViajeEnPuntos ){
+				precioViajeEnPuntos = precioViajeEnPuntos - p.getPuntos();
+				this.modeloPunto.borrarPunto(p);
+			}else
+				if(precioViajeEnPuntos >0 && p.getPuntos()>precioViajeEnPuntos){
+					p.setPuntos(p.getPuntos()-precioViajeEnPuntos);
+					precioViajeEnPuntos = 0;
+					this.modeloPunto.editarPunto(p);
+			}
+		}
+	}
+
 	private void calcularPuntos(ClienteDTO cliente, BigDecimal montoAPagar) {
 		String[] parts;
-		
 		Integer parteEntera = montoAPagar.intValue();
 		if(montoAPagar.toString().contains(".")){  //RECORRER Y VER SI CONTIENE @,@ O @.@
 			parts = (montoAPagar+"").split(".");
 			parteEntera = Integer.parseInt(parts[0]);
 		}
-        
 // BUSCAR EL REGIMEN DE LA BASE
         ModeloRegimenPunto modeloPuntos = new ModeloRegimenPunto(new DAOSQLFactory());
         RegimenPuntoDTO regimen = modeloPuntos.obtenerUltimoRegistro();
@@ -656,29 +731,20 @@ public class ControladorPasaje implements ActionListener{
 //CALCULAR EL TOTAL DE PUNTO TENIENDO EN CUENTA EL VENCIMIENTO DE LOS PUNTOS
         int puntosAux = cliente.getTotalPuntos();
         for(PuntoDTO p:cliente.getPuntos())
-        		if(!estaVencido(p.getVencimiento()))
-        				puntosAux += p.getPuntos();
-
+        		if(estaVencido(p.getVencimiento())){
+        			modeloPunto.borrarPunto(p);
+        		}else{
+        			puntosAux += p.getPuntos();
+        		}
 // SET PUNTO AL CLIENTE
         cliente.setTotalPuntos(puntosAux);
+        
         this.modeloCliente.actualizar(cliente);
 //GUARDARLO EN MODELO
         this.modeloPunto.agregarPunto(punto);
         
-        
-        //TODO:http://javaeefuncional.blogspot.com/2015/11/sumar-dias-una-fecha-date-in-java.html
-        /*
-         * Calendar cal = Calendar.getInstance(); 
-                 cal.setTime(yourDAte); 
-                 cal.add(Calendar.MONTH, 5);
-                 nuevaFecha = cal.getTime();
-         */
-        
-        
-        
 	}
 	
-
 	private boolean estaVencido(java.sql.Date fechaDePunto) {
 		java.util.Date fecha = new java.util.Date(); 
 		java.sql.Date fechaActual= new java.sql.Date(fecha.getTime());	
@@ -711,13 +777,12 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaComprobante.getTxtValorViaje().setText("$ "+this.valorFinal);
 	}
 	
-	
 	private void darAltaDeUnPasaje(ActionEvent dp) {
 		viajeDTO = viajeSeleccionado;
 		BigDecimal valorViaje = calcularMontoDePasaje();
-
 		ClienteDTO cliente = clienteSeleccionado;
 		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
+		System.out.println(estadoPasaje.getNombre()+" ACA");
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
 		
 		viajeDTO.setCapacidad(viajeSeleccionado.getCapacidad()-pasajeros.size()); //Restamos la capacidad del viaje segun la cantidad de pasajeros
@@ -752,7 +817,10 @@ public class ControladorPasaje implements ActionListener{
 			
 			modeloPasajes_pasajeros.agregarPasajePasajero(pasaje_pasajeros);
 		}
-		verificarSumaDePuntosDeCliente(pasajeDTO);
+		
+		if(pagoPasaje.getIdFormaPago().getIdFormaPago()!= 3){
+			verificarSumaDePuntosDeCliente(pasajeDTO);
+			}
 		
 		generarVoucherMail(pasajeDTO,cliente);
 		this.ventanaConfirmacionPasaje.setVisible(false);
@@ -782,11 +850,14 @@ public class ControladorPasaje implements ActionListener{
     }
 	
 	private BigDecimal calcularMontoDePasaje() {
+
+		//BigDecimal valorFinal;
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
 		totalaPagar = Valor1;
-		valorFinal = totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
-		this.precioOriginal = valorFinal;
+		this.valorFinal = totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
+		this.precioOriginal = this.valorFinal;
 		
+		//si hay promo
 		for(Viaje_PromocionDTO vp : viaje_promocion.obtenerViajePromocion()) {
 			if(vp.getIdViaje() == viajeSeleccionado.getIdViaje()) {
 				for(PromocionDTO p : modeloPromocion.obtenerPromocion()) {
@@ -796,13 +867,14 @@ public class ControladorPasaje implements ActionListener{
 							this.ventanaPago.setLblDatoMontoOriginal("$ "+this.precioOriginal.toString());
 							this.porcentajeDescuento = p.getPorcentaje();
 							this.ventanaPago.setLblDatoPorcentajeDescuento("-"+this.porcentajeDescuento+""+" %");
-							valorFinal = calcularMontoDePasajeConDescuento(valorFinal, p.getPorcentaje());
+							this.valorFinal = calcularMontoDePasajeConDescuento(this.valorFinal, p.getPorcentaje());
+//							hayPromo = true;
 						}
 					}
 				}
 			}
 		}	
-		return valorFinal;
+		return this.valorFinal;
 	}
 	
 	public boolean promocionActiva(PromocionDTO p) {
@@ -824,7 +896,6 @@ public class ControladorPasaje implements ActionListener{
 		
 	}
 		
-	
 	private BigDecimal calcularMontoDePasajeConDescuento(BigDecimal valor, int porcentaje) {
 		BigDecimal nuevoValor = new BigDecimal(100-porcentaje);
 		return valor.multiply(nuevoValor).divide(new BigDecimal(100));
@@ -833,7 +904,19 @@ public class ControladorPasaje implements ActionListener{
 	private EstadoPasajeDTO calcularEstadoPasaje() {
 		EstadoPasaje estado = new EstadoPasaje(new DAOSQLFactory());
 		EstadoPasajeDTO ret;
-		if(totalaPagar.compareTo(pagoDTO.getMonto())==0){ 
+//			if(totalaPagar.compareTo(pagoDTO.getMonto())==0){ 
+//				ret = estado.getFormaPagoByName("Vendido");
+//			}
+//			else {
+//				if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
+//					ret = estado.getFormaPagoByName("Pendiente");
+//				}
+//				else{
+//					ret = estado.getFormaPagoByName("Reservado");		
+//				}
+//			}
+//			return ret;
+		if(this.valorFinal.compareTo(pagoDTO.getMonto())==0){ 
 			ret = estado.getFormaPagoByName("Vendido");
 		}
 		else {
@@ -850,6 +933,7 @@ public class ControladorPasaje implements ActionListener{
 	private EstadoPasajeDTO estadoPasaje(BigDecimal monto){
 		EstadoPasaje estado = new EstadoPasaje(new DAOSQLFactory());
 		EstadoPasajeDTO ret;
+		//ACA
 		if(monto.compareTo(new BigDecimal(0))==0){ 
 			ret = estado.getFormaPagoByName("Vendido");
 		}
@@ -858,6 +942,7 @@ public class ControladorPasaje implements ActionListener{
 			}
 		return ret;
 	}
+
 	private void mostrarComprobanteReserva(ActionEvent cr){
 		Reporte reporte = new Reporte();
 		reporte.reporteReserva(pagos_pasajeDTO);
@@ -890,6 +975,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	private void verDatosDelPasaje(int filaSeleccionada) {
 		if (filaSeleccionada != -1){
+			this.ventanaPago.limpiarCampos();
 			this.ventanaVisualizarPasaje.getBtnPagar().setVisible(true);
 			this.ventanaVisualizarPasaje.getTxtClienteDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getCliente().getNombre());
 			this.ventanaVisualizarPasaje.getTxtCodigoDelPasaje().setText(" "+this.pasajes_en_tabla.get(filaSeleccionada).getNumeroComprobante());
