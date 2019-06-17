@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="284e0c88-a4b2-4ff8-98a2-d67b80bcffaf">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<subDataset name="Dataset1" uuid="545bbc50-215a-460b-ab7d-18166a79bb19">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="Fecha" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[]]>
+	</queryString>
+	<field name="viaje" class="dto.ViajeDTO">
+		<fieldDescription><![CDATA[viaje]]></fieldDescription>
+	</field>
+	<field name="estadoDelPasaje" class="dto.EstadoPasajeDTO">
+		<fieldDescription><![CDATA[estadoDelPasaje]]></fieldDescription>
+	</field>
+	<group name="GroupPasajes">
+		<groupExpression><![CDATA[$F{viaje}.getIdViaje()]]></groupExpression>
+		<groupHeader>
+			<band height="197">
+				<frame>
+					<reportElement mode="Opaque" x="0" y="53" width="571" height="143" isPrintInFirstWholeBand="true" backcolor="#D1DAE3" uuid="0f153d13-6ebc-40da-bdd5-411eebb6bada"/>
+					<textField>
+						<reportElement x="140" y="13" width="431" height="18" uuid="ade15ddf-88c1-464f-aefc-0b22600898c4"/>
+						<textFieldExpression><![CDATA[$F{viaje}.getPaisOrigen().getNombre().concat(", ").concat($F{viaje}.getProvinciaOrigen().getNombre()).concat(", ").concat($F{viaje}.getCiudadOrigen().getNombre())]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="140" y="70" width="431" height="18" uuid="fce766e3-024b-4230-ae2c-a30a490f7185"/>
+						<textFieldExpression><![CDATA[$F{viaje}.getFechaSalidaParseada()]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="140" y="100" width="431" height="18" uuid="1ca614fb-cf6c-4fd7-b8c7-e5359422a23e"/>
+						<textFieldExpression><![CDATA[$F{viaje}.getTransporte().getNombre()]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="20" y="97" width="100" height="21" uuid="fa3880f9-e79a-471a-b228-659512a282e9"/>
+						<textElement>
+							<font size="12" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Transporte:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="20" y="37" width="100" height="21" uuid="67fc97da-ac0c-4bbb-bd88-65124eb4428f"/>
+						<textElement>
+							<font size="12" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Destino del viaje:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="20" y="10" width="100" height="21" uuid="523406d0-e0ad-4b2c-b327-d79e45099958"/>
+						<textElement>
+							<font size="12" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Origen del viaje:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="20" y="69" width="100" height="21" uuid="cf44e884-3660-4fe8-9cd3-5369515a5d97"/>
+						<textElement>
+							<font size="12" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Fecha de salida:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="20" y="121" width="100" height="21" uuid="3ea5fba0-07fc-486b-bbbc-ad3979001cf7"/>
+						<textElement>
+							<font size="12" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Precio:]]></text>
+					</staticText>
+					<textField>
+						<reportElement x="140" y="122" width="431" height="18" uuid="64ef35c1-cc1e-4cf8-8191-f2c55c52269b"/>
+						<textFieldExpression><![CDATA[$F{viaje}.getPrecio()]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="140" y="40" width="431" height="18" uuid="059dc1ba-4f6d-448c-92ce-b8a7e1192b37"/>
+						<textFieldExpression><![CDATA[$F{viaje}.getPaisDestino().getNombre().concat(", ").concat($F{viaje}.getProvinciaDestino().getNombre()).concat(", ").concat($F{viaje}.getCiudadDestino().getNombre())]]></textFieldExpression>
+					</textField>
+					<frame>
+						<reportElement mode="Opaque" x="0" y="-45" width="571" height="40" backcolor="#3BC6F5" uuid="dfe00509-214c-40ec-a794-a3391015275d"/>
+						<textField>
+							<reportElement key="$F{estadoDelPasaje}.getIdEstadoPasaje()" mode="Transparent" x="209" y="10" width="292" height="20" forecolor="#000000" backcolor="#67FF59" uuid="a675cb08-22a6-4c44-bbc1-b383d4606e9a"/>
+							<textElement>
+								<font size="14" isBold="true" isItalic="false"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{estadoDelPasaje}.getNombre()]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement mode="Transparent" x="20" y="10" width="180" height="24" forecolor="#000000" uuid="f80df9d5-59dc-46af-b66a-fb8d64fad6a6"/>
+							<textElement textAlignment="Center">
+								<font size="16" isBold="true"/>
+							</textElement>
+							<text><![CDATA[Pasajes con estado:]]></text>
+						</staticText>
+					</frame>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="54">
+				<frame>
+					<reportElement mode="Opaque" x="0" y="0" width="571" height="37" backcolor="#18F532" uuid="4e12d8fc-aa9e-42e4-bb3a-7dbf4691bc09"/>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+					</box>
+					<textField>
+						<reportElement x="270" y="10" width="285" height="27" uuid="e87d5e48-7b13-4e4c-953b-8395ded161ad"/>
+						<textElement>
+							<font size="12" isBold="true" isItalic="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Cantidad de pasajes : " + $V{GroupPasajes_COUNT}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="45" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="630" height="40" uuid="fbf866cd-64dc-4043-b98c-ed8d9f31d19c"/>
+				<staticText>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="2" width="380" height="38" backcolor="#FFFFFF" uuid="df09700e-f0a8-43aa-a9d6-1430d1a7476d"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<pen lineStyle="Dotted"/>
+					</box>
+					<textElement verticalAlignment="Justified" rotation="None">
+						<font fontName="SansSerif" size="30"/>
+					</textElement>
+					<text><![CDATA[Reporte de pasajes]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="489" y="2" width="56" height="20" uuid="0706116d-f632-4605-96d8-35fe765b5d67"/>
+					<textFieldExpression><![CDATA[$P{Fecha}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="390" y="2" width="102" height="20" uuid="4c9394fa-e0b1-4d17-9e4d-cc7deafc6164"/>
+					<text><![CDATA[Reporte generado el:]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="46" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="4" width="630" height="24" uuid="d078763f-d7ce-421d-8cc3-c9d81fe255f9"/>
+				<staticText>
+					<reportElement x="0" y="2" width="330" height="22" forecolor="#000000" uuid="8bd693bf-e003-4042-a1f8-881763b9ba1e"/>
+					<textElement>
+						<font isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[Reporte de pasajes reservados y vendidos]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="45" splitType="Stretch">
+			<frame>
+				<reportElement key="" mode="Transparent" x="-30" y="-12" width="605" height="54" forecolor="#000000" uuid="23209a62-cc9d-4b81-8e93-aa9cc3a92b36"/>
+				<frame>
+					<reportElement key="" mode="Opaque" x="30" y="13" width="571" height="40" isPrintInFirstWholeBand="true" backcolor="#396ADB" uuid="d30fbbdf-505c-4c98-bf13-29f609872c58"/>
+					<staticText>
+						<reportElement x="0" y="10" width="571" height="24" forecolor="#FFFFFF" uuid="a21cf566-d187-491d-a224-6cb673b874c8"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="16" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Datos de los pasajes y viajes]]></text>
+					</staticText>
+				</frame>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="12" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="33" splitType="Stretch">
+			<textField>
+				<reportElement x="355" y="0" width="100" height="30" uuid="5ce007da-8e81-48b7-91fd-8e603c20d7ef"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="455" y="0" width="100" height="30" uuid="52b869cb-a151-48f6-ad3c-3147a8d111e8"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

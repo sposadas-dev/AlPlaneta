@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="284e0c88-a4b2-4ff8-98a2-d67b80bcffaf">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<subDataset name="Dataset1" uuid="545bbc50-215a-460b-ab7d-18166a79bb19">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nombre" class="java.lang.String">
+			<fieldDescription><![CDATA[nombre]]></fieldDescription>
+		</field>
+		<field name="telefono" class="java.lang.String">
+			<fieldDescription><![CDATA[telefono]]></fieldDescription>
+		</field>
+		<field name="email" class="java.lang.String">
+			<fieldDescription><![CDATA[email]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="Fecha" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[]]>
+	</queryString>
+	<field name="administrativo" class="dto.AdministrativoDTO">
+		<fieldDescription><![CDATA[administrativo]]></fieldDescription>
+	</field>
+	<group name="GroupVentas">
+		<groupExpression><![CDATA[$F{administrativo}.getNombre()]]></groupExpression>
+		<groupHeader>
+			<band height="37">
+				<frame>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="37" backcolor="#F0943E" uuid="92de61ad-73c1-4fe2-bdb2-24c5ab21012d"/>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+					</box>
+					<staticText>
+						<reportElement x="17" y="0" width="162" height="30" uuid="d4b65a65-26e0-4ce7-a6de-b2e948be1443"/>
+						<textElement>
+							<font size="12" isBold="true" isItalic="true"/>
+						</textElement>
+						<text><![CDATA[Nombre y apellido:]]></text>
+					</staticText>
+					<textField>
+						<reportElement x="180" y="1" width="170" height="28" uuid="2d1242fb-23b6-4edd-9a95-bf2e4d9110c0"/>
+						<textElement>
+							<font size="12"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{administrativo}.getNombre()]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="62">
+				<frame>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="40" backcolor="#C3D2E3" uuid="8b0f4190-e3bd-4345-961d-9992a3f0aacc"/>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+					</box>
+					<textField>
+						<reportElement x="200" y="10" width="355" height="27" uuid="c046a9e2-6006-46c2-a73f-2cf36b348378"/>
+						<textElement textAlignment="Right">
+							<font size="12" isBold="true" isItalic="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Cantidad de ventas realizadas: " + $V{GroupVentas_COUNT}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="45" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="630" height="40" uuid="fbf866cd-64dc-4043-b98c-ed8d9f31d19c"/>
+				<staticText>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="2" width="380" height="38" backcolor="#FFFFFF" uuid="df09700e-f0a8-43aa-a9d6-1430d1a7476d"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<pen lineStyle="Dotted"/>
+					</box>
+					<textElement verticalAlignment="Justified" rotation="None">
+						<font fontName="SansSerif" size="30"/>
+					</textElement>
+					<text><![CDATA[Reporte de ventas]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="489" y="2" width="56" height="20" uuid="0706116d-f632-4605-96d8-35fe765b5d67"/>
+					<textFieldExpression><![CDATA[$P{Fecha}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="390" y="2" width="102" height="20" uuid="4c9394fa-e0b1-4d17-9e4d-cc7deafc6164"/>
+					<text><![CDATA[Reporte generado el:]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="4" width="630" height="24" uuid="d078763f-d7ce-421d-8cc3-c9d81fe255f9"/>
+				<staticText>
+					<reportElement x="0" y="2" width="330" height="22" forecolor="#000000" uuid="8bd693bf-e003-4042-a1f8-881763b9ba1e"/>
+					<textElement>
+						<font isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[Reporte de ventas por personal administrativo]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<frame>
+				<reportElement mode="Transparent" x="-30" y="-12" width="605" height="54" forecolor="#000000" uuid="23209a62-cc9d-4b81-8e93-aa9cc3a92b36"/>
+				<frame>
+					<reportElement mode="Opaque" x="30" y="14" width="555" height="39" backcolor="#35B6E6" uuid="c8917450-819c-4b7c-a6fd-d89b0dd43437"/>
+					<staticText>
+						<reportElement x="17" y="15" width="144" height="24" forecolor="#000000" uuid="9fd60eb9-9e93-4d91-b585-0b7d07e4533f"/>
+						<textElement textAlignment="Center">
+							<font size="12" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Personal administrativo]]></text>
+					</staticText>
+				</frame>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="66" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="33" splitType="Stretch">
+			<textField>
+				<reportElement x="355" y="0" width="100" height="30" uuid="5ce007da-8e81-48b7-91fd-8e603c20d7ef"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="455" y="0" width="100" height="30" uuid="52b869cb-a151-48f6-ad3c-3147a8d111e8"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="344" splitType="Stretch">
+			<frame>
+				<reportElement x="110" y="30" width="370" height="285" uuid="c8f3489e-a35e-4d00-b304-3ab1ff8c6ad6"/>
+				<frame>
+					<reportElement x="-5" y="10" width="356" height="270" uuid="bcb41177-5a4e-4f4e-b4fe-9d4feb0d0b18"/>
+					<pieChart>
+						<chart isShowLegend="true" evaluationTime="Report">
+							<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToBandHeight" mode="Transparent" x="5" y="20" width="345" height="230" uuid="e6ddf398-314f-48d0-be6c-c9b48460dbf0"/>
+							<chartTitle>
+								<font size="15" isBold="false"/>
+								<titleExpression><![CDATA["Cantidad de ventas por personal administrativo"]]></titleExpression>
+							</chartTitle>
+							<chartSubtitle/>
+							<chartLegend position="Top">
+								<font fontName="SansSerif"/>
+							</chartLegend>
+						</chart>
+						<pieDataset>
+							<dataset incrementType="Group" incrementGroup="GroupVentas"/>
+							<keyExpression><![CDATA[$F{administrativo}.getNombre()]]></keyExpression>
+							<valueExpression><![CDATA[$V{GroupVentas_COUNT}]]></valueExpression>
+						</pieDataset>
+						<piePlot isShowLabels="true" isCircular="true" labelFormat="{0} {2}" legendLabelFormat="{0}">
+							<plot/>
+							<itemLabel/>
+						</piePlot>
+					</pieChart>
+				</frame>
+			</frame>
+		</band>
+	</summary>
+</jasperReport>

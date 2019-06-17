@@ -2,6 +2,7 @@ package modelo;
 
 import java.util.List;
 
+import dto.EstadoPasajeDTO;
 import dto.PagoDTO;
 import dto.PasajeDTO;
 import dto.TransporteDTO;
@@ -38,5 +39,13 @@ import persistencia.dao.interfaz.PasajeDAO;
 	
 	public PasajeDTO getUltimoRegistroPasaje() {
 		return this.pasaje.getUltimoRegistroPasaje();
+	}
+	
+	public List<PasajeDTO> obtenerPasajesConEstado(EstadoPasajeDTO estado,java.sql.Date desde, java.sql.Date hasta){
+		return this.pasaje.obtenerPasajesEstado(estado, desde, hasta);
+	}
+	
+	public List<PasajeDTO> obtenerPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta) {
+		return this.pasaje.listarPasajesEntreFechas(desde, hasta);
 	}
 }
