@@ -8,6 +8,7 @@ import java.util.List;
 
 import dto.AdministrativoDTO;
 import dto.CiudadDTO;
+import dto.EventoDTO;
 import dto.MedioContactoDTO;
 import dto.TransporteDTO;
 import dto.ViajeDTO;
@@ -21,6 +22,8 @@ public class ViajeDAOSQL implements ViajeDAO {
 	private static final String readall = "SELECT * FROM viaje";
 	private static final String update = "UPDATE viaje SET precio =?, capacidad = ? WHERE idViaje= ?;";
 	private static final String browse = "SELECT * FROM viaje WHERE idViaje = ?";
+	private static final String readBetween = "SELECT * FROM viaje WHERE fechaSalida BETWEEN ? AND ?";
+	private static final String readBetweenPrecio = "SELECT * FROM viaje WHERE precio BETWEEN ? AND ?";
 
 	@Override
 	public boolean insert(ViajeDTO viaje) {
@@ -176,12 +179,89 @@ public class ViajeDAOSQL implements ViajeDAO {
 		return null;
 	}
 	
-	public static void main(String[] args) {
-		ViajeDAOSQL adm = new ViajeDAOSQL();
-		List<ViajeDTO> administratives = adm.readAll();
-		
-		for(ViajeDTO ad: administratives)
-			System.out.println(ad.getFechaLlegada());
+	@Override
+	public List<ViajeDTO> obtenerBetween(String desde, String hasta) {
+		PreparedStatement statement;
+		ResultSet resultSet; //Guarda el resultado de la query
+		ArrayList<ViajeDTO> viajes = new ArrayList<ViajeDTO>();
+		Conexion conexion = Conexion.getConexion();
+	
+		CiudadDAOSQL ciudadDAOSQL = new CiudadDAOSQL();
+		ProvinciaDAOSQL provinciaDAOSQL = new ProvinciaDAOSQL();
+		PaisDAOSQL paisDAOSQL = new PaisDAOSQL();
+		TransporteDAOSQL transporteDAOSQL = new TransporteDAOSQL();
+	
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(readBetween);
+			statement.setString(1, desde);
+			statement.setString(2, hasta);
+			
+			resultSet = statement.executeQuery();
+			
+			while(resultSet.next()){
+				viajes.add(new ViajeDTO(resultSet.getInt("idViaje"),
+				ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadOrigen")),
+				ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadDestino")),
+				provinciaDAOSQL.getProvinciaById(resultSet.getInt("idProvinciaOrigen")),
+				provinciaDAOSQL.getProvinciaById(resultSet.getInt("idProvinciaDestino")),
+				paisDAOSQL.getPaisById(resultSet.getInt("idPaisOrigen")),
+				paisDAOSQL.getPaisById(resultSet.getInt("idPaisDestino")),
+									   resultSet.getDate("fechaSalida"),
+									   resultSet.getDate("fechaLlegada"),
+									   resultSet.getString("horaSalida"),
+									   resultSet.getInt("horasEstimadas"),
+				transporteDAOSQL.getTransporteById(resultSet.getInt("idTransporte")),
+										resultSet.getInt("capacidad"),
+									   resultSet.getBigDecimal("precio"))
+										);
+				}
+			} 
+		catch (SQLException e) {
+			e.printStackTrace();
 		}
+		return viajes;
+	}
+
+	public List<ViajeDTO> obtenerBetweenPrecio(Integer desde, Integer hasta) {
+		PreparedStatement statement;
+		ResultSet resultSet; //Guarda el resultado de la query
+		ArrayList<ViajeDTO> viajes = new ArrayList<ViajeDTO>();
+		Conexion conexion = Conexion.getConexion();
+		
+		CiudadDAOSQL ciudadDAOSQL = new CiudadDAOSQL();
+		ProvinciaDAOSQL provinciaDAOSQL = new ProvinciaDAOSQL();
+		PaisDAOSQL paisDAOSQL = new PaisDAOSQL();
+		TransporteDAOSQL transporteDAOSQL = new TransporteDAOSQL();
+		
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(readBetweenPrecio);
+			statement.setInt(1, desde);
+			statement.setInt(2, hasta);
+			
+			resultSet = statement.executeQuery();
+			
+			while(resultSet.next()){
+				viajes.add(new ViajeDTO(resultSet.getInt("idViaje"),
+						ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadOrigen")),
+						ciudadDAOSQL.getCiudadById(resultSet.getInt("idCiudadDestino")),
+						provinciaDAOSQL.getProvinciaById(resultSet.getInt("idProvinciaOrigen")),
+						provinciaDAOSQL.getProvinciaById(resultSet.getInt("idProvinciaDestino")),
+						paisDAOSQL.getPaisById(resultSet.getInt("idPaisOrigen")),
+						paisDAOSQL.getPaisById(resultSet.getInt("idPaisDestino")),
+						resultSet.getDate("fechaSalida"),
+						resultSet.getDate("fechaLlegada"),
+						resultSet.getString("horaSalida"),
+						resultSet.getInt("horasEstimadas"),
+						transporteDAOSQL.getTransporteById(resultSet.getInt("idTransporte")),
+						resultSet.getInt("capacidad"),
+						resultSet.getBigDecimal("precio"))
+						);
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return viajes;
+	}
 	
 }

@@ -30,4 +30,12 @@ public class ModeloViaje {
 	public List<ViajeDTO> obtenerViajes(){
 		return this.viaje.readAll();		
 	}
+	
+	public List<ViajeDTO> obtenerBetween(String desde, String hasta){
+		return this.viaje.obtenerBetween(desde, hasta);
+	}
+	
+	public List<ViajeDTO> obtenerBetweenPrecio(Integer desde, Integer hasta){
+		return this.viaje.obtenerBetweenPrecio(desde, hasta);
+	}
 }
