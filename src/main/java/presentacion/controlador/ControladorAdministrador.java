@@ -31,6 +31,7 @@ import modelo.Rol;
 import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
+import presentacion.vista.administrador.VentanaAgregarLocal;
 import presentacion.vista.administrador.VentanaEditarCuenta;
 import presentacion.vista.administrador.VistaAdministrador;
 
@@ -39,6 +40,7 @@ public class ControladorAdministrador {
 	private VistaAdministrador vistaAdministrador;
 	private VentanaAgregarEmpleado ventanaAgregarEmpleado;
 	private VentanaEditarCuenta ventanaEditarCuenta;
+	private VentanaAgregarLocal ventanaAgregarLocal;
 	private int filaSeleccionada;
 	
 	private List<TransporteDTO> transportes_en_tabla;
@@ -46,6 +48,7 @@ public class ControladorAdministrador {
 //	private List<AdministrativoDTO> administrativos_en_tabla;
 	private List<LoginDTO> logins_en_tabla;
 	private List<LoginDTO> logins_aux;
+	private List<LocalDTO> locales_en_tabla;
 	
 	private Administrador administrador;
 	private Administrativo administrativo;
@@ -76,6 +79,7 @@ public class ControladorAdministrador {
 //INSTANCES		
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
 		this.ventanaEditarCuenta = VentanaEditarCuenta.getInstance();
+		this.ventanaAgregarLocal = VentanaAgregarLocal.getInstance();
 
 //MENU ITEMS		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
@@ -87,6 +91,11 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemVisualizarTransportes().addActionListener(vt->visualizarTransportes(vt));
 		this.vistaAdministrador.getItemEditarTransporte().addActionListener(et->editarTransporte(et));
 		this.vistaAdministrador.getItemEliminarTransporte().addActionListener(dt->eliminarTransporte(dt));
+
+		this.vistaAdministrador.getItemVisualizarLocales().addActionListener(vl->visualizarLocales(vl));
+		this.vistaAdministrador.getItemAgregarLocal().addActionListener(al->agregarPanelLocales(al));
+//		this.vistaAdministrador.getItemEditarLocal().addActionListener(el->editarLocal(el));
+//		this.vistaAdministrador.getItemEliminarLocal().addActionListener(dl->eliminarLocal(dl));
 
 //		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 		
@@ -118,6 +127,7 @@ public class ControladorAdministrador {
 			}
 		});
 //		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
+		this.ventanaAgregarLocal.getBtnAgregar().addActionListener(agl->agregarLocal(agl));
 		
 		this.ventanaEditarCuenta.getBtnRegistrar().addActionListener(ec->editarCuenta(ec));
 		this.ventanaEditarCuenta.getBtnCancelar().addActionListener(can->cancelarEditarCuenta(can));
@@ -172,6 +182,14 @@ public class ControladorAdministrador {
 		llenarTablaEmpleados();
 	}
 
+	private void visualizarLocales(ActionEvent vl) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
+		this.llenarTablaLocales();
+	}
+	
 	private void mostrarVentanaEditarCuenta(ActionEvent mve) {
 		int filaSeleccionada = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
 		if (filaSeleccionada != -1){
@@ -574,6 +592,22 @@ public class ControladorAdministrador {
 		llenarTablaTransportes();
 	}
 
+	public void llenarTablaLocales() {
+		this.vistaAdministrador.getPanelLocales().getModelLocales().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelLocales().getModelLocales().setColumnCount(0);
+		this.vistaAdministrador.getPanelLocales().getModelLocales().setColumnIdentifiers(this.vistaAdministrador.getPanelLocales().getNombreColumnasLocales());
+		
+		this.locales_en_tabla = local.readAll();
+		
+		for (int i = 0; i < this.locales_en_tabla.size(); i++){
+			Object[] fila = {this.locales_en_tabla.get(i).getNombreLocal(),
+							 this.locales_en_tabla.get(i).getDireccionLocal()
+							};
+			this.vistaAdministrador.getPanelLocales().getModelLocales().addRow(fila);
+		}	
+		
+	}
+	
 	public void llenarTablaTransportes(){
 		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setRowCount(0); //Para vaciar la tabla
 		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setColumnCount(0);
@@ -646,6 +680,7 @@ public class ControladorAdministrador {
 		controladorFormaPago.mostrarVentanaAgregarFormaPago();
 	}
 	
+	
 	private void editarFormaPago(ActionEvent efp) {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
 		int filaSeleccionada = this.vistaAdministrador.getPanelFormaPago().getTablaFormaPago().getSelectedRow();
@@ -687,5 +722,19 @@ public class ControladorAdministrador {
 			};
 			this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().addRow(fila);
 		}		
+	}
+	private void agregarPanelLocales(ActionEvent al) {
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
+		this.ventanaAgregarLocal.mostrarVentana();
+	}
+	
+	public void agregarLocal(ActionEvent agl) {
+		LocalDTO nuevoLocal = new LocalDTO();
+		nuevoLocal.setNombreLocal(this.ventanaAgregarLocal.getTxtNombreLocal().getText());
+		nuevoLocal.setDireccionLocal(this.ventanaAgregarLocal.getTxtDireccionLocal().getText());
+		local.insert(nuevoLocal);
+		this.llenarTablaLocales();
+		this.ventanaAgregarLocal.limpiarCampos();
+		this.ventanaAgregarLocal.cerrarVentana();
 	}
 }
