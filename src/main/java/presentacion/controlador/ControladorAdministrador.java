@@ -632,6 +632,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(true);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
 		this.llenarTablaTransportes();
 	}
 	
@@ -747,6 +748,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
 		this.llenarTablaFormaPago();
 	}
 	/*Agrega el panel de Forma pago en la vistaPrinciapal del Administrador*/
