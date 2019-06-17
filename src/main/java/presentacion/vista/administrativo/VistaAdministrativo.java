@@ -1,7 +1,6 @@
 package presentacion.vista.administrativo;
 
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -20,7 +19,6 @@ import javax.swing.Box;
 public class VistaAdministrativo{
 	
 	private JFrame frame;
-	
 	private PanelCliente panelCliente;
 	private PanelPasaje panelPasaje;
 	private PanelEvento panelEvento;

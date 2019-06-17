@@ -26,28 +26,24 @@ public class VistaAdministrador extends JFrame {
 	private PanelFormaPago panelFormaPago;
 	private PanelEmpleados panelEmpleados;
 	private PanelLocales panelLocales;
+	private PanelViajes panelViajes;
 	
 	private JMenuItem itemAgregarCuenta;
 	private JMenuItem itemEditarCuenta;
 	private JMenuItem itemEliminarCuenta;
 	private JMenuItem itemActivarCuenta;
-	
 	private JMenuItem itemVisualizarTransportes;
 	private JMenuItem itemAgregarTransporte;
 	private JMenuItem itemEditarTransporte;
 	private JMenuItem itemEliminarTransporte;
-	
 	private JMenuItem itemVisualizarFormaPago;
 	private JMenuItem itemAgregarFormaPago;
 	private JMenuItem itemEditarFormaPago;
 	private JMenuItem itemEliminarFormaPago;
-
 	private JMenuItem itemPais;
 	private JMenuItem itemProvincia;
 	private JMenuItem itemCiudad;
-	
 	private JMenuItem itemAgregarViaje;
-
 	private JMenuItem itemEliminarPais;
 	private JMenuItem itemEliminarCiudad;
 	private JMenuItem itemEliminarProvincia;
@@ -56,10 +52,13 @@ public class VistaAdministrador extends JFrame {
 	private JMenuItem itemAgregarLocal;
 	private JMenuItem itemEditarLocal;
 	private JMenuItem itemEliminarLocal;
-	JMenuItem itemBackup;
-	JMenuItem itemRestore;
+
+	private JMenuItem itemBackup;
+	private JMenuItem itemRestore;
 	
 	private static VistaAdministrador INSTANCE;
+	private JMenuItem itemEditarViaje;
+	private JMenuItem itemVisualizarViajes;
 	
 	public static VistaAdministrador getInstance(){
 		if(INSTANCE == null) {
@@ -69,6 +68,10 @@ public class VistaAdministrador extends JFrame {
 		else {
 			return INSTANCE;
 		}
+	}
+
+	public void setPanelViajes(PanelViajes panelViajes) {
+		this.panelViajes = panelViajes;
 	}
 
 	public VistaAdministrador() {
@@ -125,9 +128,17 @@ public class VistaAdministrador extends JFrame {
 		menuViajes.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		menuBar.add(menuViajes);
 		
+		itemVisualizarViajes = new JMenuItem("Visualizar viajes");
+		itemVisualizarViajes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuViajes.add(itemVisualizarViajes);
+		
 		itemAgregarViaje = new JMenuItem("Agregar viaje");
 		itemAgregarViaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuViajes.add(itemAgregarViaje);
+		
+		itemEditarViaje = new JMenuItem("Editar viaje");
+		itemEditarViaje.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuViajes.add(itemEditarViaje);
 		
 		JMenu mnDestinos = new JMenu("Destinos");
 		mnDestinos.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -181,6 +192,14 @@ public class VistaAdministrador extends JFrame {
 		panelEmpleados.setLocation(0, 0);
 		getContentPane().add(panelEmpleados);
 		panelEmpleados.setVisible(false);
+		
+		panelViajes = new PanelViajes();
+		panelViajes.getTablaViajes().setSize(1114, 900);
+		panelViajes.setSize(1352, 700);
+		panelViajes.setLocation(0, 0);
+		getContentPane().add(panelViajes);
+		panelViajes.setVisible(false);
+		
 		
 	//--------------------FormaPago-----------------------------------//	
 		
@@ -306,6 +325,10 @@ public class VistaAdministrador extends JFrame {
 
 	public PanelEmpleados getPanelEmpleados() {
 		return panelEmpleados;
+	}
+	
+	public PanelViajes getPanelViajes(){
+		return this.panelViajes;
 	}
 	
 	public void setItemAgregarCuenta(JMenuItem itemAgregarCuenta) {
@@ -487,6 +510,25 @@ public class VistaAdministrador extends JFrame {
 		this.itemActivarCuenta = itemActivarCuenta;
 	}
 	
+	
+	public JMenuItem getItemEditarViaje() {
+		return itemEditarViaje;
+	}
+
+	public void setItemEditarViaje(JMenuItem itemEditarViaje) {
+		this.itemEditarViaje = itemEditarViaje;
+	}
+	
+	
+
+	public JMenuItem getItemVisualizarViajes() {
+		return itemVisualizarViajes;
+	}
+
+	public void setItemVisualizarViajes(JMenuItem itemVisualizarViajes) {
+		this.itemVisualizarViajes = itemVisualizarViajes;
+	}
+
 	public void mostrarVentana(){
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter(){

@@ -966,7 +966,7 @@ public class ControladorPasaje implements ActionListener{
 			return false;
 		
 	}
-		
+
 	private BigDecimal calcularMontoDePasajeConDescuento(BigDecimal valor, int porcentaje) {
 		BigDecimal nuevoValor = new BigDecimal(100-porcentaje);
 		return valor.multiply(nuevoValor).divide(new BigDecimal(100));
