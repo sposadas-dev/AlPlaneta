@@ -2,6 +2,7 @@ package dto;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 public class ViajeDTO {
 	private int idViaje;
@@ -108,6 +109,11 @@ public class ViajeDTO {
 		this.fechaSalida = fechaSalida;
 	}
 
+	public String getFechaSalidaParseada(){
+		SimpleDateFormat formatFecha = new SimpleDateFormat("dd-MM-yyyy");
+		return formatFecha.format(this.fechaSalida);
+	}
+	
 	public Date getFechaLlegada() {
 		return fechaLlegada;
 	}
