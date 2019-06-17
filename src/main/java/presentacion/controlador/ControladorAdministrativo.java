@@ -278,6 +278,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.mostrarVentana();
 		this.vista.getMenuUsuarioLogueado().setText(""+ administrativoLogueado.getNombre());
 		this.llenarTablaClientes();
+		controladorPasaje.reservasVencidas();
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 		controladorEvento.controlarNotificacionesInicioSesion();
 		controladorEvento.controlarNotificacionesContinuo();
