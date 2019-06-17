@@ -222,7 +222,7 @@ public class VistaAdministrador extends JFrame {
 		//Locales
 		
 		JMenu menuLocales = new JMenu("Locales");
-		menuLocales.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		menuLocales.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		menuBar.add(menuLocales);
 		
 		itemVisualizarLocales = new JMenuItem("Visualizar locales");
