@@ -396,7 +396,6 @@ public class ControladorAdministrador {
 			this.ventanaAgregarEmpleado.mostrarVentana(false);
 		}
 
-		//TODO: Falta agregar el empleado Contador.
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("contador")){
 			LoginDTO nuevoLogin = new LoginDTO();
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
@@ -425,7 +424,7 @@ public class ControladorAdministrador {
 			String rolNombre = this.ventanaEditarCuenta.getComboBoxRoles().getSelectedItem().toString();
 			int idLogin = this.logins_en_tabla.get(this.filaSeleccionada).getIdDatosLogin();
 			LocalDTO localRespaldo = null;
-			//TODO: Necesario eliminar el empleado antes de insertarlo al nuevo.
+
 			if( administradorEdit != null ) {
 				localRespaldo = administradorEdit.getLocal();
 				administrador.eliminarAdministrador(administradorEdit.getIdAdministrador());

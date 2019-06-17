@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -177,6 +179,7 @@ public class ControladorPasaje implements ActionListener{
 					}
 			}
 		});
+		
 		this.ventanaTablaViajes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
 		    public void keyTyped(KeyEvent e){
 		            char letra = e.getKeyChar();
@@ -196,6 +199,35 @@ public class ControladorPasaje implements ActionListener{
 		            }
 		    }
 		});
+		
+		//TODO: Realizar el filtro de precios.
+		
+//		this.ventanaTablaViajes.getComboBoxPrecioDesde().addPropertyChangeListener( new PropertyChangeListener() {
+//			@Override
+//			public void propertyChange(PropertyChangeEvent e) {
+//				if(ventanaTablaViajes.getComboBoxPrecioDesde().getSelectedItem() != null) {
+//					Integer desde = ((Integer)e.getNewValue());
+//					if(ventanaTablaViajes.getComboBoxPrecioHasta().getSelectedItem() != null){
+//						Integer hasta = ((Integer)ventanaTablaViajes.getComboBoxPrecioHasta().getSelectedItem());
+//						llenarTablaViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));
+//					}
+//				}
+//			}
+//		});
+//		
+//		this.ventanaTablaViajes.getComboBoxPrecioHasta().addPropertyChangeListener( new PropertyChangeListener() {
+//			@Override
+//			public void propertyChange(PropertyChangeEvent e) {
+//				if(ventanaTablaViajes.getComboBoxPrecioHasta().getSelectedItem() != null) {
+//					Integer hasta = ((Integer)e.getNewValue());
+//					if(ventanaTablaViajes.getComboBoxPrecioDesde().getSelectedItem() != null){
+//						Integer desde = ((Integer)ventanaTablaViajes.getComboBoxPrecioDesde().getSelectedItem());
+//						llenarTablaViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));
+//					}
+//				}
+//			}
+//		});	
+		
 		this.ventanaPasajero.getTxtFiltroDni().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
@@ -207,9 +239,11 @@ public class ControladorPasaje implements ActionListener{
 		});
 		this.ventanaVisualizarClientes.getBtnConfirmar().addActionListener(c->confirmarSeleccionCliente(c));
 		
+		
 		this.ventanaTablaViajes.getBtnConfirmar().addActionListener(cv->confirmarSeleccionViaje(cv));
 		this.ventanaTablaViajes.getBtnAtras().addActionListener(a->volverVentanaCliente(a));
-
+		this.ventanaTablaViajes.getBtnLimpiarFiltros().addActionListener(lf->limpiarFiltros(lf));
+		
 		this.ventanaCargaPasajero.getBtnAgregarPasajero().addActionListener(ap->mostrarVentanaAgregarPasajero(ap));
 		this.ventanaCargaPasajero.getBtnEliminarPasajero().addActionListener(ep->eliminarPasajero(ep));
 		this.ventanaCargaPasajero.getBtnConfirmar().addActionListener(ap->confirmarPasajeros(ap));
@@ -346,6 +380,20 @@ public class ControladorPasaje implements ActionListener{
 	public void iniciar(){
 		this.llenarTablaClientes();
 		this.llenarTablaPasajes();
+		this.llenarComboPrecios();
+	}
+	
+	public void llenarComboPrecios() {
+		String [] precioDesde = {"0","300","500","1000","1300","1500","2000","2500","3000","3500","5000",
+								 "7000","8000","10000","13000","15000","20000","25000","30000","35000","50000"};
+		String [] precioHasta = {"0","300","500","1000","1300","1500","2000","2500","3000","3500","5000",
+								 "7000","8000","10000","13000","15000","20000","25000","30000","35000","50000", "60000"};
+		this.ventanaTablaViajes.getComboBoxPrecioDesde().setModel(new DefaultComboBoxModel<String>(precioDesde));
+		this.ventanaTablaViajes.getComboBoxPrecioHasta().setModel(new DefaultComboBoxModel<String>(precioHasta));
+	}
+	
+	public void limpiarFiltros(ActionEvent lf){
+		this.llenarTablaViajes();
 	}
 	
 	/*----------------------------------Filtro Cliente------------------------------------*/
@@ -465,6 +513,26 @@ public class ControladorPasaje implements ActionListener{
 							"$ "+this.viajes_en_tabla.get(i).getPrecio()					
 			};
 		this.ventanaTablaViajes.getModelViajes().addRow(fila);
+		}		
+	}
+
+	private void llenarTablaViajes(List<ViajeDTO> viajes){
+		this.ventanaTablaViajes.getModelViajes().setRowCount(0); //Para vaciar la tabla
+		this.ventanaTablaViajes.getModelViajes().setColumnCount(0);
+		this.ventanaTablaViajes.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
+		
+		for (int i = 0; i < viajes.size(); i++){
+			Object[] fila = {viajes.get(i).getCiudadOrigen().getNombre(),
+					viajes.get(i).getCiudadDestino().getNombre(),
+					mapper.parseToString(viajes.get(i).getFechaSalida()),
+					mapper.parseToString(viajes.get(i).getFechaLlegada()),
+					viajes.get(i).getHoraSalida(),
+					viajes.get(i).getHorasEstimadas(),
+					viajes.get(i).getCapacidad(),
+					viajes.get(i).getTransporte().getNombre(),
+					"$ "+viajes.get(i).getPrecio()					
+			};
+			this.ventanaTablaViajes.getModelViajes().addRow(fila);
 		}		
 	}
 	
@@ -1108,16 +1176,49 @@ public class ControladorPasaje implements ActionListener{
 		}		
 	}
 	
+	protected String obtenerFecha(String string) {
+		String [] aux = string.split(" ");
+		String ret="";	
+		for(int i=0; i<aux.length; i++) {
+
+			if(i==5)	//año
+				ret= aux[5] + ret;
+			
+			if(i==2)
+				ret = ret + aux[2] ; //dia;
+			
+			if(i==1) {
+				if(aux[1].equals("Jan")) //mes
+					ret += "01";
+				if(aux[1].equals("Feb"))
+					ret += "02";
+				if(aux[1].equals("Mar"))
+					ret += "03";
+				if(aux[1].equals("Apr"))
+					ret += "04";
+				if(aux[1].equals("May"))
+					ret += "05";
+				if(aux[1].equals("Jun"))
+					ret += "06";
+				if(aux[1].equals("Jul"))
+					ret += "07";
+				if(aux[1].equals("Aug"))
+					ret += "08";
+				if(aux[1].equals("Sep"))
+					ret += "09";
+				if(aux[1].equals("Oct"))
+					ret += "10";
+				if(aux[1].equals("Nov"))
+					ret += "11";
+				if(aux[1].equals("Dec"))
+					ret += "12";
+			}
+		}	
+		return ret;
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 	}
-//	public static void main(String[] args) {
-//		ControladorPasaje c = new ControladorPasaje(new VentanaVisualizarClientes(), new Cliente(new DAOSQLFactory()), new AdministrativoDTO());
-//		BigDecimal valor = new BigDecimal (4500);
-//		int porcentajeDescuento = 45;
-//		System.out.println(c.calcularMontoDePasajeConDescuento(valor, porcentajeDescuento).toString()+" precio con DESCUENTO!");
-//		
-//	}
 }

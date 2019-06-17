@@ -15,4 +15,9 @@ public interface ViajeDAO {
 	public boolean update(ViajeDTO viaje_editar);
 
 	public ViajeDTO getViajeById(int idViaje);
+	
+	public List<ViajeDTO> obtenerBetween(String desde, String hasta);
+
+	public List<ViajeDTO> obtenerBetweenPrecio(Integer desde, Integer hasta);
+
 }
