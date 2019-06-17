@@ -1,6 +1,6 @@
-DROP DATABASE if exists `alplaneta`;
-CREATE DATABASE if not exists `alplaneta`;
-USE alplaneta;
+DROP DATABASE if exists `alplaneta_grupo3`;
+CREATE DATABASE if not exists `alplaneta_grupo3`;
+USE alplaneta_grupo3;
 
 CREATE TABLE `local` (
   `idLocal` int(11) NOT NULL AUTO_INCREMENT,
