@@ -1,12 +1,12 @@
 package persistencia.dao.interfaz;
 
-import modelo.ModeloEstadoEvento;
-
 public interface DAOAbstractFactory {
 	
 	public ClienteDAO createClienteDAO();
 	
 	public AdministradorDAO createAdministradorDAO();
+	
+	public ContadorDAO createContadorDAO();
 	
 	public AdministrativoDAO createAdministrativoDAO();
 	
@@ -53,5 +53,6 @@ public interface DAOAbstractFactory {
 	public PromocionDAO createPromocionDAO();
 	
 	public Viaje_PromocionDAO createViaje_PromocionDAO();
-//	public CoordinadorDAO createCoordinadorDAO();
+	
+	public LocalDAO createLocalDAO();
 }

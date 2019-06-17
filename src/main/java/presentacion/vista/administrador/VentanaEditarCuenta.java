@@ -34,6 +34,8 @@ public class VentanaEditarCuenta extends JFrame{
 	private JButton btnCancelar;
 	private static VentanaEditarCuenta INSTANCE;
 	private JPasswordField txtContrasena;
+	private JLabel lblDni;
+	private JTextField txtDni;
 	
 	public static VentanaEditarCuenta getInstance(){
 		if(INSTANCE == null)
@@ -53,61 +55,61 @@ public class VentanaEditarCuenta extends JFrame{
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-//		JLabel lblApellido = new JLabel("Apellido:");
-//		lblApellido.setBounds(90, 134, 74, 14);
-//		contentPane.add(lblApellido);
+		JLabel lblApellido = new JLabel("Apellido:");
+		lblApellido.setBounds(92, 99, 74, 14);
+		contentPane.add(lblApellido);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(92, 92, 87, 14);
+		lblNombre.setBounds(92, 75, 87, 14);
 		contentPane.add(lblNombre);
 		
 		JLabel lblUsuario = new JLabel("Usuario:");
-		lblUsuario.setBounds(92, 129, 74, 14);
+		lblUsuario.setBounds(92, 198, 74, 14);
 		contentPane.add(lblUsuario);
 		
 		JLabel lblContrasenia = new JLabel("Contraseña:");
-		lblContrasenia.setBounds(92, 165, 87, 14);
+		lblContrasenia.setBounds(92, 222, 87, 14);
 		contentPane.add(lblContrasenia);
 		
 		JLabel lblRol = new JLabel("Rol:");
-		lblRol.setBounds(92, 261, 74, 14);
+		lblRol.setBounds(92, 290, 74, 14);
 		contentPane.add(lblRol);
 		
 		txtNombre = new JTextField();
-		txtNombre.setBounds(189, 89, 122, 20);
+		txtNombre.setBounds(189, 73, 122, 20);
 		contentPane.add(txtNombre);
 		txtNombre.setColumns(10);
 		
 		comboBoxRoles = new JComboBox<RolDTO>();
-		comboBoxRoles.setBounds(189, 258, 122, 20);
+		comboBoxRoles.setBounds(189, 287, 122, 20);
 		contentPane.add(comboBoxRoles);
 		
-//		txtApellido = new JTextField();
-//		txtApellido.setBounds(189, 131, 122, 20);
-//		contentPane.add(txtApellido);
-//		txtApellido.setColumns(10);
+		txtApellido = new JTextField();
+		txtApellido.setBounds(189, 97, 122, 20);
+		contentPane.add(txtApellido);
+		txtApellido.setColumns(10);
 		
 		txtUsuario = new JTextField();
-		txtUsuario.setBounds(189, 127, 122, 20);
+		txtUsuario.setBounds(189, 196, 122, 20);
 		contentPane.add(txtUsuario);
 		txtUsuario.setColumns(10);
 
 		txtContrasena = new JPasswordField();
-		txtContrasena.setBounds(189, 163, 122, 19);
+		txtContrasena.setBounds(189, 220, 122, 19);
 		contentPane.add(txtContrasena);
 		
 		btnRegistrar = new JButton("Registrar");
 		btnRegistrar.setForeground(Color.WHITE);
 		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnRegistrar.setBackground(new Color(5, 196, 107));
-		btnRegistrar.setBounds(59, 321, 131, 42);
+		btnRegistrar.setBounds(58, 338, 131, 42);
 		contentPane.add(btnRegistrar);
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnCancelar.setBackground(new Color(192, 57, 43));
-		btnCancelar.setBounds(216, 321, 131, 42);
+		btnCancelar.setBounds(216, 338, 131, 42);
 		contentPane.add(btnCancelar);
 		
 		JPanel panelRegistrarEmpleado = new JPanel();
@@ -123,13 +125,22 @@ public class VentanaEditarCuenta extends JFrame{
 		panelRegistrarEmpleado.add(lblRegistrarEmpleado);
 		
 		txtMail = new JTextField();
-		txtMail.setBounds(189, 206, 122, 19);
+		txtMail.setBounds(189, 143, 122, 19);
 		contentPane.add(txtMail);
 		txtMail.setColumns(10);
 		
 		JLabel lblMail = new JLabel("Mail:");
-		lblMail.setBounds(92, 209, 46, 13);
+		lblMail.setBounds(92, 146, 46, 13);
 		contentPane.add(lblMail);
+		
+		lblDni = new JLabel("Dni:");
+		lblDni.setBounds(92, 123, 46, 13);
+		contentPane.add(lblDni);
+		
+		txtDni = new JTextField();
+		txtDni.setBounds(189, 120, 122, 19);
+		contentPane.add(txtDni);
+		txtDni.setColumns(10);
 		
 	}
 	
@@ -143,6 +154,14 @@ public class VentanaEditarCuenta extends JFrame{
 	
 	public JTextField getTxtNombre() {
 		return txtNombre;
+	}
+	
+	public JTextField getTxtApellido() {
+		return txtApellido;
+	}
+	
+	public JTextField getTxtDni() {
+		return txtDni;
 	}
 
 	public JTextField getTxtMail() {
@@ -168,6 +187,9 @@ public class VentanaEditarCuenta extends JFrame{
 	public void limpiarCampos() {
 		this.txtNombre.setText("");
 		this.txtUsuario.setText("");
+		this.txtDni.setText("");
+		this.txtMail.setText("");
+		this.txtApellido.setText("");
 		this.txtContrasena.setText("");
 	}
 }

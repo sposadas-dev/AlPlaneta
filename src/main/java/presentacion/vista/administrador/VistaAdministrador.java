@@ -25,6 +25,7 @@ public class VistaAdministrador extends JFrame {
 	private VentanaPanelGeneral panelGeneral;
 	private PanelFormaPago panelFormaPago;
 	private PanelEmpleados panelEmpleados;
+	private PanelLocales panelLocales;
 	
 	private JMenuItem itemAgregarCuenta;
 	private JMenuItem itemEditarCuenta;
@@ -51,7 +52,10 @@ public class VistaAdministrador extends JFrame {
 	private JMenuItem itemEliminarCiudad;
 	private JMenuItem itemEliminarProvincia;
 	
-	
+	private JMenuItem itemVisualizarLocales;
+	private JMenuItem itemAgregarLocal;
+	private JMenuItem itemEditarLocal;
+	private JMenuItem itemEliminarLocal;
 	JMenuItem itemBackup;
 	JMenuItem itemRestore;
 	
@@ -104,7 +108,7 @@ public class VistaAdministrador extends JFrame {
 		itemAgregarCuenta = new JMenuItem("Agregar cuenta");
 		itemAgregarCuenta.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuCuentas.add(itemAgregarCuenta);
-		
+
 		itemEditarCuenta = new JMenuItem("Editar Cuenta");
 		itemEditarCuenta.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuCuentas.add(itemEditarCuenta);
@@ -208,15 +212,82 @@ public class VistaAdministrador extends JFrame {
 		panelFormaPago.setLocation(0, 0);
 		getContentPane().add(panelFormaPago);
 		panelFormaPago.setVisible(false);
-
 		
 		JLabel labelMarcaDeAgua = new JLabel("");
 		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
 		labelMarcaDeAgua.setBounds(47, 0, 1313, 674);
 		getContentPane().add(labelMarcaDeAgua);
 		this.setVisible(false);
+		
+		//Locales
+		
+		JMenu menuLocales = new JMenu("Locales");
+		menuLocales.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		menuBar.add(menuLocales);
+		
+		itemVisualizarLocales = new JMenuItem("Visualizar locales");
+		itemVisualizarLocales.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuLocales.add(itemVisualizarLocales);
+		
+		itemAgregarLocal = new JMenuItem("Agregar local");
+		itemAgregarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuLocales.add(itemAgregarLocal);
+		
+//		itemEditarLocal = new JMenuItem("Editar local");
+//		itemEditarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+//		menuLocales.add(itemEditarLocal);
+//		
+//		itemEliminarLocal = new JMenuItem("Eliminar local");
+//		itemEliminarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+//		menuLocales.add(itemEliminarLocal);
+		
+		panelLocales = new PanelLocales();
+		panelLocales.getTablaLocales().setSize(1114, 900);
+		panelLocales.setSize(1352, 700);
+		panelLocales.setLocation(0, 0);
+		getContentPane().add(panelLocales);
+		panelLocales.setVisible(false);
 	}
 	
+	public PanelLocales getPanelLocales() {
+		return panelLocales;
+	}
+
+	public void setPanelLocales(PanelLocales panelLocales) {
+		this.panelLocales = panelLocales;
+	}
+
+	public JMenuItem getItemVisualizarLocales() {
+		return itemVisualizarLocales;
+	}
+
+	public void setItemVisualizarLocales(JMenuItem itemVisualizarLocales) {
+		this.itemVisualizarLocales = itemVisualizarLocales;
+	}
+
+	public JMenuItem getItemAgregarLocal() {
+		return itemAgregarLocal;
+	}
+
+	public void setItemAgregarLocal(JMenuItem itemAgregarLocal) {
+		this.itemAgregarLocal = itemAgregarLocal;
+	}
+
+	public JMenuItem getItemEditarLocal() {
+		return itemEditarLocal;
+	}
+
+	public void setItemEditarLocal(JMenuItem itemEditarLocal) {
+		this.itemEditarLocal = itemEditarLocal;
+	}
+
+	public JMenuItem getItemEliminarLocal() {
+		return itemEliminarLocal;
+	}
+
+	public void setItemEliminarLocal(JMenuItem itemEliminarLocal) {
+		this.itemEliminarLocal = itemEliminarLocal;
+	}
 	public JMenuItem getItemBackup() {
 		return itemBackup;
 	}

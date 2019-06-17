@@ -13,27 +13,29 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.eclipse.jdt.internal.compiler.ast.ThisReference;
-
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
-import dto.ClienteDTO;
+import dto.ContadorDTO;
 import dto.CoordinadorDTO;
 import dto.FormaPagoDTO;
+import dto.LocalDTO;
 import dto.LoginDTO;
 import dto.RolDTO;
 import dto.TransporteDTO;
 import modelo.Administrador;
 import modelo.Administrativo;
 import modelo.Cliente;
+import modelo.Contador;
 import modelo.Coordinador;
 import modelo.FormaPago;
+import modelo.Local;
 import modelo.Login;
 import modelo.Rol;
 import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.LoadingWorker;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
+import presentacion.vista.administrador.VentanaAgregarLocal;
 import presentacion.vista.administrador.VentanaEditarCuenta;
 import presentacion.vista.administrador.VistaAdministrador;
 
@@ -42,6 +44,7 @@ public class ControladorAdministrador {
 	private VistaAdministrador vistaAdministrador;
 	private VentanaAgregarEmpleado ventanaAgregarEmpleado;
 	private VentanaEditarCuenta ventanaEditarCuenta;
+	private VentanaAgregarLocal ventanaAgregarLocal;
 	private int filaSeleccionada;
 	
 	private List<TransporteDTO> transportes_en_tabla;
@@ -49,17 +52,19 @@ public class ControladorAdministrador {
 //	private List<AdministrativoDTO> administrativos_en_tabla;
 	private List<LoginDTO> logins_en_tabla;
 	private List<LoginDTO> logins_aux;
+	private List<LocalDTO> locales_en_tabla;
 	
 	private Administrador administrador;
 	private Administrativo administrativo;
 	private Cliente cliente;
 	private Coordinador coordinador;
-//	private Contador contador;
+	private Local local;
+	private Contador contador;
 	
 	private AdministradorDTO administradorEdit;
 	private AdministrativoDTO administrativoEdit;
 	private CoordinadorDTO coordinadorEdit;
-//	private ContadotDTO contadorEdit;
+	private ContadorDTO contadorEdit;
 	
 	private Transporte transporte;
 	private FormaPago formapago;
@@ -78,6 +83,7 @@ public class ControladorAdministrador {
 //INSTANCES		
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
 		this.ventanaEditarCuenta = VentanaEditarCuenta.getInstance();
+		this.ventanaAgregarLocal = VentanaAgregarLocal.getInstance();
 
 //MENU ITEMS		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
@@ -89,6 +95,11 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemVisualizarTransportes().addActionListener(vt->visualizarTransportes(vt));
 		this.vistaAdministrador.getItemEditarTransporte().addActionListener(et->editarTransporte(et));
 		this.vistaAdministrador.getItemEliminarTransporte().addActionListener(dt->eliminarTransporte(dt));
+
+		this.vistaAdministrador.getItemVisualizarLocales().addActionListener(vl->visualizarLocales(vl));
+		this.vistaAdministrador.getItemAgregarLocal().addActionListener(al->agregarPanelLocales(al));
+//		this.vistaAdministrador.getItemEditarLocal().addActionListener(el->editarLocal(el));
+//		this.vistaAdministrador.getItemEliminarLocal().addActionListener(dl->eliminarLocal(dl));
 
 //		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 		
@@ -120,6 +131,7 @@ public class ControladorAdministrador {
 			}
 		});
 //		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
+		this.ventanaAgregarLocal.getBtnAgregar().addActionListener(agl->agregarLocal(agl));
 		
 		this.ventanaEditarCuenta.getBtnRegistrar().addActionListener(ec->editarCuenta(ec));
 		this.ventanaEditarCuenta.getBtnCancelar().addActionListener(can->cancelarEditarCuenta(can));
@@ -133,11 +145,12 @@ public class ControladorAdministrador {
 		this.administrador = new Administrador(new DAOSQLFactory());
 		this.administrativo = new Administrativo(new DAOSQLFactory());
 		this.coordinador = new Coordinador(new DAOSQLFactory());
-//		this.contador = new Contador(new DAOSQLFactory());
+		this.contador = new Contador(new DAOSQLFactory());
 		
 		this.transporte = new Transporte(new DAOSQLFactory());
 		this.formapago = new FormaPago(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
+		this.local = new Local(new DAOSQLFactory());
 
 //CONTROLADORES		
 		this.controladorTransporte = new ControladorTransporte();
@@ -244,6 +257,14 @@ public class ControladorAdministrador {
 		llenarTablaEmpleados();
 	}
 
+	private void visualizarLocales(ActionEvent vl) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
+		this.llenarTablaLocales();
+	}
+	
 	private void mostrarVentanaEditarCuenta(ActionEvent mve) {
 		int filaSeleccionada = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
 		if (filaSeleccionada != -1){
@@ -297,6 +318,7 @@ public class ControladorAdministrador {
 	private void mostrarVentanaAgregarEmpleado(ActionEvent ac) {
 		this.vistaAdministrador.getPanelEmpleados().setVisible(true);
 		cargarcomboBoxRoles();
+		cargarComboBoxLocales();
 		this.ventanaAgregarEmpleado.limpiarCampos();
 		this.ventanaAgregarEmpleado.mostrarVentana(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
@@ -320,7 +342,10 @@ public class ControladorAdministrador {
 			
 			AdministradorDTO nuevoAdministrador = new AdministradorDTO(0,
 					ventanaAgregarEmpleado.getTxtNombre().getText(),
-					obtenerLoginDTO(),ventanaAgregarEmpleado.getTextMail().getText());
+					ventanaAgregarEmpleado.getTxtApellido().getText(),
+					ventanaAgregarEmpleado.getTxtDni().getText(),
+					obtenerLoginDTO(),ventanaAgregarEmpleado.getTextMail().getText(),
+					obtenerLocalDTO((String)ventanaAgregarEmpleado.getComboBoxLocales().getSelectedItem()));
 			
 			administrador.agregarAdministrador(nuevoAdministrador);
 			llenarTablaEmpleados();
@@ -338,8 +363,10 @@ public class ControladorAdministrador {
 			
 			AdministrativoDTO nuevoAdministrativo = new AdministrativoDTO(0,
 					ventanaAgregarEmpleado.getTxtNombre().getText(),
-					obtenerLoginDTO(),
-					ventanaAgregarEmpleado.getTextMail().getText());
+					ventanaAgregarEmpleado.getTxtApellido().getText(),
+					ventanaAgregarEmpleado.getTxtDni().getText(),
+					obtenerLoginDTO(),ventanaAgregarEmpleado.getTextMail().getText(),
+					obtenerLocalDTO((String)ventanaAgregarEmpleado.getComboBoxLocales().getSelectedItem()));
 			
 			Administrativo administrativo = new Administrativo(new DAOSQLFactory());
 			administrativo.agregarAdministrativo(nuevoAdministrativo);
@@ -358,35 +385,60 @@ public class ControladorAdministrador {
 			
 			CoordinadorDTO nuevoCoordinador = new CoordinadorDTO(0,
 					ventanaAgregarEmpleado.getTxtNombre().getText(),
-					obtenerLoginDTO(),
-					ventanaAgregarEmpleado.getTextMail().getText());
+					ventanaAgregarEmpleado.getTxtApellido().getText(),
+					ventanaAgregarEmpleado.getTxtDni().getText(),
+					obtenerLoginDTO(),ventanaAgregarEmpleado.getTextMail().getText(),
+					obtenerLocalDTO((String)ventanaAgregarEmpleado.getComboBoxLocales().getSelectedItem()));
 			
 			Coordinador coordinador = new Coordinador(new DAOSQLFactory());
 			coordinador.agregarCoordinador(nuevoCoordinador);
 			llenarTablaEmpleados();
 			this.ventanaAgregarEmpleado.mostrarVentana(false);
 		}
-		//TODO: Falta agregar el empleado Contador y Coordinador.
+
+		//TODO: Falta agregar el empleado Contador.
+		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("contador")){
+			LoginDTO nuevoLogin = new LoginDTO();
+			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
+			nuevoLogin.setContrasena(new String(ventanaAgregarEmpleado.getTxtContrasena().getPassword()));
+			nuevoLogin.setRol(new RolDTO(4,"contador"));
+			nuevoLogin.setEstado("activo");
+			
+			login.agregarLogin(nuevoLogin);
+			
+			ContadorDTO nuevoContador = new ContadorDTO(0,
+					ventanaAgregarEmpleado.getTxtNombre().getText(),
+					ventanaAgregarEmpleado.getTxtApellido().getText(),
+					ventanaAgregarEmpleado.getTxtDni().getText(),
+					obtenerLoginDTO(),ventanaAgregarEmpleado.getTextMail().getText(),
+					obtenerLocalDTO((String)ventanaAgregarEmpleado.getComboBoxLocales().getSelectedItem()));
+			
+			Contador contador = new Contador(new DAOSQLFactory());
+			contador.agregarContador(nuevoContador);
+			llenarTablaEmpleados();
+			this.ventanaAgregarEmpleado.mostrarVentana(false);
+		}
 	}
 		
 	public void editarCuenta(ActionEvent ec) {
 			String estado = "activo";
 			String rolNombre = this.ventanaEditarCuenta.getComboBoxRoles().getSelectedItem().toString();
 			int idLogin = this.logins_en_tabla.get(this.filaSeleccionada).getIdDatosLogin();
-			
+			LocalDTO localRespaldo = null;
 			//TODO: Necesario eliminar el empleado antes de insertarlo al nuevo.
 			if( administradorEdit != null ) {
+				localRespaldo = administradorEdit.getLocal();
 				administrador.eliminarAdministrador(administradorEdit.getIdAdministrador());
 			} else if ( administrativoEdit != null ) {
+				localRespaldo = administrativoEdit.getLocal();
 				administrativo.delete(administrativoEdit.getIdAdministrativo());
 			} else if ( coordinadorEdit != null ) {
+				localRespaldo = coordinadorEdit.getLocal();
 				coordinador.eliminarCoordinador(coordinadorEdit.getIdCoordinador());
-			} 
-//			else if ( contadorEdit != null) {
-//				contador.eliminarContador(contadorEdit.getIdContador());
-//				login.deleteLogin(idLogin);
-//				contadorEdit = null;
-//			}
+			} else if ( contadorEdit != null) {
+				localRespaldo = contadorEdit.getLocal();
+				contador.eliminarContador(contadorEdit.getIdContador());
+			}
 			
 			int idRol = 0;
 			switch(rolNombre) {
@@ -400,9 +452,12 @@ public class ControladorAdministrador {
 					this.login.editarLogin(login);
 
 					administradorEdit = new AdministradorDTO();
-					administradorEdit.setDatosLogin(login);
 					administradorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
+					administradorEdit.setApellido(this.ventanaEditarCuenta.getTxtApellido().getText());
+					administradorEdit.setDni(this.ventanaEditarCuenta.getTxtDni().getText());
+					administradorEdit.setDatosLogin(login);
 					administradorEdit.setMail(this.ventanaEditarCuenta.getTxtMail().getText());
+					administradorEdit.setLocal(localRespaldo);
 					this.administrador.agregarAdministrador(administradorEdit);
 					
 					break;
@@ -416,9 +471,12 @@ public class ControladorAdministrador {
 					this.login.editarLogin(login2);
 					
 					administrativoEdit = new AdministrativoDTO();
-					administrativoEdit.setDatosLogin(login2);
 					administrativoEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
+					administrativoEdit.setApellido(this.ventanaEditarCuenta.getTxtApellido().getText());
+					administrativoEdit.setDni(this.ventanaEditarCuenta.getTxtDni().getText());
+					administrativoEdit.setDatosLogin(login2);
 					administrativoEdit.setMail(this.ventanaEditarCuenta.getTxtMail().getText());
+					administrativoEdit.setLocal(localRespaldo);
 					this.administrativo.agregarAdministrativo(administrativoEdit);
 					
 					break;
@@ -432,27 +490,33 @@ public class ControladorAdministrador {
 					this.login.editarLogin(login3);
 					
 					coordinadorEdit = new CoordinadorDTO();
-					coordinadorEdit.setDatosLogin(login3);
 					coordinadorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
+					coordinadorEdit.setApellido(this.ventanaEditarCuenta.getTxtApellido().getText());
+					coordinadorEdit.setDni(this.ventanaEditarCuenta.getTxtDni().getText());
+					coordinadorEdit.setDatosLogin(login3);
 					coordinadorEdit.setMail(this.ventanaEditarCuenta.getTxtMail().getText());
+					coordinadorEdit.setLocal(localRespaldo);
 					this.coordinador.agregarCoordinador(coordinadorEdit);
 					
 					break;
 				case "contador":
 					idRol = 4;
-//					
-//					String usuarioLogin4 = this.ventanaEditarCuenta.getTxtUsuario().getText();
-//					String contrasenaLogin4 = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
-//					RolDTO rol4 = new RolDTO(idRol, rolNombre);
-//					LoginDTO login4 = new LoginDTO(idLogin, usuarioLogin4, contrasenaLogin4, rol4, estado);
-//					this.login.editarLogin(login4);
-//					
-//					contadorEdit = new ContadorDTO();
-//					contadorEdit.setDatosLogin(login4);
-//					contadorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
-//					contadorEdit.setMail(this.ventanaEditarCuenta.getTxtMail().getText());
-//					this.contador.agregarContador(contadorEdit);
-//					
+					
+					String usuarioLogin4 = this.ventanaEditarCuenta.getTxtUsuario().getText();
+					String contrasenaLogin4 = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
+					RolDTO rol4 = new RolDTO(idRol, rolNombre);
+					LoginDTO login4 = new LoginDTO(idLogin, usuarioLogin4, contrasenaLogin4, rol4, estado);
+					this.login.editarLogin(login4);
+					
+					contadorEdit = new ContadorDTO();
+					contadorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
+					contadorEdit.setApellido(this.ventanaEditarCuenta.getTxtApellido().getText());
+					contadorEdit.setDni(this.ventanaEditarCuenta.getTxtDni().getText());
+					contadorEdit.setDatosLogin(login4);
+					contadorEdit.setMail(this.ventanaEditarCuenta.getTxtMail().getText());
+					contadorEdit.setLocal(localRespaldo);
+					this.contador.agregarContador(contadorEdit);
+					
 					break;
 			}
 			llenarTablaEmpleados();
@@ -466,18 +530,25 @@ public class ControladorAdministrador {
 		
 		if( administradorEdit != null ) {
 			ventanaEditarCuenta.getTxtNombre().setText(administradorEdit.getNombre());
+			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(administradorEdit.getMail());
 		} else if ( administrativoEdit != null ) {
 			ventanaEditarCuenta.getTxtNombre().setText(administrativoEdit.getNombre());
+			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(administrativoEdit.getMail());
 		} else if ( coordinadorEdit != null ) {
 			ventanaEditarCuenta.getTxtNombre().setText(coordinadorEdit.getNombre());
+			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(coordinadorEdit.getMail());
-		} 
-//		else if ( contadorEdit != null) {
-//			ventanaEditarCuenta.getTxtNombre().setText(contadorEdit.getNombre());
-//			ventanaEditarCuenta.getTxtMail().setText(contadorEdit.getMail());
-//		}
+		} else if ( contadorEdit != null) {
+			ventanaEditarCuenta.getTxtNombre().setText(contadorEdit.getNombre());
+			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
+			ventanaEditarCuenta.getTxtMail().setText(contadorEdit.getMail());
+		}
 		ventanaEditarCuenta.getTxtUsuario().setText(this.logins_en_tabla.get(this.filaSeleccionada).getUsuario());
 		ventanaEditarCuenta.getTxtContrasena().setText(this.logins_en_tabla.get(this.filaSeleccionada).getContrasena());
 	}
@@ -490,7 +561,7 @@ public class ControladorAdministrador {
 		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("coordinador")) {
 			this.coordinadorEdit = coordinador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
 		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("contador")) {
-//			this.contadorEdit = contador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+			this.contadorEdit = contador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
 		}
 	}
 	
@@ -498,7 +569,7 @@ public class ControladorAdministrador {
 		this.administradorEdit = null;
 		this.administrativoEdit = null;
 		this.coordinadorEdit = null;
-//		this.contadorEdit = null;
+		this.contadorEdit = null;
 		
 		this.ventanaEditarCuenta.limpiarCampos();
 		this.ventanaEditarCuenta.mostrarVentana(false);
@@ -521,6 +592,10 @@ public class ControladorAdministrador {
 		return loginDTO;
 	}
 	
+	private LocalDTO obtenerLocalDTO(String nombreLocal) {
+		return this.local.obtenerLocal(nombreLocal);
+	}
+	
 	/*Carga del comboBox de roles*/
 	private void cargarcomboBoxRoles(){
 		ventanaAgregarEmpleado.getComboBoxRoles().removeAllItems();
@@ -533,6 +608,18 @@ public class ControladorAdministrador {
 		}
 		this.ventanaAgregarEmpleado.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
 		this.ventanaEditarCuenta.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
+	}
+	
+	private void cargarComboBoxLocales() {
+		ventanaAgregarEmpleado.getComboBoxLocales().removeAllItems();
+		Local local = new Local(new DAOSQLFactory());
+		List<LocalDTO> localesDTO = local.readAll();
+		String[] locales = new String[localesDTO.size()];
+		for(int i = 0; i < localesDTO.size(); i++) {
+			String rango = localesDTO.get(i).getNombreLocal();
+			locales[i] = rango;
+		}
+		this.ventanaAgregarEmpleado.getComboBoxLocales().setModel(new DefaultComboBoxModel(locales));
 	}
 	
 	private void cancelarAgregarCuentaEmpleado(ActionEvent c) {
@@ -580,6 +667,22 @@ public class ControladorAdministrador {
 		llenarTablaTransportes();
 	}
 
+	public void llenarTablaLocales() {
+		this.vistaAdministrador.getPanelLocales().getModelLocales().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelLocales().getModelLocales().setColumnCount(0);
+		this.vistaAdministrador.getPanelLocales().getModelLocales().setColumnIdentifiers(this.vistaAdministrador.getPanelLocales().getNombreColumnasLocales());
+		
+		this.locales_en_tabla = local.readAll();
+		
+		for (int i = 0; i < this.locales_en_tabla.size(); i++){
+			Object[] fila = {this.locales_en_tabla.get(i).getNombreLocal(),
+							 this.locales_en_tabla.get(i).getDireccionLocal()
+							};
+			this.vistaAdministrador.getPanelLocales().getModelLocales().addRow(fila);
+		}	
+		
+	}
+	
 	public void llenarTablaTransportes(){
 		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setRowCount(0); //Para vaciar la tabla
 		this.vistaAdministrador.getPanelTransporte().getModelTransportes().setColumnCount(0);
@@ -652,6 +755,7 @@ public class ControladorAdministrador {
 		controladorFormaPago.mostrarVentanaAgregarFormaPago();
 	}
 	
+	
 	private void editarFormaPago(ActionEvent efp) {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
 		int filaSeleccionada = this.vistaAdministrador.getPanelFormaPago().getTablaFormaPago().getSelectedRow();
@@ -693,5 +797,19 @@ public class ControladorAdministrador {
 			};
 			this.vistaAdministrador.getPanelFormaPago().getModelFormaPago().addRow(fila);
 		}		
+	}
+	private void agregarPanelLocales(ActionEvent al) {
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
+		this.ventanaAgregarLocal.mostrarVentana();
+	}
+	
+	public void agregarLocal(ActionEvent agl) {
+		LocalDTO nuevoLocal = new LocalDTO();
+		nuevoLocal.setNombreLocal(this.ventanaAgregarLocal.getTxtNombreLocal().getText());
+		nuevoLocal.setDireccionLocal(this.ventanaAgregarLocal.getTxtDireccionLocal().getText());
+		local.insert(nuevoLocal);
+		this.llenarTablaLocales();
+		this.ventanaAgregarLocal.limpiarCampos();
+		this.ventanaAgregarLocal.cerrarVentana();
 	}
 }

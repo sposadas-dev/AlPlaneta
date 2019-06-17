@@ -86,12 +86,6 @@ public class ControladorRegimenPuntos implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Ya existe un regimen de puntos actualmente", "Mensaje", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-			
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres agregar el Punto?", 
-			             "Agregar Punto", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		if (confirm == 0){		
 			RegimenPuntoDTO nuevoPunto = new RegimenPuntoDTO();
 			nuevoPunto.setPunto(Integer.parseInt(this.ventanaRegistroRegimenPuntos.getTxtCantPuntos().getText()));
 			nuevoPunto.setARS(Integer.parseInt(this.ventanaRegistroRegimenPuntos.getTextARS().getText()));
@@ -101,7 +95,6 @@ public class ControladorRegimenPuntos implements ActionListener {
 			this.ventanaRegistroRegimenPuntos.limpiarCampos();
 			this.ventanaRegistroRegimenPuntos.cerrarVentana();
 			
-		}
 	}
 	
 	private void cancelarVentanaRegistroRegimenPuntos(ActionEvent c) {
@@ -110,11 +103,6 @@ public class ControladorRegimenPuntos implements ActionListener {
 	}
 	
     public void ModificarRegimenPuntos(ActionEvent ac) { 
-		int confirm = JOptionPane.showOptionDialog(
-	            null,"¿Estás seguro que quieres editar el regimen puntos?", 
-			             "Editar puntos", JOptionPane.YES_NO_OPTION,
-			             JOptionPane.WARNING_MESSAGE, null, null, null);
-		if (confirm == 0){
 			this.modeloRegimenPunto.editarPunto(new RegimenPuntoDTO(
 												regimenPunto.getIdPunto(),
 												Integer.parseInt(this.ventanaModificarRegimenPuntos.getTxtCantPuntos().getText()),
@@ -125,7 +113,6 @@ public class ControladorRegimenPuntos implements ActionListener {
 			ventanaModificarRegimenPuntos.dispose(); 
 			this.regimenPunto = this.modeloRegimenPunto.obtenerUltimoRegistro();
 			mostrarVentanaRegimenPuntos();
-		}  
 	}  
 		
 	private void cancelarVentanaModificarRegimenPuntos(ActionEvent c) {
@@ -135,15 +122,9 @@ public class ControladorRegimenPuntos implements ActionListener {
 	
 	public void eliminarPunto(){
 		mostrarVentanaRegimenPuntos();
-		int confirm = JOptionPane.showOptionDialog(
-		            null,"¿Estás seguro que quieres eliminar el regimen de puntos?", 
-				             "Eliminar puntos", JOptionPane.YES_NO_OPTION,
-				             JOptionPane.ERROR_MESSAGE, null, null, null);
-	 if (confirm == 0){
 		this.modeloRegimenPunto.borrarPunto(regimenPunto);
 		this.ventanaMostrarRegimenPuntos.limpiarCampos();
 		this.ventanaMostrarRegimenPuntos.cerrarVentana();
-	 }
 	}
 	
 	@Override
