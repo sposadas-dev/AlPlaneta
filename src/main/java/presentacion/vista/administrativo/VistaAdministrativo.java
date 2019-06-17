@@ -20,7 +20,6 @@ import javax.swing.Box;
 public class VistaAdministrativo{
 	
 	private JFrame frame;
-	
 	private PanelCliente panelCliente;
 	private PanelPasaje panelPasaje;
 	private PanelEvento panelEvento;

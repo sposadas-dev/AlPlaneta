@@ -100,7 +100,6 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaVisualizarCliente = VentanaVisualizarClientes.getInstance();
 		this.ventanaRegistrarCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaEditarCliente = VentanaEditarCliente.getInstance();
-
 		this.ventanaVisualizarPasaje = VentanaVisualizarPasaje.getInstance();
 		
 		this.ventanaPromocion = VentanaRegistrarPromocion.getInstance();
@@ -547,7 +546,6 @@ public class ControladorAdministrativo implements ActionListener {
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
 
 	private void cancelarPasaje(ActionEvent cp) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);

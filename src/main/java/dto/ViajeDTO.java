@@ -10,6 +10,7 @@ public class ViajeDTO {
 	private ProvinciaDTO provinciaOrigen;
 	private ProvinciaDTO provinciaDestino;
 	private PaisDTO paisOrigen;
+	private String estado;
 	public ProvinciaDTO getProvinciaOrigen() {
 		return provinciaOrigen;
 	}
@@ -54,7 +55,7 @@ public class ViajeDTO {
 
 	public ViajeDTO(int idViaje, CiudadDTO ciudadOrigen, CiudadDTO ciudadDestino, ProvinciaDTO provinciaOrigen, 
 			ProvinciaDTO provinciaDestino, PaisDTO paisOrigen, PaisDTO paisDestino, Date fechaSalida, Date fechaLlegada,
-			String horaSalida, int horasEstimadas,TransporteDTO transporte,int capacidad, BigDecimal precio ) {
+			String horaSalida, int horasEstimadas,TransporteDTO transporte,int capacidad, BigDecimal precio, String estado ) {
 		super();
 		this.idViaje = idViaje;
 		this.ciudadOrigen = ciudadOrigen;
@@ -70,6 +71,7 @@ public class ViajeDTO {
 		this.transporte = transporte;
 		this.capacidad = capacidad;
 		this.precio = precio;
+		this.estado = estado;
 	}
 
 	public ViajeDTO() {
@@ -155,4 +157,14 @@ public class ViajeDTO {
 	public void setPrecio(BigDecimal precio) {
 		this.precio = precio;
 	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	
+	
 }

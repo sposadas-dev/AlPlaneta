@@ -16,7 +16,7 @@ import persistencia.dao.interfaz.ViajeDAO;
 
 public class ViajeDAOSQL implements ViajeDAO {
 
-	private static final String insert = "INSERT INTO viaje (idViaje, fechaSalida, fechaLlegada, precio, idCiudadOrigen, idCiudadDestino, idProvinciaOrigen, idProvinciaDestino, idPaisOrigen, idPaisDestino, horaSalida, idTransporte, horasEstimadas, capacidad) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private static final String insert = "INSERT INTO viaje (idViaje, fechaSalida, fechaLlegada, precio, idCiudadOrigen, idCiudadDestino, idProvinciaOrigen, idProvinciaDestino, idPaisOrigen, idPaisDestino, horaSalida, idTransporte, horasEstimadas, capacidad, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String delete = "DELETE FROM viaje WHERE idViaje = ?";
 	private static final String readall = "SELECT * FROM viaje";
 	private static final String update = "UPDATE viaje SET precio =?, capacidad = ? WHERE idViaje= ?;";
@@ -43,6 +43,7 @@ public class ViajeDAOSQL implements ViajeDAO {
 			statement.setInt(12, viaje.getTransporte().getIdTransporte());
 			statement.setInt(13, viaje.getHorasEstimadas());
 			statement.setInt(14, viaje.getCapacidad());
+			statement.setString(15, viaje.getEstado());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -100,7 +101,8 @@ public class ViajeDAOSQL implements ViajeDAO {
 									   resultSet.getInt("horasEstimadas"),
 				transporteDAOSQL.getTransporteById(resultSet.getInt("idTransporte")),
 										resultSet.getInt("capacidad"),
-									   resultSet.getBigDecimal("precio"))
+									   resultSet.getBigDecimal("precio"),
+									   resultSet.getString("estado"))
 										);
 				}
 			} 
@@ -165,7 +167,8 @@ public class ViajeDAOSQL implements ViajeDAO {
 											   resultSet.getInt("horasEstimadas"),
 						transporteDAOSQL.getTransporteById(resultSet.getInt("idTransporte")),
 												resultSet.getInt("capacidad"),
-											   resultSet.getBigDecimal("precio")
+											   resultSet.getBigDecimal("precio"),
+											   resultSet.getString("estado")
 												);
 				return viaje;
 			}
