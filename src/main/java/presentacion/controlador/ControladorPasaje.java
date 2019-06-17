@@ -104,7 +104,6 @@ public class ControladorPasaje implements ActionListener{
 	private Pasaje_Pasajeros modeloPasajes_pasajeros;
 	private ModeloPromocion modeloPromocion;
 	private ModeloViaje_Promocion viaje_promocion;
-	/*Fin de modelos*/
 	private Integer valorDelViajeEnPuntos;
 	private BigDecimal totalaPagar;
 	private BigDecimal precioOriginal;
@@ -379,7 +378,7 @@ public class ControladorPasaje implements ActionListener{
 		int filaSeleccionada = this.ventanaVisualizarClientes.getTablaClientes().getSelectedRow();
 		if (filaSeleccionada != -1){
 			this.ventanaVisualizarClientes.mostrarVentana(false);
-			clienteSeleccionado = clientes_en_tabla.get(filaSeleccionada);	
+			this.clienteSeleccionado = clientes_en_tabla.get(filaSeleccionada);	
 			this.ventanaTablaViajes.mostrarVentana(true);
 			llenarTablaViajes();
 		}else{
@@ -454,17 +453,20 @@ public class ControladorPasaje implements ActionListener{
 		this.viajes_en_tabla = modeloViaje.obtenerViajes();
 			
 		for (int i = 0; i < this.viajes_en_tabla.size(); i++){
-			Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
-							this.viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
-							mapper.parseToString(this.viajes_en_tabla.get(i).getFechaSalida()),
-							mapper.parseToString(this.viajes_en_tabla.get(i).getFechaLlegada()),
-							this.viajes_en_tabla.get(i).getHoraSalida(),
-							this.viajes_en_tabla.get(i).getHorasEstimadas(),
-							this.viajes_en_tabla.get(i).getCapacidad(),
-							this.viajes_en_tabla.get(i).getTransporte().getNombre(),
-							"$ "+this.viajes_en_tabla.get(i).getPrecio()					
-			};
-		this.ventanaTablaViajes.getModelViajes().addRow(fila);
+			if(this.viajes_en_tabla.get(i).getEstado().equals("activo")){
+				Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
+								this.viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
+								mapper.parseToString(this.viajes_en_tabla.get(i).getFechaSalida()),
+								mapper.parseToString(this.viajes_en_tabla.get(i).getFechaLlegada()),
+								this.viajes_en_tabla.get(i).getHoraSalida(),
+								this.viajes_en_tabla.get(i).getHorasEstimadas(),
+								this.viajes_en_tabla.get(i).getCapacidad(),
+								this.viajes_en_tabla.get(i).getTransporte().getNombre(),
+								"$ "+this.viajes_en_tabla.get(i).getPrecio()					
+				};
+			
+				this.ventanaTablaViajes.getModelViajes().addRow(fila);
+			}
 		}		
 	}
 	
