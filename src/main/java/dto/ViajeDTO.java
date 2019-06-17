@@ -11,6 +11,7 @@ public class ViajeDTO {
 	private ProvinciaDTO provinciaDestino;
 	private PaisDTO paisOrigen;
 	private String estado;
+	
 	public ProvinciaDTO getProvinciaOrigen() {
 		return provinciaOrigen;
 	}

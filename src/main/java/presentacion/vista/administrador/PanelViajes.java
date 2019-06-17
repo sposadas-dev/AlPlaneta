@@ -16,7 +16,7 @@ public class PanelViajes extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel modelViajes;
-	private  String[] nombreColumnasViajes = {"Origen","Destino","Fecha de salida","Fecha de llegada","Hora de salida","Horas estimadas","Capacidad","Transporte","Precio"};
+	private  String[] nombreColumnasViajes = {"Origen","Destino","Fecha de salida","Fecha de llegada","Hora de salida","Horas estimadas","Capacidad","Transporte","Precio","Estado"};
 	private JTable tablaViajes;
 	private JButton btnConfirmar;
 	private JLabel lblEmpleados;

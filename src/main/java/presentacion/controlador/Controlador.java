@@ -285,7 +285,6 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		this.ventanaCargarViaje.getComboBoxPaisOrigen().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisOrigen(e);}});
 		
-		
 		this.ventanaCargarViaje.getComboBoxPaisDestino().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisDestino(e);}});
 		
@@ -295,16 +294,28 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		this.ventanaCargarViaje.getComboBoxProvinciaDestino().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { obtenerCiudades_porProvinciaDestino(e);}});
 		
-		medioContacto = new MedioContacto(new DAOSQLFactory());
-		cliente = new Cliente(new DAOSQLFactory());
+		this.ventanaEditarViaje.getBtnEditarViaje().addActionListener(ed->accionEditarViaje(ed));
+		
+		this.medioContacto = new MedioContacto(new DAOSQLFactory());
+		
+		this.cliente = new Cliente(new DAOSQLFactory());
 	}
 
-	
+	private void accionEditarViaje(ActionEvent ed) {
+		this.viajeSeleccionado.setHoraSalida(this.ventanaEditarViaje.getComboBoxHorarioSalida().getSelectedItem().toString());
+		this.viajeSeleccionado.setEstado(this.ventanaEditarViaje.getComboBoxEstados().getSelectedItem().toString());
+		System.out.println("NUEVOS DATOS : "+this.viajeSeleccionado.getHoraSalida()+" "+this.viajeSeleccionado.getEstado());
+		
+		modeloViaje.editarViaje(viajeSeleccionado);
+		llenarViajesEnPanelViajes();
+		this.ventanaEditarViaje.setVisible(false);
+	}
+
 	private void agregarPais(ActionEvent agP) {
-	PaisDTO paisNuevo = new PaisDTO();
-	paisNuevo.setNombre(this.controladorAdministrador_ventanaAgregarPais.getTxtNombrePais().getText());
-	this.controladorAdministrador_modeloPais.agregarPais(paisNuevo);
-}
+		PaisDTO paisNuevo = new PaisDTO();
+		paisNuevo.setNombre(this.controladorAdministrador_ventanaAgregarPais.getTxtNombrePais().getText());
+		this.controladorAdministrador_modeloPais.agregarPais(paisNuevo);
+	}
 	/* - - - - - - - - - - - - - - - - - INICIALIZAR - - - - - - - - - - - - - - - - - - - -*/
 	
 /*< METODOS DE VIAJE > - - -   - - - - - - - - - - - - - - - - - - - - - - - - - - --  */
@@ -730,6 +741,7 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		}
 		return Integer.parseInt(ret);
 	}
+	
 	private void limpiarVentana() {
 		this.ventanaCargarViaje.getTextCapacidad().setText("");
 		this.ventanaCargarViaje.getTextHorasEstimadas().setText("");
@@ -963,11 +975,12 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 					viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
 					mapper.parseToString(viajes_en_tabla.get(i).getFechaSalida()),
 					mapper.parseToString(viajes_en_tabla.get(i).getFechaLlegada()),
-					viajes_en_tabla.get(i).getPrecio(),
 					viajes_en_tabla.get(i).getHoraSalida(),
+					viajes_en_tabla.get(i).getHorasEstimadas(),
 					viajes_en_tabla.get(i).getCapacidad(),
 					viajes_en_tabla.get(i).getTransporte().getNombre(),
-					viajes_en_tabla.get(i).getPrecio()
+					"$ "+viajes_en_tabla.get(i).getPrecio(),
+					viajes_en_tabla.get(i).getEstado()
 			};
 			this.panelViajes.getModelViajes().addRow(fila);
 		}
@@ -1304,7 +1317,7 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		this.ventanaEditarViaje.getDateChooserFechaOrigen().setEnabled(false);
 		
 		this.ventanaEditarViaje.getTextFechaDestino().setText(mapper.parseToString(this.viajeSeleccionado.getFechaLlegada()));
-		
+		this.ventanaEditarViaje.getComboBoxHorarioSalida().setSelectedItem(this.viajeSeleccionado.getHoraSalida());
 		this.ventanaEditarViaje.setVisible(true);
 	}
 }

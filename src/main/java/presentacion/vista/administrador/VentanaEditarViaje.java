@@ -41,7 +41,7 @@ public class VentanaEditarViaje extends JFrame {
 	private JComboBox<?> comboBoxProvinciaOrigen;
 	private JComboBox<?> comboBoxProvinciaDestino;
 	private JComboBox<?> comboBoxTransporte;
-
+	private JComboBox comboBoxEstados;
 	private DefaultTableModel modelViajes;
 	private  String[] nombreColumnas = {"Origen","Destino"};
 	
@@ -215,6 +215,16 @@ public class VentanaEditarViaje extends JFrame {
 		textFechaDestino.setBounds(601, 66, 153, 20);
 		contentPane.add(textFechaDestino);
 		
+		comboBoxEstados = new JComboBox();
+		comboBoxEstados.addItem("activo");
+		comboBoxEstados.addItem("inactivo");
+		comboBoxEstados.setBounds(379, 100, 74, 20);
+		contentPane.add(comboBoxEstados);
+		
+		JLabel lblEstado = new JLabel("Estado :");
+		lblEstado.setBounds(275, 103, 100, 20);
+		contentPane.add(lblEstado);
+		
 		inicializar();
 		this.setVisible(false);
 	}
@@ -222,6 +232,7 @@ public class VentanaEditarViaje extends JFrame {
 		return textHorasEstimadas;
 	}
 
+	
 	public void setTextHorasEstimadas(JTextField textHorasEstimadas) {
 		this.textHorasEstimadas = textHorasEstimadas;
 	}
@@ -265,7 +276,7 @@ public class VentanaEditarViaje extends JFrame {
 		
 	}
 
-	public JButton getBtnCrearViaje() {
+	public JButton getBtnEditarViaje() {
 		return btnEditarViaje;
 	}
 
@@ -376,6 +387,14 @@ public class VentanaEditarViaje extends JFrame {
 
 	public void setTextFechaDestino(JTextField textFechaDestino) {
 		this.textFechaDestino = textFechaDestino;
+	}
+	
+	public JComboBox<?> getComboBoxEstados() {
+		return comboBoxEstados;
+	}
+
+	public void setComboBoxEstados(JComboBox<?> comboBoxEstados) {
+		this.comboBoxEstados = comboBoxEstados;
 	}
 
 	public static void main(String[] args) {

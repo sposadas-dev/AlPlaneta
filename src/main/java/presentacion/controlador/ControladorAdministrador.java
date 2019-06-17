@@ -512,7 +512,7 @@ public class ControladorAdministrador {
 	}
 	
 	private void mostrarVentanaViaje(ActionEvent ac) { //METODO AGREGADO!!
-		this.controlador.llenarCiudadesEnCargaViajes();
+//	TODO:	this.controlador.llenarCiudadesEnCargaViajes();
 		this.controlador.mostrarVentanaCargarViaje();
 	}
 	
