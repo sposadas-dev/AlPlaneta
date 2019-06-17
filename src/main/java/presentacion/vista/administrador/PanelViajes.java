@@ -22,6 +22,7 @@ public class PanelViajes extends JPanel {
 	private JLabel lblEmpleados;
 	private JCheckBox activos;
 	private JCheckBox inactivos;
+	private JCheckBox checkBoxAll;
 
 	@SuppressWarnings("serial")
 	public PanelViajes() {
@@ -65,6 +66,10 @@ public class PanelViajes extends JPanel {
 		inactivos = new JCheckBox("Inactivos");
 		inactivos.setBounds(167, 5, 95, 21);
 		add(inactivos);
+		
+		checkBoxAll = new JCheckBox("Todos");
+		checkBoxAll.setBounds(261, 4, 95, 21);
+		add(checkBoxAll);
 	
 		btnConfirmar.setVisible(false);
 	
@@ -96,6 +101,14 @@ public class PanelViajes extends JPanel {
 
 	public JButton getBtnConfirmar() {
 		return btnConfirmar;
+	}
+
+	public JCheckBox getCheckBoxAll() {
+		return checkBoxAll;
+	}
+
+	public void setCheckBoxAll(JCheckBox checkBoxAll) {
+		this.checkBoxAll = checkBoxAll;
 	}
 
 	public Window getBtnAtras() {

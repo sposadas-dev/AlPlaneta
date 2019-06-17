@@ -527,7 +527,6 @@ public class ControladorAdministrador {
 	}
 		return loginDTO;
 	}
-	
 	/*Carga del comboBox de roles*/
 	private void cargarcomboBoxRoles(){
 		ventanaAgregarEmpleado.getComboBoxRoles().removeAllItems();
