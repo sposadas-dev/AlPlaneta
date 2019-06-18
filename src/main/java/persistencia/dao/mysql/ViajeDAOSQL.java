@@ -227,7 +227,9 @@ public class ViajeDAOSQL implements ViajeDAO {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return viajes;
+		System.out.println("FROM viaje WHERE fechaSalida BETWEEN "+desde+" AND "+hasta);
+		System.out.println("LEYO "+viajes.size()+"REGISTROS");
+		return viajes; 
 	}
 
 	public List<ViajeDTO> obtenerBetweenPrecio(Integer desde, Integer hasta) {

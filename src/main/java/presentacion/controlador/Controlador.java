@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
@@ -153,7 +155,7 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 	private DefaultTableModel dm;
 	private StringBuilder cad= new StringBuilder();
 	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyz";
-	
+	private DefaultTableModel tableModel;
 	private static Controlador INSTANCE;
 	
 	public static Controlador getInstance(){
@@ -213,7 +215,10 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		this.modeloPais = new ModeloPais(daoSqlFactory);
 		this.modeloTransporte = new Transporte(daoSqlFactory);
 		this.modeloViaje = new ModeloViaje(daoSqlFactory);
+		this.medioContacto = new MedioContacto(daoSqlFactory);
+		this.cliente = new Cliente(daoSqlFactory);
 		this.panelViajes = new PanelViajes();
+		
 		/*Fin de Modelos*/
 		
 		this.viajes_en_tabla = new ArrayList<ViajeDTO>();
@@ -221,8 +226,34 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		this.pasajerosEnEstaReserva = new ArrayList<PasajeroDTO>();
 		this.viajeSeleccionado = new ViajeDTO();
 		this.transporteSeleccionado = new TransporteDTO();
+		this.controladorAdministrador_ventanaAgregarPais.getBtnAgregar().addActionListener(agP->agregarPais(agP));
+		this.ventanaLogin.getBtnLogin().addActionListener(log->logearse(log));
+		this.ventanaReserva.getBtnIrViajes().addActionListener(iV->mostrarViajesDisponibles(iV));
+		this.ventanaReserva.getBtnRealizarPago().addActionListener(rP->realizarPago(rP));
+		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
+		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
+		this.ventanaCliente.getBtnCancelar().addActionListener(bc->salirVentanaCliente(bc));
+		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaViaje(aV));
+		this.ventanaEditarViaje.getBtnEditarViaje().addActionListener(ed->accionEditarViaje(ed));
+		this.ventanaAdministrador.getPanelViajes().getActivos().addActionListener(mv->mostrarViajesActivos(mv));
+		this.ventanaAdministrador.getPanelViajes().getInactivos().addActionListener(mv->mostrarViajesInactivos(mv));
+		this.ventanaAdministrador.getPanelViajes().getCheckBoxAll().addActionListener(mv->mostrarTodosLosViajes(mv));
 		
-		this.ventanaTablaViajes.getTxtFiltro().addKeyListener(new KeyAdapter(){            
+
+		this.ventanaCargarViaje.getComboBoxPaisOrigen().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisOrigen(e);}});
+		
+		this.ventanaCargarViaje.getComboBoxPaisDestino().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisDestino(e);}});
+		
+		this.ventanaCargarViaje.getComboBoxProvinciaOrigen().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { obtenerCiudades_porProvinciaOrigen(e);}});
+		
+		this.ventanaCargarViaje.getComboBoxProvinciaDestino().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { obtenerCiudades_porProvinciaDestino(e);}});
+//  - - - - - - - - - -  - - - -- - - - - - FILTROS - - -- -  - --  --  -- -
+		
+		this.ventanaAdministrador.getPanelViajes().getTxtFiltro().addKeyListener(new KeyAdapter(){            
 		    public void keyTyped(KeyEvent e){
 		            char letra = e.getKeyChar();
 		            dm = (DefaultTableModel) ventanaTablaViajes.getModelViajes();
@@ -241,19 +272,36 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		            }
 		    }
 		});
+
+// FILTRO CALENDAR DESDE
+		this.ventanaAdministrador.getPanelViajes().getFiltroDesde().addPropertyChangeListener( new PropertyChangeListener() {
+		    @Override
+		    public void propertyChange(PropertyChangeEvent e) {
+		    	String desde = obtenerFecha(e.getNewValue().toString());
+		    	if(ventanaAdministrador.getPanelViajes().getFiltroHasta().getDate() != null){
+		    		String hasta = obtenerFecha(ventanaAdministrador.getPanelViajes().getFiltroHasta().getDate().toString());
+		    		llenarViajesEnPanelViajes(modeloViaje.obtenerBetween(desde, hasta));
+		    	}
+		    }
+		});
 		
-		this.controladorAdministrador_ventanaAgregarPais.getBtnAgregar().addActionListener(agP->agregarPais(agP));
+// FILTRO CALENDAR HASTA		
+		this.ventanaAdministrador.getPanelViajes().getFiltroHasta().addPropertyChangeListener( new PropertyChangeListener() {
+		    @Override
+		    public void propertyChange(PropertyChangeEvent e) {
+		    	String hasta = obtenerFecha(e.getNewValue().toString());
+		    	if(ventanaAdministrador.getPanelViajes().getFiltroDesde().getDate() != null){
+		    		String desde = obtenerFecha(ventanaAdministrador.getPanelViajes().getFiltroDesde().getDate().toString());
+		    		llenarViajesEnPanelViajes(modeloViaje.obtenerBetween(desde, hasta));
+		    	}
+		    }});
 		
-		this.ventanaLogin.getBtnLogin().addActionListener(log->logearse(log));
-		
-		this.ventanaReserva.getBtnIrViajes().addActionListener(iV->mostrarViajesDisponibles(iV));
-		this.ventanaReserva.getBtnRealizarPago().addActionListener(rP->realizarPago(rP));
-		
-		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago->darAltaDelPago(pago));
-		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
-		this.ventanaCliente.getBtnCancelar().addActionListener(bc->salirVentanaCliente(bc));
-		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV->darAltaViaje(aV));
 	
+		
+		
+
+		
+		
 		this.ventanaCargarViaje.getTextCapacidad().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
@@ -263,6 +311,7 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 				}
 			}
 		});
+		
 		this.ventanaCargarViaje.getTextHorasEstimadas().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
@@ -272,7 +321,8 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 				}
 			}
 		});
-		this.ventanaCargarViaje.getTextPrecioViaje().addKeyListener(new KeyAdapter(){            
+	
+		this.ventanaAdministrador.getPanelViajes().getTxtFiltro().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
@@ -282,28 +332,7 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 			}
 		});
 		
-		//this.ventanaCargarViaje.getBtnOK().addActionListener(v->mostrarDatosViaje(v));
-		this.ventanaCargarViaje.getComboBoxPaisOrigen().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisOrigen(e);}});
 		
-		this.ventanaCargarViaje.getComboBoxPaisDestino().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { obtenerProvincias_porPaisDestino(e);}});
-		
-		this.ventanaCargarViaje.getComboBoxProvinciaOrigen().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { obtenerCiudades_porProvinciaOrigen(e);}});
-		
-		this.ventanaCargarViaje.getComboBoxProvinciaDestino().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { obtenerCiudades_porProvinciaDestino(e);}});
-		
-		this.ventanaEditarViaje.getBtnEditarViaje().addActionListener(ed->accionEditarViaje(ed));
-		this.ventanaAdministrador.getPanelViajes().getActivos().addActionListener(mv->mostrarViajesActivos(mv));
-		this.ventanaAdministrador.getPanelViajes().getInactivos().addActionListener(mv->mostrarViajesInactivos(mv));
-		this.ventanaAdministrador.getPanelViajes().getCheckBoxAll().addActionListener(mv->mostrarTodosLosViajes(mv));
-		//get panel viajes
-		
-		this.medioContacto = new MedioContacto(new DAOSQLFactory());
-		
-		this.cliente = new Cliente(new DAOSQLFactory());
 	}
 
 	private void mostrarTodosLosViajes(ActionEvent mv) {
@@ -1414,4 +1443,73 @@ private VentanaAgregarPais controladorAdministrador_ventanaAgregarPais;
 		this.ventanaEditarViaje.getComboBoxEstados().setSelectedItem(this.viajeSeleccionado.getEstado());
 		this.ventanaEditarViaje.setVisible(true);
 	}
+
+
+	protected String obtenerFecha(String string) {
+		String [] aux = string.split(" ");
+		String ret="";	
+		for(int i=0; i<aux.length; i++) {
+
+			if(i==5)	//año
+				ret= aux[5] + ret;
+			
+			if(i==2)
+				ret = ret + aux[2] ; //dia;
+			
+			if(i==1) {
+				if(aux[1].equals("Jan")) //mes
+					ret += "01";
+				if(aux[1].equals("Feb"))
+					ret += "02";
+				if(aux[1].equals("Mar"))
+					ret += "03";
+				if(aux[1].equals("Apr"))
+					ret += "04";
+				if(aux[1].equals("May"))
+					ret += "05";
+				if(aux[1].equals("Jun"))
+					ret += "06";
+				if(aux[1].equals("Jul"))
+					ret += "07";
+				if(aux[1].equals("Aug"))
+					ret += "08";
+				if(aux[1].equals("Sep"))
+					ret += "09";
+				if(aux[1].equals("Oct"))
+					ret += "10";
+				if(aux[1].equals("Nov"))
+					ret += "11";
+				if(aux[1].equals("Dec"))
+					ret += "12";
+			}
+		}	
+		return ret;
+	}
+	private void llenarViajesEnPanelViajes(List<ViajeDTO> obtenerBetween) {
+		this.ventanaAdministrador.getPanelViajes().getActivos().setSelected(false);
+		this.ventanaAdministrador.getPanelViajes().getInactivos().setSelected(false);
+		this.ventanaAdministrador.getPanelViajes().getCheckBoxAll().setSelected(true);
+		
+		this.panelViajes = this.ventanaAdministrador.getPanelViajes();
+		this.panelViajes.getModelViajes().setRowCount(0);
+		this.panelViajes.getModelViajes().setColumnCount(0);
+		this.panelViajes.getModelViajes().setColumnIdentifiers(this.panelViajes.getNombreColumnasViajes());
+		
+		for(int i=0; i< obtenerBetween.size();i++){
+			Object[] fila = { 
+					obtenerBetween.get(i).getCiudadOrigen().getNombre(),
+					obtenerBetween.get(i).getCiudadDestino().getNombre(),
+					mapper.parseToString(obtenerBetween.get(i).getFechaSalida()),
+					mapper.parseToString(obtenerBetween.get(i).getFechaLlegada()),
+					obtenerBetween.get(i).getHoraSalida(),
+					obtenerBetween.get(i).getHorasEstimadas(),
+					obtenerBetween.get(i).getCapacidad(),
+					obtenerBetween.get(i).getTransporte().getNombre(),
+					"$ "+obtenerBetween.get(i).getPrecio(),
+					obtenerBetween.get(i).getEstado()
+			};
+			this.panelViajes.getModelViajes().addRow(fila);
+		}
+	}
+
 }
