@@ -8,7 +8,9 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -16,6 +18,7 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import correo.EnvioDeCorreo;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EventoDTO;
@@ -42,12 +45,16 @@ import presentacion.vista.administrativo.VentanaTablaViajes;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import generatePDF.GeneratePDF;
 import recursos.Mapper;
 
 public class ControladorAdministrativo implements ActionListener {
 
 	private VistaAdministrativo vista;
+	private EnvioDeCorreo envioCorreo;		
 	private Mapper mapper;
+	private GeneratePDF pdf;
+	private Pasaje modeloPasaje;
 	private VentanaTablaViajes ventanaTablaViajes;
 	private VentanaRegistrarCliente ventanaCliente;
 	private VentanaRegistrarEvento ventanaEvento;
@@ -109,6 +116,10 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaPromocion = VentanaRegistrarPromocion.getInstance();
 		this.ventanaEditarPromocion = VentanaEditarPromocion.getInstance();
 		this.mapper = new Mapper();
+		this.pdf = new GeneratePDF();
+		this.envioCorreo = new EnvioDeCorreo();
+		this.modeloPasaje = new Pasaje(new DAOSQLFactory());
+		
 		this.vista.getItemRegistrarCliente().addActionListener(ac->mostrarVentanaAgregarCliente(ac));
 		this.vista.getItemVisualizarClientes().addActionListener(ac->agregarPanelClientes(ac));
 		this.vista.getItemEditarCliente().addActionListener(mve->mostrarVentanaEditarCliente(mve));
@@ -364,6 +375,7 @@ public class ControladorAdministrativo implements ActionListener {
         controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
         controladorDatosLogin = new ControladorDatosLogin();
 
+        //TODO: FIN DEL CONTROLADOR
 	}
 
 	private void llenarTablaViajes(List<ViajeDTO> viajes){
@@ -426,6 +438,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 		controladorEvento.controlarNotificacionesInicioSesion();
 		controladorEvento.controlarNotificacionesContinuo();
+		controlarAutomatizacionDelEnvioDeVoucher();
 	}
 	
 	private void agregarPanelClientes(ActionEvent ac) {
@@ -1084,4 +1097,29 @@ public class ControladorAdministrativo implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		
     }
+	private void generarVoucherMail(PasajeDTO pasaje,ClienteDTO cliente){			
+		this.pdf.createPDF(pasaje, cliente);//(pasaje,cliente); // se crea el pdf en resource				
+		this.envioCorreo.enviarAdjunto(cliente.getMail());				
+	}
+	
+	public void controlarAutomatizacionDelEnvioDeVoucher(){
+
+		Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+// TODO: CAMBIAR LA FECHA..		
+//		calendar.add(Calendar.DATE, -2); //el -2 indica que se le restaran 2 dias
+		
+		for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
+			
+			String fechaLimite = format.format(calendar.getTime());
+			String fechaDelViaje = mapper.parseToStringJavaUtil(p.getViaje().getFechaSalida());
+			
+			if(fechaLimite.equals(fechaDelViaje)){
+				generarVoucherMail(p, p.getCliente());
+			}
+	}
+		
+}
+
+	
 }

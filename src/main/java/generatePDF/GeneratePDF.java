@@ -44,10 +44,12 @@ public class GeneratePDF {
     	URL url = getClass().getResource("/recursos/AlPlanetaPDF.png");
     	String urlPDF = url.toString().substring(6);
     	urlPDF = urlPDF.substring(0, urlPDF.length()-16)+"PDF.pdf";
-    	System.out.println(urlPDF);
+//    	System.out.println(urlPDF);
 
-   
-    	File pdfNewFile2 = new File(urlPDF);
+    	String urlTemp = "C:\\Windows\\Temp\\PDF.pdf";
+//    	String urlTemp = "C:\\Users\\avmni\\Desktop\\PDF.pdf";
+    	
+    	File pdfNewFile2 = new File(urlTemp);
         try {
             Document document = new Document();
             try {

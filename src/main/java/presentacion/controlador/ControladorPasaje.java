@@ -319,7 +319,7 @@ public class ControladorPasaje implements ActionListener{
 		
 		this.editarPago = true;
 		this.modeloPunto = new ModeloPunto(new DAOSQLFactory());
-		controlarAutomatizacionDelEnvioDeVoucher();
+	
 	}
 	
 
@@ -897,7 +897,7 @@ public class ControladorPasaje implements ActionListener{
 			verificarSumaDePuntosDeCliente(pasajeDTO);
 			}
 		
-		generarVoucherMail(pasajeDTO,cliente);
+//		generarVoucherMail(pasajeDTO,cliente);
 		this.ventanaConfirmacionPasaje.setVisible(false);
 		this.pasajeros_en_reserva.clear();
 		this.llenarTablaDePasajeros();
@@ -1024,10 +1024,7 @@ public class ControladorPasaje implements ActionListener{
 		reporte.mostrar();
 	}
 	
-	private void generarVoucherMail(PasajeDTO pasaje,ClienteDTO cliente){			
-		this.pdf.createPDF(pasaje, cliente);//(pasaje,cliente); // se crea el pdf en resource				
-		this.envioCorreo.enviarAdjunto(cliente.getMail());				
-	}
+	
 	
 	private void reportePago(){
 		if(pagoDTO.getMonto().compareTo(new BigDecimal(0))!=0){
@@ -1108,7 +1105,6 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaTablaPagos.getBtnImprimirComprobante().setVisible(true);
 
 	}
-	
 
 	private void imprimirComprobante(ActionEvent i) {
 		int filaSeleccionada = this.ventanaTablaPagos.getTablaPagos().getSelectedRow();
@@ -1129,7 +1125,6 @@ public class ControladorPasaje implements ActionListener{
 		reporte.mostrar();
 	}
 
-	
 	public void eliminarPasaje(int filaSeleccionada){
 		int confirm = JOptionPane.showOptionDialog(
 		            null,"¿Estás seguro que quieres cancelar el pasaje?", 
@@ -1150,7 +1145,6 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaCancelacionPasaje.mostrarVentana(false);
 		this.llenarTablaPasajes();
 	}
-	
 	
 	
 	private void llenarTablaPasajes(){
@@ -1225,24 +1219,7 @@ public class ControladorPasaje implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 	}
-	public void controlarAutomatizacionDelEnvioDeVoucher(){
-		TimerTask timerTask = new TimerTask() {
-		    public void run() {
-				for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
-					
-					Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy 
-//					calendar.add(Calendar.DATE, -2); //el -3 indica que se le restaran 3 dias 
 
-					String fechaLimite = mapper.parseToStringJavaUtil(calendar.getTime());
-					String fechaDelViaje = mapper.parseToStringJavaUtil(p.getViaje().getFechaSalida());
-					if(fechaLimite.equals(fechaDelViaje))
-						generarVoucherMail(p, p.getCliente());
-				}
-			}
-		};
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(timerTask, 0, 1000);//1000=1 segundo
-	}
-
+	
 	
 }

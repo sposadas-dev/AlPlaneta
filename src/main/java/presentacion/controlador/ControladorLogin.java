@@ -11,11 +11,13 @@ import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
+import dto.ContadorDTO;
 import dto.CoordinadorDTO;
 import dto.LoginDTO;
 import modelo.Administrador;
 import modelo.Administrativo;
 import modelo.Cliente;
+import modelo.Contador;
 import modelo.Coordinador;
 import modelo.Login;
 import modelo.MedioContacto;
@@ -51,6 +53,8 @@ public class ControladorLogin {
 	private MedioContacto modeloMedioContacto;
 	private Administrativo modeloAdministrativo;
 	private Integer idMedioContactoBuscado;
+	private Coordinador modeloCoordinador;
+	private Contador modeloContador;
 
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
@@ -65,7 +69,9 @@ public class ControladorLogin {
 		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
 		this.modeloCliente = new Cliente(new DAOSQLFactory());
 		this.modeloAdministrador = new Administrador(new DAOSQLFactory());
-	
+		this.modeloCoordinador = new Coordinador(new DAOSQLFactory());
+		this.modeloContador = new Contador(new DAOSQLFactory());
+
 		this.modeloLogin = login;
 		this.usuarioLogueado = null;
 		this.administradorLogueado = null;
@@ -151,14 +157,19 @@ public class ControladorLogin {
 			return true;
 		}
 		
-		/*TODO:
-		CoordinadirDTO coordinador = modeloCoordinador.buscarPorEmail(mailDeRecuperacion);
+		CoordinadorDTO coordinador = modeloCoordinador.buscarPorEmail(mailDeRecuperacion);
 		if(coordinador!=null){
-			coordinador.getLogin().setContrasena(contrasenaProvisoria);
-			//TODO: modeloCoordinador.actualizar(coordinador)
+			coordinador.getDatosLogin().setContrasena(contrasenaProvisoria);
+			modeloLogin.editarLogin(coordinador.getDatosLogin());
 			return true;
 		}
-		*/
+		
+		ContadorDTO contador= modeloContador.buscarPorEmail(mailDeRecuperacion);
+		if(contador!=null){
+			contador.getDatosLogin().setContrasena(contrasenaProvisoria);
+			modeloLogin.editarLogin(contador.getDatosLogin());
+			return true;
+		}
 		
 		return false;
 	}
