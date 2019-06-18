@@ -84,8 +84,8 @@ public class EnvioDeCorreo {
 	 this.pdf = new GeneratePDF();
 	 
 	 
-//	 String pathAdjunto = "C:\\Users\\avmni\\Desktop\\PDF.pdf";
-	 String pathAdjunto = pdf.getUrlPDF(); 
+	 String pathAdjunto = "C:\\Windows\\Temp\\PDF.pdf";
+//	 String pathAdjunto = pdf.getUrlPDF(); 
 		try
      {
 		String emisor = "AlPlanetaProject";
@@ -130,7 +130,7 @@ public class EnvioDeCorreo {
          Transport t = session.getTransport("smtp");
          t.connect(emisor, claveCorreo);
          t.sendMessage(message, message.getAllRecipients());
-         System.out.println("Se envia el correo");
+         System.out.println("SE ENVIO EL VOUCHER AL CORREO :"+ correoDestino);
          t.close();
      }
      catch (Exception e)
@@ -140,8 +140,8 @@ public class EnvioDeCorreo {
 	}
  
  public static void main(String[] args) {
-  EnvioDeCorreo correoTexto = new EnvioDeCorreo();
-  correoTexto.enviarNuevaContrasena("AlPlanetaProject@gmail.com", "1234","nuevapas");
+//  EnvioDeCorreo correoTexto = new EnvioDeCorreo();
+//  correoTexto.enviarNuevaContrasena("AlPlanetaProject@gmail.com", "1234","nuevapas");
 //  correoTexto.enviarAdjunto("AlPlanetaProject@gmail.com");
   
  }

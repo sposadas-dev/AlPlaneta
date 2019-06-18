@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -1102,19 +1103,16 @@ public class ControladorAdministrativo implements ActionListener {
 	}
 	
 	public void controlarAutomatizacionDelEnvioDeVoucher(){
-		for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
-			
-			Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy 
-			calendar.add(Calendar.DATE, -2); //el -2 indica que se le restaran 2 dias 
 
-			String fechaLimite = mapper.parseToStringJavaUtil(calendar.getTime());
+		Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+//		calendar.add(Calendar.DATE, -2); //el -2 indica que se le restaran 2 dias
+		
+		for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
+			String fechaLimite = format.format(calendar.getTime());
 			String fechaDelViaje = mapper.parseToStringJavaUtil(p.getViaje().getFechaSalida());
 			
-			System.out.println("fecha limite "+fechaLimite);
-			System.out.println("fecha del viaje "+fechaDelViaje);
-			
 			if(fechaLimite.equals(fechaDelViaje)){
-				System.out.println("SE ENVIA EL VOUCHER");
 				generarVoucherMail(p, p.getCliente());
 			}
 	}
