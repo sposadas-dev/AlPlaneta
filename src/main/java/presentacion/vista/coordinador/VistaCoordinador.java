@@ -23,6 +23,8 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class VistaCoordinador extends JFrame {
 		
@@ -44,6 +46,9 @@ public class VistaCoordinador extends JFrame {
 	private JMenuItem itemListaEmpleados;
 	private JMenuItem itemPasajes;
 	private JMenuItem itemVentas;
+	private Component horizontalGlue;
+	private JMenu menuUsuarioLogueado;
+	private JMenuItem itemCambiarContrasenia;
 	
 	public static VistaCoordinador getInstance(){
 		if(vistaCoordinador== null){	
@@ -110,6 +115,17 @@ public class VistaCoordinador extends JFrame {
 		itemVentas.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuReportes.add(itemVentas);
 		
+		horizontalGlue = Box.createHorizontalGlue();
+		menuBar.add(horizontalGlue);
+		
+		menuUsuarioLogueado = new JMenu(" ");
+		menuUsuarioLogueado.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuBar.add(menuUsuarioLogueado);
+		
+		itemCambiarContrasenia = new JMenuItem("Cambiar contraseña");
+		itemCambiarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuUsuarioLogueado.add(itemCambiarContrasenia);
+		
 		panelRegimenPuntos = new PanelRegimenPuntos();
 		panelRegimenPuntos.getLblRegimenPuntos().setText("Regimen de puntos");
 		panelRegimenPuntos.getLblRegimenPuntos().setBounds(462, 11, 450, 65);
@@ -123,6 +139,14 @@ public class VistaCoordinador extends JFrame {
 //		this.setVisible(false);
 	}
 	
+
+	public JMenu getMenuUsuarioLogueado() {
+		return menuUsuarioLogueado;
+	}
+
+	public JMenuItem getItemCambiarContrasenia() {
+		return itemCambiarContrasenia;
+	}
 
 	public JMenuItem getItemPasajes() {
 		return itemPasajes;

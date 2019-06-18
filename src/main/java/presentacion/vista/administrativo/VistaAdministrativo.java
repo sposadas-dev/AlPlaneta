@@ -52,8 +52,7 @@ public class VistaAdministrativo{
 	private JMenuItem itemRestablecerContrasena;
 	private Component horizontalGlue;
 	private JMenu menuUsuarioLogueado;
-	private JMenuItem itemDatosPersonales;
-	private JMenuItem itemSalir;
+	private JMenuItem itemCambiarContrasenia;
 
 	public static VistaAdministrativo getInstance(){
 		if(vistaAdministrativo == null){	
@@ -197,13 +196,12 @@ public class VistaAdministrativo{
 		menuBar.add(horizontalGlue);
 		
 		menuUsuarioLogueado = new JMenu(" ");
+		menuUsuarioLogueado.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuBar.add(menuUsuarioLogueado);
 		
-		itemDatosPersonales = new JMenuItem("Mis datos");
-		menuUsuarioLogueado.add(itemDatosPersonales);
-		
-		itemSalir = new JMenuItem("Salir");
-		menuUsuarioLogueado.add(itemSalir);
+		itemCambiarContrasenia = new JMenuItem("Cambiar contraseña");
+		itemCambiarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuUsuarioLogueado.add(itemCambiarContrasenia);
 	
 		JLabel labelMarcaDeAgua = new JLabel("");
 		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
@@ -215,13 +213,11 @@ public class VistaAdministrativo{
 		return menuUsuarioLogueado;
 	}
 
-	public JMenuItem getItemDatosPersonales() {
-		return itemDatosPersonales;
+	public JMenuItem getItemCambiarContrasenia() {
+		return itemCambiarContrasenia;
 	}
 
-	public JMenuItem getItemSalir() {
-		return itemSalir;
-	}
+
 
 	public JFrame getFrame() {
 		return frame;

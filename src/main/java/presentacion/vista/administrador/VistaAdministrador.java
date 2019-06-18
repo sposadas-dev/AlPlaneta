@@ -16,6 +16,8 @@ import javax.swing.border.EmptyBorder;
 
 import persistencia.conexion.Conexion;
 import presentacion.vista.administrativo.VistaAdministrativo;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class VistaAdministrador extends JFrame {
 	
@@ -59,6 +61,9 @@ public class VistaAdministrador extends JFrame {
 	private static VistaAdministrador INSTANCE;
 	private JMenuItem itemEditarViaje;
 	private JMenuItem itemVisualizarViajes;
+	private Component horizontalGlue;
+	private JMenu menuUsuarioLogueado;
+	private JMenuItem itemCambiarContrasenia;
 	
 	public static VistaAdministrador getInstance(){
 		if(INSTANCE == null) {
@@ -252,6 +257,17 @@ public class VistaAdministrador extends JFrame {
 		itemAgregarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuLocales.add(itemAgregarLocal);
 		
+		horizontalGlue = Box.createHorizontalGlue();
+		menuBar.add(horizontalGlue);
+		
+		menuUsuarioLogueado = new JMenu(" ");
+		menuUsuarioLogueado.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuBar.add(menuUsuarioLogueado);
+		
+		itemCambiarContrasenia = new JMenuItem("Cambiar contraseña");
+		itemCambiarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuUsuarioLogueado.add(itemCambiarContrasenia);
+		
 //		itemEditarLocal = new JMenuItem("Editar local");
 //		itemEditarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 //		menuLocales.add(itemEditarLocal);
@@ -268,6 +284,14 @@ public class VistaAdministrador extends JFrame {
 		panelLocales.setVisible(false);
 	}
 	
+	public JMenu getMenuUsuarioLogueado() {
+		return menuUsuarioLogueado;
+	}
+
+	public JMenuItem getItemCambiarContrasenia() {
+		return itemCambiarContrasenia;
+	}
+
 	public PanelLocales getPanelLocales() {
 		return panelLocales;
 	}
