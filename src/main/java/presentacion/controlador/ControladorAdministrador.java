@@ -8,13 +8,16 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
+import dto.ClienteDTO;
 import dto.ContadorDTO;
 import dto.CoordinadorDTO;
 import dto.FormaPagoDTO;
@@ -50,6 +53,7 @@ public class ControladorAdministrador {
 	private VentanaEditarViaje ventanaEditarViaje;
 	private int filaSeleccionada;
 	private PanelEmpleados panel;
+	private EnvioDeCorreo enviodeCorreo;
 	
 	private List<TransporteDTO> transportes_en_tabla;
 	private List<FormaPagoDTO> fpago_en_tabla;
@@ -88,8 +92,9 @@ public class ControladorAdministrador {
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
 		this.ventanaEditarCuenta = VentanaEditarCuenta.getInstance();
 		this.ventanaAgregarLocal = VentanaAgregarLocal.getInstance();
-
 		this.ventanaEditarViaje = VentanaEditarViaje.getInstance();
+		this.enviodeCorreo = new EnvioDeCorreo();
+		
 //MENU ITEMS		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
 		this.vistaAdministrador.getItemEditarCuenta().addActionListener(mve->mostrarVentanaEditarCuenta(mve));
@@ -341,24 +346,43 @@ public class ControladorAdministrador {
 	//TERMINA METODO AGREGADO
 		/*Método para agregar a un empleado según el item que selecciona en el comboBox*/
 	private void agregarCuentaEmpleado(ActionEvent ac) {
+
+		if(existeUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText())){
+			JOptionPane.showMessageDialog(null, "El nombre de usuario ya esta en uso", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		if(mailExistente(ventanaAgregarEmpleado.getTextMail().getText())){
+			JOptionPane.showMessageDialog(null, "Ya existe un usuario con ese mail en nuestra base de datos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		if(dniExistente(ventanaAgregarEmpleado.getTxtDni().getText())){
+			JOptionPane.showMessageDialog(null, "Ya existe un usuario con ese dni en nuestra base de datos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+			
 		//TODO: VER
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("administrador")){
 			LoginDTO nuevoLogin = new LoginDTO();
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
-			nuevoLogin.setContrasena(new String(ventanaAgregarEmpleado.getTxtContrasena().getPassword()));
+			nuevoLogin.setContrasena(UUID.randomUUID().toString().toUpperCase().substring(0, 8));
 			nuevoLogin.setRol(new RolDTO(1,"administrador"));
 			nuevoLogin.setEstado("activo");
 			
 			login.agregarLogin(nuevoLogin);
-			
 			AdministradorDTO nuevoAdministrador = new AdministradorDTO(0,
 					ventanaAgregarEmpleado.getTxtNombre().getText(),
 					ventanaAgregarEmpleado.getTxtApellido().getText(),
 					ventanaAgregarEmpleado.getTxtDni().getText(),
-					obtenerLoginDTO(),ventanaAgregarEmpleado.getTextMail().getText(),
+					obtenerLoginDTO(),
+					ventanaAgregarEmpleado.getTextMail().getText(),
 					obtenerLocalDTO((String)ventanaAgregarEmpleado.getComboBoxLocales().getSelectedItem()));
 			
 			administrador.agregarAdministrador(nuevoAdministrador);
+			
+			enviodeCorreo.enviarDatosDeCuenta(nuevoAdministrador.getMail(), nuevoLogin.getContrasena(),nuevoLogin.getUsuario(),"Generacion de Usuario");
+			
 			llenarTablaEmpleados();
 			this.ventanaAgregarEmpleado.mostrarVentana(false);
 		}
@@ -366,7 +390,7 @@ public class ControladorAdministrador {
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("administrativo")){
 			LoginDTO nuevoLogin = new LoginDTO();
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
-			nuevoLogin.setContrasena(new String(ventanaAgregarEmpleado.getTxtContrasena().getPassword()));
+			nuevoLogin.setContrasena(UUID.randomUUID().toString().toUpperCase().substring(0, 8));
 			nuevoLogin.setRol(new RolDTO(2,"administrativo"));
 			nuevoLogin.setEstado("activo");
 
@@ -381,6 +405,9 @@ public class ControladorAdministrador {
 			
 			Administrativo administrativo = new Administrativo(new DAOSQLFactory());
 			administrativo.agregarAdministrativo(nuevoAdministrativo);
+			
+			enviodeCorreo.enviarDatosDeCuenta(nuevoAdministrativo.getMail(), nuevoLogin.getContrasena(),nuevoLogin.getUsuario(),"Generacion de Usuario");
+			
 			llenarTablaEmpleados();
 			this.ventanaAgregarEmpleado.mostrarVentana(false);
 		}
@@ -388,7 +415,7 @@ public class ControladorAdministrador {
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("coordinador")){
 			LoginDTO nuevoLogin = new LoginDTO();
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
-			nuevoLogin.setContrasena(new String(ventanaAgregarEmpleado.getTxtContrasena().getPassword()));
+			nuevoLogin.setContrasena(UUID.randomUUID().toString().toUpperCase().substring(0, 8));
 			nuevoLogin.setRol(new RolDTO(3,"coordinador"));
 			nuevoLogin.setEstado("activo");
 
@@ -403,6 +430,9 @@ public class ControladorAdministrador {
 			
 			Coordinador coordinador = new Coordinador(new DAOSQLFactory());
 			coordinador.agregarCoordinador(nuevoCoordinador);
+			
+			enviodeCorreo.enviarDatosDeCuenta(nuevoCoordinador.getMail(), nuevoLogin.getContrasena(),nuevoLogin.getUsuario(),"Generacion de Usuario");
+			
 			llenarTablaEmpleados();
 			this.ventanaAgregarEmpleado.mostrarVentana(false);
 		}
@@ -410,7 +440,7 @@ public class ControladorAdministrador {
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("contador")){
 			LoginDTO nuevoLogin = new LoginDTO();
 			nuevoLogin.setUsuario(ventanaAgregarEmpleado.getTxtUsuario().getText());
-			nuevoLogin.setContrasena(new String(ventanaAgregarEmpleado.getTxtContrasena().getPassword()));
+			nuevoLogin.setContrasena(UUID.randomUUID().toString().toUpperCase().substring(0, 8));
 			nuevoLogin.setRol(new RolDTO(4,"contador"));
 			nuevoLogin.setEstado("activo");
 			
@@ -425,6 +455,9 @@ public class ControladorAdministrador {
 			
 			Contador contador = new Contador(new DAOSQLFactory());
 			contador.agregarContador(nuevoContador);
+			
+			enviodeCorreo.enviarDatosDeCuenta(nuevoContador.getMail(), nuevoLogin.getContrasena(),nuevoLogin.getUsuario(),"Generacion de Usuario");
+			
 			llenarTablaEmpleados();
 			this.ventanaAgregarEmpleado.mostrarVentana(false);
 		}
@@ -595,13 +628,24 @@ public class ControladorAdministrador {
 		LoginDTO loginDTO = new LoginDTO();
 		List<LoginDTO> logins = login.obtenerLogin();
 		for(LoginDTO l: logins){
-			if(l.getUsuario().equals(this.ventanaAgregarEmpleado.getTxtUsuario().getText()) &&
-					l.getContrasena().equals(new String(this.ventanaAgregarEmpleado.getTxtContrasena().getPassword()))){
+			if(l.getUsuario().equals(this.ventanaAgregarEmpleado.getTxtUsuario().getText())){
 			loginDTO = l;
 		}
 	}
 		return loginDTO;
 	}
+	
+	private boolean existeUsuario(String usuario) {
+		boolean ret = false;
+		List<LoginDTO> logins = login.obtenerLogin();
+		for(LoginDTO l: logins){
+			if(l.getUsuario().equals(usuario)){
+			ret = true;
+		}
+	}
+		return ret;
+	}
+	
 	
 	private LocalDTO obtenerLocalDTO(String nombreLocal) {
 		return this.local.obtenerLocal(nombreLocal);
@@ -824,5 +868,63 @@ public class ControladorAdministrador {
 		this.llenarTablaLocales();
 		this.ventanaAgregarLocal.limpiarCampos();
 		this.ventanaAgregarLocal.cerrarVentana();
+	}
+	
+	private boolean mailExistente(String mail){
+		Administrador modeloAdministrador = new Administrador(new DAOSQLFactory());
+		for(AdministradorDTO administrador: modeloAdministrador.obtenerAdministradores())
+			if(administrador.getMail().equals(mail))
+				return true;
+		
+		Administrativo modeloAdministrativo = new Administrativo(new DAOSQLFactory());
+		for(AdministrativoDTO administrativo: modeloAdministrativo.obtenerAdministrativos())
+			if(administrativo.getMail().equals(mail))
+				return true;
+		
+		Cliente modeloCliente= new Cliente(new DAOSQLFactory());
+		for(ClienteDTO cliente: modeloCliente.obtenerClientes())
+			if(cliente.getMail().equals(mail))
+				return true;
+		
+		Contador modeloContador= new Contador(new DAOSQLFactory());
+		for(ContadorDTO contador: modeloContador.obtenerContadores())
+			if(contador.getMail().equals(mail))
+				return true;
+		
+		Coordinador modeloCoordinador= new Coordinador(new DAOSQLFactory());
+		for(CoordinadorDTO coordinador: modeloCoordinador.obtenerCoordinadores())
+			if(coordinador.getMail().equals(mail))
+				return true;
+		
+		return false;
+	}
+	
+	private boolean dniExistente(String dni){
+		Administrador modeloAdministrador = new Administrador(new DAOSQLFactory());
+		for(AdministradorDTO administrador: modeloAdministrador.obtenerAdministradores())
+			if(administrador.getDni().equals(dni))
+				return true;
+		
+		Administrativo modeloAdministrativo = new Administrativo(new DAOSQLFactory());
+		for(AdministrativoDTO administrativo: modeloAdministrativo.obtenerAdministrativos())
+			if(administrativo.getDni().equals(dni))
+				return true;
+		
+		Cliente modeloCliente= new Cliente(new DAOSQLFactory());
+		for(ClienteDTO cliente: modeloCliente.obtenerClientes())
+			if(cliente.getDni().equals(dni))
+				return true;
+		
+		Contador modeloContador= new Contador(new DAOSQLFactory());
+		for(ContadorDTO contador: modeloContador.obtenerContadores())
+			if(contador.getDni().equals(dni))
+				return true;
+		
+		Coordinador modeloCoordinador= new Coordinador(new DAOSQLFactory());
+		for(CoordinadorDTO coordinador: modeloCoordinador.obtenerCoordinadores())
+			if(coordinador.getDni().equals(dni))
+				return true;
+		
+		return false;
 	}
 }

@@ -31,7 +31,6 @@ public class VentanaAgregarEmpleado extends JFrame {
 
 	private static VentanaAgregarEmpleado INSTANCE;
 	private JTextField textMail;
-	private JPasswordField txtContrasena;
 	private JTextField txtDni;
 	
 	public static VentanaAgregarEmpleado getInstance(){
@@ -72,10 +71,6 @@ public class VentanaAgregarEmpleado extends JFrame {
 		lblUsuario.setBounds(90, 193, 74, 14);
 		contentPane.add(lblUsuario);
 		
-		JLabel lblContrasenia = new JLabel("Contraseña:");
-		lblContrasenia.setBounds(90, 217, 87, 14);
-		contentPane.add(lblContrasenia);
-		
 		JLabel lblRol = new JLabel("Rol:");
 		lblRol.setBounds(90, 287, 74, 14);
 		contentPane.add(lblRol);
@@ -98,10 +93,6 @@ public class VentanaAgregarEmpleado extends JFrame {
 		txtUsuario.setBounds(189, 191, 122, 20);
 		contentPane.add(txtUsuario);
 		txtUsuario.setColumns(10);
-		
-		txtContrasena = new JPasswordField();
-		txtContrasena.setBounds(189, 215, 122, 19);
-		contentPane.add(txtContrasena);
 		
 		btnRegistrar = new JButton("Registrar");
 		btnRegistrar.setForeground(Color.WHITE);
@@ -149,10 +140,6 @@ public class VentanaAgregarEmpleado extends JFrame {
 		txtDni.setColumns(10);
 	}
 	
-	public JPasswordField getTxtContrasena() {
-		return txtContrasena;
-	}
-	
 	public JTextField getTxtDni() {
 		return txtDni;
 	}
@@ -190,6 +177,5 @@ public class VentanaAgregarEmpleado extends JFrame {
 		this.txtApellido.setText("");
 		this.txtDni.setText("");
 		this.txtUsuario.setText("");
-		this.txtContrasena.setText("");
 	}
 }
