@@ -143,7 +143,6 @@ public class ViajeDAOSQL implements ViajeDAO {
 		return false;
 	}
 	
-
 	@Override
 	public ViajeDTO getViajeById(int idViaje ){
 		PreparedStatement statement;

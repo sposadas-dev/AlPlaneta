@@ -128,8 +128,7 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		this.ventanaEditarCliente.getBtnEditar().addActionListener(ec->editarCliente(ec));
 		
-		/* Filtros */
-		
+//TODO: ARREGLAR EL FILTRO 		
 		this.vista.getPanelCliente().getTxtFiltro().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 					char letra = e.getKeyChar();
@@ -567,7 +566,6 @@ public class ControladorAdministrativo implements ActionListener {
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}	
 	}
-
 	
 	private void verDatosDelEvento(int filaSeleccionada) {
 		controladorEvento.llenarComboEstados();
