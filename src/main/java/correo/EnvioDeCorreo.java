@@ -79,6 +79,63 @@ public class EnvioDeCorreo {
   }
  }
  
+ public void enviarDatosDeCuenta(String correoDestino, String nuevaContrasena, String usuario, String adjunto) {
+	  // El correo gmail de envío
+	  String correoEnvia = "AlPlanetaProject";
+	  String claveCorreo = "alplaneta123";
+	 
+	  // La configuración para enviar correo
+	  Properties properties = new Properties();
+	  properties.put("mail.smtp.host", "smtp.gmail.com");
+	  properties.put("mail.smtp.starttls.enable", "true");
+	  properties.put("mail.smtp.port", "587");
+	  properties.put("mail.smtp.auth", "true");
+	  properties.put("mail.user", correoEnvia);
+	  properties.put("mail.password", claveCorreo);
+	 
+	  // Obtener la sesion
+	  Session session = Session.getInstance(properties, null);
+	 
+	  try {
+	   // Crear el cuerpo del mensaje
+	   MimeMessage mimeMessage = new MimeMessage(session);
+	 
+	   // Agregar quien envía el correo
+	   mimeMessage.setFrom(new InternetAddress(correoEnvia, "Al Planeta"));
+	    
+	   // Los destinatarios
+	   InternetAddress[] internetAddresses = {
+	     new InternetAddress(correoDestino)};
+	 
+	   // Agregar los destinatarios al mensaje
+	   mimeMessage.setRecipients(Message.RecipientType.TO,
+	     internetAddresses);
+	 
+	   // Agregar el asunto al correo
+	   mimeMessage.setSubject(adjunto);
+	 
+	   // Creo la parte del mensaje
+	   MimeBodyPart mimeBodyPart = new MimeBodyPart();
+	   mimeBodyPart.setText("Su usuario es: "+usuario+", y cu contraseña es: "+nuevaContrasena);
+	 
+	   // Crear el multipart para agregar la parte del mensaje anterior
+	   Multipart multipart = new MimeMultipart();
+	   multipart.addBodyPart(mimeBodyPart);
+	 
+	   // Agregar el multipart al cuerpo del mensaje
+	   mimeMessage.setContent(multipart);
+	   
+	   // Enviar el mensaje
+	   Transport transport = session.getTransport("smtp");
+	   transport.connect(correoEnvia, claveCorreo);
+	   transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
+	   transport.close();
+	 
+	  } catch (Exception ex) {
+	   ex.printStackTrace();
+	  }
+	 }
+ 
  public void enviarAdjunto(String correoDestino){
 //TODO: cambiar la ruta en donde se encuentra el PDF, package= Recursos
 	 this.pdf = new GeneratePDF();

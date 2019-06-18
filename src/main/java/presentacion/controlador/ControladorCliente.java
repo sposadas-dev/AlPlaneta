@@ -161,7 +161,8 @@ public class ControladorCliente implements ActionListener{
 			this.ventanaRegistrarCliente.cerrarVentana();
 		
 		ClienteDTO clienteDTO = cliente.getByLoginId(loginProv.getIdDatosLogin());
-		enviodeCorreo.enviarNuevaContrasena(clienteDTO.getMail(), contrasenaProvisoria,"Generacion de Usuario");
+//		enviodeCorreo.enviarNuevaContrasena(clienteDTO.getMail(), contrasenaProvisoria,"Generacion de Usuario");
+		enviodeCorreo.enviarDatosDeCuenta(clienteDTO.getMail(), contrasenaProvisoria,clienteDTO.getNombre(),"Generacion de Usuario");
 		}else{
 			JOptionPane.showMessageDialog(null, "Verifique los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
