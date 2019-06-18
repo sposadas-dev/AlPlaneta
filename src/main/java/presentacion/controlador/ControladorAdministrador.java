@@ -40,6 +40,7 @@ import presentacion.vista.administrador.LoadingWorker;
 import presentacion.vista.administrador.PanelEmpleados;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
 import presentacion.vista.administrador.VentanaAgregarLocal;
+import presentacion.vista.administrador.VentanaCambiarContrasena;
 import presentacion.vista.administrador.VentanaEditarCuenta;
 import presentacion.vista.administrador.VentanaEditarViaje;
 import presentacion.vista.administrador.VistaAdministrador;
@@ -51,6 +52,7 @@ public class ControladorAdministrador {
 	private VentanaEditarCuenta ventanaEditarCuenta;
 	private VentanaAgregarLocal ventanaAgregarLocal;
 	private VentanaEditarViaje ventanaEditarViaje;
+	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	private int filaSeleccionada;
 	private PanelEmpleados panel;
 	private EnvioDeCorreo enviodeCorreo;
@@ -61,6 +63,8 @@ public class ControladorAdministrador {
 	private List<LoginDTO> logins_en_tabla;
 	private List<LoginDTO> logins_aux;
 	private List<LocalDTO> locales_en_tabla;
+	
+	private AdministradorDTO administradorLogueado;
 	
 	private Administrador administrador;
 	private Administrativo administrativo;
@@ -86,13 +90,14 @@ public class ControladorAdministrador {
 	private ControladorCiudad controladorCiudad;
 	private ControladorProvincia controladorProvincia;
 	
-	public ControladorAdministrador(VistaAdministrador vistaAdministrador){
+	public ControladorAdministrador(VistaAdministrador vistaAdministrador,AdministradorDTO administradorLogueado){
 		this.vistaAdministrador = vistaAdministrador;
 //INSTANCES		
 		this.ventanaAgregarEmpleado = VentanaAgregarEmpleado.getInstance();
 		this.ventanaEditarCuenta = VentanaEditarCuenta.getInstance();
 		this.ventanaAgregarLocal = VentanaAgregarLocal.getInstance();
 		this.ventanaEditarViaje = VentanaEditarViaje.getInstance();
+		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
 		this.enviodeCorreo = new EnvioDeCorreo();
 		
 //MENU ITEMS		
@@ -130,6 +135,11 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemVisualizarViajes().addActionListener(v->mostrarPanelDeViajes(v));
 		this.vistaAdministrador.getItemAgregarViaje().addActionListener(v->mostrarVentanaViaje(v));
 		this.vistaAdministrador.getItemEditarViaje().addActionListener(v->mostrarVentanaEditarViaje(v));
+		
+		this.vistaAdministrador.getItemCambiarContrasenia().addActionListener(dp->mostrarVentanaCambiarContrasenia(dp));
+		this.ventanaCambiarContrasenia.getBtnAceptar().addActionListener(c->cambiarContrasenia(c));
+		this.ventanaCambiarContrasenia.getBtnCancelar().addActionListener(c->salirVentanaCambiarContrasenia(c));
+
 		//		BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
 		this.ventanaAgregarEmpleado.getTxtNombre().addKeyListener(new KeyAdapter(){            
@@ -150,7 +160,6 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemBackup().addActionListener(b -> crearBackup(b));
 		this.vistaAdministrador.getItemRestore().addActionListener(r -> cargarRestore(r));
 
-
 		this.administrador = new Administrador(new DAOSQLFactory());
 		this.administrativo = new Administrativo(new DAOSQLFactory());
 		this.coordinador = new Coordinador(new DAOSQLFactory());
@@ -169,6 +178,8 @@ public class ControladorAdministrador {
 		this.controladorProvincia = ControladorProvincia.getInstance();
 		this.controladorCiudad = ControladorCiudad.getInstance();
 		this.controlador = Controlador.getInstance();
+		this.administradorLogueado = administradorLogueado;
+
 	}
 	
 	private void mostrarPanelDeViajes(ActionEvent v) {
@@ -240,7 +251,44 @@ public class ControladorAdministrador {
 		LoadingWorker work = new LoadingWorker(vistaAdministrador, "Por favor aguarde mientras se realiza la restauración de datos .", thread,"/recursos/loading.gif");
 		work.mostrar();
 	    inicializar();
+	}
 	
+	private void cambiarContrasenia(ActionEvent c) {
+		
+		String passwordActual = new String(this.ventanaCambiarContrasenia.getPassActual().getPassword());
+		String passwordConfirmacion1 = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
+		String passwordConfirmacion2 = new String(this.ventanaCambiarContrasenia.getConfirmacionContrasena().getPassword());
+		
+		System.out.println(passwordConfirmacion1+" "+passwordConfirmacion2);
+		
+		if(!passwordConfirmacion1.equals(passwordConfirmacion2)){
+			JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden ", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+		else if(!passwordActual.equals(administradorLogueado.getDatosLogin().getContrasena())){
+			JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}else{
+			LoginDTO loginDTO = new LoginDTO();
+			loginDTO.setIdDatosLogin(administradorLogueado.getDatosLogin().getIdDatosLogin());
+			loginDTO.setUsuario(administradorLogueado.getDatosLogin().getUsuario());
+			loginDTO.setRol(administradorLogueado.getDatosLogin().getRol());
+			loginDTO.setEstado(administradorLogueado.getDatosLogin().getEstado());
+		
+			String password = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
+			loginDTO.setContrasena(password);
+			this.login.editarLogin(loginDTO);
+			this.ventanaCambiarContrasenia.mostrarVentana(false);
+			this.ventanaCambiarContrasenia.limpiarCampos();
+			JOptionPane.showMessageDialog(null, "Contraseña actualizada", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	private void mostrarVentanaCambiarContrasenia(ActionEvent dp) {
+		this.ventanaCambiarContrasenia.limpiarCampos();
+		this.ventanaCambiarContrasenia.mostrarVentana(true);
+	}
+	
+	private void salirVentanaCambiarContrasenia(ActionEvent c) {
+		this.ventanaCambiarContrasenia.limpiarCampos();
+		this.ventanaCambiarContrasenia.mostrarVentana(false);;
 	}
 	
 	public void cargarInactivos(ActionEvent si) {
@@ -325,6 +373,7 @@ public class ControladorAdministrador {
 
 	public void inicializar(){
 		this.vistaAdministrador.mostrarVentana();
+		this.vistaAdministrador.getMenuUsuarioLogueado().setText(administradorLogueado.getNombre()+" "+administradorLogueado.getApellido());
 		this.llenarTablaTransportes();
 		this.llenarTablaFormaPago();
 		this.llenarTablaEmpleados();
@@ -789,7 +838,6 @@ public class ControladorAdministrador {
 		for (int i = 0; i < this.logins_en_tabla.size(); i++) {
 				Object[] fila = {
 						this.logins_en_tabla.get(i).getUsuario(),
-						this.logins_en_tabla.get(i).getContrasena(),
 						this.logins_en_tabla.get(i).getRol().getNombre(),
 						this.logins_en_tabla.get(i).getEstado()
 				};

@@ -23,12 +23,15 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class VistaContador extends JFrame {
 		
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
+	private JMenu menuUsuarioLogueado;
+	private JMenuItem itemCambiarContrasenia;
 	private static VistaContador vistaContador;
 	
 	public static VistaContador getInstance(){
@@ -77,6 +80,17 @@ public class VistaContador extends JFrame {
 		itemEgresosReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuReportes.add(itemEgresosReportes);
 		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		menuBarContador.add(horizontalGlue);
+		
+		menuUsuarioLogueado = new JMenu(" ");
+		menuUsuarioLogueado.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuBarContador.add(menuUsuarioLogueado);
+		
+		itemCambiarContrasenia = new JMenuItem("Cambiar contraseña");
+		itemCambiarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuUsuarioLogueado.add(itemCambiarContrasenia);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -100,4 +114,14 @@ public class VistaContador extends JFrame {
 		});
 		setVisible(true);
 	}
+
+	public JMenu getMenuUsuarioLogueado() {
+		return menuUsuarioLogueado;
+	}
+
+	public JMenuItem getItemCambiarContrasenia() {
+		return itemCambiarContrasenia;
+	}
+	
+	
 }

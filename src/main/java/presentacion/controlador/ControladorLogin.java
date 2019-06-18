@@ -77,7 +77,6 @@ public class ControladorLogin {
 	
 		this.modeloLogin = login;
 		this.usuarioLogueado = null;
-		this.administradorLogueado = null;
 		this.mailDeRecuperacion = null;
 		this.contrasenaProvisoria = null;
 		this.idMedioContactoBuscado = null;
@@ -263,7 +262,7 @@ public class ControladorLogin {
 		System.out.println("Se Loguea Como Administrador");
 //		System.out.println(administradorLogueado.getNombre());
 		this.ventanaLogin.setVisible(false);
-		ControladorAdministrador controladorAdministrador = new ControladorAdministrador(vistaAdministrador);
+		ControladorAdministrador controladorAdministrador = new ControladorAdministrador(vistaAdministrador,administradorLogueado);
 		controladorAdministrador.inicializar();
 	}
 		

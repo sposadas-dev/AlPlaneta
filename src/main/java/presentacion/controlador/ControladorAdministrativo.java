@@ -29,12 +29,14 @@ import dto.PromocionDTO;
 import dto.RolDTO;
 import dto.ViajeDTO;
 import modelo.Cliente;
+import modelo.Login;
 import modelo.ModeloEvento;
 import modelo.ModeloPromocion;
 import modelo.ModeloViaje;
 import modelo.ModeloViaje_Promocion;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.vista.administrativo.VentanaCambiarContrasena;
 import presentacion.vista.administrativo.VentanaEditarCliente;
 import presentacion.vista.administrativo.VentanaEditarEvento;
 import presentacion.vista.administrativo.VentanaEditarPromocion;
@@ -65,6 +67,7 @@ public class ControladorAdministrativo implements ActionListener {
 	private VentanaRegistrarCliente ventanaRegistrarCliente;
 	private VentanaEditarCliente ventanaEditarCliente;
 	private VentanaVisualizarPasaje ventanaVisualizarPasaje;
+	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	private AdministrativoDTO administrativoLogueado;
 	private List<ClienteDTO> clientes_en_tabla;
 	private List<PasajeDTO> pasajes_en_tabla;
@@ -82,6 +85,8 @@ public class ControladorAdministrativo implements ActionListener {
 	private ModeloViaje viaje;
 	private ModeloViaje_Promocion viaje_promocion;
 	private ControladorCliente controladorCliente;
+	
+	private Login login;
 	private int filaSeleccionada;
 	private ControladorEvento controladorEvento;
 	private ControladorPromocion controladorPromocion;
@@ -115,10 +120,12 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		this.ventanaPromocion = VentanaRegistrarPromocion.getInstance();
 		this.ventanaEditarPromocion = VentanaEditarPromocion.getInstance();
+		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
 		this.mapper = new Mapper();
 		this.pdf = new GeneratePDF();
 		this.envioCorreo = new EnvioDeCorreo();
 		this.modeloPasaje = new Pasaje(new DAOSQLFactory());
+		this.login = new Login(new DAOSQLFactory());
 		
 		this.vista.getItemRegistrarCliente().addActionListener(ac->mostrarVentanaAgregarCliente(ac));
 		this.vista.getItemVisualizarClientes().addActionListener(ac->agregarPanelClientes(ac));
@@ -132,12 +139,17 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getItemEditarPasaje().addActionListener(ep->mostrarVentanaEditarPasaje(ep));
 		this.vista.getItemCancelarPasaje().addActionListener(cp->cancelarPasaje(cp));
 		
+		this.vista.getItemCambiarContrasenia().addActionListener(dp->mostrarVentanaCambiarContrasenia(dp));
+		
 		this.vista.getPanelCliente().getActivos().addActionListener(sa->cargarActivos(sa));
 		this.vista.getPanelCliente().getInactivos().addActionListener(si->cargarInactivos(si));
 		this.vista.getPanelCliente().getBtnAgregar().addActionListener(a->mostrarVentanaAgregarCliente(a));
 		this.vista.getPanelCliente().getBtnEditar().addActionListener(a->mostrarVentanaEditarCliente(a));
 		
 		this.ventanaEditarCliente.getBtnEditar().addActionListener(ec->editarCliente(ec));
+		this.ventanaCambiarContrasenia.getBtnAceptar().addActionListener(c->cambiarContrasenia(c));
+		this.ventanaCambiarContrasenia.getBtnCancelar().addActionListener(c->salirVentanaCambiarContrasenia(c));
+		
 		
 //TODO: ARREGLAR EL FILTRO 		
 		this.vista.getPanelCliente().getTxtFiltro().addKeyListener(new KeyAdapter(){            
@@ -378,6 +390,44 @@ public class ControladorAdministrativo implements ActionListener {
         //TODO: FIN DEL CONTROLADOR
 	}
 
+	private void cambiarContrasenia(ActionEvent c) {
+		
+		String passwordActual = new String(this.ventanaCambiarContrasenia.getPassActual().getPassword());
+		String passwordConfirmacion1 = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
+		String passwordConfirmacion2 = new String(this.ventanaCambiarContrasenia.getConfirmacionContrasena().getPassword());
+		
+		System.out.println(passwordConfirmacion1+" "+passwordConfirmacion2);
+		
+		if(!passwordConfirmacion1.equals(passwordConfirmacion2)){
+			JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden ", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+		else if(!passwordActual.equals(administrativoLogueado.getDatosLogin().getContrasena())){
+			JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}else{
+			LoginDTO loginDTO = new LoginDTO();
+			loginDTO.setIdDatosLogin(administrativoLogueado.getDatosLogin().getIdDatosLogin());
+			loginDTO.setUsuario(administrativoLogueado.getDatosLogin().getUsuario());
+			loginDTO.setRol(administrativoLogueado.getDatosLogin().getRol());
+			loginDTO.setEstado(administrativoLogueado.getDatosLogin().getEstado());
+		
+			String password = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
+			loginDTO.setContrasena(password);
+			this.login.editarLogin(loginDTO);
+			this.ventanaCambiarContrasenia.mostrarVentana(false);
+			JOptionPane.showMessageDialog(null, "Contraseña actualizada", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	private void mostrarVentanaCambiarContrasenia(ActionEvent dp) {
+		this.ventanaCambiarContrasenia.limpiarCampos();
+		this.ventanaCambiarContrasenia.mostrarVentana(true);
+	}
+	
+	private void salirVentanaCambiarContrasenia(ActionEvent c) {
+		this.ventanaCambiarContrasenia.limpiarCampos();
+		this.ventanaCambiarContrasenia.mostrarVentana(false);;
+	}
+	
 	private void llenarTablaViajes(List<ViajeDTO> viajes){
 		this.ventanaTablaViajes.getModelViajes().setRowCount(0); //Para vaciar la tabla
 		this.ventanaTablaViajes.getModelViajes().setColumnCount(0);
@@ -433,7 +483,7 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	public void inicializar(){
 		this.vista.mostrarVentana();
-		this.vista.getMenuUsuarioLogueado().setText(""+ administrativoLogueado.getNombre());
+		this.vista.getMenuUsuarioLogueado().setText(""+ administrativoLogueado.getNombre()+" "+administrativoLogueado.getApellido());
 		this.llenarTablaClientes();
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 		controladorEvento.controlarNotificacionesInicioSesion();

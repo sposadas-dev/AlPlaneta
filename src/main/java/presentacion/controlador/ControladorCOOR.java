@@ -8,15 +8,18 @@ import javax.swing.JOptionPane;
 
 import dto.CoordinadorDTO;
 import dto.EstadoPasajeDTO;
+import dto.LoginDTO;
 import dto.PasajeDTO;
 import dto.RegimenPuntoDTO;
 import modelo.Administrativo;
 import modelo.Coordinador;
 import modelo.EstadoPasaje;
+import modelo.Login;
 import modelo.ModeloRegimenPunto;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.reportes.Reporte;
+import presentacion.vista.coordinador.VentanaCambiarContrasena;
 import presentacion.vista.coordinador.VentanaGenerarReporte;
 import presentacion.vista.coordinador.VistaCoordinador;
 
@@ -24,7 +27,9 @@ public class ControladorCOOR {
 	
 	private VistaCoordinador vistaCoordinador;
 	private VentanaGenerarReporte ventanaGenerarReporte;
+	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	private List<RegimenPuntoDTO> puntos_en_tabla;
+	private Login login;
 	
 	private CoordinadorDTO coordinadorLogueado;
 	private Coordinador coordinador;
@@ -38,6 +43,7 @@ public class ControladorCOOR {
 
 		this.vistaCoordinador = vistaCoordinador;
 		this.ventanaGenerarReporte = VentanaGenerarReporte.getInstance();
+		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
 
 //INSTANCES
 		
@@ -57,10 +63,16 @@ public class ControladorCOOR {
 		this.ventanaGenerarReporte.getBtnGenerarReportePasajes().addActionListener(gv->generarReportePasajes(gv));
 		this.ventanaGenerarReporte.getComboBoxFiltro().addActionListener(f->activarFiltroFechas(f));
 		
+		this.vistaCoordinador.getItemCambiarContrasenia().addActionListener(dp->mostrarVentanaCambiarContrasenia(dp));
+		
+		this.ventanaCambiarContrasenia.getBtnAceptar().addActionListener(c->cambiarContrasenia(c));
+		this.ventanaCambiarContrasenia.getBtnCancelar().addActionListener(c->salirVentanaCambiarContrasenia(c));
+
 		this.coordinador = new Coordinador(new DAOSQLFactory());
 		this.administrativo = new Administrativo(new DAOSQLFactory());
 		this.punto = new ModeloRegimenPunto(new DAOSQLFactory()); 
 		this.pasaje = new Pasaje(new DAOSQLFactory());
+		this.login = new Login(new DAOSQLFactory());
 		this.coordinadorLogueado = coordinadorLogueado;
 		
 //CONTROLADORES		
@@ -71,10 +83,47 @@ public class ControladorCOOR {
 
 	public void inicializar(){
 		this.vistaCoordinador.mostrarVentana();
+		this.vistaCoordinador.getMenuUsuarioLogueado().setText(coordinadorLogueado.getNombre()+" "+coordinadorLogueado.getApellido());
 		this.llenarTablaRegimenPuntos();
-		
 	}
 	
+	private void cambiarContrasenia(ActionEvent c) {
+		
+		String passwordActual = new String(this.ventanaCambiarContrasenia.getPassActual().getPassword());
+		String passwordConfirmacion1 = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
+		String passwordConfirmacion2 = new String(this.ventanaCambiarContrasenia.getConfirmacionContrasena().getPassword());
+		
+		System.out.println(passwordConfirmacion1+" "+passwordConfirmacion2);
+		
+		if(!passwordConfirmacion1.equals(passwordConfirmacion2)){
+			JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden ", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+		else if(!passwordActual.equals(coordinadorLogueado.getDatosLogin().getContrasena())){
+			JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}else{
+			LoginDTO loginDTO = new LoginDTO();
+			loginDTO.setIdDatosLogin(coordinadorLogueado.getDatosLogin().getIdDatosLogin());
+			loginDTO.setUsuario(coordinadorLogueado.getDatosLogin().getUsuario());
+			loginDTO.setRol(coordinadorLogueado.getDatosLogin().getRol());
+			loginDTO.setEstado(coordinadorLogueado.getDatosLogin().getEstado());
+		
+			String password = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
+			loginDTO.setContrasena(password);
+			this.login.editarLogin(loginDTO);
+			this.ventanaCambiarContrasenia.mostrarVentana(false);
+			this.ventanaCambiarContrasenia.limpiarCampos();
+			JOptionPane.showMessageDialog(null, "Contraseña actualizada", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	private void mostrarVentanaCambiarContrasenia(ActionEvent dp) {
+		this.ventanaCambiarContrasenia.limpiarCampos();
+		this.ventanaCambiarContrasenia.mostrarVentana(true);
+	}
+	
+	private void salirVentanaCambiarContrasenia(ActionEvent c) {
+		this.ventanaCambiarContrasenia.limpiarCampos();
+		this.ventanaCambiarContrasenia.mostrarVentana(false);;
+	}
 	//------------------------------REgimen Puntos-------------------------------------------------
 	
 	private void visualizarRegimenPuntos(ActionEvent vfp) {
