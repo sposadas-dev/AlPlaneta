@@ -143,7 +143,6 @@ public class ViajeDAOSQL implements ViajeDAO {
 		return false;
 	}
 	
-
 	@Override
 	public ViajeDTO getViajeById(int idViaje ){
 		PreparedStatement statement;
@@ -227,7 +226,7 @@ public class ViajeDAOSQL implements ViajeDAO {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return viajes;
+		return viajes; 
 	}
 
 	public List<ViajeDTO> obtenerBetweenPrecio(Integer desde, Integer hasta) {

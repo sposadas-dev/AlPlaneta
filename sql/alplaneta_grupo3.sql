@@ -322,7 +322,7 @@ INSERT INTO provincia VALUES (1,3,'Azerbaijan'),(2,3,'Nargorni Karabakh'),(3,3,'
 INSERT INTO ciudad VALUES (1,1834,'Cafayate'),(2,1818,'Buenos Aires'),(3,1818,'La Plata'),(4,1822,'Córdoba'),(5,1838,'Rosario'),(6,1831,'Posadas'),(7,1825,'Parana'),(8,1836,'Villa Mercedes');
 
 INSERT INTO cliente VALUES (1,'Seba','Apellido','36584266','1996-05-08',1,4,'posadas.sca@gmail.com'),(2,'Nico','Avila','32125322','1995-04-12',2,5,'alplanetaproject@gmail.com');
-INSERT INTO formapago VALUES (1,'Efectivo'),(2,'Tarjeta');
+INSERT INTO formapago VALUES (1,'Efectivo'),(2,'Tarjeta'),(3,'Puntos');
 INSERT INTO estadospasaje VALUES (1,'Vendido','Se abono el total del pasaje'),(2,'Reservado','Se abono un porcentaje del pasaje'),(3,'Pendiente','No se registro pago'),(4,'Cancelado','Se cancelo el pasaje');
 INSERT INTO horario VALUES (1,'1:00'),(2,'2:00'),(3,'3:00'),(4,'4:00'),(5,'5:00'),(6,'6:00'),(7,'7:00'),(8,'8:00'),(9,'9:00'),(10,'10:00'),(11,'11:00'),(12,'12:00');
 INSERT INTO transporte VALUES (1,'Avion'),(2,'Micro'),(3,'Buquebus');
