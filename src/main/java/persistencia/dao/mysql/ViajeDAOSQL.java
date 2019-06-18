@@ -226,8 +226,6 @@ public class ViajeDAOSQL implements ViajeDAO {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("FROM viaje WHERE fechaSalida BETWEEN "+desde+" AND "+hasta);
-		System.out.println("LEYO "+viajes.size()+"REGISTROS");
 		return viajes; 
 	}
 
