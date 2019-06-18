@@ -360,7 +360,6 @@ public class ControladorAdministrador {
 			JOptionPane.showMessageDialog(null, "Ya existe un usuario con ese dni en nuestra base de datos", "Mensaje", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		
 			
 		//TODO: VER
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("administrador")){
