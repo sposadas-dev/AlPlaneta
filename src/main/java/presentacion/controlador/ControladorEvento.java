@@ -61,11 +61,8 @@ public class ControladorEvento {
 	private EstadoEventoDTO estado; 	
 	private String motivoReprogramacion;
 	private EventoDTO eventoRegistrado;
-
 	private EventoDTO eventoAsociado;
-
 	private Mapper mapper;
-	
 
 	public ControladorEvento(VentanaRegistrarEvento ventanaEvento, ModeloEvento evento, AdministrativoDTO administrativoLogueado, List<EventoDTO> eventos_en_tabla){
 		//DATOS EVENTO:
@@ -111,7 +108,6 @@ public class ControladorEvento {
 		
 		this.administrativoLogueado= administrativoLogueado;		
 	}
-
 
 	public void iniciar(){
 		llenarComboEstados();
