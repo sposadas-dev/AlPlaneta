@@ -39,7 +39,8 @@ public class ControladorLogin {
 	private VistaAdministrativo vistaAdministrativo;
 	private VistaCoordinador vistaCoordinador;
 	private VistaContador vistaContador;
-	
+	private Coordinador modeloCoordinador;
+	private Contador modeloContador;
 	private VistaCliente vistaCliente;
 	private Login modeloLogin;
 	private LoginDTO usuarioLogueado;
@@ -71,6 +72,8 @@ public class ControladorLogin {
 		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
 		this.modeloCliente = new Cliente(new DAOSQLFactory());
 		this.modeloAdministrador = new Administrador(new DAOSQLFactory());
+		this.modeloCoordinador = new Coordinador(new DAOSQLFactory());
+		this.modeloContador = new Contador(new DAOSQLFactory());
 	
 		this.modeloLogin = login;
 		this.usuarioLogueado = null;
@@ -157,14 +160,19 @@ public class ControladorLogin {
 			return true;
 		}
 		
-		/*TODO:
-		CoordinadirDTO coordinador = modeloCoordinador.buscarPorEmail(mailDeRecuperacion);
+		CoordinadorDTO coordinador = modeloCoordinador.buscarPorEmail(mailDeRecuperacion);
 		if(coordinador!=null){
-			coordinador.getLogin().setContrasena(contrasenaProvisoria);
-			//TODO: modeloCoordinador.actualizar(coordinador)
+			coordinador.getDatosLogin().setContrasena(contrasenaProvisoria);
+			modeloLogin.editarLogin(coordinador.getDatosLogin());
 			return true;
 		}
-		*/
+		
+		ContadorDTO contador= modeloContador.buscarPorEmail(mailDeRecuperacion);
+		if(contador!=null){
+			contador.getDatosLogin().setContrasena(contrasenaProvisoria);
+			modeloLogin.editarLogin(contador.getDatosLogin());
+			return true;
+		}
 		
 		return false;
 	}
