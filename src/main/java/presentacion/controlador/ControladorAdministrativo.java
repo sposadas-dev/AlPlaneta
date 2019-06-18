@@ -1106,9 +1106,11 @@ public class ControladorAdministrativo implements ActionListener {
 
 		Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+// TODO: CAMBIAR LA FECHA..		
 //		calendar.add(Calendar.DATE, -2); //el -2 indica que se le restaran 2 dias
 		
 		for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
+			
 			String fechaLimite = format.format(calendar.getTime());
 			String fechaDelViaje = mapper.parseToStringJavaUtil(p.getViaje().getFechaSalida());
 			
