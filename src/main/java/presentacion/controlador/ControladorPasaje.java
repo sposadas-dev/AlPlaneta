@@ -22,8 +22,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import correo.EnvioDeCorreo;
+import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
+import dto.ContadorDTO;
+import dto.CoordinadorDTO;
 import dto.EstadoPasajeDTO;
 import dto.EventoDTO;
 import dto.FormaPagoDTO;
@@ -38,7 +41,11 @@ import dto.RegimenPuntoDTO;
 import dto.ViajeDTO;
 import dto.Viaje_PromocionDTO;
 import generatePDF.GeneratePDF;
+import modelo.Administrador;
+import modelo.Administrativo;
 import modelo.Cliente;
+import modelo.Contador;
+import modelo.Coordinador;
 import modelo.EstadoPasaje;
 import modelo.FormaPago;
 import modelo.ModeloPromocion;
@@ -604,10 +611,18 @@ public class ControladorPasaje implements ActionListener{
 
 	/*Cargamos los datos del pasajero*/
 	private void cargarDatosPasajero(ActionEvent cd) {
+		System.out.println("cargamos datos");
+		
 		if(validarCamposRegistrarPasajero()){
 		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
 		java.util.Date dateFechaNacimiento = ventanaPasajero.getDateFechaNacimiento().getDate();
 		java.sql.Date fechaNacimiento = new java.sql.Date(dateFechaNacimiento.getTime());
+		
+		if(dniExistente(ventanaPasajero.getTxtDni().getText(),ventanaPasajero.getTxtNombre().getText(),
+				ventanaPasajero.getTxtApellido().getText(),mapper.parseToString(fechaNacimiento))){
+			JOptionPane.showMessageDialog(null, "Los datos ingresados no coinciden con un pasajero registrado con ese DNI", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		
 		PasajeroDTO nuevoPasajero = new PasajeroDTO(0,
 				ventanaPasajero.getTxtNombre().getText(),
@@ -1282,7 +1297,30 @@ public class ControladorPasaje implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 	}
-
 	
+	private boolean dniExistente(String dni, String nombre, String apellido, String fechaNacimiento){
+		Pasajero modeloPasajero= new Pasajero(new DAOSQLFactory());
+		for(PasajeroDTO pasajero: modeloPasajero.obtenerPasajeros()){
+			
+			if(pasajero.getDni().equals(dni)){
+				
+				System.out.println("Pasajero: "+pasajero.getNombre()+" "+pasajero.getNombre().length());
+				System.out.println("Tabla pa: "+nombre+" "+nombre.length());
+				if(!pasajero.getNombre().equals(nombre)){
+					System.out.println("nombres distintos");
+					return true;}
+				
+				if(!pasajero.getApellido().equals(apellido)){
+					System.out.println("apellidos distintos");
+					return true;}
+
+				if(!mapper.parseToString(pasajero.getFechaNacimiento()).equals(fechaNacimiento)){
+					System.out.println("nacimiento distintos");
+					return true;}
+						
+			}
+		}
+		return false;
+	}
 	
 }

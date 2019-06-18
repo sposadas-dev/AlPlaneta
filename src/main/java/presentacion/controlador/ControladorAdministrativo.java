@@ -1097,9 +1097,12 @@ public class ControladorAdministrativo implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		
     }
-	private void generarVoucherMail(PasajeDTO pasaje,ClienteDTO cliente){			
-		this.pdf.createPDF(pasaje, cliente);//(pasaje,cliente); // se crea el pdf en resource				
-		this.envioCorreo.enviarAdjunto(cliente.getMail());				
+	private void generarVoucherMail(PasajeDTO pasaje,ClienteDTO cliente){		
+		GeneratePDF pdf = new GeneratePDF();
+		pdf.createPDF(pasaje, cliente);//(pasaje,cliente); // se crea el pdf en resource	
+	
+		EnvioDeCorreo envioCorreo = new EnvioDeCorreo();
+		envioCorreo.enviarAdjunto(cliente.getMail());				
 	}
 	
 	public void controlarAutomatizacionDelEnvioDeVoucher(){
@@ -1114,7 +1117,10 @@ public class ControladorAdministrativo implements ActionListener {
 			String fechaLimite = format.format(calendar.getTime());
 			String fechaDelViaje = mapper.parseToStringJavaUtil(p.getViaje().getFechaSalida());
 			
+			System.out.println("limite: "+fechaLimite);
+			System.out.println("viaje : "+fechaDelViaje);
 			if(fechaLimite.equals(fechaDelViaje)){
+				System.out.println("obtenemos pasaje "+p.getIdPasaje());
 				generarVoucherMail(p, p.getCliente());
 			}
 	}
