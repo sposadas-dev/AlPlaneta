@@ -99,11 +99,11 @@
 				<text><![CDATA[Atendido por:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="50" width="181" height="31" uuid="ffd9be4b-ef8e-4d8a-a16b-b0565bda9f6e"/>
+				<reportElement x="100" y="50" width="300" height="31" uuid="ffd9be4b-ef8e-4d8a-a16b-b0565bda9f6e"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pasaje}.getAdministrativo().getNombre()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pasaje}.getAdministrativo().getNombre().concat(" ").concat($F{pasaje}.getAdministrativo().getApellido())]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

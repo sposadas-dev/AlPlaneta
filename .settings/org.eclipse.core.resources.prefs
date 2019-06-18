@@ -1,6 +1,8 @@
 eclipse.preferences.version=1
 encoding//reportes/ReporteCancelacionReserva.jrxml=UTF-8
 encoding//reportes/ReporteCancelacionVenta.jrxml=UTF-8
+encoding//reportes/ReporteEmpleados.jrxml=UTF-8
+encoding//reportes/ReporteReserva.jrxml=UTF-8
 encoding//reportes/ReporteVentas.jrxml=UTF-8
 encoding//src/main/java=UTF-8
 encoding//src/main/resources=UTF-8

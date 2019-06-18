@@ -27,9 +27,9 @@ public class PasajeDAOSQL implements PasajeDAO {
 	private static final String browse = "SELECT * FROM pasaje WHERE idPasaje=?";
 	private static final String ultimoRegistro = "SELECT * FROM pasaje ORDER BY idPasaje desc limit 1";
 	
-	private static final String estadoPasaje = "SELECT * FROM pasaje WHERE idEstadoPasaje=? AND fechaEmision BETWEEN ? and ?";
+	private static final String estadoPasaje = "SELECT * FROM pasaje p, administrativo a,local l  WHERE a.idLocal=l.idLocal AND p.idAdministrativo=a.idAdministrativo AND l.idLocal=? AND idEstadoPasaje=? AND fechaEmision BETWEEN ? and ?";
 
-	private static final String registrosEntreFechas = "SELECT * FROM pasaje WHERE fechaEmision BETWEEN ? and ?";
+	private static final String registrosEntreFechas = "SELECT * FROM pasaje p, administrativo a,local l  WHERE a.idLocal=l.idLocal AND p.idAdministrativo=a.idAdministrativo AND l.idLocal=? AND fechaEmision BETWEEN ? AND ?";
 	
 	@Override
 	public boolean insert(PasajeDTO pasaje) {
@@ -225,7 +225,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 	}
 	
 	@Override
-	public List<PasajeDTO> obtenerPasajesEstado(EstadoPasajeDTO estado,java.sql.Date desde, java.sql.Date hasta) {
+	public List<PasajeDTO> obtenerPasajesEstado(EstadoPasajeDTO estado,java.sql.Date desde, java.sql.Date hasta, int idLocal) {
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
 		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
@@ -238,9 +238,10 @@ public class PasajeDAOSQL implements PasajeDAO {
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(estadoPasaje);
-			statement.setInt(1, estado.getIdEstadoPasaje());
-			statement.setDate(2, desde);
-			statement.setDate(3, hasta);
+			statement.setInt(1, idLocal);
+			statement.setInt(2, estado.getIdEstadoPasaje());
+			statement.setDate(3, desde);
+			statement.setDate(4, hasta);
 			resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {
@@ -269,7 +270,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 	}
 	
 	@Override
-	public List<PasajeDTO> listarPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta) {
+	public List<PasajeDTO> listarPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta,int idLocal) {
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
 		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
@@ -282,8 +283,10 @@ public class PasajeDAOSQL implements PasajeDAO {
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(registrosEntreFechas);
-			statement.setDate(1, desde);
-			statement.setDate(2, hasta);
+			statement.setInt(1,idLocal);
+			statement.setDate(2, desde);
+			statement.setDate(3, hasta);
+			
 			resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {
@@ -316,16 +319,16 @@ public class PasajeDAOSQL implements PasajeDAO {
         return sDate;
     }
 	
-	public static void main(String [] args){
-		Pasaje p = new Pasaje(new DAOSQLFactory());
-		EstadoPasaje e = new EstadoPasaje (new DAOSQLFactory());
-	    Calendar fecha = Calendar.getInstance();
-		java.sql.Date fechaEmision = convertUtilToSql(fecha.getTime());
-		List<PasajeDTO> pasajes= p.obtenerPasajesConEstado(e.getFormaPagoByName("Reservado"), fechaEmision, fechaEmision);
-
-		for(PasajeDTO pa: pasajes){
-			System.out.println(pa.getIdPasaje());
-		}
-	}
+//	public static void main(String [] args){
+////		Pasaje p = new Pasaje(new DAOSQLFactory());
+////		EstadoPasaje e = new EstadoPasaje (new DAOSQLFactory());
+////	    Calendar fecha = Calendar.getInstance();
+////		java.sql.Date fechaEmision = convertUtilToSql(fecha.getTime());
+////		List<PasajeDTO> pasajes= p.obtenerPasajesConEstado(e.getFormaPagoByName("Reservado"), fechaEmision, fechaEmision);
+////
+////		for(PasajeDTO pa: pasajes){
+////			System.out.println(pa.getIdPasaje());
+////		}
+//	}
 	
 }

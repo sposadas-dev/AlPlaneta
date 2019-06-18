@@ -11,11 +11,13 @@ import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
+import dto.ContadorDTO;
 import dto.CoordinadorDTO;
 import dto.LoginDTO;
 import modelo.Administrador;
 import modelo.Administrativo;
 import modelo.Cliente;
+import modelo.Contador;
 import modelo.Coordinador;
 import modelo.Login;
 import modelo.MedioContacto;
@@ -25,6 +27,7 @@ import presentacion.vista.VentanaLogin;
 import presentacion.vista.administrador.VistaAdministrador;
 import presentacion.vista.administrativo.VistaAdministrativo;
 import presentacion.vista.cliente.VistaCliente;
+import presentacion.vista.contador.VistaContador;
 import presentacion.vista.coordinador.VistaCoordinador;
 
 public class ControladorLogin {
@@ -35,6 +38,7 @@ public class ControladorLogin {
 	private VistaAdministrador vistaAdministrador;
 	private VistaAdministrativo vistaAdministrativo;
 	private VistaCoordinador vistaCoordinador;
+	private VistaContador vistaContador;
 	
 	private VistaCliente vistaCliente;
 	private Login modeloLogin;
@@ -45,6 +49,7 @@ public class ControladorLogin {
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
 	private CoordinadorDTO coordinadorLogueado;
+	private ContadorDTO contadorLogueado;
 	
 	private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
@@ -59,6 +64,7 @@ public class ControladorLogin {
 		this.vistaAdministrativo = VistaAdministrativo.getInstance();
 		
 		this.vistaCoordinador = VistaCoordinador.getInstance();
+		this.vistaContador = VistaContador.getInstance();
 		
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
 		this.modeloMedioContacto = new MedioContacto(new DAOSQLFactory());
@@ -203,6 +209,9 @@ public class ControladorLogin {
 						if(usuarioLogueado.getRol().getIdRol()==3){
 							 coordinadorLogueado = obtenerCoordinador(usuarioLogueado);
 							 mostrarVentanaCoordinador();
+						}else if(usuarioLogueado.getRol().getIdRol()==4){
+							contadorLogueado = obtenerContador(usuarioLogueado);
+							mostrarVentanaContador();
 						}
 				}
 			}
@@ -235,6 +244,13 @@ public class ControladorLogin {
 		controladorCoordinador.inicializar();
 	}
 	
+	private void mostrarVentanaContador() {
+		System.out.println("Se Loguea Como Contador");
+//		System.out.println(administradorLogueado.getNombre());
+		this.ventanaLogin.setVisible(false);
+		ControladorContador controladorContador = new ControladorContador(vistaContador, contadorLogueado);
+		controladorContador.inicializar();
+	}
 	private void mostrarVentanaAdministrador() {
 		System.out.println("Se Loguea Como Administrador");
 //		System.out.println(administradorLogueado.getNombre());
@@ -257,6 +273,11 @@ public class ControladorLogin {
 	private CoordinadorDTO obtenerCoordinador(LoginDTO loginUsuario) {
 		Coordinador coordinador = new Coordinador(new DAOSQLFactory());
 		return coordinador.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
+	private ContadorDTO obtenerContador(LoginDTO loginUsuario) {
+		Contador contador = new Contador(new DAOSQLFactory());
+		return contador.getByLoginId(loginUsuario.getIdDatosLogin());
 	}
 		
 	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {

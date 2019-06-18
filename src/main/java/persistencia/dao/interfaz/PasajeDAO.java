@@ -20,10 +20,7 @@ public interface PasajeDAO {
 
 	public PasajeDTO getUltimoRegistroPasaje();
 
-//	public List<PasajeDTO> listarPasajesEntreFechas();
+	public List<PasajeDTO> listarPasajesEntreFechas(Date desde, Date hasta, int idLocal);
 
-	public List<PasajeDTO> listarPasajesEntreFechas(Date desde, Date hasta);
-
-	public List<PasajeDTO> obtenerPasajesEstado(EstadoPasajeDTO estado, Date desde, Date hasta);
+	public List<PasajeDTO> obtenerPasajesEstado(EstadoPasajeDTO estado, Date desde, Date hasta, int idLocal);
 }
-

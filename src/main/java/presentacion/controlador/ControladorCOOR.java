@@ -160,7 +160,7 @@ public class ControladorCOOR {
 	
 	private void visualizarReporteEmpleados(ActionEvent l) {
 		Reporte reporte = new Reporte();
-		reporte.reporteEmpleados(administrativo.obtenerAdministrativos());
+		reporte.reporteEmpleados(administrativo.obtenerAdministrativosByLocal(coordinadorLogueado.getLocal().getIdLocal()));
 		reporte.mostrar();
 	}
 	
@@ -189,7 +189,7 @@ public class ControladorCOOR {
 			java.util.Date dateHasta = ventanaGenerarReporte.getDateHastaChooser().getDate();
 			java.sql.Date fechaHasta = new java.sql.Date(dateHasta.getTime());
 			
-			List<PasajeDTO> pasajes = pasaje.obtenerPasajesEntreFechas(fechaDesde, fechaHasta);
+			List<PasajeDTO> pasajes = pasaje.obtenerPasajesEntreFechas(fechaDesde, fechaHasta,coordinadorLogueado.getLocal().getIdLocal());
 			if(this.ventanaGenerarReporte.getDateDesdeChooser().getDate().before(this.ventanaGenerarReporte.getDateHastaChooser().getDate())){
 				if(pasajes.size()!=0){
 					Reporte reporte = new Reporte();
@@ -232,7 +232,7 @@ public class ControladorCOOR {
 
 				}
 			}else if(estado.equals("Reservados")){
-				List<PasajeDTO> pasajesReservados = pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Reservado"), fechaDesde, fechaHasta);
+				List<PasajeDTO> pasajesReservados = pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Reservado"), fechaDesde, fechaHasta,coordinadorLogueado.getLocal().getIdLocal());
 					if(pasajesReservados.size()!=0){
 						reporte.reportePasajes(pasajesReservados);
 						reporte.mostrar();
@@ -241,7 +241,7 @@ public class ControladorCOOR {
 						JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
 					}
 			}else if(estado.equals("Vendidos")){
-				List<PasajeDTO> pasajesVendidos= pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Vendido"), fechaDesde, fechaHasta);
+				List<PasajeDTO> pasajesVendidos= pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Vendido"), fechaDesde, fechaHasta, coordinadorLogueado.getLocal().getIdLocal());
 				if(pasajesVendidos.size()!=0){
 					reporte.reportePasajes(pasajesVendidos);		
 					reporte.mostrar();
@@ -259,10 +259,10 @@ public class ControladorCOOR {
 	}
 	private List<PasajeDTO> obtenerPasajesVendidosYReservados(java.sql.Date fechaDesde, java.sql.Date fechaHasta){
 		EstadoPasaje estadoPasaje = new EstadoPasaje(new DAOSQLFactory());
-		List<PasajeDTO> pasajesVendidos = pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Vendido"), fechaDesde, fechaHasta);
+		List<PasajeDTO> pasajesVendidos = pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Vendido"), fechaDesde, fechaHasta,coordinadorLogueado.getLocal().getIdLocal());
 		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>(pasajesVendidos);
 		
-		List<PasajeDTO> pasajesReservados = pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Reservado"), fechaDesde, fechaHasta);
+		List<PasajeDTO> pasajesReservados = pasaje.obtenerPasajesConEstado(estadoPasaje.getFormaPagoByName("Reservado"), fechaDesde, fechaHasta,coordinadorLogueado.getLocal().getIdLocal());
 		pasajes.addAll(pasajesReservados);
 		
 		return pasajes;

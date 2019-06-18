@@ -36,6 +36,18 @@
 	<field name="nombreCoordinador" class="java.lang.String">
 		<fieldDescription><![CDATA[nombre]]></fieldDescription>
 	</field>
+	<field name="mail" class="java.lang.String">
+		<fieldDescription><![CDATA[mail]]></fieldDescription>
+	</field>
+	<field name="apellido" class="java.lang.String">
+		<fieldDescription><![CDATA[apellido]]></fieldDescription>
+	</field>
+	<field name="dni" class="java.lang.String">
+		<fieldDescription><![CDATA[dni]]></fieldDescription>
+	</field>
+	<field name="local" class="dto.LocalDTO">
+		<fieldDescription><![CDATA[local]]></fieldDescription>
+	</field>
 	<group name="GroupAdministrativos">
 		<groupExpression><![CDATA[$F{nombre}]]></groupExpression>
 		<groupHeader>
@@ -46,11 +58,33 @@
 						<pen lineColor="#FFFFFF"/>
 					</box>
 					<textField>
-						<reportElement x="17" y="0" width="153" height="28" uuid="2d1242fb-23b6-4edd-9a95-bf2e4d9110c0"/>
+						<reportElement x="17" y="0" width="163" height="28" uuid="2d1242fb-23b6-4edd-9a95-bf2e4d9110c0"/>
 						<textElement>
 							<font size="12"/>
 						</textElement>
-						<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+						<textFieldExpression><![CDATA[$F{nombre}.concat(" ").concat($F{apellido})]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="180" y="0" width="100" height="28" uuid="7b47263a-0e00-4248-aeaf-66e19cd96d58"/>
+						<textElement>
+							<font size="12"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{dni}]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="280" y="0" width="175" height="28" uuid="4e679dc3-bbba-41ef-b6ac-6ff935cc6d9e"/>
+						<textElement>
+							<font size="12"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{mail}
+]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="455" y="0" width="100" height="28" uuid="abd23437-fc28-4ae2-89e0-97e79bbe5288"/>
+						<textElement>
+							<font size="12"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{local}.getNombreLocal()]]></textFieldExpression>
 					</textField>
 				</frame>
 			</band>
