@@ -82,17 +82,17 @@ public class PanelViajes extends JPanel {
 		
 		label = new JLabel("Filtro: Origen ó Destino");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		label.setBounds(131, 86, 158, 19);
+		label.setBounds(161, 86, 158, 19);
 		add(label);
 		
 		textFiltro = new JTextField();
 		textFiltro.setColumns(10);
-		textFiltro.setBounds(133, 116, 158, 19);
+		textFiltro.setBounds(163, 116, 158, 19);
 		add(textFiltro);
 		
 		JLabel label_1 = new JLabel("Fecha de Salida");
 		label_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_1.setBounds(395, 86, 183, 14);
+		label_1.setBounds(469, 86, 183, 14);
 		add(label_1);
 		
 		checkBoxAll = new JCheckBox("Todos");
@@ -100,29 +100,29 @@ public class PanelViajes extends JPanel {
 		add(checkBoxAll);
 		
 		dateDesde = new JDateChooser();
-		dateDesde.setBounds(314, 115, 131, 20);
+		dateDesde.setBounds(398, 115, 131, 20);
 		add(dateDesde);
 		
 		dateHasta = new JDateChooser();
-		dateHasta.setBounds(461, 115, 131, 20);
+		dateHasta.setBounds(545, 115, 131, 20);
 		add(dateHasta);
 		
 		Label label_2 = new Label("Desde");
-		label_2.setBounds(336, 141, 78, 18);
+		label_2.setBounds(485, 141, 78, 18);
 		add(label_2);
 		
 		JLabel label_3 = new JLabel("Hasta");
 		label_3.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_3.setBounds(484, 141, 78, 14);
+		label_3.setBounds(550, 141, 78, 14);
 		add(label_3);
 		
 		Label label_4 = new Label("Precio");
-		label_4.setBounds(732, 81, 59, 21);
+		label_4.setBounds(836, 81, 59, 21);
 		add(label_4);
 		
 		
 		comboBoxPrecioDesde = new JComboBox<String>();
-		comboBoxPrecioDesde.setBounds(650, 116, 81, 21);
+		comboBoxPrecioDesde.setBounds(767, 116, 81, 21);
 		add(comboBoxPrecioDesde);
 		
 		comboBoxPrecioDesde.addMouseWheelListener(new MouseWheelListener() {
@@ -137,7 +137,7 @@ public class PanelViajes extends JPanel {
 		});
 		
 		comboBoxPrecioHasta = new JComboBox<String>();
-		comboBoxPrecioHasta.setBounds(765, 116, 78, 21);
+		comboBoxPrecioHasta.setBounds(882, 116, 78, 21);
 		add(comboBoxPrecioHasta);
 		
 		comboBoxPrecioHasta.addMouseWheelListener(new MouseWheelListener() {
@@ -154,16 +154,16 @@ public class PanelViajes extends JPanel {
 		
 		JLabel label_5 = new JLabel("Desde");
 		label_5.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_5.setBounds(660, 136, 57, 19);
+		label_5.setBounds(773, 136, 57, 19);
 		add(label_5);
 		
 		JLabel label_6 = new JLabel("Hasta");
 		label_6.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_6.setBounds(775, 141, 57, 14);
+		label_6.setBounds(888, 141, 57, 14);
 		add(label_6);
 		
 		btnLimpiarFiltros = new JButton("Listar Viajes sin filtro");
-		btnLimpiarFiltros.setBounds(873, 105, 150, 19);
+		btnLimpiarFiltros.setBounds(1032, 113, 150, 19);
 		add(btnLimpiarFiltros);
 	
 		btnConfirmar.setVisible(false);
