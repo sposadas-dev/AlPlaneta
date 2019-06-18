@@ -64,6 +64,7 @@ public class ControladorPromocion {
 		this.modeloPromocion = new ModeloPromocion(new DAOSQLFactory());
 		this.modeloViaje = new ModeloViaje(new DAOSQLFactory());
 		this.modeloViaje_Promocion = new ModeloViaje_Promocion(new DAOSQLFactory());
+		this.viajes_en_tabla = modeloViaje.obtenerViajes();
 
 		this.ventanaPromocion.getBtnRegistrar().addActionListener(rc->registrarPromocion(rc));
 		
