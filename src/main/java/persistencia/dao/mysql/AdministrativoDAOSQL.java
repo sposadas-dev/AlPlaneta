@@ -22,6 +22,8 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 	private static final String browseByMail = "SELECT * FROM administrativo WHERE mail = ?";
 	private static final String delete = "DELETE FROM administrativo WHERE idAdministrativo = ?";
 
+	private static final String browseByIdLocal = "SELECT * FROM administrativo WHERE idLocal = ?";
+
 	@Override
 	public boolean insert(AdministrativoDTO administrativo) {
 		PreparedStatement statement;
@@ -236,6 +238,37 @@ public class AdministrativoDAOSQL implements AdministrativoDAO {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	@Override
+	public List<AdministrativoDTO> getAdministrativosByLocal(int idLocal) {
+		PreparedStatement statement;
+		ResultSet resultSet; // Guarda el resultado de la query
+		Conexion conexion = Conexion.getConexion();
+
+		ArrayList<AdministrativoDTO> administrativos = new ArrayList<AdministrativoDTO>();
+		LoginDAOSQL login = new LoginDAOSQL();
+		LocalDAOSQL local = new LocalDAOSQL();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(browseByIdLocal);
+			statement.setInt(1, idLocal);
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				administrativos.add(
+						new AdministrativoDTO(
+								resultSet.getInt("idAdministrativo"),
+								resultSet.getString("nombre"),
+								resultSet.getString("apellido"),
+								resultSet.getString("dni"),
+								login.getById(resultSet.getInt("idLogin")),
+								resultSet.getString("mail" ),
+								local.getById(resultSet.getInt("idLocal"))));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return administrativos;
 	}
 	
 	public static void main(String[] args) {

@@ -27,6 +27,7 @@ import presentacion.vista.VentanaLogin;
 import presentacion.vista.administrador.VistaAdministrador;
 import presentacion.vista.administrativo.VistaAdministrativo;
 import presentacion.vista.cliente.VistaCliente;
+import presentacion.vista.contador.VistaContador;
 import presentacion.vista.coordinador.VistaCoordinador;
 
 public class ControladorLogin {
@@ -37,6 +38,7 @@ public class ControladorLogin {
 	private VistaAdministrador vistaAdministrador;
 	private VistaAdministrativo vistaAdministrativo;
 	private VistaCoordinador vistaCoordinador;
+	private VistaContador vistaContador;
 	
 	private VistaCliente vistaCliente;
 	private Login modeloLogin;
@@ -47,14 +49,13 @@ public class ControladorLogin {
 	private ClienteDTO clienteLogueado;
 	private AdministradorDTO administradorLogueado;
 	private CoordinadorDTO coordinadorLogueado;
+	private ContadorDTO contadorLogueado;
 	
 	private String mailDeRecuperacion;
 	private String contrasenaProvisoria;
 	private MedioContacto modeloMedioContacto;
 	private Administrativo modeloAdministrativo;
 	private Integer idMedioContactoBuscado;
-	private Coordinador modeloCoordinador;
-	private Contador modeloContador;
 
 	
 	public ControladorLogin(VentanaLogin ventanaLogin, Login login){
@@ -63,15 +64,14 @@ public class ControladorLogin {
 		this.vistaAdministrativo = VistaAdministrativo.getInstance();
 		
 		this.vistaCoordinador = VistaCoordinador.getInstance();
+		this.vistaContador = VistaContador.getInstance();
 		
 		this.ventanaClaveOlvidada = VentanaClaveOlvidada.getInstance();
 		this.modeloMedioContacto = new MedioContacto(new DAOSQLFactory());
 		this.modeloAdministrativo = new Administrativo(new DAOSQLFactory());
 		this.modeloCliente = new Cliente(new DAOSQLFactory());
 		this.modeloAdministrador = new Administrador(new DAOSQLFactory());
-		this.modeloCoordinador = new Coordinador(new DAOSQLFactory());
-		this.modeloContador = new Contador(new DAOSQLFactory());
-
+	
 		this.modeloLogin = login;
 		this.usuarioLogueado = null;
 		this.administradorLogueado = null;
@@ -157,19 +157,14 @@ public class ControladorLogin {
 			return true;
 		}
 		
-		CoordinadorDTO coordinador = modeloCoordinador.buscarPorEmail(mailDeRecuperacion);
+		/*TODO:
+		CoordinadirDTO coordinador = modeloCoordinador.buscarPorEmail(mailDeRecuperacion);
 		if(coordinador!=null){
-			coordinador.getDatosLogin().setContrasena(contrasenaProvisoria);
-			modeloLogin.editarLogin(coordinador.getDatosLogin());
+			coordinador.getLogin().setContrasena(contrasenaProvisoria);
+			//TODO: modeloCoordinador.actualizar(coordinador)
 			return true;
 		}
-		
-		ContadorDTO contador= modeloContador.buscarPorEmail(mailDeRecuperacion);
-		if(contador!=null){
-			contador.getDatosLogin().setContrasena(contrasenaProvisoria);
-			modeloLogin.editarLogin(contador.getDatosLogin());
-			return true;
-		}
+		*/
 		
 		return false;
 	}
@@ -214,6 +209,9 @@ public class ControladorLogin {
 						if(usuarioLogueado.getRol().getIdRol()==3){
 							 coordinadorLogueado = obtenerCoordinador(usuarioLogueado);
 							 mostrarVentanaCoordinador();
+						}else if(usuarioLogueado.getRol().getIdRol()==4){
+							contadorLogueado = obtenerContador(usuarioLogueado);
+							mostrarVentanaContador();
 						}
 				}
 			}
@@ -246,6 +244,13 @@ public class ControladorLogin {
 		controladorCoordinador.inicializar();
 	}
 	
+	private void mostrarVentanaContador() {
+		System.out.println("Se Loguea Como Contador");
+//		System.out.println(administradorLogueado.getNombre());
+		this.ventanaLogin.setVisible(false);
+		ControladorContador controladorContador = new ControladorContador(vistaContador, contadorLogueado);
+		controladorContador.inicializar();
+	}
 	private void mostrarVentanaAdministrador() {
 		System.out.println("Se Loguea Como Administrador");
 //		System.out.println(administradorLogueado.getNombre());
@@ -268,6 +273,11 @@ public class ControladorLogin {
 	private CoordinadorDTO obtenerCoordinador(LoginDTO loginUsuario) {
 		Coordinador coordinador = new Coordinador(new DAOSQLFactory());
 		return coordinador.getByLoginId(loginUsuario.getIdDatosLogin());
+	}
+	
+	private ContadorDTO obtenerContador(LoginDTO loginUsuario) {
+		Contador contador = new Contador(new DAOSQLFactory());
+		return contador.getByLoginId(loginUsuario.getIdDatosLogin());
 	}
 		
 	private ClienteDTO obtenerCliente(LoginDTO loginUsuario) {

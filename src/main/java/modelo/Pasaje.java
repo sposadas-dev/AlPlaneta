@@ -41,11 +41,11 @@ import persistencia.dao.interfaz.PasajeDAO;
 		return this.pasaje.getUltimoRegistroPasaje();
 	}
 	
-	public List<PasajeDTO> obtenerPasajesConEstado(EstadoPasajeDTO estado,java.sql.Date desde, java.sql.Date hasta){
-		return this.pasaje.obtenerPasajesEstado(estado, desde, hasta);
+	public List<PasajeDTO> obtenerPasajesConEstado(EstadoPasajeDTO estado,java.sql.Date desde, java.sql.Date hasta,int idLocal){
+		return this.pasaje.obtenerPasajesEstado(estado, desde, hasta,idLocal);
 	}
 	
-	public List<PasajeDTO> obtenerPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta) {
-		return this.pasaje.listarPasajesEntreFechas(desde, hasta);
+	public List<PasajeDTO> obtenerPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta,int idLocal) {
+		return this.pasaje.listarPasajesEntreFechas(desde, hasta,idLocal);
 	}
 }

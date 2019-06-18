@@ -20,16 +20,16 @@ import persistencia.dao.interfaz.PasajeDAO;
 
 public class PasajeDAOSQL implements PasajeDAO {
 	
-	private static final String insert = "INSERT INTO pasaje(idPasaje, fechaEmision, numeroComprobante,fechaVencimiento, valorViaje, montoAPagar, idCliente, idViaje, idAdministrativo, idEstadoPasaje,motivoCancelacion, fechaCancelacion) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+	private static final String insert = "INSERT INTO pasaje(idPasaje, fechaEmision, numeroComprobante,fechaVencimiento, valorViaje, montoAPagar, idCliente, idViaje, idAdministrativo, idEstadoPasaje,motivoCancelacion, fechaCancelacion,montoAReembolsar) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 	private static final String delete = "DELETE FROM pasaje  WHERE idPasaje = ?";
 	private static final String readall = "SELECT * FROM pasaje";
-	private static final String update = "UPDATE pasaje SET idEstadoPasaje=?, montoAPagar=?, motivoCancelacion=?, fechaCancelacion=? WHERE idPasaje = ?;";
+	private static final String update = "UPDATE pasaje SET idEstadoPasaje=?, montoAPagar=?, motivoCancelacion=?, fechaCancelacion=?, montoAReembolsar=? WHERE idPasaje = ?;";
 	private static final String browse = "SELECT * FROM pasaje WHERE idPasaje=?";
 	private static final String ultimoRegistro = "SELECT * FROM pasaje ORDER BY idPasaje desc limit 1";
 	
-	private static final String estadoPasaje = "SELECT * FROM pasaje WHERE idEstadoPasaje=? AND fechaEmision BETWEEN ? and ?";
+	private static final String estadoPasaje = "SELECT * FROM pasaje p, administrativo a,local l  WHERE a.idLocal=l.idLocal AND p.idAdministrativo=a.idAdministrativo AND l.idLocal=? AND idEstadoPasaje=? AND fechaEmision BETWEEN ? and ?";
 
-	private static final String registrosEntreFechas = "SELECT * FROM pasaje WHERE fechaEmision BETWEEN ? and ?";
+	private static final String registrosEntreFechas = "SELECT * FROM pasaje p, administrativo a,local l  WHERE a.idLocal=l.idLocal AND p.idAdministrativo=a.idAdministrativo AND l.idLocal=? AND fechaEmision BETWEEN ? AND ?";
 	
 	@Override
 	public boolean insert(PasajeDTO pasaje) {
@@ -50,6 +50,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 			statement.setInt(10, pasaje.getEstadoDelPasaje().getIdEstadoPasaje());
 			statement.setString(11, pasaje.getMotivoCancelacion());
 			statement.setDate(12, pasaje.getDateCancelacion());
+			statement.setBigDecimal(13, pasaje.getMontoAReembolsar());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -109,7 +110,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
-						resultSet.getDate("fechaCancelacion")
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
 						));							
 			}
 		} catch (SQLException e) {
@@ -129,7 +131,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 			statement.setBigDecimal(2, pasaje_editar.getMontoAPagar());
 			statement.setString(3, pasaje_editar.getMotivoCancelacion());
 			statement.setDate(4, pasaje_editar.getDateCancelacion());
-			statement.setInt(5, pasaje_editar.getIdPasaje());
+			statement.setBigDecimal(5, pasaje_editar.getMontoAReembolsar());
+			statement.setInt(6, pasaje_editar.getIdPasaje());
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
@@ -169,7 +172,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 							estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 							pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 							resultSet.getString("motivoCancelacion"),
-							resultSet.getDate("fechaCancelacion")
+							resultSet.getDate("fechaCancelacion"),
+							resultSet.getBigDecimal("montoAReembolsar")
 							);
 										
 				return pasaje;
@@ -208,7 +212,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
-						resultSet.getDate("fechaCancelacion")
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
 						);
 			return pasaje;
 			}
@@ -220,7 +225,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 	}
 	
 	@Override
-	public List<PasajeDTO> obtenerPasajesEstado(EstadoPasajeDTO estado,java.sql.Date desde, java.sql.Date hasta) {
+	public List<PasajeDTO> obtenerPasajesEstado(EstadoPasajeDTO estado,java.sql.Date desde, java.sql.Date hasta, int idLocal) {
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
 		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
@@ -233,9 +238,10 @@ public class PasajeDAOSQL implements PasajeDAO {
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(estadoPasaje);
-			statement.setInt(1, estado.getIdEstadoPasaje());
-			statement.setDate(2, desde);
-			statement.setDate(3, hasta);
+			statement.setInt(1, idLocal);
+			statement.setInt(2, estado.getIdEstadoPasaje());
+			statement.setDate(3, desde);
+			statement.setDate(4, hasta);
 			resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {
@@ -253,7 +259,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
-						resultSet.getDate("fechaCancelacion")
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
 						));							
 			}
 		} catch (SQLException e) {
@@ -263,7 +270,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 	}
 	
 	@Override
-	public List<PasajeDTO> listarPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta) {
+	public List<PasajeDTO> listarPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta,int idLocal) {
 		PreparedStatement statement;
 		ResultSet resultSet; // Guarda el resultado de la query
 		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
@@ -276,8 +283,10 @@ public class PasajeDAOSQL implements PasajeDAO {
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(registrosEntreFechas);
-			statement.setDate(1, desde);
-			statement.setDate(2, hasta);
+			statement.setInt(1,idLocal);
+			statement.setDate(2, desde);
+			statement.setDate(3, hasta);
+			
 			resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {
@@ -295,7 +304,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
-						resultSet.getDate("fechaCancelacion")
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
 						));							
 			}
 		} catch (SQLException e) {
@@ -309,16 +319,16 @@ public class PasajeDAOSQL implements PasajeDAO {
         return sDate;
     }
 	
-	public static void main(String [] args){
-		Pasaje p = new Pasaje(new DAOSQLFactory());
-		EstadoPasaje e = new EstadoPasaje (new DAOSQLFactory());
-	    Calendar fecha = Calendar.getInstance();
-		java.sql.Date fechaEmision = convertUtilToSql(fecha.getTime());
-		List<PasajeDTO> pasajes= p.obtenerPasajesConEstado(e.getFormaPagoByName("Reservado"), fechaEmision, fechaEmision);
-
-		for(PasajeDTO pa: pasajes){
-			System.out.println(pa.getIdPasaje());
-		}
-	}
+//	public static void main(String [] args){
+////		Pasaje p = new Pasaje(new DAOSQLFactory());
+////		EstadoPasaje e = new EstadoPasaje (new DAOSQLFactory());
+////	    Calendar fecha = Calendar.getInstance();
+////		java.sql.Date fechaEmision = convertUtilToSql(fecha.getTime());
+////		List<PasajeDTO> pasajes= p.obtenerPasajesConEstado(e.getFormaPagoByName("Reservado"), fechaEmision, fechaEmision);
+////
+////		for(PasajeDTO pa: pasajes){
+////			System.out.println(pa.getIdPasaje());
+////		}
+//	}
 	
 }

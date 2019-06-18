@@ -23,4 +23,6 @@ public interface AdministrativoDAO {
 	
 	public boolean delete(int idAdministrativo);
 
+	public List<AdministrativoDTO> getAdministrativosByLocal(int idLocal);
+
 }

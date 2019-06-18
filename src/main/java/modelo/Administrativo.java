@@ -41,4 +41,8 @@ public class Administrativo {
 	public boolean delete(int idAdministrativo) {
 		return this.administrativo.delete(idAdministrativo);
 	}
+
+	public List<AdministrativoDTO> obtenerAdministrativosByLocal(int idLocal) {
+		return this.administrativo.getAdministrativosByLocal(idLocal);
+	}
 }
