@@ -18,6 +18,14 @@ public class Mapper {
 		fechaelegida = dia + "-" + mes + "-" + ano;
 		return fechaelegida;
 	}
+	public String parseToStringJavaUtil (java.util.Date date){
+		String fechaelegida = date.toString();
+		String mes= fechaelegida.substring(5, 7) ;
+		String dia= fechaelegida.substring(8, 10);
+		String ano= fechaelegida.substring(0, 4);
+		fechaelegida = dia + "-" + mes + "-" + ano;
+		return fechaelegida;
+	}
 	
 	public Date parseToSQLDate (String date){
 		String mes= date.substring(2, 4) ;
@@ -31,7 +39,6 @@ public class Mapper {
 		}
 		return utilDate;
 	}
-	// sos linda :$
 	
 	public static void main(String[] args) {
 //		mapper map = new mapper();

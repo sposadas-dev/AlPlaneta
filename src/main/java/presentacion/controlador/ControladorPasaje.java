@@ -12,6 +12,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -23,6 +25,7 @@ import correo.EnvioDeCorreo;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EstadoPasajeDTO;
+import dto.EventoDTO;
 import dto.FormaPagoDTO;
 import dto.PagoDTO;
 import dto.Pagos_PasajeDTO;
@@ -316,6 +319,7 @@ public class ControladorPasaje implements ActionListener{
 		
 		this.editarPago = true;
 		this.modeloPunto = new ModeloPunto(new DAOSQLFactory());
+		controlarAutomatizacionDelEnvioDeVoucher();
 	}
 	
 
@@ -1221,4 +1225,24 @@ public class ControladorPasaje implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 	}
+	public void controlarAutomatizacionDelEnvioDeVoucher(){
+		TimerTask timerTask = new TimerTask() {
+		    public void run() {
+				for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
+					
+					Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy 
+//					calendar.add(Calendar.DATE, -2); //el -3 indica que se le restaran 3 dias 
+
+					String fechaLimite = mapper.parseToStringJavaUtil(calendar.getTime());
+					String fechaDelViaje = mapper.parseToStringJavaUtil(p.getViaje().getFechaSalida());
+					if(fechaLimite.equals(fechaDelViaje))
+						generarVoucherMail(p, p.getCliente());
+				}
+			}
+		};
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(timerTask, 0, 1000);//1000=1 segundo
+	}
+
+	
 }
