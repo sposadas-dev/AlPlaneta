@@ -510,7 +510,8 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaTablaViajes.getModelViajes().setColumnCount(0);
 		this.ventanaTablaViajes.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
 			
-		this.viajes_en_tabla = modeloViaje.obtenerViajes();
+//		this.viajes_en_tabla = modeloViaje.obtenerViajes();
+		this.viajes_en_tabla = viajesActivos();
 			
 		for (int i = 0; i < this.viajes_en_tabla.size(); i++){
 			Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
@@ -525,6 +526,16 @@ public class ControladorPasaje implements ActionListener{
 			};
 		this.ventanaTablaViajes.getModelViajes().addRow(fila);
 		}		
+	}
+	
+	private ArrayList<ViajeDTO> viajesActivos() {
+		ArrayList<ViajeDTO> ret = new ArrayList<ViajeDTO>();
+		for(ViajeDTO v : modeloViaje.obtenerViajes()) {
+			if(v.getEstado().equals("activo")) {
+				ret.add(v);
+			}
+		}
+		return ret;
 	}
 
 	private void llenarTablaViajes(List<ViajeDTO> viajes){

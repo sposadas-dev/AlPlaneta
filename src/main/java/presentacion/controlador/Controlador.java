@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Vector;
 import java.util.regex.Pattern;
 
 import javax.swing.DefaultComboBoxModel;
@@ -151,6 +150,7 @@ public class Controlador implements ActionListener {
 	// Filtro
 	private DefaultTableModel dm;
 	private StringBuilder cad = new StringBuilder();
+	private TableRowSorter<DefaultTableModel> tr;
 	private String aceptada = "0123456789abcdefghijklmnopqrstuvwxyz";
 	private DefaultTableModel tableModel;
 	private static Controlador INSTANCE;
@@ -235,6 +235,7 @@ public class Controlador implements ActionListener {
 		this.ventanaAdministrador.getPanelViajes().getActivos().addActionListener(mv -> mostrarViajesActivos(mv));
 		this.ventanaAdministrador.getPanelViajes().getInactivos().addActionListener(mv -> mostrarViajesInactivos(mv));
 		this.ventanaAdministrador.getPanelViajes().getCheckBoxAll().addActionListener(mv -> mostrarTodosLosViajes(mv));
+		this.ventanaAdministrador.getPanelViajes().getBtnLimpiarFiltros().addActionListener(lc -> limpiarCampos(lc));
 
 		this.ventanaCargarViaje.getComboBoxPaisOrigen().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -264,78 +265,108 @@ public class Controlador implements ActionListener {
 		this.ventanaAdministrador.getPanelViajes().getTxtFiltro().addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char letra = e.getKeyChar();
+				if (Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume(); 
+				}
 				tableModel = (DefaultTableModel) ventanaAdministrador.getPanelViajes().getModelViajes();
-				TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(tableModel);
+				tr = new TableRowSorter<>(tableModel);
 				ventanaAdministrador.getPanelViajes().getTablaViajes().setRowSorter(tr);
 				if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
-					if (letra == KeyEvent.VK_BACK_SPACE) {
-						if (cad.length() != 0) {
-							cad.deleteCharAt(cad.length() - 1);
-							tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+					if (letra == KeyEvent.VK_BACK_SPACE){
+						if(cad.length() != 0) {
+							cad.deleteCharAt(cad.length()-1);
+					        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
 						}
-					} else {
-						cad.append(String.valueOf(letra));
-						tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+					}
+					else{
+						if(!Character.isDigit(letra)) {
+							cad.append(String.valueOf(letra));
+			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+						}
 					}
 				}
-			}
+		}
 		});
 
 		// FILTRO CALENDAR DESDE
-		this.ventanaAdministrador.getPanelViajes().getFiltroDesde()
+		this.ventanaAdministrador.getPanelViajes().getFechaDesde()
 				.addPropertyChangeListener(new PropertyChangeListener() {
 					@Override
 					public void propertyChange(PropertyChangeEvent e) {
 						String desde = obtenerFecha(e.getNewValue().toString());
-						if (ventanaAdministrador.getPanelViajes().getFiltroHasta().getDate() != null) {
+						if (ventanaAdministrador.getPanelViajes().getFechaHasta().getDate() != null) {
 							String hasta = obtenerFecha(
-									ventanaAdministrador.getPanelViajes().getFiltroHasta().getDate().toString());
+									ventanaAdministrador.getPanelViajes().getFechaHasta().getDate().toString());
 							llenarViajesEnPanelViajes(modeloViaje.obtenerBetween(desde, hasta));
 						}
 					}
 				});
 
-		this.ventanaAdministrador.getPanelViajes().getFiltroHasta()
+		this.ventanaAdministrador.getPanelViajes().getFechaHasta()
 				.addPropertyChangeListener(new PropertyChangeListener() {
 					@Override
 					public void propertyChange(PropertyChangeEvent e) {
 						String hasta = obtenerFecha(e.getNewValue().toString());
-						if (ventanaAdministrador.getPanelViajes().getFiltroDesde().getDate() != null) {
+						if (ventanaAdministrador.getPanelViajes().getFechaDesde().getDate() != null) {
 							String desde = obtenerFecha(
-									ventanaAdministrador.getPanelViajes().getFiltroDesde().getDate().toString());
+									ventanaAdministrador.getPanelViajes().getFechaDesde().getDate().toString());
 							llenarViajesEnPanelViajes(modeloViaje.obtenerBetween(desde, hasta));
 						}
 					}
 				});
 
-		this.ventanaAdministrador.getPanelViajes().getComboBoxPrecioDesde().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (ventanaAdministrador.getPanelViajes().getComboBoxPrecioDesde().getSelectedItem() != null) {
-					Integer desde = Integer.parseInt(ventanaAdministrador.getPanelViajes().getComboBoxPrecioDesde()
-							.getSelectedItem().toString());
-					if (ventanaAdministrador.getPanelViajes().getComboBoxPrecioHasta().getSelectedItem() != null) {
-						Integer hasta = Integer.parseInt((ventanaAdministrador.getPanelViajes().getComboBoxPrecioHasta()
-								.getSelectedItem().toString()));
-						llenarViajesEnPanelViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));
+		this.ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+				char letra = e.getKeyChar();
+				if (!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+			}
+			public void keyReleased(KeyEvent e){
+				char letra = e.getKeyChar();
+				if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+					if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText())) {
+						if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText())) {
+							Integer desde = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText());
+							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText());
+							llenarViajesEnPanelViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));	
+						}
+					}
+					if(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText().length() == 0) {
+						llenarViajesEnPanelViajes(modeloViaje.obtenerViajes());
 					}
 				}
 			}
 		});
 
-		this.ventanaAdministrador.getPanelViajes().getComboBoxPrecioHasta().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (ventanaAdministrador.getPanelViajes().getComboBoxPrecioHasta().getSelectedItem() != null) {
-					Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getComboBoxPrecioHasta()
-							.getSelectedItem().toString());
-					if (ventanaAdministrador.getPanelViajes().getComboBoxPrecioDesde().getSelectedItem() != null) {
-						Integer desde = Integer.parseInt((ventanaAdministrador.getPanelViajes().getComboBoxPrecioDesde()
-								.getSelectedItem().toString()));
-						llenarViajesEnPanelViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));
+		this.ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+				char letra = e.getKeyChar();
+				if (!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+			}
+			public void keyReleased(KeyEvent e){
+				char letra = e.getKeyChar();
+				if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+					if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText())) {
+						if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText())) {
+							Integer desde = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText());
+							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText());
+							llenarViajesEnPanelViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));	
+						}
+					}
+					if(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText().length() == 0) {
+						llenarViajesEnPanelViajes(modeloViaje.obtenerViajes());
 					}
 				}
 			}
 		});
-
+		
+		
 		this.ventanaCargarViaje.getTextCapacidad().addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char letra = e.getKeyChar();
@@ -355,25 +386,20 @@ public class Controlador implements ActionListener {
 				}
 			}
 		});
+		
 
-		this.ventanaAdministrador.getPanelViajes().getTxtFiltro().addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char letra = e.getKeyChar();
-				if (!Character.isDigit(letra)) {
-					Toolkit.getDefaultToolkit().beep();
-					e.consume();
-				}
-			}
-		});
-
-		this.ventanaAdministrador.getPanelViajes().getBtnLimpiarFiltros().addActionListener(lc -> limpiarCampos(lc));
-
-		llenarComboPrecios();
+//		llenarComboPrecios();
 
 	}
 
 
 	private void limpiarCampos(ActionEvent lc) {
+		this.ventanaAdministrador.getPanelViajes().getTxtFiltro().setText("");
+		cad.delete(0, cad.length());
+        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+		this.ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().setText("");
+		this.ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().setText("");
+		this.ventanaAdministrador.getPanelViajes().limpiarFiltrosFechas();
 		llenarViajesEnPanelViajes();
 	}
 
@@ -1125,7 +1151,7 @@ public class Controlador implements ActionListener {
 		this.panelViajes.getModelViajes().setColumnCount(0);
 		this.panelViajes.getModelViajes().setColumnIdentifiers(this.panelViajes.getNombreColumnasViajes());
 
-		viajes_en_tabla = (ArrayList<ViajeDTO>) modeloViaje.obtenerViajes();
+		this.viajes_en_tabla = (ArrayList<ViajeDTO>) modeloViaje.obtenerViajes(); 	
 		for (int i = 0; i < viajes_en_tabla.size(); i++) {
 			Object[] fila = { viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
 					viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
@@ -1219,8 +1245,11 @@ public class Controlador implements ActionListener {
 
 
 	private void llenarCombroHorarioSalida() {
-		String[] horarios = { "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00",
-				"12:00" };
+		String[] horarios = { 
+				"00:00","00:30","01:00","01:30","02:00","02:30","03:00","03:30","04:00","04:30","05:00","05:30",
+				"06:00","06:30","07:00","07:30","08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30",
+				"12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30",
+				"18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30"};
 		this.ventanaCargarViaje.getComboBoxHorarioSalida().setModel(new DefaultComboBoxModel(horarios));
 		this.ventanaEditarViaje.getComboBoxHorarioSalida().setModel(new DefaultComboBoxModel(horarios));
 	}
@@ -1558,16 +1587,27 @@ public class Controlador implements ActionListener {
 			this.panelViajes.getModelViajes().addRow(fila);
 		}
 	}
-
-	public void llenarComboPrecios() {
-		String[] precioDesde = { "0", "300", "500", "1000", "1300", "1500", "2000", "2500", "3000", "3500", "5000",
-				"7000", "8000", "10000", "13000", "15000", "20000", "25000", "30000", "35000", "50000" };
-		String[] precioHasta = { "0", "300", "500", "1000", "1300", "1500", "2000", "2500", "3000", "3500", "5000",
-				"7000", "8000", "10000", "13000", "15000", "20000", "25000", "30000", "35000", "50000", "60000" };
-		this.ventanaAdministrador.getPanelViajes().getComboBoxPrecioDesde()
-				.setModel(new DefaultComboBoxModel<String>(precioDesde));
-		this.ventanaAdministrador.getPanelViajes().getComboBoxPrecioHasta()
-				.setModel(new DefaultComboBoxModel<String>(precioHasta));
+	
+	public boolean esUnNumero(String s) {
+		if (s.length()==0)
+			return false;
+		
+		for(int i=0; i<s.length(); i++)
+			if(!Character.isDigit(s.charAt(i)))
+				return false;
+		return true;
 	}
+
+//	public void llenarComboPrecios() {
+//		String[] precioDesde = { "0", "300", "500", "1000", "1300", "1500", "2000", "2500", "3000", "3500", "5000",
+//				"7000", "8000", "10000", "13000", "15000", "20000", "25000", "30000", "35000", "50000" };
+//		String[] precioHasta = { "0", "300", "500", "1000", "1300", "1500", "2000", "2500", "3000", "3500", "5000",
+//				"7000", "8000", "10000", "13000", "15000", "20000", "25000", "30000", "35000", "50000", "60000" };
+//		this.ventanaAdministrador.getPanelViajes().getComboBoxPrecioDesde()
+//				.setModel(new DefaultComboBoxModel<String>(precioDesde));
+//		this.ventanaAdministrador.getPanelViajes().getComboBoxPrecioHasta().setSelectedIndex(this.ventanaAdministrador.getPanelViajes().getComboBoxPrecioHasta().getItemCount()-1);
+//		this.ventanaAdministrador.getPanelViajes().getComboBoxPrecioHasta()
+//				.setModel(new DefaultComboBoxModel<String>(precioHasta));
+//	}
 
 }
