@@ -451,10 +451,16 @@ public class ControladorPasaje implements ActionListener{
 	private void confirmarSeleccionViaje(ActionEvent sv){
 		int filaSeleccionada = this.ventanaTablaViajes.getTablaViajes().getSelectedRow();
 		if (filaSeleccionada != -1){
-			this.ventanaTablaViajes.mostrarVentana(false);
-			viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
-			this.ventanaCargaPasajero.mostrarVentana(true);
-		}else{
+			if(viajes_en_tabla.get(filaSeleccionada).getCapacidad()!=0) {
+				viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);	
+				this.ventanaTablaViajes.mostrarVentana(false);
+				this.ventanaCargaPasajero.mostrarVentana(true);
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "No quedan cupos disponibles en este viaje", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -469,6 +475,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaCargaPasajero.mostrarVentana(false);
 		this.ventanaCargaPasajero.getModelPasajeros().setRowCount(0);
 		this.ventanaCargaPasajero.getModelPasajeros().setColumnCount(0);
+		this.ventanaCargaPasajero.getLblPasajerosCargados().setText("");
 		this.ventanaTablaViajes.mostrarVentana(true);
 	}
 	
@@ -690,14 +697,23 @@ public class ControladorPasaje implements ActionListener{
 	}
 	/*Se confirma la carga de pasajeros*/
 	private void confirmarPasajeros(ActionEvent ap) {
-		this.ventanaCargaPasajero.setVisible(false);
-		cargarComboBoxFormaDePago();
-		this.ventanaPago.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
-		this.ventanaPago.setVisible(true);
+		int capacidad = this.viajeSeleccionado.getCapacidad(); 
+		if(capacidad >= pasajeros_en_reserva.size()) {
+			this.ventanaCargaPasajero.setVisible(false);
+			cargarComboBoxFormaDePago();
+			this.ventanaPago.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
+			this.ventanaPago.setVisible(true);
+		}
+		else {
+			if(capacidad == 1)
+				JOptionPane.showMessageDialog(null, "Error: sólo queda un cupo disponible en este viaje", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(null, "Error: sólo quedan "+capacidad+" cupos disponibles en este viaje", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void cargarComboBoxFormaDePago(){
-		ventanaPago.getComboBoxFormaPago().removeAllItems();
+		//ventanaPago.getComboBoxFormaPago().removeAllItems();
 		FormaPago formaPago = new FormaPago(new DAOSQLFactory());
 		List<FormaPagoDTO> formasPagosDTO = formaPago.obtenerFormaPago();
 		String[] formasPagos = new String[formasPagosDTO.size()+1]; 
@@ -711,6 +727,7 @@ public class ControladorPasaje implements ActionListener{
 	
 	private void darAltaDelPago(ActionEvent cp)  {
 // Validar que se haya seleccionado una forma de pago 
+		if(this.ventanaPago.getComboBoxFormaPago().getSelectedIndex()!=0) {
 			FormaPago f = new FormaPago(new DAOSQLFactory());
 			this.ventanaPago.getRadioReservaSinPagar().setVisible(true);
 			
@@ -743,6 +760,11 @@ public class ControladorPasaje implements ActionListener{
 			reportePago();
 			this.llenarTablaPasajes();
 			}
+		}
+		else {
+			
+		}
+		
 	}
 	
 	private void darAltaDelPagoConPuntos()  {
