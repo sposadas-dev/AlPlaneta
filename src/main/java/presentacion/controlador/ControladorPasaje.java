@@ -467,6 +467,8 @@ public class ControladorPasaje implements ActionListener{
 	
 	private void volverVentanaViaje(ActionEvent a) {
 		this.ventanaCargaPasajero.mostrarVentana(false);
+		this.ventanaCargaPasajero.getModelPasajeros().setRowCount(0);
+		this.ventanaCargaPasajero.getModelPasajeros().setColumnCount(0);
 		this.ventanaTablaViajes.mostrarVentana(true);
 	}
 	

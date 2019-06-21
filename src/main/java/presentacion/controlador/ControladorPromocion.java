@@ -20,14 +20,14 @@ import modelo.ModeloPromocion;
 import modelo.ModeloViaje;
 import modelo.ModeloViaje_Promocion;
 import persistencia.dao.mysql.DAOSQLFactory;
-import persistencia.dao.mysql.Viaje_PromocionDAOSQL;
 import presentacion.vista.administrativo.PanelPromocion;
 import presentacion.vista.administrativo.VentanaEditarPromocion;
 import presentacion.vista.administrativo.VentanaRegistrarPromocion;
 import presentacion.vista.administrativo.VentanaTablaViajes;
+import presentacion.vista.administrativo.VentanaTablaViajesPromocion;
 
 public class ControladorPromocion {
-	private VentanaTablaViajes ventanaTablaViajes;
+	private VentanaTablaViajesPromocion ventanaTablaViajes;
 	private List<ViajeDTO> viajes_en_tabla;
 	private ModeloPromocion modeloPromocion;
 	private ModeloViaje modeloViaje;
@@ -60,7 +60,7 @@ public class ControladorPromocion {
 		
 		this.ventanaPromocion = ventanaPromocion;
 		this.ventanaEditarPromocion = VentanaEditarPromocion.getInstance();
-		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();		
+		this.ventanaTablaViajes = VentanaTablaViajesPromocion.getInstance();		
 		this.modeloPromocion = new ModeloPromocion(new DAOSQLFactory());
 		this.modeloViaje = new ModeloViaje(new DAOSQLFactory());
 		this.modeloViaje_Promocion = new ModeloViaje_Promocion(new DAOSQLFactory());
@@ -177,17 +177,17 @@ public class ControladorPromocion {
 		ventanaTablaViajes.getBtnConfirmar().setVisible(true);
 		ventanaTablaViajes.getBtnAtras().setVisible(true);
 		ventanaTablaViajes.getTxtMensajeCtrl().setVisible(true);
-		llenarTablaViajes(obtenerViajesSinPromo());
+		llenarTablaViajes(obtenerViajesActivosSinPromo());
 	}
 	
-	private List<ViajeDTO> obtenerViajesSinPromo() {
+	private List<ViajeDTO> obtenerViajesActivosSinPromo() {
 		List<ViajeDTO> sinPromo = new ArrayList<>();
 		for(ViajeDTO v : modeloViaje.obtenerViajes()) {
 			boolean tienePromo = false;
 			for(Viaje_PromocionDTO x : modeloViaje_Promocion.obtenerViajePromocion())
 				if(x.getIdViaje()==v.getIdViaje())
 					tienePromo = true;
-			if(!tienePromo)
+			if(!tienePromo && v.getEstado().equals("activo"))
 				sinPromo.add(v);
 		}
 		return sinPromo;
