@@ -2,21 +2,19 @@ package presentacion.vista.administrador;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Label;
 import java.awt.Window;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JCheckBox;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 import com.toedter.calendar.JDateChooser;
-import java.awt.Label;
-import javax.swing.JComboBox;
 
 public class PanelViajes extends JPanel {
 
@@ -29,13 +27,13 @@ public class PanelViajes extends JPanel {
 	private JCheckBox activos;
 	private JCheckBox inactivos;
 	private JCheckBox checkBoxAll;
-	private JLabel label;
-	private JTextField textFiltro;
-	private JComboBox<String> comboBoxPrecioDesde; 
-	private JComboBox<String> comboBoxPrecioHasta;
+	private JLabel lblOrigenDestino;
 	private JButton btnLimpiarFiltros;
 	private JDateChooser dateDesde;
 	private JDateChooser dateHasta;
+	private JTextField txtFiltro;
+	private JTextField txtPrecioDesde;
+	private JTextField txtPrecioHasta;
 	
 	@SuppressWarnings("serial")
 	public PanelViajes() {
@@ -79,20 +77,16 @@ public class PanelViajes extends JPanel {
 		inactivos = new JCheckBox("Inactivos");
 		inactivos.setBounds(32, 130, 95, 21);
 		add(inactivos);
-		
-		label = new JLabel("Filtro: Origen ó Destino");
-		label.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		label.setBounds(161, 86, 158, 19);
-		add(label);
-		
-		textFiltro = new JTextField();
-		textFiltro.setColumns(10);
-		textFiltro.setBounds(163, 116, 158, 19);
-		add(textFiltro);
+
+		lblOrigenDestino = new JLabel("Origen / Destino");
+		lblOrigenDestino.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblOrigenDestino.setBounds(161, 86, 158, 19);
+		add(lblOrigenDestino);
+
 		
 		JLabel label_1 = new JLabel("Fecha de Salida");
 		label_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_1.setBounds(469, 86, 183, 14);
+		label_1.setBounds(469, 86, 183, 21);
 		add(label_1);
 		
 		checkBoxAll = new JCheckBox("Todos");
@@ -108,7 +102,7 @@ public class PanelViajes extends JPanel {
 		add(dateHasta);
 		
 		Label label_2 = new Label("Desde");
-		label_2.setBounds(485, 141, 78, 18);
+		label_2.setBounds(466, 141, 67, 14);
 		add(label_2);
 		
 		JLabel label_3 = new JLabel("Hasta");
@@ -117,57 +111,40 @@ public class PanelViajes extends JPanel {
 		add(label_3);
 		
 		Label label_4 = new Label("Precio");
-		label_4.setBounds(836, 81, 59, 21);
+		label_4.setBounds(846, 86, 59, 21);
 		add(label_4);
-		
-		
-		comboBoxPrecioDesde = new JComboBox<String>();
-		comboBoxPrecioDesde.setBounds(767, 116, 81, 21);
-		add(comboBoxPrecioDesde);
-		
-		comboBoxPrecioDesde.addMouseWheelListener(new MouseWheelListener() {
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				if(e.getWheelRotation()>0)
-					if(comboBoxPrecioDesde.getSelectedIndex() < comboBoxPrecioDesde.getItemCount()-1) 
-						comboBoxPrecioDesde.setSelectedIndex(comboBoxPrecioDesde.getSelectedIndex()+1);
-				if(e.getWheelRotation()<0)
-					if(comboBoxPrecioDesde.getSelectedIndex() > 0)
-						comboBoxPrecioDesde.setSelectedIndex(comboBoxPrecioDesde.getSelectedIndex()-1);
-			}
-		});
-		
-		comboBoxPrecioHasta = new JComboBox<String>();
-		comboBoxPrecioHasta.setBounds(882, 116, 78, 21);
-		add(comboBoxPrecioHasta);
-		
-		comboBoxPrecioHasta.addMouseWheelListener(new MouseWheelListener() {
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				if(e.getWheelRotation()>0)
-					if(comboBoxPrecioHasta.getSelectedIndex() < comboBoxPrecioHasta.getItemCount()-1) 
-						comboBoxPrecioHasta.setSelectedIndex(comboBoxPrecioHasta.getSelectedIndex()+1);
-				if(e.getWheelRotation()<0)
-					if(comboBoxPrecioHasta.getSelectedIndex() > 0)
-						comboBoxPrecioHasta.setSelectedIndex(comboBoxPrecioHasta.getSelectedIndex()-1);
-			}
-		});
 
 		
 		JLabel label_5 = new JLabel("Desde");
 		label_5.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_5.setBounds(773, 136, 57, 19);
+		label_5.setBounds(805, 136, 57, 14);
 		add(label_5);
 		
 		JLabel label_6 = new JLabel("Hasta");
 		label_6.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_6.setBounds(888, 141, 57, 14);
+		label_6.setBounds(887, 136, 57, 14);
 		add(label_6);
 		
 		btnLimpiarFiltros = new JButton("Listar Viajes sin filtro");
-		btnLimpiarFiltros.setBounds(1032, 113, 150, 19);
+		btnLimpiarFiltros.setBounds(1032, 106, 150, 29);
 		add(btnLimpiarFiltros);
+		
+		txtFiltro = new JTextField();
+		txtFiltro.setBounds(161, 113, 141, 20);
+		add(txtFiltro);
+		txtFiltro.setColumns(10);
+		
+		txtPrecioDesde = new JTextField();
+		txtPrecioDesde.setBounds(780, 113, 78, 20);
+		add(txtPrecioDesde);
+		txtPrecioDesde.setColumns(10);
+		
+		txtPrecioHasta = new JTextField();
+		txtPrecioHasta.setColumns(10);
+		txtPrecioHasta.setBounds(869, 113, 78, 20);
+		add(txtPrecioHasta);
 	
 		btnConfirmar.setVisible(false);
-	
 	}
 
 	public void mostrarPanelViajes(boolean visibilidad){
@@ -220,35 +197,35 @@ public class PanelViajes extends JPanel {
 	}
 
 	public JLabel getLabel() {
-		return label;
+		return lblOrigenDestino;
 	}
 
 	public void setLabel(JLabel label) {
-		this.label = label;
+		this.lblOrigenDestino = label;
 	}
 
 	public JTextField getTxtFiltro() {
-		return textFiltro;
+		return txtFiltro;
 	}
 
 	public void setTextFiltro(JTextField textFiltro) {
-		this.textFiltro = textFiltro;
+		this.txtFiltro = textFiltro;
+	}
+	
+	public JTextField getTxtPrecioDesde() {
+		return txtPrecioDesde;
 	}
 
-	public JComboBox<String> getComboBoxPrecioDesde() {
-		return comboBoxPrecioDesde;
+	public void setTxtPrecioDesde(JTextField txtPrecioDesde) {
+		this.txtPrecioDesde = txtPrecioDesde;
 	}
 
-	public void setComboBoxPrecioDesde(JComboBox<String> comboBoxPrecioDesde) {
-		this.comboBoxPrecioDesde = comboBoxPrecioDesde;
+	public JTextField getTxtPrecioHasta() {
+		return txtPrecioHasta;
 	}
 
-	public JComboBox<String> getComboBoxPrecioHasta() {
-		return comboBoxPrecioHasta;
-	}
-
-	public void setComboBoxPrecioHasta(JComboBox<String> comboBoxPrecioHasta) {
-		this.comboBoxPrecioHasta = comboBoxPrecioHasta;
+	public void setTxtPrecioHasta(JTextField txtPrecioHasta) {
+		this.txtPrecioHasta = txtPrecioHasta;
 	}
 
 	public JButton getBtnLimpiarFiltros() {
@@ -259,7 +236,7 @@ public class PanelViajes extends JPanel {
 		this.btnLimpiarFiltros = btnLimpiarFiltros;
 	}
 
-	public JDateChooser getFiltroDesde() {
+	public JDateChooser getFechaDesde() {
 		return dateDesde;
 	}
 
@@ -267,7 +244,7 @@ public class PanelViajes extends JPanel {
 		this.dateDesde = dateDesde;
 	}
 
-	public JDateChooser getFiltroHasta() {
+	public JDateChooser getFechaHasta() {
 		return dateHasta;
 	}
 
@@ -299,5 +276,8 @@ public class PanelViajes extends JPanel {
 		this.inactivos = inactivos;
 	}
 	
-	
+	public void limpiarFiltrosFechas() {
+		((JTextField)dateDesde.getDateEditor().getUiComponent()).setText("");
+		((JTextField)dateHasta.getDateEditor().getUiComponent()).setText("");
+	}
 }
