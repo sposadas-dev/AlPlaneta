@@ -598,8 +598,10 @@ public class ControladorAdministrativo implements ActionListener {
 	}
 	
 	private void mostrarVentanaEditarPasaje(ActionEvent ep) {
+		
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
 		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
+		
 		if (filaSeleccionada != -1){
 			controladorPasaje.editarPasaje(filaSeleccionada);
 			llenarTablaPasajes(pasaje.obtenerPasajes());
@@ -905,8 +907,8 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
-							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
+							this.mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+							this.mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
 							"$ "+this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
