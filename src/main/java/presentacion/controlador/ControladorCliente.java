@@ -327,27 +327,6 @@ public class ControladorCliente implements ActionListener{
 		}		
 	}
 	
-	
-//	private void llenarTablaClientes(){
-//		panelCliente.getModelClientes().setRowCount(0); //Para vaciar la tabla
-//		panelCliente.getModelClientes().setColumnCount(0);
-//		panelCliente.getModelClientes().setColumnIdentifiers(this.panelCliente.getNombreColumnasClientes());
-//			
-//		this.clientes_en_tabla = cliente.obtenerClientes();
-//			
-//		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
-//			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
-//							this.clientes_en_tabla.get(i).getApellido(),
-//							this.clientes_en_tabla.get(i).getDni(),
-//							this.clientes_en_tabla.get(i).getFechaNacimiento(),
-//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
-//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
-//							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()	
-//			};
-//			this.panelCliente.getModelClientes().addRow(fila);
-//		}		
-//	}
-	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub

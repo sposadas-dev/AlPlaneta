@@ -332,7 +332,6 @@ public class ControladorAdministrador {
 	private void mostrarVentanaEditarCuenta(ActionEvent mve) {
 		int filaSeleccionada = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
 		if (filaSeleccionada != -1){
-			ventanaEditarCuenta.setVisible(true);
 			cargarcomboBoxRoles();
 			mostrarCuenta(filaSeleccionada);
 		}else{
@@ -552,6 +551,7 @@ public class ControladorAdministrador {
 					administradorEdit.setLocal(localRespaldo);
 					this.administrador.agregarAdministrador(administradorEdit);
 					
+					this.administradorEdit = null;
 					break;
 				case "administrativo":
 					idRol = 2;
@@ -571,6 +571,7 @@ public class ControladorAdministrador {
 					administrativoEdit.setLocal(localRespaldo);
 					this.administrativo.agregarAdministrativo(administrativoEdit);
 					
+					this.administrativoEdit = null;
 					break;
 				case "coordinador":
 					idRol = 3;
@@ -590,6 +591,7 @@ public class ControladorAdministrador {
 					coordinadorEdit.setLocal(localRespaldo);
 					this.coordinador.agregarCoordinador(coordinadorEdit);
 					
+					this.coordinadorEdit = null;
 					break;
 				case "contador":
 					idRol = 4;
@@ -609,6 +611,7 @@ public class ControladorAdministrador {
 					contadorEdit.setLocal(localRespaldo);
 					this.contador.agregarContador(contadorEdit);
 					
+					this.contadorEdit = null;
 					break;
 			}
 			llenarTablaEmpleados();
@@ -616,8 +619,8 @@ public class ControladorAdministrador {
 	}
 	
 	private void mostrarCuenta(int filaSeleccionada){
-		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarCuenta.mostrarVentana(true);
+		this.filaSeleccionada = filaSeleccionada;
 		obtenerEmpleado(this.filaSeleccionada);
 		
 		if( administradorEdit != null ) {
@@ -625,21 +628,29 @@ public class ControladorAdministrador {
 			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
 			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(administradorEdit.getMail());
+			ventanaEditarCuenta.getComboBoxRoles().setSelectedIndex(0);
+			
 		} else if ( administrativoEdit != null ) {
 			ventanaEditarCuenta.getTxtNombre().setText(administrativoEdit.getNombre());
-			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
-			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
+			ventanaEditarCuenta.getTxtApellido().setText(administrativoEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(administrativoEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(administrativoEdit.getMail());
+			ventanaEditarCuenta.getComboBoxRoles().setSelectedIndex(1);
+			
 		} else if ( coordinadorEdit != null ) {
 			ventanaEditarCuenta.getTxtNombre().setText(coordinadorEdit.getNombre());
-			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
-			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
+			ventanaEditarCuenta.getTxtApellido().setText(coordinadorEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(coordinadorEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(coordinadorEdit.getMail());
+			ventanaEditarCuenta.getComboBoxRoles().setSelectedIndex(2);
+			
 		} else if ( contadorEdit != null) {
 			ventanaEditarCuenta.getTxtNombre().setText(contadorEdit.getNombre());
-			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
-			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
+			ventanaEditarCuenta.getTxtApellido().setText(contadorEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(contadorEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(contadorEdit.getMail());
+			ventanaEditarCuenta.getComboBoxRoles().setSelectedIndex(3);
+			
 		}
 		ventanaEditarCuenta.getTxtUsuario().setText(this.logins_en_tabla.get(this.filaSeleccionada).getUsuario());
 		ventanaEditarCuenta.getTxtContrasena().setText(this.logins_en_tabla.get(this.filaSeleccionada).getContrasena());
@@ -648,12 +659,24 @@ public class ControladorAdministrador {
 	public void obtenerEmpleado(int seleccionado) {
 		if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("administrador")) {
 			this.administradorEdit = administrador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+			this.administrativoEdit = null;
+			this.coordinadorEdit = null;
+			this.contadorEdit = null;
 		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("administrativo")) {
 			this.administrativoEdit = administrativo.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+			this.administradorEdit = null;
+			this.coordinadorEdit = null;
+			this.contadorEdit = null;
 		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("coordinador")) {
 			this.coordinadorEdit = coordinador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+			this.administradorEdit = null;
+			this.administrativoEdit = null;
+			this.contadorEdit = null;
 		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("contador")) {
 			this.contadorEdit = contador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+			this.administradorEdit = null;
+			this.administrativoEdit = null;
+			this.coordinadorEdit = null;
 		}
 	}
 	
