@@ -1,13 +1,22 @@
 package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
+import dto.AdministrativoDTO;
 import dto.CoordinadorDTO;
-import dto.EstadoPasajeDTO;
+import dto.EventoDTO;
 import dto.LoginDTO;
 import dto.PasajeDTO;
 import dto.RegimenPuntoDTO;
@@ -15,35 +24,54 @@ import modelo.Administrativo;
 import modelo.Coordinador;
 import modelo.EstadoPasaje;
 import modelo.Login;
+import modelo.ModeloEvento;
 import modelo.ModeloRegimenPunto;
 import modelo.Pasaje;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.reportes.Reporte;
+import presentacion.vista.administrativo.VentanaMotivosReprogramacionEvento;
+import presentacion.vista.administrativo.VentanaReasignarEvento;
+import presentacion.vista.administrativo.VentanaTablaAdministrativos;
 import presentacion.vista.coordinador.VentanaCambiarContrasena;
 import presentacion.vista.coordinador.VentanaGenerarReporte;
 import presentacion.vista.coordinador.VistaCoordinador;
+import recursos.Mapper;
 
 public class ControladorCOOR {
 	
 	private VistaCoordinador vistaCoordinador;
 	private VentanaGenerarReporte ventanaGenerarReporte;
 	private VentanaCambiarContrasena ventanaCambiarContrasenia;
+	private VentanaReasignarEvento ventanaReasignarEvento;
+	private VentanaTablaAdministrativos ventanaTablaAdministrativos;
+	private VentanaMotivosReprogramacionEvento ventanaMotivos;
 	private List<RegimenPuntoDTO> puntos_en_tabla;
-	private Login login;
-	
+	private List<EventoDTO> eventosEnTabla;
+	private List<AdministrativoDTO> administrativosEnTabla;
+	private Login login;	
+	private Mapper mapper;
 	private CoordinadorDTO coordinadorLogueado;
 	private Coordinador coordinador;
 	private Administrativo administrativo;
 	private ModeloRegimenPunto punto;
+	private ModeloEvento modeloEvento;
 	private ControladorRegimenPuntos controladorRegimenPuntos;
-	
+	private ControladorEvento controladorEvento;
+	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private DefaultTableModel tableModel;
+	private StringBuilder cad = new StringBuilder();
 	private Pasaje pasaje;
+	private AdministrativoDTO administrativoElegido;
 	
 	public ControladorCOOR(VistaCoordinador vistaCoordinador,CoordinadorDTO coordinadorLogueado){
 
 		this.vistaCoordinador = vistaCoordinador;
 		this.ventanaGenerarReporte = VentanaGenerarReporte.getInstance();
 		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
+		this.ventanaReasignarEvento = VentanaReasignarEvento.getInstance();
+		this.ventanaMotivos = VentanaMotivosReprogramacionEvento.getInstance();
+		this.ventanaTablaAdministrativos = VentanaTablaAdministrativos.getInstance();
+		
 
 //INSTANCES
 		
@@ -71,14 +99,97 @@ public class ControladorCOOR {
 		this.coordinador = new Coordinador(new DAOSQLFactory());
 		this.administrativo = new Administrativo(new DAOSQLFactory());
 		this.punto = new ModeloRegimenPunto(new DAOSQLFactory()); 
+		this.modeloEvento = new ModeloEvento(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
 		this.coordinadorLogueado = coordinadorLogueado;
+		this.mapper = new Mapper();
+		this.administrativoElegido = null;
 		
+		this.vistaCoordinador.getItemVisualizarEventos().addActionListener(e->mostrarTodosEventos(e));
+		this.vistaCoordinador.getItemReasignarEvento().addActionListener(e->reasignarEvento(e));
+		
+		this.eventosEnTabla = modeloEvento.obtenerEvento();
+		this.administrativosEnTabla = administrativo.obtenerAdministrativos();
 //CONTROLADORES		
 		this.controladorRegimenPuntos = new ControladorRegimenPuntos();
-	
-	} 
+		this.controladorEvento = new ControladorEvento(modeloEvento,eventosEnTabla);
+
+		this.vistaCoordinador.getPanelEvento().getFiltroApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					tableModel = (DefaultTableModel) vistaCoordinador.getPanelEvento().getModelEventos();
+					TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(tableModel);
+					vistaCoordinador.getPanelEvento().getTablaEventos().setRowSorter(tr);
+					if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+						if (letra == KeyEvent.VK_BACK_SPACE){
+							if(cad.length() != 0) {
+								cad.deleteCharAt(cad.length()-1);
+						        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+							}
+						} else{
+							cad.append(String.valueOf(letra));
+			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+						}
+					}
+			}
+		});
+		
+		this.vistaCoordinador.getPanelEvento().getFiltroDesde().addPropertyChangeListener( new PropertyChangeListener() {
+		    @Override
+		    public void propertyChange(PropertyChangeEvent e) {
+		    	String desde = obtenerFecha(e.getNewValue().toString());
+		    	if(vistaCoordinador.getPanelEvento().getFiltroHasta().getDate() != null){
+		    		String hasta = obtenerFecha(vistaCoordinador.getPanelEvento().getFiltroHasta().getDate().toString());
+		    		llenarTablaEventos(modeloEvento.obtenerBetween(desde, hasta));
+		    	}
+		    }
+		});
+		
+		this.vistaCoordinador.getPanelEvento().getFiltroHasta().addPropertyChangeListener( new PropertyChangeListener() {
+		    @Override
+		    public void propertyChange(PropertyChangeEvent e) {
+		    	String hasta = obtenerFecha(e.getNewValue().toString());
+		    	if(vistaCoordinador.getPanelEvento().getFiltroDesde().getDate() != null){
+		    		String desde = obtenerFecha(vistaCoordinador.getPanelEvento().getFiltroDesde().getDate().toString());
+		    		llenarTablaEventos(modeloEvento.obtenerBetween(desde, hasta));
+		    	}
+		    }
+		});	
+		
+		this.vistaCoordinador.getPanelEvento().getComboFiltros().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String filtro = vistaCoordinador.getPanelEvento().getComboFiltros().getSelectedItem().toString();
+				if(!filtro.equals("Todos"))
+					llenarTablaEventos(filtrarEventoSegun(filtro));		
+				else {					
+					limpiarFiltrosEvento();
+					llenarTablaEventos(modeloEvento.obtenerEvento());
+				}
+			}
+		});
+		
+		this.vistaCoordinador.getPanelEvento().getFiltroNombre().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					tableModel = (DefaultTableModel) vistaCoordinador.getPanelEvento().getModelEventos();
+					TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(tableModel);
+					vistaCoordinador.getPanelEvento().getTablaEventos().setRowSorter(tr);
+					if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+						if (letra == KeyEvent.VK_BACK_SPACE){
+							if(cad.length() != 0) {
+								cad.deleteCharAt(cad.length()-1);
+						        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+							}
+						} else{
+							cad.append(String.valueOf(letra));
+			    			tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+						}
+					}
+			}
+		});
+	}
+		
 
 
 	public void inicializar(){
@@ -315,5 +426,201 @@ public class ControladorCOOR {
 		pasajes.addAll(pasajesReservados);
 		
 		return pasajes;
+	}
+	
+	private void mostrarTodosEventos(ActionEvent e) {
+		this.vistaCoordinador.getPanelEvento().mostrarPanelEvento(true);
+		limpiarFiltrosEvento();
+		llenarTablaEventos(modeloEvento.obtenerEvento());
+	}
+	
+	private void llenarTablaEventos(List<EventoDTO> tabla){
+		this.vistaCoordinador.getPanelEvento().getModelEventos().setRowCount(0); //Para vaciar la tabla
+		this.vistaCoordinador.getPanelEvento().getModelEventos().setColumnCount(0);
+		this.vistaCoordinador.getPanelEvento().getModelEventos().setColumnIdentifiers(this.vistaCoordinador.getPanelEvento().getNombreColumnasEventos());
+
+		this.eventosEnTabla = modeloEvento.obtenerEvento();
+			
+		for (int i = 0; i < tabla.size(); i++){
+
+			Object[] fila = {
+							mapper.parseToString(tabla.get(i).getFechaIngreso()),
+							mapper.parseToString(tabla.get(i).getFechaEvento()),
+							tabla.get(i).getHoraEvento(),
+							tabla.get(i).getDescripcion(),
+							tabla.get(i).getCliente().getApellido(),
+							tabla.get(i).getCliente().getNombre(),
+							tabla.get(i).getAdministrativo().getApellido()+" "+tabla.get(i).getAdministrativo().getNombre(),
+							tabla.get(i).getEstadoEvento().getNombre(),
+							this.estaReprogramado(tabla.get(i))
+			};
+							this.vistaCoordinador.getPanelEvento().getModelEventos().addRow(fila);
+		}	
+		controladorEvento.llenarComboEstados();
+	}
+	
+	public String estaReprogramado(EventoDTO e) {
+		if(e.getMotivoReprogramacion().equals(""))
+			return "no";
+		else
+			return "si";
+	}
+	
+	protected String obtenerFecha(String string) {
+		String [] aux = string.split(" ");
+		String ret="";	
+		for(int i=0; i<aux.length; i++) {
+
+			if(i==5)	//año
+				ret= aux[5] + ret;
+			
+			if(i==2)
+				ret = ret + aux[2] ; //dia;
+			
+			if(i==1) {
+				if(aux[1].equals("Jan")) //mes
+					ret += "01";
+				if(aux[1].equals("Feb"))
+					ret += "02";
+				if(aux[1].equals("Mar"))
+					ret += "03";
+				if(aux[1].equals("Apr"))
+					ret += "04";
+				if(aux[1].equals("May"))
+					ret += "05";
+				if(aux[1].equals("Jun"))
+					ret += "06";
+				if(aux[1].equals("Jul"))
+					ret += "07";
+				if(aux[1].equals("Aug"))
+					ret += "08";
+				if(aux[1].equals("Sep"))
+					ret += "09";
+				if(aux[1].equals("Oct"))
+					ret += "10";
+				if(aux[1].equals("Nov"))
+					ret += "11";
+				if(aux[1].equals("Dec"))
+					ret += "12";
+			}
+		}	
+		return ret;
+	}
+	
+	public List<EventoDTO> filtrarEventoSegun(String datoCombo){
+		List<EventoDTO> ret = new ArrayList<EventoDTO>();
+		for (int i = 0; i < eventosEnTabla.size(); i++) {
+			if (eventosEnTabla.get(i).getEstadoEvento().getNombre().compareTo(datoCombo)==0) {
+				ret.add(eventosEnTabla.get(i));
+			}
+		}
+		return ret;
+	}
+	
+	private void limpiarFiltrosEvento() {
+		this.vistaCoordinador.getPanelEvento().getComboFiltros().setSelectedIndex(0);
+	}
+	
+	private void reasignarEvento(ActionEvent e) {
+		int filaSeleccionada = this.vistaCoordinador.getPanelEvento().getTablaEventos().getSelectedRow();
+		if (filaSeleccionada != -1){
+			verDatosDelEvento(filaSeleccionada);
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}	
+	}
+	
+	private void verDatosDelEvento(int filaSeleccionada) {
+		EventoDTO eventoSeleccionado = this.eventosEnTabla.get(filaSeleccionada);
+		ventanaReasignarEvento.mostrarVentana(true);
+		ventanaReasignarEvento.getFechaEvento().setText(mapper.parseToString(eventoSeleccionado.getFechaEvento()));
+		ventanaReasignarEvento.getHoraEvento().setText(eventoSeleccionado.getHoraEvento().toString());
+		ventanaReasignarEvento.getTxtDescripcion().setText(eventoSeleccionado.getDescripcion());
+		ventanaReasignarEvento.getEstado().setText(eventoSeleccionado.getEstadoEvento().getNombre());
+		ventanaReasignarEvento.getTxtDni().setText(eventoSeleccionado.getCliente().getDni());
+		ventanaReasignarEvento.getTxtApellido().setText(eventoSeleccionado.getCliente().getApellido());
+		ventanaReasignarEvento.getTxtNombre().setText(eventoSeleccionado.getCliente().getNombre());
+		ventanaReasignarEvento.getAdministrativo().setText(eventoSeleccionado.getAdministrativo().getApellido()+" "+eventoSeleccionado.getAdministrativo().getNombre());		
+		botonesEnReasignarEvento(eventoSeleccionado);
+	}
+
+
+
+	private void botonesEnReasignarEvento(EventoDTO selec) {
+		ventanaReasignarEvento.getBtnReasignar().addActionListener(r->mostrarTablaAdministrativos(r));
+		ventanaReasignarEvento.getBtnMotivos().addActionListener(cv->mostrarMotivos(cv,selec));
+		ventanaReasignarEvento.getBtnOk().addActionListener(rc->modificarAdministrativoEnEvento(rc,selec));
+		ventanaMotivos.getBtnCancelar().addActionListener(a->cerrarVentanaMotivos(a));
+	}
+	
+	private void mostrarTablaAdministrativos(ActionEvent e) {
+		ventanaReasignarEvento.mostrarVentana(false);
+		ventanaTablaAdministrativos.setVisible(true);
+		ventanaTablaAdministrativos.getBtnConfirmar().addActionListener(f->confirmarAdministrativo(f));
+		ventanaTablaAdministrativos.getBtnAtras().addActionListener(f->cancelarSeleccionAdministrativo(f));
+		llenarTablaAdministrativosSin();
+	}
+	
+	private void llenarTablaAdministrativosSin(){
+		ventanaTablaAdministrativos.getModelAdministrativos().setRowCount(0); //Para vaciar la tabla
+		ventanaTablaAdministrativos.getModelAdministrativos().setColumnCount(0);
+		ventanaTablaAdministrativos.getModelAdministrativos().setColumnIdentifiers(ventanaTablaAdministrativos.getNombreColumnas());
+			
+		administrativosEnTabla = administrativo.obtenerAdministrativos();
+		
+		for (int i = 0; i < administrativosEnTabla.size(); i++){
+				Object[] fila = {
+						administrativosEnTabla.get(i).getApellido(),
+						administrativosEnTabla.get(i).getNombre(),
+						administrativosEnTabla.get(i).getDni(),
+						administrativosEnTabla.get(i).getMail()
+				};
+			ventanaTablaAdministrativos.getModelAdministrativos().addRow(fila);
+		}		
+	}
+	
+	private void confirmarAdministrativo(ActionEvent e) {
+		AdministrativoDTO ret = null;
+		int filaSeleccionada = this.ventanaTablaAdministrativos.getTablaAdministrativos().getSelectedRow();
+		if (filaSeleccionada != -1){
+			this.ventanaTablaAdministrativos.mostrarVentana(false);
+			ret = administrativosEnTabla.get(filaSeleccionada);
+			ventanaReasignarEvento.mostrarVentana(true);
+			ventanaReasignarEvento.getAdministrativo().setText(ret.getApellido()+" "+ret.getNombre());
+			administrativoElegido = ret;
+			ventanaReasignarEvento.getBtnOk().setEnabled(true);
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	
+	private void cancelarSeleccionAdministrativo(ActionEvent e) {
+		this.ventanaTablaAdministrativos.mostrarVentana(false);
+		this.ventanaReasignarEvento.mostrarVentana(true);
+		administrativoElegido = null;
+		ventanaReasignarEvento.getBtnOk().setEnabled(false);
+
+	}
+	
+	private void mostrarMotivos(ActionEvent e,EventoDTO selec) {
+		ventanaReasignarEvento.setEnabled(false);
+		ventanaMotivos.getTxtMotivos().setText(selec.getMotivoReprogramacion());
+		ventanaMotivos.mostrarVentana(true);	
+	}
+	
+	private void modificarAdministrativoEnEvento(ActionEvent e,EventoDTO evento) {
+			evento.setAdministrativo(administrativoElegido);
+			modeloEvento.editarAdminEnEvento(evento);
+			ventanaReasignarEvento.mostrarVentana(false);
+			llenarTablaEventos(modeloEvento.obtenerEvento());
+	}
+	
+	private void cerrarVentanaMotivos(ActionEvent e) {
+		this.ventanaReasignarEvento.setEnabled(true);
+		this.ventanaMotivos.limpiarCampos();
+		this.ventanaMotivos.cerrarVentana();
 	}
 }

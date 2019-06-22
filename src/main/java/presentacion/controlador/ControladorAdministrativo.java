@@ -28,6 +28,7 @@ import dto.PasajeDTO;
 import dto.PromocionDTO;
 import dto.RolDTO;
 import dto.ViajeDTO;
+import generatePDF.GeneratePDF;
 import modelo.Cliente;
 import modelo.Login;
 import modelo.ModeloEvento;
@@ -47,7 +48,6 @@ import presentacion.vista.administrativo.VentanaTablaViajes;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
 import presentacion.vista.administrativo.VistaAdministrativo;
-import generatePDF.GeneratePDF;
 import recursos.Mapper;
 
 public class ControladorAdministrativo implements ActionListener {
@@ -382,7 +382,8 @@ public class ControladorAdministrativo implements ActionListener {
 
 		controladorCliente = new ControladorCliente(ventanaRegistrarCliente, ventanaEditarCliente, cliente);
 
-		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado, this.eventos_en_tabla);
+		controladorEvento = new ControladorEvento(evento, this.eventos_en_tabla);
+		this.controladorEvento.setAdministrativoLogueado(administrativoLogueado);
 		
         controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
         controladorDatosLogin = new ControladorDatosLogin();
@@ -698,7 +699,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 	}
 	
-	private void mostrarEventos(ActionEvent ap) {
+	public void mostrarEventos(ActionEvent ap) {
 		this.vista.getPanelEvento().mostrarPanelEvento(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
@@ -932,7 +933,7 @@ public class ControladorAdministrativo implements ActionListener {
 							tabla.get(i).getDescripcion(),
 							tabla.get(i).getCliente().getApellido(),
 							tabla.get(i).getCliente().getNombre(),
-							tabla.get(i).getAdministrativo().getNombre(),
+							tabla.get(i).getAdministrativo().getApellido()+" "+tabla.get(i).getAdministrativo().getNombre(),
 							tabla.get(i).getEstadoEvento().getNombre(),
 							this.estaReprogramado(tabla.get(i))
 			};

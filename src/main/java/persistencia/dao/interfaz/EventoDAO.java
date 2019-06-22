@@ -15,5 +15,7 @@ public interface EventoDAO {
 
 	public EventoDTO getEventoById(int id);
 
-	List<EventoDTO> readBetween(String i, String j);
+	public List<EventoDTO> readBetween(String i, String j);
+
+	public boolean updateAdministrativo(EventoDTO evento);
 }
