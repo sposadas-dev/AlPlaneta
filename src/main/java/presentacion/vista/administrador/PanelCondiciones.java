@@ -51,7 +51,7 @@ public class PanelCondiciones extends JPanel {
 		add(panelTransporte);
 		panelTransporte.setLayout(null);
 		
-		lblCondiciones = new JLabel("Devolución de dinero por cancelación");
+		lblCondiciones = new JLabel("Reembolso de dinero por cancelación");
 		lblCondiciones.setBounds(228, 0, 740, 65);
 		lblCondiciones.setForeground(Color.WHITE);
 		lblCondiciones.setFont(new Font("Tahoma", Font.BOLD, 36));
@@ -59,7 +59,6 @@ public class PanelCondiciones extends JPanel {
 		
 		Reservas = new JCheckBox("Reservas");
 		Reservas.setBounds(70, 6, 95, 21);
-		Reservas.setSelected(true);
 		add(Reservas);
 		
 		Ventas = new JCheckBox("Ventas");
@@ -68,6 +67,7 @@ public class PanelCondiciones extends JPanel {
 		
 		Todas = new JCheckBox("Todas");
 		Todas.setBounds(264, 5, 95, 21);
+		Todas.setSelected(true);
 		add(Todas);
 	
 		btnConfirmar.setVisible(false);
