@@ -18,6 +18,7 @@ import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
+import dto.CondicionDeCancelacionDTO;
 import dto.ContadorDTO;
 import dto.CoordinadorDTO;
 import dto.FormaPagoDTO;
@@ -33,14 +34,17 @@ import modelo.Coordinador;
 import modelo.FormaPago;
 import modelo.Local;
 import modelo.Login;
+import modelo.ModeloCondicionDeCancelacion;
 import modelo.Rol;
 import modelo.Transporte;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.administrador.LoadingWorker;
 import presentacion.vista.administrador.PanelEmpleados;
+import presentacion.vista.administrador.VentanaAgregarCondicionCancelacion;
 import presentacion.vista.administrador.VentanaAgregarEmpleado;
 import presentacion.vista.administrador.VentanaAgregarLocal;
 import presentacion.vista.administrador.VentanaCambiarContrasena;
+import presentacion.vista.administrador.VentanaEditarCondicionCancelacion;
 import presentacion.vista.administrador.VentanaEditarCuenta;
 import presentacion.vista.administrador.VentanaEditarViaje;
 import presentacion.vista.administrador.VistaAdministrador;
@@ -52,6 +56,10 @@ public class ControladorAdministrador {
 	private VentanaEditarCuenta ventanaEditarCuenta;
 	private VentanaAgregarLocal ventanaAgregarLocal;
 	private VentanaEditarViaje ventanaEditarViaje;
+	private VentanaAgregarCondicionCancelacion ventanaAgregarCondicion;
+	private VentanaEditarCondicionCancelacion ventanaEditarCondicion;
+	private ModeloCondicionDeCancelacion modeloCondicionCancelacion;
+	private List<CondicionDeCancelacionDTO> condiciones_en_tabla;
 	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	private int filaSeleccionada;
 	private PanelEmpleados panel;
@@ -77,6 +85,7 @@ public class ControladorAdministrador {
 	private AdministrativoDTO administrativoEdit;
 	private CoordinadorDTO coordinadorEdit;
 	private ContadorDTO contadorEdit;
+	private CondicionDeCancelacionDTO condicionEditar;
 	
 	private Transporte transporte;
 	private FormaPago formapago;
@@ -99,6 +108,7 @@ public class ControladorAdministrador {
 		this.ventanaEditarViaje = VentanaEditarViaje.getInstance();
 		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
 		this.enviodeCorreo = new EnvioDeCorreo();
+		this.condicionEditar = new CondicionDeCancelacionDTO();
 		
 //MENU ITEMS		
 		this.vistaAdministrador.getItemAgregarCuenta().addActionListener(ac->mostrarVentanaAgregarEmpleado(ac));
@@ -169,7 +179,7 @@ public class ControladorAdministrador {
 		this.formapago = new FormaPago(new DAOSQLFactory());
 		this.login = new Login(new DAOSQLFactory());
 		this.local = new Local(new DAOSQLFactory());
-
+		this.modeloCondicionCancelacion = new ModeloCondicionDeCancelacion(new DAOSQLFactory());
 //CONTROLADORES		
 		this.controladorTransporte = new ControladorTransporte();
 		this.controladorFormaPago = new ControladorFormaPago();
@@ -179,9 +189,213 @@ public class ControladorAdministrador {
 		this.controladorCiudad = ControladorCiudad.getInstance();
 		this.controlador = Controlador.getInstance();
 		this.administradorLogueado = administradorLogueado;
-
+		this.ventanaAgregarCondicion = VentanaAgregarCondicionCancelacion.getInstance();
+		this.ventanaEditarCondicion = VentanaEditarCondicionCancelacion.getInstance();
+		
+		
+		this.condiciones_en_tabla = modeloCondicionCancelacion.obtenerCondiciones();
+		this.vistaAdministrador.getItemVizualizarCondicion().addActionListener(ev->visualizarCondicion(ev));
+		this.vistaAdministrador.getItemAgregarCondicion().addActionListener(ev->mostrarAgregarCondicion(ev));
+		this.vistaAdministrador.getItemEditarCondicion().addActionListener(ev->mostrarEditarCondicion(ev));
+		this.vistaAdministrador.getItemEliminarCondicion().addActionListener(ev->eliminarCondicion(ev));
+		
+		this.ventanaAgregarCondicion.getBtnAceptar().addActionListener(ev->agregarCondicion(ev));
+		this.ventanaAgregarCondicion.getBtnCancelar().addActionListener(ev->cancelarVentanaAgregarCondicion(ev));
+		
+		// AGREGAR BOTON CANCELAR
+		this.ventanaEditarCondicion.getBtnAceptar().addActionListener(ev->editarCondicion(ev));
+		this.ventanaEditarCondicion.getBtnCancelar().addActionListener(ev->cancelarVentanaEditarCondicion(ev));
+		
+		// AGREGAR BOTON CANCELAR
+		this.vistaAdministrador.getPanelCondiciones().getVentas().addActionListener(ev->mostrarCondicionesDeVentas(ev));
+		this.vistaAdministrador.getPanelCondiciones().getReservas().addActionListener(ev->mostrarCondicionesDeReservas(ev));
+		this.vistaAdministrador.getPanelCondiciones().getTodas().addActionListener(ev->mostrarTodasCondiciones(ev));
+		
 	}
 	
+	private void cancelarVentanaEditarCondicion(ActionEvent ev) {
+		this.ventanaEditarCondicion.limpiarCampos();
+		this.ventanaEditarCondicion.setVisible(false);
+	}
+
+	private void cancelarVentanaAgregarCondicion(ActionEvent ev) {
+		this.ventanaAgregarCondicion.limpiarCampos();
+		this.ventanaAgregarCondicion.setVisible(false);
+	}
+
+	private void mostrarTodasCondiciones(ActionEvent ev) {
+		this.vistaAdministrador.getPanelCondiciones().getReservas().setSelected(false);
+		this.vistaAdministrador.getPanelCondiciones().getVentas().setSelected(false);
+		this.vistaAdministrador.getPanelCondiciones().getTodas().setSelected(true);
+		llenarTablaCondiciones();
+	}
+
+	private void mostrarCondicionesDeReservas(ActionEvent ev) {
+		this.vistaAdministrador.getPanelCondiciones().getReservas().setSelected(true);
+		this.vistaAdministrador.getPanelCondiciones().getVentas().setSelected(false);
+		this.vistaAdministrador.getPanelCondiciones().getTodas().setSelected(false);
+		
+		this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().setColumnCount(0);
+		this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().setColumnIdentifiers(this.vistaAdministrador.getPanelCondiciones().getNombreColumnasCondiciones());
+		this.condiciones_en_tabla = modeloCondicionCancelacion.obtenerCondiciones();
+		
+		for (int i = 0; i < this.condiciones_en_tabla.size(); i++){
+			if(condiciones_en_tabla.get(i).getEstadoDelPasaje().equals("reservado")){
+				Object[] fila = {this.condiciones_en_tabla.get(i).getInicio(),
+								 this.condiciones_en_tabla.get(i).getFin(),
+								 "%"+this.condiciones_en_tabla.get(i).getPorcentaje(),
+								 this.condiciones_en_tabla.get(i).getEstadoDelPasaje()
+								};
+				this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().addRow(fila);
+			}
+		}
+		this.vistaAdministrador.getPanelCondiciones().setVisible(true);
+	}
+
+	private void mostrarCondicionesDeVentas(ActionEvent ev) {
+		this.vistaAdministrador.getPanelCondiciones().getVentas().setSelected(true);
+		this.vistaAdministrador.getPanelCondiciones().getReservas().setSelected(false);
+		this.vistaAdministrador.getPanelCondiciones().getTodas().setSelected(false);
+		
+		
+		this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().setColumnCount(0);
+		this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().setColumnIdentifiers(this.vistaAdministrador.getPanelCondiciones().getNombreColumnasCondiciones());
+		this.condiciones_en_tabla = modeloCondicionCancelacion.obtenerCondiciones();
+		
+		for (int i = 0; i < this.condiciones_en_tabla.size(); i++){
+			if(condiciones_en_tabla.get(i).getEstadoDelPasaje().equals("vendido")){
+				Object[] fila = {this.condiciones_en_tabla.get(i).getInicio(),
+								 this.condiciones_en_tabla.get(i).getFin(),
+								 "%"+this.condiciones_en_tabla.get(i).getPorcentaje(),
+								 this.condiciones_en_tabla.get(i).getEstadoDelPasaje()
+								};
+				this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().addRow(fila);
+			}
+		}
+		this.vistaAdministrador.getPanelCondiciones().setVisible(true);
+	}
+
+	private void visualizarCondicion(ActionEvent ev) {
+		llenarTablaCondiciones();
+	}
+	
+	private void mostrarEditarCondicion(ActionEvent ev) {
+		this.condiciones_en_tabla = this.modeloCondicionCancelacion.obtenerCondiciones();
+		int filaSeleccionada = this.vistaAdministrador.getPanelCondiciones().getTablaCondiciones().getSelectedRow();
+		this.condicionEditar = null;
+		
+		if (filaSeleccionada != -1){
+			this.condicionEditar = this.condiciones_en_tabla.get(filaSeleccionada);
+			this.ventanaEditarCondicion.getTxtDiaInicio().setText((String.valueOf(condicionEditar.getInicio())));
+			this.ventanaEditarCondicion.getTxtDiaFin().setText((String.valueOf(condicionEditar.getFin())));
+			this.ventanaEditarCondicion.getTxtPorcentaje().setText(String.valueOf(condicionEditar.getPorcentaje()));
+			this.ventanaEditarCondicion.getComboBoxEstados().setSelectedItem(condicionEditar.getEstadoDelPasaje());
+			this.ventanaEditarCondicion.setVisible(true);
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void editarCondicion(ActionEvent ev) {
+		if(this.condicionEditar==null){
+			JOptionPane.showMessageDialog(null, "No se pudo editar la condicion de cancelacion ", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+			
+		this.condicionEditar.setInicio(Integer.valueOf(ventanaEditarCondicion.getTxtDiaInicio().getText()));
+		this.condicionEditar.setFin(Integer.valueOf(ventanaEditarCondicion.getTxtDiaFin().getText()));
+		this.condicionEditar.setPorcentaje(Integer.valueOf(ventanaEditarCondicion.getTxtPorcentaje().getText()));
+		this.condicionEditar.setEstadoDelPasaje(ventanaEditarCondicion.getComboBoxEstados().getSelectedItem().toString());
+		if(puedeAgregarCondicion(this.condicionEditar)){
+			this.modeloCondicionCancelacion.updateCondicionDeCancelacion(this.condicionEditar);
+			this.ventanaEditarCondicion.limpiarCampos();
+			this.ventanaEditarCondicion.setVisible(false);
+			llenarTablaCondiciones();
+		}else{
+			JOptionPane.showMessageDialog(null, "Verifique los valores que no coincidan con otra condicion de cancelacion", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void mostrarAgregarCondicion(ActionEvent ev) {
+		llenarTablaCondiciones();
+		this.ventanaAgregarCondicion.setVisible(true);
+	}
+
+	private void agregarCondicion(ActionEvent ev) {
+		CondicionDeCancelacionDTO condicion = new CondicionDeCancelacionDTO();
+		condicion.setInicio(Integer.valueOf(ventanaAgregarCondicion.getTxtDiaInicio().getText()));
+		condicion.setFin(Integer.valueOf(ventanaAgregarCondicion.getTxtDiaFin().getText()));
+		condicion.setPorcentaje(Integer.valueOf(ventanaAgregarCondicion.getTxtPorcentaje().getText()));
+		condicion.setEstadoDelPasaje(ventanaAgregarCondicion.getComboBoxEstados().getSelectedItem().toString());
+		
+		if(puedeAgregarCondicion(condicion)){
+			this.modeloCondicionCancelacion.agregarCondicionDeCancelacion(condicion);
+			this.ventanaAgregarCondicion.limpiarCampos();
+			this.ventanaAgregarCondicion.setVisible(false);
+			llenarTablaCondiciones();
+		}else{
+			JOptionPane.showMessageDialog(null, "Verifique los valores que no coincidan con otra condicion de cancelacion", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+			
+	}
+
+	private void eliminarCondicion(ActionEvent ev) {
+		this.condiciones_en_tabla = this.modeloCondicionCancelacion.obtenerCondiciones();
+		int filaSeleccionada = this.vistaAdministrador.getPanelCondiciones().getTablaCondiciones().getSelectedRow();
+		
+		if (filaSeleccionada != -1){
+			CondicionDeCancelacionDTO condicionEliminar = this.condiciones_en_tabla.get(filaSeleccionada);
+			modeloCondicionCancelacion.eliminarCondicionDeCancelacion(condicionEliminar.getIdCondicion());
+			llenarTablaCondiciones();
+			JOptionPane.showMessageDialog(null, "Se ha eliminado exitosamente", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private boolean puedeAgregarCondicion(CondicionDeCancelacionDTO condicionAgregada){
+		if(condicionAgregada.getInicio()>condicionAgregada.getFin())
+			return false;
+		
+		this.condiciones_en_tabla = modeloCondicionCancelacion.obtenerCondiciones();
+		for(CondicionDeCancelacionDTO c: condiciones_en_tabla){
+			if(condicionAgregada.getIdCondicion()!=c.getIdCondicion()){
+			
+				if(condicionAgregada.getInicio()>= c.getInicio() && 
+						condicionAgregada.getInicio()<=c.getFin() &&
+							condicionAgregada.getEstadoDelPasaje().equals(c.getEstadoDelPasaje()))
+					return false;
+				
+				if(condicionAgregada.getFin()>=c.getInicio() &&
+						condicionAgregada.getFin()<=c.getFin() &&
+							condicionAgregada.getEstadoDelPasaje().equals(c.getEstadoDelPasaje()))
+					return false;
+				
+			}
+		}
+		return true;
+	}
+
+	private void llenarTablaCondiciones() {
+		this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().setRowCount(0); //Para vaciar la tabla
+		this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().setColumnCount(0);
+		this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().setColumnIdentifiers(this.vistaAdministrador.getPanelCondiciones().getNombreColumnasCondiciones());
+		this.condiciones_en_tabla = modeloCondicionCancelacion.obtenerCondiciones();
+		
+		for (int i = 0; i < this.condiciones_en_tabla.size(); i++){
+			Object[] fila = {this.condiciones_en_tabla.get(i).getInicio(),
+							 this.condiciones_en_tabla.get(i).getFin(),
+							 "%"+this.condiciones_en_tabla.get(i).getPorcentaje(),
+							 this.condiciones_en_tabla.get(i).getEstadoDelPasaje()
+							};
+			this.vistaAdministrador.getPanelCondiciones().getModelCondiciiones().addRow(fila);
+		}
+		this.vistaAdministrador.getPanelCondiciones().setVisible(true);
+		
+	}
+
 	private void mostrarPanelDeViajes(ActionEvent v) {
 		this.controlador.mostrarPanelDeViajes();
 	}

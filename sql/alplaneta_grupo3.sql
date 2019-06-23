@@ -9,6 +9,16 @@ CREATE TABLE `local` (
   PRIMARY KEY (`idLocal`)
 );
 
+CREATE TABLE `condicioncancelacion` (
+  `idCondicion` int(11) NOT NULL AUTO_INCREMENT,
+  `inicio` int(11) NOT NULL,
+  `fin` int(11) NOT NULL,
+  `porcentaje` int(11) NOT NULL,
+  `estado` varchar(45) NOT NULL,
+  PRIMARY KEY (`idCondicion`)
+);
+
+
 CREATE TABLE `rol` (
   `idRol` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(45) NOT NULL,
@@ -329,6 +339,7 @@ INSERT INTO horario VALUES (1,'1:00'),(2,'2:00'),(3,'3:00'),(4,'4:00'),(5,'5:00'
 INSERT INTO transporte VALUES (1,'Avion'),(2,'Micro'),(3,'Buquebus');
 INSERT INTO viaje VALUES (1,'2019-05-01','2019-05-02',500,2,1,1818,1818,5,5,'12:00',1,12,500,'activo'),(2,'2019-05-04','2019-05-16',700,2,4,1818,1822,5,5,'3:00',2,14,150,'activo'),(3,'2019-05-16','2019-05-28',1200,2,4,1818,1822,5,5,'7:00',3,24,1000,'activo');
 INSERT INTO estadoevento VALUES (1,'pendiente','el evento aún no se realizó'), (2,'realizado','el evento ya se realizó'),(3,'cancelado','el evento fue cancelado'), (4,'vencido','el evento está vencido');
+INSERT INTO condicioncancelacion VALUES(1,0,6,100,'vendido'),(2,7,20,75,'vendido'),(3,21,34,50,'vendido'),(4,35,750,25,'vendido'),(5,0,9,100,'reservado'),(6,10,20,50,'reservado'),(7,21,34,34,'reservado'),(8,35,750,25,'reservado');
 
 INSERT INTO evento VALUES (1,'2019-05-27','2019-05-30','15:00:00','Consulta sobre reserva de viaje',1,1,2,'',1), (2,'2019-05-28','2019-06-04','18:00:00','Llamar a cliente por reclamo',2,1,1,'',0), (3,'2019-05-28','2019-06-04','19:15:00','Llamar al cliente por viaje a San Juan, Argentina',1,1,1,'',0), (4,'2019-05-29','2019-06-06','15:00:00','Llamar al cliente por reclamo de un viaje',2,1,1,'',0);
 INSERT INTO regimenpunto VALUES (1,1,100,4);
