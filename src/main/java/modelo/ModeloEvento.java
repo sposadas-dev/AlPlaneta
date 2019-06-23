@@ -33,4 +33,8 @@ public class ModeloEvento {
 		return this.evento.readBetween(dateA, dateB);
 	}
 	
+	public void editarAdminEnEvento(EventoDTO evento) {
+		this.evento.updateAdministrativo(evento);
+	}
+	
 }

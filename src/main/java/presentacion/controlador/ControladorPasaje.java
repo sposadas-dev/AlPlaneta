@@ -383,7 +383,8 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPasajero.getDateFechaNacimiento().setDate(pasajeroDTO.getFechaNacimiento());
 		this.ventanaPasajero.getTxtTelefono().setText(pasajeroDTO.getTelefono());
 		this.ventanaPasajero.getTxtEmail().setText(pasajeroDTO.getEmail());
-		}else{
+		}
+		else{
 			JOptionPane.showMessageDialog(ventanaPasajero, "No existe ningún cliente ni pasajero con ese DNI", "Filtro", 0);
 		}
 	}
@@ -765,9 +766,8 @@ public class ControladorPasaje implements ActionListener{
 			}
 		}
 		else {
-			
-		}
-		
+			JOptionPane.showMessageDialog(ventanaPasajero, "Seleccione forma de pago", "Filtro", 0);
+		}	
 	}
 	
 	private void darAltaDelPagoConPuntos()  {

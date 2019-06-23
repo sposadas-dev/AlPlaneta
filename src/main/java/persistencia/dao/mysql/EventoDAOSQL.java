@@ -1,20 +1,12 @@
 package persistencia.dao.mysql;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dto.AdministrativoDTO;
-import dto.ClienteDTO;
-import dto.EstadoEventoDTO;
 import dto.EventoDTO;
-import dto.LocalDTO;
-import dto.LoginDTO;
-import dto.MedioContactoDTO;
-import dto.RolDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.EventoDAO;
 
@@ -23,6 +15,7 @@ public class EventoDAOSQL implements EventoDAO {
 	private static final String insert = "INSERT INTO evento (idEvento, fechaIngreso, fechaEvento, horaEvento, descripcion, idCliente, idAdministrativo, idEstadoEvento, motivoReprogramacion,visto) VALUES (?,?,?,?,?,?,?,?,?,?)";
 	private static final String readall = "SELECT * FROM evento";
 	private static final String update = "UPDATE evento SET fechaEvento=?, horaEvento=?, idEstadoEvento=?, motivoReprogramacion=?, visto=? WHERE idEvento= ?";//VER
+	private static final String updateAdministrativo = "UPDATE evento SET idAdministrativo=? WHERE idEvento= ?";
 	private static final String updateVisto = "UPDATE evento SET visto=? WHERE idEvento= ?";//VER
 	private static final String browse = "SELECT * FROM evento WHERE idEvento = ?";
 	private static final String readbetween = "SELECT * FROM evento WHERE fechaEvento BETWEEN ? AND ?";
@@ -139,6 +132,27 @@ public class EventoDAOSQL implements EventoDAO {
 			statement.setString(4, evento.getMotivoReprogramacion());
 			statement.setInt(5, evento.getVisto());
 			statement.setInt(6, evento.getIdEvento());
+		
+			chequeoUpdate = statement.executeUpdate();
+			if(chequeoUpdate > 0) //Si se ejecutó devuelvo true
+				return true;
+		} 
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean updateAdministrativo(EventoDTO evento) {
+		PreparedStatement statement;
+		int chequeoUpdate = 0;
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(updateAdministrativo);
+			
+			statement.setInt(1, evento.getAdministrativo().getIdAdministrativo());
+			statement.setInt(2, evento.getIdEvento());
 		
 			chequeoUpdate = statement.executeUpdate();
 			if(chequeoUpdate > 0) //Si se ejecutó devuelvo true
