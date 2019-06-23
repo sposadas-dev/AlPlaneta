@@ -4,6 +4,7 @@ import persistencia.dao.interfaz.AdministradorDAO;
 import persistencia.dao.interfaz.AdministrativoDAO;
 import persistencia.dao.interfaz.CiudadDAO;
 import persistencia.dao.interfaz.ClienteDAO;
+import persistencia.dao.interfaz.CondicionDeCancelacionDAO;
 import persistencia.dao.interfaz.ContadorDAO;
 import persistencia.dao.interfaz.CoordinadorDAO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
@@ -47,6 +48,9 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 		return new AdministrativoDAOSQL();
 	}
 	
+	public CondicionDeCancelacionDAO createCondicionDeCancelacionDAO(){
+		return new CondicionDeCancelacionDAOSQL();
+	}
 
 	public CoordinadorDAO createCoordinadorDAO() {
 		return new CoordinadorDAOSQL();

@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -743,15 +744,15 @@ public class ControladorPasaje implements ActionListener{
 				this.ventanaPago.setVisible(false);
 				mostrarVentanaConfirmacionPasaje();
 			}else{ 
-			modeloPago.agregarPago(pagoDTO);
-			pagos_pasajeDTO = new Pagos_PasajeDTO();
-			PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
-			pagos_pasajeDTO.setPago(pagoPasaje);
-			pagos_pasajeDTO.setPasaje(pasajeAEditar);
-			modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
-			pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
-			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
-			modeloPasaje.editarPasaje(pasajeAEditar);
+				modeloPago.agregarPago(pagoDTO);
+				pagos_pasajeDTO = new Pagos_PasajeDTO();
+				PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
+				pagos_pasajeDTO.setPago(pagoPasaje);
+				pagos_pasajeDTO.setPasaje(pasajeAEditar);
+				modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
+				pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
+				pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
+				modeloPasaje.editarPasaje(pasajeAEditar);
 			
 			if(pagoDTO.getIdFormaPago().getIdFormaPago()!= 3){
 				verificarSumaDePuntosDeCliente(pasajeAEditar);
@@ -1182,16 +1183,56 @@ public class ControladorPasaje implements ActionListener{
 		reporte.reporteReserva(pagoDTO);
 		reporte.mostrar();
 	}
-
+//TODO: CANCELACION DE PASAJE
 	public void eliminarPasaje(int filaSeleccionada){
 		int confirm = JOptionPane.showOptionDialog(
 		            null,"¿Estás seguro que quieres cancelar el pasaje?", 
 				             "Cancelar pasaje", JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE, null, null, null);
 	 if (confirm == 0){
+		 System.out.println("Cancelamos el viaje");
 		 pasajeACancelar = pasajes_en_tabla.get(filaSeleccionada);
-		 this.ventanaCancelacionPasaje.mostrarVentana(true);
+//		 int diff = calcularDiferenciasDeDiasAlCancelarPasaje(pasajeACancelar);
+//		 calcularRetencionDeDineroPorCancelacionDelPasaje(pasajeACancelar,diff);
+//		 this.ventanaCancelacionPasaje.mostrarVentana(true);
 	 }
+	}
+	
+	private int calcularDiferenciasDeDiasAlCancelarPasaje(PasajeDTO pasajeACancelar){
+		Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy
+		 
+		Date fechaFinal= pasajeACancelar.getViaje().getFechaSalida();
+		java.util.Date fechaInicial = (java.util.Date) calendar.getTime();
+ 
+		int dias=(int) ((fechaFinal.getTime()-fechaInicial.getTime())/86400000);
+ 
+		System.out.println("Hay "+dias+" dias de diferencia");
+		return dias;
+	}
+	
+	private BigDecimal calcularRetencionDeDineroPorCancelacionDelPasaje(PasajeDTO pasajeACancelar, int diferenciaEnDias){
+		BigDecimal ONE_HUNDRED = new BigDecimal(100);
+		BigDecimal base = pasajeACancelar.getValorViaje();
+		BigDecimal porcentajeDeRetencion = null;
+		BigDecimal montoRetenidoPorLaEmpreza = null;
+		
+		if(diferenciaEnDias>=35){
+			porcentajeDeRetencion = new BigDecimal(25);
+		}
+		if(diferenciaEnDias<35 && diferenciaEnDias>=21){
+			porcentajeDeRetencion = new BigDecimal(35);
+		}
+		if(diferenciaEnDias<21 && diferenciaEnDias>=7){
+			porcentajeDeRetencion = new BigDecimal(50);
+		}
+		if(diferenciaEnDias<7){
+			porcentajeDeRetencion = new BigDecimal(35);
+		}
+		montoRetenidoPorLaEmpreza = base.multiply(porcentajeDeRetencion).divide(ONE_HUNDRED);
+		System.out.println("Total del viaje es: "+base);
+		System.out.println("Le retenemos el:"+porcentajeDeRetencion);
+		System.out.println("El monto retenido es: "+montoRetenidoPorLaEmpreza);
+		return montoRetenidoPorLaEmpreza;
 	}
 	
 	public void cancelarPasaje(ActionEvent cp){
