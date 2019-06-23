@@ -20,6 +20,7 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -90,7 +91,6 @@ public class VentanaCargarViaje extends JFrame {
 				}
 			};
 		
-		
 		btnCrearViaje = new JButton("Cargar Viaje");
 		btnCrearViaje.setEnabled(true);
 		btnCrearViaje.setBounds(345, 307, 173, 37); 	
@@ -98,6 +98,7 @@ public class VentanaCargarViaje extends JFrame {
 		
 		dateChooserFechaOrigen = new JDateChooser();
 		dateChooserFechaOrigen.setBounds(98, 72, 153, 20);
+		dateChooserFechaOrigen.setMinSelectableDate(new Date());
 		contentPane.add(dateChooserFechaOrigen);
 		
 		comboBoxCiudadOrigen = new JComboBox();
