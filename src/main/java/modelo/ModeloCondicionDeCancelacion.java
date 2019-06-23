@@ -29,4 +29,9 @@ private CondicionDeCancelacionDAO condicion;
 	public List<CondicionDeCancelacionDTO> obtenerCondiciones(){
 		return this.condicion.readAll();		
 	}
+	
+	public List<CondicionDeCancelacionDTO> getByEstado(String estado){
+		return this.condicion.getByEstado(estado);
+	}
+	
 }

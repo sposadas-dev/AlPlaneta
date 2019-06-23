@@ -8,6 +8,8 @@ import java.util.List;
 
 import dto.AdministradorDTO;
 import dto.CondicionDeCancelacionDTO;
+import dto.EstadoPasajeDTO;
+import dto.PasajeDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.CondicionDeCancelacionDAO;
 
@@ -17,6 +19,33 @@ public class CondicionDeCancelacionDAOSQL implements CondicionDeCancelacionDAO {
 	private static final String update = "UPDATE condicioncancelacion SET inicio = ?, fin = ?, porcentaje = ?, estado = ? WHERE idCondicion = ?";
 	private static final String browse = "SELECT * FROM condicioncancelacion WHERE idCondicion = ?";
 	private static final String delete = "DELETE FROM condicioncancelacion WHERE idCondicion = ?";
+	private static final String between = "SELECT * FROM condicioncancelacion  WHERE estado=? and inicio BETWEEN ? and ? and fin BETWEEN ? and ?;";
+	private static final String estadoPasaje = "SELECT * FROM condicioncancelacion WHERE estado = ?";
+	
+	@Override
+	public List<CondicionDeCancelacionDTO> getByEstado(String estado) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		ArrayList<CondicionDeCancelacionDTO> condiciones = new ArrayList<CondicionDeCancelacionDTO>();
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(estadoPasaje);
+			statement.setString(1, estado);
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				condiciones.add(new CondicionDeCancelacionDTO(
+									resultSet.getInt("idCondicion"),
+									resultSet.getInt("inicio"),
+									resultSet.getInt("fin"),
+									resultSet.getInt("porcentaje"),
+									resultSet.getString("estado")));
+				}
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return condiciones;
+	}
 	
 	@Override
 	public boolean insert(CondicionDeCancelacionDTO condicion) {
@@ -96,7 +125,7 @@ public class CondicionDeCancelacionDAOSQL implements CondicionDeCancelacionDAO {
 			statement.setInt(2, condicion.getFin());
 			statement.setInt(3, condicion.getPorcentaje());
 			statement.setString(4, condicion.getEstadoDelPasaje()); 
-			statement.setInt(4, condicion.getIdCondicion()); 
+			statement.setInt(5, condicion.getIdCondicion()); 
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
@@ -138,7 +167,8 @@ public class CondicionDeCancelacionDAOSQL implements CondicionDeCancelacionDAO {
 	
 	public static void main(String[] args) {
 		CondicionDeCancelacionDAOSQL dao = new CondicionDeCancelacionDAOSQL();
-		dao.insert(new CondicionDeCancelacionDTO(1,0,6,25,"reservado"));
-		
+		ArrayList<CondicionDeCancelacionDTO> condiciones = (ArrayList<CondicionDeCancelacionDTO>) dao.getByEstado("reservado");
+		for(CondicionDeCancelacionDTO c: condiciones)
+			System.out.println(c.getEstadoDelPasaje());
 	}
 }

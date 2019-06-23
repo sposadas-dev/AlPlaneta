@@ -15,13 +15,14 @@ public class PanelCondiciones extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel modelCondiciones;
-	private String[] nombreColumnasCondiciones = {"Inicio","Fin","Porcentaje","Parae Estado"};
+	private String[] nombreColumnasCondiciones = {"Desde","Hasta","Porcentaje de retención","Estado del Pasaje"};
 	private JTable tablaCondiciones;
 	private JButton btnConfirmar;
 	private JLabel lblCondiciones;
-	private JCheckBox activos;
-	private JCheckBox inactivos;
-
+	private JCheckBox Reservas;
+	private JCheckBox Ventas;
+	private JCheckBox Todas;
+	
 	@SuppressWarnings("serial")
 	public PanelCondiciones() {
 		
@@ -50,20 +51,24 @@ public class PanelCondiciones extends JPanel {
 		add(panelTransporte);
 		panelTransporte.setLayout(null);
 		
-		lblCondiciones = new JLabel("Empleados");
-		lblCondiciones.setBounds(551, 0, 219, 65);
+		lblCondiciones = new JLabel("Devolución de dinero por cancelación");
+		lblCondiciones.setBounds(228, 0, 740, 65);
 		lblCondiciones.setForeground(Color.WHITE);
 		lblCondiciones.setFont(new Font("Tahoma", Font.BOLD, 36));
 		panelTransporte.add(lblCondiciones);
 		
-		activos = new JCheckBox("Activos");
-		activos.setBounds(70, 6, 95, 21);
-		activos.setSelected(true);
-		add(activos);
+		Reservas = new JCheckBox("Reservas");
+		Reservas.setBounds(70, 6, 95, 21);
+		Reservas.setSelected(true);
+		add(Reservas);
 		
-		inactivos = new JCheckBox("Inactivos");
-		inactivos.setBounds(167, 5, 95, 21);
-		add(inactivos);
+		Ventas = new JCheckBox("Ventas");
+		Ventas.setBounds(167, 5, 95, 21);
+		add(Ventas);
+		
+		Todas = new JCheckBox("Todas");
+		Todas.setBounds(264, 5, 95, 21);
+		add(Todas);
 	
 		btnConfirmar.setVisible(false);
 	
@@ -73,12 +78,12 @@ public class PanelCondiciones extends JPanel {
 		this.setVisible(visibilidad);
 	}
 	
-	public JCheckBox getActivos() {
-		return activos;
+	public JCheckBox getReservas() {
+		return Reservas;
 	}
 	
-	public JCheckBox getInactivos() {
-		return inactivos;
+	public JCheckBox getVentas() {
+		return Ventas;
 	}
 
 	public DefaultTableModel getModelCondiciiones() {
@@ -96,4 +101,15 @@ public class PanelCondiciones extends JPanel {
 	public JButton getBtnConfirmar() {
 		return btnConfirmar;
 	}
+
+	public JCheckBox getTodas() {
+		return Todas;
+	}
+
+	public void setTodas(JCheckBox todas) {
+		Todas = todas;
+	}
+
+	
 }
+

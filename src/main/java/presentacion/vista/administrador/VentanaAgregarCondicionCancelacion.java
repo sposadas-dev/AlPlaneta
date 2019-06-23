@@ -50,16 +50,16 @@ public class VentanaAgregarCondicionCancelacion extends JFrame{
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(new Color(96, 163, 188));
-		panel.setBounds(0, 0, 448, 53);
+		panel.setBounds(0, 0, 458, 53);
 		contentPane.add(panel);
 		
-		JLabel lblAgregarPunto = new JLabel("Retencion de la empreza");
+		JLabel lblAgregarPunto = new JLabel("Retención de la empresa");
 		lblAgregarPunto.setForeground(Color.WHITE);
 		lblAgregarPunto.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblAgregarPunto.setBounds(27, 0, 411, 53);
+		lblAgregarPunto.setBounds(27, 0, 431, 53);
 		panel.add(lblAgregarPunto);
 		
-		JLabel lblCANTPUNTOS = new JLabel("Inicio");
+		JLabel lblCANTPUNTOS = new JLabel("Desde :");
 		lblCANTPUNTOS.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		lblCANTPUNTOS.setBounds(20, 98, 85, 14);
 		contentPane.add(lblCANTPUNTOS);
@@ -83,7 +83,7 @@ public class VentanaAgregarCondicionCancelacion extends JFrame{
 		btnAceptar.setBounds(45, 243, 131, 42);
 		contentPane.add(btnAceptar);
 		
-		lblArs = new JLabel("Fin");
+		lblArs = new JLabel("Hasta :");
 		lblArs.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		lblArs.setBounds(227, 98, 46, 14);
 		contentPane.add(lblArs);
@@ -95,16 +95,16 @@ public class VentanaAgregarCondicionCancelacion extends JFrame{
 		
 		lblVencimiento = new JLabel("Porcentaje de retención:     %\r\n");
 		lblVencimiento.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblVencimiento.setBounds(108, 205, 166, 14);
+		lblVencimiento.setBounds(108, 186, 166, 14);
 		contentPane.add(lblVencimiento);
 		
 		txtPorcentaje = new JTextField();
 		txtPorcentaje.setColumns(10);
-		txtPorcentaje.setBounds(282, 202, 86, 20);
+		txtPorcentaje.setBounds(282, 183, 86, 20);
 		contentPane.add(txtPorcentaje);
 		
-		JLabel lblNewLabel = new JLabel("Si la cancelacion del servicio se realiza entre los rangos de dias [Inicio - Fin]");
-		lblNewLabel.setBounds(31, 64, 395, 14);
+		JLabel lblNewLabel = new JLabel("[Desde - Hasta] Rango entre dias de la cancelacion del pasaje");
+		lblNewLabel.setBounds(31, 64, 427, 14);
 		contentPane.add(lblNewLabel);
 		
 		comboBoxEstados = new JComboBox();

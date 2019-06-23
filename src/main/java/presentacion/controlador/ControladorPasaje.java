@@ -5,16 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -23,13 +18,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import correo.EnvioDeCorreo;
-import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
-import dto.ContadorDTO;
-import dto.CoordinadorDTO;
+import dto.CondicionDeCancelacionDTO;
 import dto.EstadoPasajeDTO;
-import dto.EventoDTO;
 import dto.FormaPagoDTO;
 import dto.PagoDTO;
 import dto.Pagos_PasajeDTO;
@@ -42,13 +34,10 @@ import dto.RegimenPuntoDTO;
 import dto.ViajeDTO;
 import dto.Viaje_PromocionDTO;
 import generatePDF.GeneratePDF;
-import modelo.Administrador;
-import modelo.Administrativo;
 import modelo.Cliente;
-import modelo.Contador;
-import modelo.Coordinador;
 import modelo.EstadoPasaje;
 import modelo.FormaPago;
+import modelo.ModeloCondicionDeCancelacion;
 import modelo.ModeloPromocion;
 import modelo.ModeloPunto;
 import modelo.ModeloRegimenPunto;
@@ -94,6 +83,7 @@ public class ControladorPasaje implements ActionListener{
 	private VentanaTarjeta ventanaTarjeta;
 	private VentanaCancelacionPasaje ventanaCancelacionPasaje;
 	private VentanaPagoPuntos ventanaPagoPuntos;
+	private ModeloCondicionDeCancelacion modeloCondicionDeCancelacion;
 	
 	private List<ClienteDTO> clientes_en_tabla;
 	private List <ViajeDTO> viajes_en_tabla;
@@ -163,6 +153,7 @@ public class ControladorPasaje implements ActionListener{
 		this.modeloPromocion = new ModeloPromocion(new DAOSQLFactory());
 		this.modeloRegimenPunto = new ModeloRegimenPunto(new DAOSQLFactory());
 		this.viaje_promocion = new ModeloViaje_Promocion (new DAOSQLFactory());
+		this.modeloCondicionDeCancelacion = new ModeloCondicionDeCancelacion(new DAOSQLFactory());
 		
 		this.pdf = new GeneratePDF();				
 		this.envioCorreo = new EnvioDeCorreo();
@@ -1194,7 +1185,7 @@ public class ControladorPasaje implements ActionListener{
 		 pasajeACancelar = pasajes_en_tabla.get(filaSeleccionada);
 //		 int diff = calcularDiferenciasDeDiasAlCancelarPasaje(pasajeACancelar);
 //		 calcularRetencionDeDineroPorCancelacionDelPasaje(pasajeACancelar,diff);
-//		 this.ventanaCancelacionPasaje.mostrarVentana(true);
+		 this.ventanaCancelacionPasaje.mostrarVentana(true);
 	 }
 	}
 	
@@ -1234,10 +1225,11 @@ public class ControladorPasaje implements ActionListener{
 		System.out.println("El monto retenido es: "+montoRetenidoPorLaEmpreza);
 		return montoRetenidoPorLaEmpreza;
 	}
-	
+	//TODO: SE CANCELA EL PASAJE
 	public void cancelarPasaje(ActionEvent cp){
 		Reporte reporte = new Reporte();
 		Calendar currenttime = Calendar.getInstance();
+		
 		if(pasajeACancelar.getEstadoDelPasaje().getIdEstadoPasaje()==1){
 			pasajeACancelar.setMontoAReembolsar(calcularReembolsoPasajeVendido(pasajeACancelar));
 			pasajeACancelar.setEstadoDelPasaje(new EstadoPasajeDTO(4,"Cancelado","Se cancelo el pasaje"));
@@ -1270,34 +1262,73 @@ public class ControladorPasaje implements ActionListener{
 		BigDecimal montoAReembolsar = new BigDecimal(0);
 		Calendar currenttime = Calendar.getInstance();
 		int diferenciaDias = numeroDiasEntreDosFechas(new Date((currenttime.getTime()).getTime()),pasaje.getViaje().getFechaSalida());
-		if(diferenciaDias>35){
-			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(25)));
-		}else if(diferenciaDias>21 && diferenciaDias<34){
-			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(35)));
-		}else if(diferenciaDias>10 && diferenciaDias<20){
-			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(50)));
-		}else if(diferenciaDias>5 && diferenciaDias<9){
-			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(100)));
+		ArrayList<CondicionDeCancelacionDTO> condiciones = (ArrayList<CondicionDeCancelacionDTO>) this.modeloCondicionDeCancelacion.getByEstado("reservado");
+		for(CondicionDeCancelacionDTO c:condiciones){
+			int desde = c.getInicio();
+			int hasta = c.getFin();
+			int porcentaje = c.getPorcentaje();
+			
+			if(diferenciaDias>=desde && diferenciaDias<=hasta){
+				montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(porcentaje)));
+				System.out.println("Se cancelo a los "+diferenciaDias+" se reembolsa %"+porcentaje+" que es: "+montoAReembolsar);
+			}else if(diferenciaDias>=desde && diferenciaDias<=hasta){
+				montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(porcentaje)));
+				System.out.println("Se cancelo a los "+diferenciaDias+" se reembolsa %"+porcentaje+" que es: "+montoAReembolsar);
+			}else if(diferenciaDias>=desde && diferenciaDias<=hasta){
+				montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(porcentaje)));
+				System.out.println("Se cancelo a los "+diferenciaDias+" se reembolsa %"+porcentaje+" que es: "+montoAReembolsar);
+			}else if(diferenciaDias>=desde && diferenciaDias<=hasta){
+				montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(porcentaje)));
+				System.out.println("Se cancelo a los "+diferenciaDias+" se reembolsa %"+porcentaje+" que es: "+montoAReembolsar);
+			}
 		}
 		return montoAReembolsar;
 	}
 	
 	private BigDecimal calcularReembolsoPasajeVendido(PasajeDTO pasajeACancelar) {
+		
 		BigDecimal montoPagado = pasajeACancelar.getValorViaje().subtract(pasajeACancelar.getMontoAPagar());
 		BigDecimal montoAReembolsar = new BigDecimal(0);
 		Calendar currenttime = Calendar.getInstance();
 		int diferenciaDias = numeroDiasEntreDosFechas(new Date((currenttime.getTime()).getTime()),pasajeACancelar.getViaje().getFechaSalida());
-		if(diferenciaDias>35){
-			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(25)));
-		}else if(diferenciaDias>21 && diferenciaDias<34){
-			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(50)));
-		}else if(diferenciaDias>7 && diferenciaDias<20){
-			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(75)));
-		}else if(diferenciaDias>5 && diferenciaDias<9){
-			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(100)));
+		ArrayList<CondicionDeCancelacionDTO> condiciones = (ArrayList<CondicionDeCancelacionDTO>) this.modeloCondicionDeCancelacion.getByEstado("vendido");		
+		
+		for(CondicionDeCancelacionDTO c:condiciones){
+			int desde = c.getInicio();
+			int hasta = c.getFin();
+			int porcentaje = c.getPorcentaje();
+			
+			if(diferenciaDias>=desde && diferenciaDias<=hasta){
+				montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(porcentaje)));
+				
+			}else if(diferenciaDias>=desde && diferenciaDias<=hasta){
+				montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(porcentaje)));
+				System.out.println("Se cancelo a los "+diferenciaDias+" se reembolsa %"+porcentaje+" que es: "+montoAReembolsar);
+			}else if(diferenciaDias>=desde && diferenciaDias<=hasta){
+				montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(porcentaje)));
+				System.out.println("Se cancelo a los "+diferenciaDias+" se reembolsa %"+porcentaje+" que es: "+montoAReembolsar);
+			}else if(diferenciaDias>=desde && diferenciaDias<=hasta){
+				montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(porcentaje)));
+				System.out.println("Se cancelo a los "+diferenciaDias+" se reembolsa %"+porcentaje+" que es: "+montoAReembolsar);
+			}
 		}
 		return montoAReembolsar;
 	}
+//		if(diferenciaDias>35){
+//			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(25)));
+	
+//		}else if(diferenciaDias>21 && diferenciaDias<34){
+//			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(50)));
+	
+//		}else if(diferenciaDias>7 && diferenciaDias<20){
+//			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(75)));
+	
+//		}else if(diferenciaDias>5 && diferenciaDias<9){
+//			montoAReembolsar = montoPagado.subtract(calcularPorcentaje(montoPagado,new BigDecimal(100)));
+	
+//		}
+//		return montoAReembolsar;
+//	}
 
 	
 	public int numeroDiasEntreDosFechas(java.sql.Date fecha1, java.sql.Date fecha2){

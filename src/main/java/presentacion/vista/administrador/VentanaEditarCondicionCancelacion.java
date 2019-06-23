@@ -23,7 +23,6 @@ public class VentanaEditarCondicionCancelacion extends JFrame{
 	private static VentanaEditarCondicionCancelacion INSTANCE;
 	private JLabel lblArs;
 	private JTextField txtDiaFin;
-	private JLabel lblVencimiento;
 	private JTextField txtPorcentaje;
 	private JComboBox comboBoxEstados;
 	private JLabel lblEstadoDelPasaje;
@@ -59,7 +58,7 @@ public class VentanaEditarCondicionCancelacion extends JFrame{
 		lblAgregarPunto.setBounds(27, 0, 411, 53);
 		panel.add(lblAgregarPunto);
 		
-		JLabel lblCANTPUNTOS = new JLabel("Inicio");
+		JLabel lblCANTPUNTOS = new JLabel("Desde :");
 		lblCANTPUNTOS.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		lblCANTPUNTOS.setBounds(20, 98, 85, 14);
 		contentPane.add(lblCANTPUNTOS);
@@ -83,7 +82,7 @@ public class VentanaEditarCondicionCancelacion extends JFrame{
 		btnAceptar.setBounds(45, 243, 131, 42);
 		contentPane.add(btnAceptar);
 		
-		lblArs = new JLabel("Fin");
+		lblArs = new JLabel("Hasta :");
 		lblArs.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		lblArs.setBounds(227, 98, 46, 14);
 		contentPane.add(lblArs);
@@ -93,23 +92,10 @@ public class VentanaEditarCondicionCancelacion extends JFrame{
 		contentPane.add(txtDiaFin);
 		txtDiaFin.setColumns(10);
 		
-		lblVencimiento = new JLabel("Porcentaje de retención:     %\r\n");
-		lblVencimiento.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		lblVencimiento.setBounds(108, 205, 166, 14);
-		contentPane.add(lblVencimiento);
-		
 		txtPorcentaje = new JTextField();
 		txtPorcentaje.setColumns(10);
-		txtPorcentaje.setBounds(282, 202, 86, 20);
+		txtPorcentaje.setBounds(282, 186, 86, 20);
 		contentPane.add(txtPorcentaje);
-		
-		JLabel lblNewLabel = new JLabel("Si la cancelacion del servicio se realiza entre los rangos de dias [Inicio - Fin]");
-		lblNewLabel.setBounds(31, 64, 395, 14);
-		contentPane.add(lblNewLabel);
-		
-		JLabel lblSePodraRetener = new JLabel("Se podra retener un porcentaje respecto del precio total del pasaje a cancelar");
-		lblSePodraRetener.setBounds(31, 180, 395, 14);
-		contentPane.add(lblSePodraRetener);
 		
 		comboBoxEstados = new JComboBox();
 		comboBoxEstados.addItem("reservado");
@@ -121,6 +107,15 @@ public class VentanaEditarCondicionCancelacion extends JFrame{
 		lblEstadoDelPasaje.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		lblEstadoDelPasaje.setBounds(158, 139, 115, 14);
 		contentPane.add(lblEstadoDelPasaje);
+		
+		JLabel label = new JLabel("[Desde - Hasta] Rango entre dias de la cancelacion del pasaje");
+		label.setBounds(31, 64, 427, 14);
+		contentPane.add(label);
+		
+		JLabel label_1 = new JLabel("Porcentaje de retención:     %\r\n");
+		label_1.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		label_1.setBounds(107, 189, 166, 14);
+		contentPane.add(label_1);
 	}
 	
 	
@@ -150,14 +145,6 @@ public class VentanaEditarCondicionCancelacion extends JFrame{
 
 	public void setTxtPorcentaje(JTextField porcentaje) {
 		this.txtPorcentaje = porcentaje;
-	}
-
-	public JLabel getLblVencimiento() {
-		return lblVencimiento;
-	}
-
-	public void setLblVencimiento(JLabel lblVencimiento) {
-		this.lblVencimiento = lblVencimiento;
 	}
 
 	public void setBtnCancelar(JButton btnCancelar) {

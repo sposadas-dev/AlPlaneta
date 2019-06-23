@@ -18,4 +18,6 @@ public interface CondicionDeCancelacionDAO {
 	
 	public CondicionDeCancelacionDTO getById(int id );
 
+	public List<CondicionDeCancelacionDTO> getByEstado(String estado);
+
 }
