@@ -550,18 +550,20 @@ public class ControladorPasaje implements ActionListener{
 		this.viajes_en_tabla = viajesActivos();
 			
 		for (int i = 0; i < this.viajes_en_tabla.size(); i++){
-			Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
-							this.viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
-							mapper.parseToString(this.viajes_en_tabla.get(i).getFechaSalida()),
-							mapper.parseToString(this.viajes_en_tabla.get(i).getFechaLlegada()),
-							this.viajes_en_tabla.get(i).getHoraSalida(),
-							this.viajes_en_tabla.get(i).getHorasEstimadas(),
-							this.viajes_en_tabla.get(i).getCapacidad(),
-							this.viajes_en_tabla.get(i).getTransporte().getNombre(),
-							"$ "+this.viajes_en_tabla.get(i).getPrecio()					
-			};
-		this.ventanaTablaViajes.getModelViajes().addRow(fila);
-		}		
+			if(!(viajes_en_tabla.get(i).getCapacidad() == 0)){				
+					Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
+									this.viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
+									mapper.parseToString(this.viajes_en_tabla.get(i).getFechaSalida()),
+									mapper.parseToString(this.viajes_en_tabla.get(i).getFechaLlegada()),
+									this.viajes_en_tabla.get(i).getHoraSalida(),
+									this.viajes_en_tabla.get(i).getHorasEstimadas(),
+									this.viajes_en_tabla.get(i).getCapacidad(),
+									this.viajes_en_tabla.get(i).getTransporte().getNombre(),
+									"$ "+this.viajes_en_tabla.get(i).getPrecio()					
+					};
+				this.ventanaTablaViajes.getModelViajes().addRow(fila);
+			}		
+		}
 	}
 	
 	private ArrayList<ViajeDTO> viajesActivos() {
