@@ -33,7 +33,6 @@ public class VistaCoordinador extends JFrame {
 	private JMenuItem itemEliminarRegimenPuntos;
 	
 	
-	
 	private static VistaCoordinador vistaCoordinador;
 	private JMenu menuReportes;
 	private JMenuItem itemListaEmpleados;
@@ -87,9 +86,9 @@ public class VistaCoordinador extends JFrame {
 		itemAgregarRegimenPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuRegimenPuntos.add(itemAgregarRegimenPuntos);
 		
-		itemEditarRegimenPuntos = new JMenuItem("Modificar");
-		itemEditarRegimenPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuRegimenPuntos.add(itemEditarRegimenPuntos);
+//		itemEditarRegimenPuntos = new JMenuItem("Modificar");
+//		itemEditarRegimenPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+//		menuRegimenPuntos.add(itemEditarRegimenPuntos);
 		
 		itemEliminarRegimenPuntos = new JMenuItem("Eliminar ");
 		itemEliminarRegimenPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 16));

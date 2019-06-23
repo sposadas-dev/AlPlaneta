@@ -12,9 +12,11 @@ import java.awt.Color;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import java.awt.SystemColor;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 
 public class VentanaMostrarRegimenPuntos  extends JFrame {
 
@@ -38,7 +40,7 @@ public class VentanaMostrarRegimenPuntos  extends JFrame {
 	
 	public VentanaMostrarRegimenPuntos() {
 		
-		setTitle("Registro de Regimen de Puntos");
+		setTitle("Visualización Regimen de Puntos");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 423, 303);
@@ -107,6 +109,14 @@ public class VentanaMostrarRegimenPuntos  extends JFrame {
 		vencimiento.setBounds(119, 111, 86, 20);
 		contentPane.add(vencimiento);
 		vencimiento.setEditable(false);
+		
+		JEditorPane dtrpnelClienteSumar = new JEditorPane();
+		dtrpnelClienteSumar.setBackground(SystemColor.control);
+		dtrpnelClienteSumar.setFont(new Font("Consolas", Font.PLAIN, 10));
+		dtrpnelClienteSumar.setText("-El Cliente sumará una cantidad de puntos (Cant.Puntos) por unidad gastada.\r\n-La Unidad de medida es pesos argentinos (ARS).\r\n-Los puntos tendran un vencimiento, este sera en cantidad de meses (Vencimiento).");
+		dtrpnelClienteSumar.setBounds(213, 64, 194, 110);
+		dtrpnelClienteSumar.setEditable(false);
+		contentPane.add(dtrpnelClienteSumar);
 		
 		
 	}
