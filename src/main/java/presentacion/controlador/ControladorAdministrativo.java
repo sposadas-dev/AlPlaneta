@@ -294,15 +294,29 @@ public class ControladorAdministrativo implements ActionListener {
 			}
 		});
 		
-		
+		this.ventanaEditarCliente.getTxtEmail().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCliente.getTxtEmail().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
 		
 		this.ventanaEditarCliente.getTxtNombre().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
-					char letra = e.getKeyChar();
-					if(Character.isDigit(letra)) {
-						Toolkit.getDefaultToolkit().beep();
-						e.consume();
-					}
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCliente.getTxtNombre().getText().length() == 45) {
+					e.consume();
+				}
 			}
 		});
 		this.ventanaEditarCliente.getTxtApellido().addKeyListener(new KeyAdapter(){            
@@ -310,6 +324,9 @@ public class ControladorAdministrativo implements ActionListener {
 				char letra = e.getKeyChar();
 				if(Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCliente.getTxtApellido().getText().length() == 45) {
 					e.consume();
 				}
 			}
@@ -321,6 +338,9 @@ public class ControladorAdministrativo implements ActionListener {
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaEditarCliente.getTxtDni().getText().length() == 8) {
+					e.consume();
+				}
 			}
 		});
 		this.ventanaEditarCliente.getTxtTelefonoFijo().addKeyListener(new KeyAdapter(){            
@@ -330,6 +350,9 @@ public class ControladorAdministrativo implements ActionListener {
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaEditarCliente.getTxtTelefonoFijo().getText().length() == 45) {
+					e.consume();
+				}
 			}
 		});
 		this.ventanaEditarCliente.getTxtTelefonoCelular().addKeyListener(new KeyAdapter(){            
@@ -337,6 +360,9 @@ public class ControladorAdministrativo implements ActionListener {
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCliente.getTxtTelefonoCelular().getText().length() == 45) {
 					e.consume();
 				}
 			}

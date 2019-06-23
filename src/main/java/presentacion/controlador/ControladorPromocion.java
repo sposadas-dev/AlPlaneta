@@ -75,6 +75,9 @@ public class ControladorPromocion {
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaPromocion.getTxtStock().getText().length() == 11) {
+					e.consume();
+				}
 			}
 		});
 		
@@ -90,8 +93,12 @@ public class ControladorPromocion {
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaPromocion.getTxtStock().getText().length() == 11) {
+					e.consume();
+				}
 			}
 		});
+		
 		this.ventanaEditarPromocion.getBtnAsociarViaje().addActionListener(e->mostrarViajesEditarPromo(e));
 		this.ventanaEditarPromocion.getBtnCancelar().addActionListener(e->cerrarVentanaEditarPromocion(e));
 

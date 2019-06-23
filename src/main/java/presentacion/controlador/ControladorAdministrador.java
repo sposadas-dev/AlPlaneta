@@ -149,6 +149,61 @@ public class ControladorAdministrador {
 						Toolkit.getDefaultToolkit().beep();
 						e.consume();
 					}
+					if(ventanaAgregarEmpleado.getTxtNombre().getText().length() == 45) {
+						e.consume();
+					}
+			}
+		});
+
+		this.ventanaAgregarEmpleado.getTxtApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaAgregarEmpleado.getTxtApellido().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaAgregarEmpleado.getTxtDni().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaAgregarEmpleado.getTxtDni().getText().length() == 8) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaAgregarEmpleado.getTxtUsuario().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaAgregarEmpleado.getTxtUsuario().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaAgregarEmpleado.getTextMail().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaAgregarEmpleado.getTextMail().getText().length() == 45) {
+					e.consume();
+				}
 			}
 		});
 //		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
@@ -156,6 +211,71 @@ public class ControladorAdministrador {
 		
 		this.ventanaEditarCuenta.getBtnRegistrar().addActionListener(ec->editarCuenta(ec));
 		this.ventanaEditarCuenta.getBtnCancelar().addActionListener(can->cancelarEditarCuenta(can));
+		
+		this.ventanaEditarCuenta.getTxtNombre().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
+						e.consume();
+					}
+					if(ventanaEditarCuenta.getTxtNombre().getText().length() == 45) {
+						e.consume();
+					}
+			}
+		});
+
+		this.ventanaEditarCuenta.getTxtApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCuenta.getTxtApellido().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaEditarCuenta.getTxtDni().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCuenta.getTxtDni().getText().length() == 8) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaEditarCuenta.getTxtUsuario().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCuenta.getTxtUsuario().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaEditarCuenta.getTxtMail().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCuenta.getTxtMail().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
 		
 		this.vistaAdministrador.getItemBackup().addActionListener(b -> crearBackup(b));
 		this.vistaAdministrador.getItemRestore().addActionListener(r -> cargarRestore(r));
@@ -183,6 +303,12 @@ public class ControladorAdministrador {
 	}
 	
 	private void mostrarPanelDeViajes(ActionEvent v) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
+		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(true);
+		
 		this.controlador.mostrarPanelDeViajes();
 	}
 
@@ -323,6 +449,7 @@ public class ControladorAdministrador {
 
 	private void visualizarLocales(ActionEvent vl) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
@@ -874,6 +1001,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
 		this.llenarTablaFormaPago();
 	}

@@ -269,6 +269,10 @@ public class ControladorPasaje implements ActionListener{
 						Toolkit.getDefaultToolkit().beep();
 						e.consume();
 					}
+					if(ventanaPasajero.getTxtNombre().getText().length() == 45) {
+						e.consume();
+					}
+					
 			}
 		});
 		this.ventanaPasajero.getTxtApellido().addKeyListener(new KeyAdapter(){            
@@ -276,6 +280,9 @@ public class ControladorPasaje implements ActionListener{
 				char letra = e.getKeyChar();
 				if(Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaPasajero.getTxtApellido().getText().length() == 45) {
 					e.consume();
 				}
 			}});
@@ -286,6 +293,9 @@ public class ControladorPasaje implements ActionListener{
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaPasajero.getTxtDni().getText().length() == 8) {
+					e.consume();
+				}
 			}
 		});
 		this.ventanaPasajero.getTxtTelefono().addKeyListener(new KeyAdapter(){            
@@ -293,6 +303,22 @@ public class ControladorPasaje implements ActionListener{
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaPasajero.getTxtTelefono().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+		
+		this.ventanaPasajero.getTxtEmail().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaPasajero.getTxtEmail().getText().length() == 45) {
 					e.consume();
 				}
 			}

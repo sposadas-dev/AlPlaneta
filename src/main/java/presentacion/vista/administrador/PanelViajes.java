@@ -102,12 +102,12 @@ public class PanelViajes extends JPanel {
 		add(dateHasta);
 		
 		Label label_2 = new Label("Desde");
-		label_2.setBounds(466, 141, 67, 14);
+		label_2.setBounds(430, 141, 78, 14);
 		add(label_2);
 		
 		JLabel label_3 = new JLabel("Hasta");
 		label_3.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_3.setBounds(550, 141, 78, 14);
+		label_3.setBounds(586, 142, 78, 14);
 		add(label_3);
 		
 		Label label_4 = new Label("Precio");

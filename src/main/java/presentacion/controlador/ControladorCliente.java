@@ -73,6 +73,9 @@ public class ControladorCliente implements ActionListener{
 						Toolkit.getDefaultToolkit().beep();
 						e.consume();
 					}
+					if(ventanaRegistrarCliente.getTxtNombre().getText().length() == 45) {
+						e.consume();
+					}
 			}
 		});
 	
@@ -81,6 +84,9 @@ public class ControladorCliente implements ActionListener{
 				char letra = e.getKeyChar();
 				if(Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaRegistrarCliente.getTxtApellido().getText().length() == 45) {
 					e.consume();
 				}
 			}
@@ -92,6 +98,9 @@ public class ControladorCliente implements ActionListener{
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaRegistrarCliente.getTxtDni().getText().length() == 8) {
+					e.consume();
+				}
 			}
 		});
 		this.ventanaRegistrarCliente.getTxtTelefonoFijo().addKeyListener(new KeyAdapter(){            
@@ -101,6 +110,9 @@ public class ControladorCliente implements ActionListener{
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaRegistrarCliente.getTxtTelefonoFijo().getText().length() == 45) {
+					e.consume();
+				}
 			}
 		});
 		this.ventanaRegistrarCliente.getTxtTelefonoCelular().addKeyListener(new KeyAdapter(){            
@@ -108,6 +120,35 @@ public class ControladorCliente implements ActionListener{
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaRegistrarCliente.getTxtTelefonoCelular().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaRegistrarCliente.getTxtEmail().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaRegistrarCliente.getTxtEmail().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaRegistrarCliente.getTxtUsuario().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaRegistrarCliente.getTxtUsuario().getText().length() == 45) {
 					e.consume();
 				}
 			}
