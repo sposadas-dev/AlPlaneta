@@ -28,6 +28,7 @@ import dto.PasajeDTO;
 import dto.PromocionDTO;
 import dto.RolDTO;
 import dto.ViajeDTO;
+import generatePDF.GeneratePDF;
 import modelo.Cliente;
 import modelo.Login;
 import modelo.ModeloEvento;
@@ -47,7 +48,6 @@ import presentacion.vista.administrativo.VentanaTablaViajes;
 import presentacion.vista.administrativo.VentanaVisualizarClientes;
 import presentacion.vista.administrativo.VentanaVisualizarPasaje;
 import presentacion.vista.administrativo.VistaAdministrativo;
-import generatePDF.GeneratePDF;
 import recursos.Mapper;
 
 public class ControladorAdministrativo implements ActionListener {
@@ -408,7 +408,8 @@ public class ControladorAdministrativo implements ActionListener {
 
 		controladorCliente = new ControladorCliente(ventanaRegistrarCliente, ventanaEditarCliente, cliente);
 
-		controladorEvento = new ControladorEvento(ventanaEvento, evento, administrativoLogueado, this.eventos_en_tabla);
+		controladorEvento = new ControladorEvento(evento, this.eventos_en_tabla);
+		this.controladorEvento.setAdministrativoLogueado(administrativoLogueado);
 		
         controladorPromocion = new ControladorPromocion(ventanaPromocion, promocion, this.promociones_en_tabla);
         controladorDatosLogin = new ControladorDatosLogin();
@@ -624,8 +625,10 @@ public class ControladorAdministrativo implements ActionListener {
 	}
 	
 	private void mostrarVentanaEditarPasaje(ActionEvent ep) {
+		
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
 		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
+		
 		if (filaSeleccionada != -1){
 			controladorPasaje.editarPasaje(filaSeleccionada);
 			llenarTablaPasajes(pasaje.obtenerPasajes());
@@ -724,7 +727,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.llenarTablaPasajes(pasaje.obtenerPasajes());
 	}
 	
-	private void mostrarEventos(ActionEvent ap) {
+	public void mostrarEventos(ActionEvent ap) {
 		this.vista.getPanelEvento().mostrarPanelEvento(true);
 		this.vista.getPanelCliente().mostrarPanelCliente(false);
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
@@ -931,8 +934,8 @@ public class ControladorAdministrativo implements ActionListener {
 							this.pasajes_en_tabla.get(i).getNumeroComprobante(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadOrigen().getNombre(),
 							this.pasajes_en_tabla.get(i).getViaje().getCiudadDestino().getNombre(),
-							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
-							mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
+							this.mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaSalida()),
+							this.mapper.parseToString(this.pasajes_en_tabla.get(i).getViaje().getFechaLlegada()),
 							this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
 							"$ "+this.pasajes_en_tabla.get(i).getValorViaje(),
 							this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
@@ -958,7 +961,7 @@ public class ControladorAdministrativo implements ActionListener {
 							tabla.get(i).getDescripcion(),
 							tabla.get(i).getCliente().getApellido(),
 							tabla.get(i).getCliente().getNombre(),
-							tabla.get(i).getAdministrativo().getNombre(),
+							tabla.get(i).getAdministrativo().getApellido()+" "+tabla.get(i).getAdministrativo().getNombre(),
 							tabla.get(i).getEstadoEvento().getNombre(),
 							this.estaReprogramado(tabla.get(i))
 			};

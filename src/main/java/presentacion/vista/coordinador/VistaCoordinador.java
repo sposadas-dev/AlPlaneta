@@ -1,30 +1,22 @@
 package presentacion.vista.coordinador;
 
-import java.awt.SystemColor;
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
-
+import javax.swing.Box;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 
 import persistencia.conexion.Conexion;
 import presentacion.vista.administrador.VentanaPanelGeneral;
-
-
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Component;
-import javax.swing.Box;
+import presentacion.vista.administrativo.PanelEvento;
 
 public class VistaCoordinador extends JFrame {
 		
@@ -32,6 +24,7 @@ public class VistaCoordinador extends JFrame {
 	private JPanel contentPane;
 	private PanelRegimenPuntos panelRegimenPuntos;
 	private VentanaPanelGeneral panelGeneral;
+	private PanelEvento panelEvento;
 	
 	
 	private JMenuItem itemVisualizarRegimenPuntos ;
@@ -49,6 +42,9 @@ public class VistaCoordinador extends JFrame {
 	private Component horizontalGlue;
 	private JMenu menuUsuarioLogueado;
 	private JMenuItem itemCambiarContrasenia;
+	private JMenu menuEventos;
+	private JMenuItem itemVisualizarEventos;
+	private JMenuItem itemReasignarEvento;
 	
 	public static VistaCoordinador getInstance(){
 		if(vistaCoordinador== null){	
@@ -115,6 +111,18 @@ public class VistaCoordinador extends JFrame {
 		itemVentas.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuReportes.add(itemVentas);
 		
+		menuEventos = new JMenu("Eventos");
+		menuEventos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuBar.add(menuEventos);
+		
+		itemVisualizarEventos = new JMenuItem("Visualizar Eventos");
+		itemVisualizarEventos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuEventos.add(itemVisualizarEventos);
+		
+		itemReasignarEvento = new JMenuItem("Reasignar Evento");
+		itemReasignarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuEventos.add(itemReasignarEvento);
+		
 		horizontalGlue = Box.createHorizontalGlue();
 		menuBar.add(horizontalGlue);
 		
@@ -137,6 +145,13 @@ public class VistaCoordinador extends JFrame {
 //		panelRegimenPuntos.getBtnRecargarTabla().setVisible(true);
 
 //		this.setVisible(false);
+		
+		panelEvento = new PanelEvento();
+		panelEvento.getTablaEventos().setSize(1114, 900);
+		panelEvento.setSize(1352, 700);
+		panelEvento.setLocation(0, 0);
+		getContentPane().add(panelEvento);
+		panelEvento.setVisible(false);
 	}
 	
 
@@ -209,6 +224,27 @@ public class VistaCoordinador extends JFrame {
 	
 	public void mostrarVentana(boolean visibilidad){
 		this.setVisible(visibilidad);
+	}
+
+	
+	public JMenuItem getItemVisualizarEventos() {
+		return itemVisualizarEventos;
+	}
+
+	public JMenuItem getItemReasignarEvento() {
+		return itemReasignarEvento;
+	}
+
+	public void setItemVisualizarEventos(JMenuItem itemVisualizarEventos) {
+		this.itemVisualizarEventos = itemVisualizarEventos;
+	}
+
+	public void setItemReasignarEvento(JMenuItem itemReasignarEvento) {
+		this.itemReasignarEvento = itemReasignarEvento;
+	}
+	
+	public PanelEvento getPanelEvento() {
+		return panelEvento;
 	}
 
 	public void mostrarVentana(){

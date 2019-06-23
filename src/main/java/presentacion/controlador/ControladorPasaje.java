@@ -124,7 +124,7 @@ public class ControladorPasaje implements ActionListener{
 	private int porcentajeDescuento;
 	private AdministrativoDTO administrativoLogueado;
 	private PagoDTO pagoDTO;
-	private boolean editarPago;
+	private boolean noEditarPago;
 	private ViajeDTO viajeDTO;
 	private java.util.Date fechaActual;
 
@@ -350,7 +350,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPagoPuntos.getBtnPago().addActionListener(p->pagarConPuntos(p));
 		this.ventanaPagoPuntos.getBtnAtras().addActionListener(a->volverVentanaPago(a));
 		
-		this.editarPago = true;
+		this.noEditarPago = true;
 		this.modeloPunto = new ModeloPunto(new DAOSQLFactory());
 	
 	}
@@ -409,7 +409,8 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPasajero.getDateFechaNacimiento().setDate(pasajeroDTO.getFechaNacimiento());
 		this.ventanaPasajero.getTxtTelefono().setText(pasajeroDTO.getTelefono());
 		this.ventanaPasajero.getTxtEmail().setText(pasajeroDTO.getEmail());
-		}else{
+		}
+		else{
 			JOptionPane.showMessageDialog(ventanaPasajero, "No existe ningún cliente ni pasajero con ese DNI", "Filtro", 0);
 		}
 	}
@@ -657,7 +658,6 @@ public class ControladorPasaje implements ActionListener{
 
 	/*Cargamos los datos del pasajero*/
 	private void cargarDatosPasajero(ActionEvent cd) {
-		System.out.println("cargamos datos");
 		
 		if(validarCamposRegistrarPasajero()){
 		/*Obtenemos la fecha de nacimiento , y la parseamos a tipo de date de SQL*/
@@ -766,8 +766,7 @@ public class ControladorPasaje implements ActionListener{
 			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
 			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
 	
-			if (editarPago){
-				System.out.println("editaPago");
+			if (noEditarPago){
 				this.ventanaPago.setVisible(false);
 				mostrarVentanaConfirmacionPasaje();
 			}else{ 
@@ -780,6 +779,11 @@ public class ControladorPasaje implements ActionListener{
 			pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
 			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
 			modeloPasaje.editarPasaje(pasajeAEditar);
+			
+			if(pagoDTO.getIdFormaPago().getIdFormaPago()!= 3){
+				verificarSumaDePuntosDeCliente(pasajeAEditar);
+				}
+			
 			this.ventanaPago.limpiarCampos();
 			this.ventanaPago.mostrarVentana(false);
 			this.ventanaVisualizarPasaje.mostrarVentana(false);
@@ -788,9 +792,8 @@ public class ControladorPasaje implements ActionListener{
 			}
 		}
 		else {
-			
-		}
-		
+			JOptionPane.showMessageDialog(ventanaPasajero, "Seleccione forma de pago", "Filtro", 0);
+		}	
 	}
 	
 	private void darAltaDelPagoConPuntos()  {
@@ -807,7 +810,7 @@ public class ControladorPasaje implements ActionListener{
 		pagoDTO.setMonto(viajeSeleccionado.getPrecio());	
 		pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
 			
-		if (editarPago){
+		if (noEditarPago){
 			this.ventanaPagoPuntos.setVisible(false);
 			mostrarVentanaConfirmacionPasaje();
 		}else{ 
@@ -983,9 +986,11 @@ public class ControladorPasaje implements ActionListener{
 		
 	}
 
-	private void verificarSumaDePuntosDeCliente(PasajeDTO pasajeDTO2) {
-		if(pasajeDTO.getEstadoDelPasaje().getNombre().equals("Vendido"))
-			calcularPuntos(pasajeDTO.getCliente(),totalaPagar);		
+	private void verificarSumaDePuntosDeCliente(PasajeDTO pasaje) {
+		if(pasaje.getEstadoDelPasaje().getNombre().equals("Vendido")){
+		System.out.println("El pasaje esta vendido, se le suman los puntos a"+pasaje.getCliente().getNombre());
+			calcularPuntos(pasaje.getCliente(),totalaPagar);		
+		}
 	}
 
 	public Date calcularFechaReserva(Date fechaSalida){
@@ -994,7 +999,7 @@ public class ControladorPasaje implements ActionListener{
 		calendar.add(Calendar.DATE, -20);  //La fecha de reserva son 20 días antes a la fecha de salida del viaje
 		return convertUtilToSql(calendar.getTime()); 
 	}
-	
+		
 	private java.sql.Date convertUtilToSql(java.util.Date uDate) {
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
         return sDate;
@@ -1117,8 +1122,11 @@ public class ControladorPasaje implements ActionListener{
 	}
 	
 	public void editarPasaje(int filaSeleccionada){
-		verDatosDelPasaje(filaSeleccionada);
 		pasajeAEditar = this.pasajes_en_tabla.get(filaSeleccionada);
+		this.clienteSeleccionado = pasajeAEditar.getCliente();
+		
+		verDatosDelPasaje(filaSeleccionada);
+		
 	}
 	
 	private void verDatosDelPasaje(int filaSeleccionada) {
@@ -1173,7 +1181,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPago.getRadioReservaSinPagar().setVisible(false);
 		this.ventanaPago.getBtnAtras().setVisible(false);
 		this.ventanaPago.getLblMontoaPagar().setText(""+this.pasajes_en_tabla.get(filaSeleccionada).getMontoAPagar());
-		this.editarPago = false;
+		this.noEditarPago = false;
 	}
 
 	private void verTablaPagos(ActionEvent vp) {

@@ -1,11 +1,8 @@
 package presentacion.controlador;
 
-import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.font.TextAttribute;
 import java.sql.Date;
 import java.sql.Time;
-import java.text.AttributedString;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -64,21 +61,20 @@ public class ControladorEvento {
 	private EventoDTO eventoAsociado;
 	private Mapper mapper;
 
-	public ControladorEvento(VentanaRegistrarEvento ventanaEvento, ModeloEvento evento, AdministrativoDTO administrativoLogueado, List<EventoDTO> eventos_en_tabla){
+	public ControladorEvento(ModeloEvento evento, List<EventoDTO> eventos_en_tabla){
 		//DATOS EVENTO:
 		java.util.Date fecha = new java.util.Date(); 
 		this.fechaIngreso = new java.sql.Date(fecha.getTime());	
 		this.fechaEvento = null;
 		this.horaEvento = null;
 		this.descripcion = null;
-		this.clienteSeleccionado = null; //cliente que selecciona en la tabla 		
-		this.administrativoLogueado = administrativoLogueado;
+		this.clienteSeleccionado = null; //cliente que selecciona en la tabla 
 		this.estado = null;
 		this.motivoReprogramacion="";
 		this.eventoRegistrado = null;
 		
 		this.mapper = new Mapper();
-		this.ventanaEvento = ventanaEvento;
+		this.ventanaEvento = VentanaRegistrarEvento.getInstance();
 		this.ventanaEditarEvento = VentanaEditarEvento.getInstance();
 		this.ventanaTablaClientes = VentanaTablaClientes.getInstance();
 		this.ventanaMotivos = VentanaMotivosReprogramacionEvento.getInstance();
@@ -106,7 +102,7 @@ public class ControladorEvento {
 		
 		this.notificacion.getBtnVerNotificacion().addActionListener(v->mostrarEvento(v));
 		
-		this.administrativoLogueado= administrativoLogueado;		
+//		this.administrativoLogueado= administrativoLogueado;		
 	}
 
 	public void iniciar(){
@@ -184,7 +180,7 @@ public class ControladorEvento {
 	}
 	
 	public void verVentanaMotivos(ActionEvent e) {
-		ventanaEditarEvento.mostrarVentana(false);
+		ventanaEditarEvento.setEnabled(false);
 		llenarMotivos(eventoSeleccionado);
 		ventanaMotivos.mostrarVentana(true);	
 	}
@@ -250,7 +246,7 @@ public class ControladorEvento {
 	}
 	
 	private void cerrarVentanaMotivos(ActionEvent e) {
-		this.ventanaEditarEvento.mostrarVentana(true);
+		this.ventanaEditarEvento.setEnabled(true);
 		this.ventanaMotivos.limpiarCampos();
 		this.ventanaMotivos.cerrarVentana();
 	}
@@ -402,6 +398,10 @@ public class ControladorEvento {
 					e.setVisto(1);
 					evento.editarVistoEvento(e);
 		}
+	}
+	
+	public void setAdministrativoLogueado(AdministrativoDTO adm) {
+		this.administrativoLogueado = adm;
 	}
 	/*private void llenarTablaEventos(){
 		System.out.println("ENTRA A TABLA EVENTO EN CONTROLADOREVENTO");
