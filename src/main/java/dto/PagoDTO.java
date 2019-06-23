@@ -9,14 +9,24 @@ public class PagoDTO {
 	private FormaPagoDTO idFormaPago;
 	private Date fechaPago;
 	private BigDecimal monto;
+	private TarjetaDTO idtarjeta;
 
-	public PagoDTO(int idPago, AdministrativoDTO administrativo, Date fechaPago, BigDecimal monto, FormaPagoDTO pago) {
+	public PagoDTO(int idPago, AdministrativoDTO administrativo, Date fechaPago, BigDecimal monto, FormaPagoDTO pago, TarjetaDTO idtarjeta) {
 		super();
 		this.idPago = idPago;
 		this.administrativo = administrativo;
 		this.fechaPago = fechaPago;
 		this.monto = monto;
 		this.idFormaPago = pago;
+		this.idtarjeta = idtarjeta;
+	}
+
+	public TarjetaDTO getIdtarjeta() {
+		return idtarjeta;
+	}
+
+	public void setIdtarjeta(TarjetaDTO idtarjeta) {
+		this.idtarjeta = idtarjeta;
 	}
 
 	public PagoDTO() {

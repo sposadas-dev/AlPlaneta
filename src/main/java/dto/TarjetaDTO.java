@@ -1,19 +1,16 @@
 package dto;
 
-
-import java.sql.Date;
 public class TarjetaDTO {
 	
 	
 	private int idTarjeta;
 //	private PagoDTO idPago;
 //	private FormaPagoDTO idFormaPago;	
-	private int nroTarjeta;
-	private Date fechaVencimiento;
+	private String nroTarjeta;
+	private String fechaVencimiento;
 	
 	
-	public TarjetaDTO(int idTarjeta,  int nroTarjeta, Date fechaVencimiento )
-	{
+	public TarjetaDTO(int idTarjeta,  String nroTarjeta, String fechaVencimiento ){
 		super();
 		this.idTarjeta = idTarjeta;
 		//this.idPago = idPago;
@@ -21,7 +18,10 @@ public class TarjetaDTO {
 		this.fechaVencimiento =  fechaVencimiento;
 	}
 
-
+	public TarjetaDTO() {
+		super();
+	}
+	
 	public int getIdTarjeta() {
 		return idTarjeta;
 	}
@@ -32,26 +32,23 @@ public class TarjetaDTO {
 	}
 
 
-	public int getNroTarjeta() {
+	public String getNroTarjeta() {
 		return nroTarjeta;
 	}
 
 
-	public void setNroTarjeta(int nroTarjeta) {
+	public void setNroTarjeta(String nroTarjeta) {
 		this.nroTarjeta = nroTarjeta;
 	}
 
 
-	public Date getFechaVencimiento() {
+	public String getVencimiento() {
 		return fechaVencimiento;
 	}
 
 
-	public void setFechaVencimiento(Date fechaVencimiento) {
+	public void setVencimiento(String fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
 	}
-	
-	
-	
 
 }

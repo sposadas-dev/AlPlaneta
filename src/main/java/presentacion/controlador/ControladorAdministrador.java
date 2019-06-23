@@ -208,7 +208,7 @@ public class ControladorAdministrador {
 					p.waitFor();
 					file.delete();
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "No se cargó el backup correctamente. "+ ex.getMessage() );
+					JOptionPane.showMessageDialog(null, "No se cargó el restore correctamente. "+ ex.getMessage() );
 				}
 			}
 		});

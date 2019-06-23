@@ -263,7 +263,8 @@ CREATE TABLE `viaje_promocion` (
 CREATE TABLE `tarjeta` (
 	`idtarjeta` int(11)  NOT NULL AUTO_INCREMENT,
 	`nrotarjeta`  char(16),
-	`vencimiento`  char(6), --e.g 202506
+	`vencimiento`  char(6),
+    PRIMARY KEY(`idtarjeta`)
 );
 
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);

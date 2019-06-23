@@ -22,6 +22,8 @@ import dto.AdministrativoDTO;
 import dto.ClienteDTO;
 import dto.EstadoPasajeDTO;
 import dto.FormaPagoDTO;
+
+import dto.TarjetaDTO;
 import dto.PagoDTO;
 import dto.Pagos_PasajeDTO;
 import dto.PasajeDTO;
@@ -93,6 +95,8 @@ public class ControladorPasaje implements ActionListener{
 	private PasajeDTO pasajeAEditar; 
 	private PasajeDTO pasajeACancelar;
 	private Pagos_PasajeDTO pagos_pasajeDTO;
+	
+	private ControladorTarjeta controladorTarjeta;
 	
 	/*Modelos*/
 	private Cliente modeloCliente;
@@ -277,13 +281,22 @@ public class ControladorPasaje implements ActionListener{
 		
 //		this.ventanaPago.getPanelPasaje().getCancelCheckBox().addActionListener(ccb->cargarCancelados(ccb));
 		this.ventanaPago.getComboBoxFormaPago().addActionListener(fp->verFormaDePago(fp));
+		this.ventanaPago.getBtnIngresarTarjeta().addActionListener(it->ingresarTarjeta(it));
 		this.ventanaPagoPuntos.getBtnPago().addActionListener(p->pagarConPuntos(p));
 		this.ventanaPagoPuntos.getBtnAtras().addActionListener(a->volverVentanaPago(a));
 		
 		this.editarPago = true;
 		this.modeloPunto = new ModeloPunto(new DAOSQLFactory());
+		
+		this.controladorTarjeta = new ControladorTarjeta();
 	}
 	
+
+	private void ingresarTarjeta(ActionEvent it) {
+		
+		controladorTarjeta.mostrarVentanaTarjeta();
+	}
+
 
 	private void pagarConPuntos(ActionEvent p) {
 		if(valorDelViajeEnPuntos<=clienteSeleccionado.getTotalPuntos()){
@@ -303,6 +316,9 @@ public class ControladorPasaje implements ActionListener{
 			this.ventanaPago.setVisible(false);
 			this.ventanaPagoPuntos.getLblPuntosDelCliente().setText(String.valueOf(clienteSeleccionado.getTotalPuntos()));
 			this.ventanaPagoPuntos.getLblCostoDelPasajeEnPuntos().setText(String.valueOf(calcularValorDeViajeEnPuntos(viajeSeleccionado.getPrecio())));
+		}
+		else if(formaDePago.equals("Tarjeta")) {
+			this.ventanaPago.getBtnIngresarTarjeta().setVisible(true);
 		}
 	}
 
@@ -612,9 +628,11 @@ public class ControladorPasaje implements ActionListener{
 	private void darAltaDelPago(ActionEvent cp)  {
 // Validar que se haya seleccionado una forma de pago 
 			FormaPago f = new FormaPago(new DAOSQLFactory());
+			
 			this.ventanaPago.getRadioReservaSinPagar().setVisible(true);
 			
 			FormaPagoDTO formaPago = f.getFormaPagoByName(ventanaPago.getComboBoxFormaPago().getSelectedItem().toString());
+			
 			Calendar currenttime = Calendar.getInstance();
 			
 			pagoDTO = new PagoDTO();	
@@ -622,6 +640,11 @@ public class ControladorPasaje implements ActionListener{
 			pagoDTO.setAdministrativo(administrativoLogueado);
 			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
 			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
+			
+			if(formaPago.getIdFormaPago()==2){
+				pagoDTO.setIdtarjeta(controladorTarjeta.datosTarjeta());
+				System.out.println(pagoDTO.getIdtarjeta().getIdTarjeta());
+			}
 	
 			if (editarPago){
 				System.out.println("editaPago");
@@ -787,6 +810,7 @@ public class ControladorPasaje implements ActionListener{
 		
 		viajeDTO.setCapacidad(viajeSeleccionado.getCapacidad()-pasajeros.size()); //Restamos la capacidad del viaje segun la cantidad de pasajeros
 		modeloViaje.editarViaje(viajeDTO);
+		controladorTarjeta.cargarTarjeta();
 		modeloPago.agregarPago(pagoDTO);
 		
 		PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
@@ -795,6 +819,7 @@ public class ControladorPasaje implements ActionListener{
 		
 		pasajeDTO = new PasajeDTO(0,numeroComprobante,viajeDTO,administrativoLogueado,cliente,calcularFechaReserva(viajeDTO.getFechaSalida()),valorViaje,montoAPagar,estadoPasaje,
 				pasajeros_en_reserva,"",null);
+		
 		
 		modeloPasaje.agregarPasaje(pasajeDTO);
 		

@@ -9,6 +9,8 @@ public interface TarjetaDAO {
 	public boolean insert(TarjetaDTO tarjeta);
 	
 	public List<TarjetaDTO> readAll();
+
+	TarjetaDTO getTarjetaById(int idtarjeta);
 	
 //	public boolean update(TarjetaDTO tarjeta);
 	
