@@ -106,6 +106,7 @@ public class LocalDAOSQL implements LocalDAO{
 			statement = conexion.getSQLConexion().prepareStatement(update);
 			statement.setString(1, local.getNombreLocal());
 			statement.setString(2, local.getDireccionLocal());
+			statement.setInt(3, local.getIdLocal());
 			if(statement.executeUpdate() > 0) {
 				return true;
 			}

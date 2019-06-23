@@ -42,6 +42,7 @@ import presentacion.vista.administrador.VentanaAgregarEmpleado;
 import presentacion.vista.administrador.VentanaAgregarLocal;
 import presentacion.vista.administrador.VentanaCambiarContrasena;
 import presentacion.vista.administrador.VentanaEditarCuenta;
+import presentacion.vista.administrador.VentanaEditarLocal;
 import presentacion.vista.administrador.VentanaEditarViaje;
 import presentacion.vista.administrador.VistaAdministrador;
 
@@ -54,6 +55,7 @@ public class ControladorAdministrador {
 	private VentanaEditarViaje ventanaEditarViaje;
 	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	private int filaSeleccionada;
+	private int filaLocalSeleccionada;
 	private PanelEmpleados panel;
 	private EnvioDeCorreo enviodeCorreo;
 	
@@ -89,6 +91,7 @@ public class ControladorAdministrador {
 	private ControladorPais controladorPais;
 	private ControladorCiudad controladorCiudad;
 	private ControladorProvincia controladorProvincia;
+	private VentanaEditarLocal ventanaEditarLocal;
 	
 	public ControladorAdministrador(VistaAdministrador vistaAdministrador,AdministradorDTO administradorLogueado){
 		this.vistaAdministrador = vistaAdministrador;
@@ -98,6 +101,7 @@ public class ControladorAdministrador {
 		this.ventanaAgregarLocal = VentanaAgregarLocal.getInstance();
 		this.ventanaEditarViaje = VentanaEditarViaje.getInstance();
 		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
+		this.ventanaEditarLocal = VentanaEditarLocal.getInstance();
 		this.enviodeCorreo = new EnvioDeCorreo();
 		
 //MENU ITEMS		
@@ -113,9 +117,13 @@ public class ControladorAdministrador {
 
 		this.vistaAdministrador.getItemVisualizarLocales().addActionListener(vl->visualizarLocales(vl));
 		this.vistaAdministrador.getItemAgregarLocal().addActionListener(al->agregarPanelLocales(al));
-//		this.vistaAdministrador.getItemEditarLocal().addActionListener(el->editarLocal(el));
-//		this.vistaAdministrador.getItemEliminarLocal().addActionListener(dl->eliminarLocal(dl));
+		this.vistaAdministrador.getItemEditarLocal().addActionListener(el->mostrarEditarLocal(el));
+		this.vistaAdministrador.getItemEliminarLocal().addActionListener(dl->eliminarLocal(dl));
 
+		this.ventanaEditarLocal.getBtnEditar().addActionListener(elo->editarLocal(elo));
+		this.ventanaEditarLocal.getBtnCancelar().addActionListener(canEL->cancelarEditarLocal(canEL));
+		this.ventanaAgregarLocal.getBtnCancelar().addActionListener(canAL->cancelarAgregarLocal(canAL));
+		
 //		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 		
 		this.vistaAdministrador.getItemAgregarFormaPago().addActionListener(afp->agregarPanelFormaPago(afp));
@@ -301,7 +309,18 @@ public class ControladorAdministrador {
 		this.administradorLogueado = administradorLogueado;
 
 	}
-	
+
+	private void cancelarEditarLocal(ActionEvent canEL) {
+		this.ventanaAgregarLocal.cerrarVentana();
+		this.ventanaAgregarLocal.limpiarCampos();
+		this.filaLocalSeleccionada = -1;
+	}
+
+	private void cancelarAgregarLocal(ActionEvent canAL) {
+		this.ventanaAgregarLocal.cerrarVentana();
+		this.ventanaAgregarLocal.limpiarCampos();
+	}
+
 	private void mostrarPanelDeViajes(ActionEvent v) {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
@@ -1069,6 +1088,41 @@ public class ControladorAdministrador {
 		this.ventanaAgregarLocal.cerrarVentana();
 	}
 	
+	private void mostrarEditarLocal(ActionEvent el) {
+		this.ventanaEditarLocal.mostrarVentana();
+		this.setFilaLocalSeleccionada(this.vistaAdministrador.getPanelLocales().getTablaLocales().getSelectedRow());
+		if (filaLocalSeleccionada != -1){
+			this.ventanaEditarLocal.getTxtNombreLocal().setText(this.locales_en_tabla.get(filaLocalSeleccionada).getNombreLocal());
+			this.ventanaEditarLocal.getTxtDireccionLocal().setText(this.locales_en_tabla.get(filaLocalSeleccionada).getDireccionLocal());
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void editarLocal(ActionEvent elo) {
+		LocalDTO editLocal = new LocalDTO(this.locales_en_tabla.get(this.filaLocalSeleccionada).getIdLocal(), this.ventanaEditarLocal.getTxtNombreLocal().getText(), this.ventanaEditarLocal.getTxtDireccionLocal().getText());
+		local.update(editLocal);
+		this.ventanaEditarLocal.cerrarVentana();
+		this.ventanaEditarLocal.limpiarCampos();
+		this.filaLocalSeleccionada = -1;
+		this.llenarTablaLocales();
+		
+	}
+	
+	private void eliminarLocal(ActionEvent dl) {
+		this.setFilaLocalSeleccionada(this.vistaAdministrador.getPanelLocales().getTablaLocales().getSelectedRow());
+		if (filaLocalSeleccionada != -1){
+			if(local.delete(this.locales_en_tabla.get(filaLocalSeleccionada).getIdLocal())) {
+				this.filaLocalSeleccionada = -1;
+				this.llenarTablaLocales();
+			} else {
+				JOptionPane.showMessageDialog(null, "No se ha podido eliminar el local seleccionado", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			}
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	private boolean mailExistente(String mail){
 		Administrador modeloAdministrador = new Administrador(new DAOSQLFactory());
 		for(AdministradorDTO administrador: modeloAdministrador.obtenerAdministradores())
@@ -1125,5 +1179,13 @@ public class ControladorAdministrador {
 				return true;
 		
 		return false;
+	}
+
+	public int getFilaLocalSeleccionada() {
+		return filaLocalSeleccionada;
+	}
+
+	public void setFilaLocalSeleccionada(int filaLocalSeleccionada) {
+		this.filaLocalSeleccionada = filaLocalSeleccionada;
 	}
 }
