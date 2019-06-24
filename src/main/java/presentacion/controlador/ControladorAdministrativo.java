@@ -297,10 +297,6 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaEditarCliente.getTxtEmail().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
-				if(Character.isDigit(letra)) {
-					Toolkit.getDefaultToolkit().beep();
-					e.consume();
-				}
 				if(ventanaEditarCliente.getTxtEmail().getText().length() == 45) {
 					e.consume();
 				}

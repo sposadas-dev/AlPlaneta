@@ -192,10 +192,6 @@ public class ControladorAdministrador {
 		this.ventanaAgregarEmpleado.getTxtUsuario().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
-				if(Character.isDigit(letra)) {
-					Toolkit.getDefaultToolkit().beep();
-					e.consume();
-				}
 				if(ventanaAgregarEmpleado.getTxtUsuario().getText().length() == 45) {
 					e.consume();
 				}
@@ -205,10 +201,6 @@ public class ControladorAdministrador {
 		this.ventanaAgregarEmpleado.getTextMail().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
-				if(Character.isDigit(letra)) {
-					Toolkit.getDefaultToolkit().beep();
-					e.consume();
-				}
 				if(ventanaAgregarEmpleado.getTextMail().getText().length() == 45) {
 					e.consume();
 				}
@@ -262,10 +254,6 @@ public class ControladorAdministrador {
 		this.ventanaEditarCuenta.getTxtUsuario().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
-				if(Character.isDigit(letra)) {
-					Toolkit.getDefaultToolkit().beep();
-					e.consume();
-				}
 				if(ventanaEditarCuenta.getTxtUsuario().getText().length() == 45) {
 					e.consume();
 				}
@@ -275,10 +263,6 @@ public class ControladorAdministrador {
 		this.ventanaEditarCuenta.getTxtMail().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
-				if(Character.isDigit(letra)) {
-					Toolkit.getDefaultToolkit().beep();
-					e.consume();
-				}
 				if(ventanaEditarCuenta.getTxtMail().getText().length() == 45) {
 					e.consume();
 				}

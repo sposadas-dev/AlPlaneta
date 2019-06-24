@@ -131,10 +131,6 @@ public class ControladorCliente implements ActionListener{
 		this.ventanaRegistrarCliente.getTxtEmail().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
-				if(!Character.isDigit(letra)) {
-					Toolkit.getDefaultToolkit().beep();
-					e.consume();
-				}
 				if(ventanaRegistrarCliente.getTxtEmail().getText().length() == 45) {
 					e.consume();
 				}
@@ -144,10 +140,6 @@ public class ControladorCliente implements ActionListener{
 		this.ventanaRegistrarCliente.getTxtUsuario().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
-				if(!Character.isDigit(letra)) {
-					Toolkit.getDefaultToolkit().beep();
-					e.consume();
-				}
 				if(ventanaRegistrarCliente.getTxtUsuario().getText().length() == 45) {
 					e.consume();
 				}

@@ -314,10 +314,6 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPasajero.getTxtEmail().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 				char letra = e.getKeyChar();
-				if(!Character.isDigit(letra)) {
-					Toolkit.getDefaultToolkit().beep();
-					e.consume();
-				}
 				if(ventanaPasajero.getTxtEmail().getText().length() == 45) {
 					e.consume();
 				}
