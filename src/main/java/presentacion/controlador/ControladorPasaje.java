@@ -384,18 +384,9 @@ public class ControladorPasaje implements ActionListener{
 	public void iniciar(){
 		this.llenarTablaClientes();
 		this.llenarTablaPasajes();
-		this.llenarComboPrecios();
 	}
 	
-	public void llenarComboPrecios() {
-		String [] precioDesde = {"0","300","500","1000","1300","1500","2000","2500","3000","3500","5000",
-								 "7000","8000","10000","13000","15000","20000","25000","30000","35000","50000"};
-		String [] precioHasta = {"0","300","500","1000","1300","1500","2000","2500","3000","3500","5000",
-								 "7000","8000","10000","13000","15000","20000","25000","30000","35000","50000", "60000"};
-		this.ventanaTablaViajes.getComboBoxPrecioDesde().setModel(new DefaultComboBoxModel<String>(precioDesde));
-		this.ventanaTablaViajes.getComboBoxPrecioHasta().setModel(new DefaultComboBoxModel<String>(precioHasta));
-	}
-	
+
 	public void limpiarFiltros(ActionEvent lf){
 		this.llenarTablaViajes();
 	}

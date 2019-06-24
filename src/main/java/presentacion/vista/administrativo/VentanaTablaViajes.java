@@ -38,9 +38,8 @@ public class VentanaTablaViajes extends JFrame {
 	private Label label_1;
 	private JLabel lblDesde;
 	private JLabel lblHasta_1;
-	private JComboBox<String> comboBoxPrecioDesde;
-
-	private JComboBox<String> comboBoxPrecioHasta;
+	private JTextField txtPrecioDesde;
+	private JTextField txtPrecioHasta;
 
 	public static VentanaTablaViajes getInstance(){
 		if(INSTANCE == null)
@@ -130,11 +129,13 @@ public class VentanaTablaViajes extends JFrame {
 		contentPane.add(lblPresioneLaTecla);
 		
 		Label label = new Label("Desde");
+		label.setFont(new Font("Dialog", Font.PLAIN, 13));
 		label.setBounds(351, 125, 78, 18);
 		contentPane.add(label);
 		
 		label_1 = new Label("Precio");
-		label_1.setBounds(771, 75, 59, 21);
+		label_1.setFont(new Font("Dialog", Font.PLAIN, 13));
+		label_1.setBounds(771, 85, 59, 14);
 		contentPane.add(label_1);
 		
 		lblDesde = new JLabel("Desde");
@@ -151,33 +152,15 @@ public class VentanaTablaViajes extends JFrame {
 		btnLimpiarFiltros.setBounds(788, 386, 150, 19);
 		contentPane.add(btnLimpiarFiltros);
 		
-		comboBoxPrecioDesde = new JComboBox<String>();
-		comboBoxPrecioDesde.setBounds(702, 103, 81, 21);
-		contentPane.add(comboBoxPrecioDesde);
-		comboBoxPrecioDesde.addMouseWheelListener(new MouseWheelListener() {
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				if(e.getWheelRotation()>0)
-					if(comboBoxPrecioDesde.getSelectedIndex() < comboBoxPrecioDesde.getItemCount()-1) 
-						comboBoxPrecioDesde.setSelectedIndex(comboBoxPrecioDesde.getSelectedIndex()+1);
-				if(e.getWheelRotation()<0)
-					if(comboBoxPrecioDesde.getSelectedIndex() > 0)
-						comboBoxPrecioDesde.setSelectedIndex(comboBoxPrecioDesde.getSelectedIndex()-1);
-			}
-		});
+		txtPrecioDesde = new JTextField();
+		txtPrecioDesde.setBounds(707, 103, 78, 20);
+		getContentPane().add(txtPrecioDesde);
+		txtPrecioDesde.setColumns(10);
 		
-		comboBoxPrecioHasta = new JComboBox<String>();
-		comboBoxPrecioHasta.setBounds(803, 103, 78, 21);
-		contentPane.add(comboBoxPrecioHasta);
-		comboBoxPrecioHasta.addMouseWheelListener(new MouseWheelListener() {
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				if(e.getWheelRotation()>0)
-					if(comboBoxPrecioHasta.getSelectedIndex() < comboBoxPrecioHasta.getItemCount()-1) 
-						comboBoxPrecioHasta.setSelectedIndex(comboBoxPrecioHasta.getSelectedIndex()+1);
-				if(e.getWheelRotation()<0)
-					if(comboBoxPrecioHasta.getSelectedIndex() > 0)
-						comboBoxPrecioHasta.setSelectedIndex(comboBoxPrecioHasta.getSelectedIndex()-1);
-			}
-		});
+		txtPrecioHasta = new JTextField();
+		txtPrecioHasta.setColumns(10);
+		txtPrecioHasta.setBounds(796, 103, 78, 20);
+		getContentPane().add(txtPrecioHasta);
 		
 		lblPresioneLaTecla.setVisible(false);
 		
@@ -243,12 +226,12 @@ public class VentanaTablaViajes extends JFrame {
 		return dateHasta;	
 	}
 	
-	public JComboBox<String> getComboBoxPrecioDesde() {
-		return comboBoxPrecioDesde;
+	public JTextField getTextPrecioDesde() {
+		return txtPrecioDesde;
 	}
 
-	public JComboBox<String> getComboBoxPrecioHasta() {
-		return comboBoxPrecioHasta;
+	public JTextField getTextPrecioHasta() {
+		return txtPrecioHasta;
 	}
 	
 }
