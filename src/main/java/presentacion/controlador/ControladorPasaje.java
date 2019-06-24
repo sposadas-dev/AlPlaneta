@@ -93,6 +93,7 @@ public class ControladorPasaje implements ActionListener{
 	private VentanaTarjeta ventanaTarjeta;
 	private VentanaCancelacionPasaje ventanaCancelacionPasaje;
 	private VentanaPagoPuntos ventanaPagoPuntos;
+
 	
 	private List<ClienteDTO> clientes_en_tabla;
 	private List <ViajeDTO> viajes_en_tabla;
@@ -105,6 +106,9 @@ public class ControladorPasaje implements ActionListener{
 	private PasajeDTO pasajeAEditar; 
 	private PasajeDTO pasajeACancelar;
 	private Pagos_PasajeDTO pagos_pasajeDTO;
+	
+	
+	private ControladorTarjeta controladorTarjeta;
 	
 	/*Modelos*/
 	private Cliente modeloCliente;
@@ -323,11 +327,20 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPago.getComboBoxFormaPago().addActionListener(fp->verFormaDePago(fp));
 		this.ventanaPagoPuntos.getBtnPago().addActionListener(p->pagarConPuntos(p));
 		this.ventanaPagoPuntos.getBtnAtras().addActionListener(a->volverVentanaPago(a));
-		
+		this.ventanaPago.getBtnIngresarTarjeta().addActionListener(it->ingresarTarjeta(it));
+
 		this.noEditarPago = true;
 		this.modeloPunto = new ModeloPunto(new DAOSQLFactory());
+		this.controladorTarjeta = new ControladorTarjeta();
 	
 	}
+	
+	private void ingresarTarjeta(ActionEvent it) {
+		
+		controladorTarjeta.mostrarVentanaTarjeta();
+	}
+
+
 	
 
 	private void pagarConPuntos(ActionEvent p) {
@@ -349,6 +362,10 @@ public class ControladorPasaje implements ActionListener{
 			this.ventanaPagoPuntos.getLblPuntosDelCliente().setText(String.valueOf(clienteSeleccionado.getTotalPuntos()));
 			this.ventanaPagoPuntos.getLblCostoDelPasajeEnPuntos().setText(String.valueOf(calcularValorDeViajeEnPuntos(viajeSeleccionado.getPrecio())));
 		}
+		else if(formaDePago.equals("Tarjeta")) {
+			this.ventanaPago.getBtnIngresarTarjeta().setVisible(true);
+		}
+
 	}
 
 	private Integer calcularValorDeViajeEnPuntos(BigDecimal precio) {
@@ -739,7 +756,12 @@ public class ControladorPasaje implements ActionListener{
 			pagoDTO.setAdministrativo(administrativoLogueado);
 			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
 			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
-	
+
+			
+			if(formaPago.getIdFormaPago()==2){
+				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
+			}
+
 			if (noEditarPago){
 				this.ventanaPago.setVisible(false);
 				mostrarVentanaConfirmacionPasaje();

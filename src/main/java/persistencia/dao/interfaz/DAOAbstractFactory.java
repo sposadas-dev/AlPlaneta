@@ -55,4 +55,6 @@ public interface DAOAbstractFactory {
 	public Viaje_PromocionDAO createViaje_PromocionDAO();
 	
 	public LocalDAO createLocalDAO();
+	
+	public TarjetaDAO createTarjetaDAO();
 }

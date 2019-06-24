@@ -123,6 +123,7 @@ CREATE TABLE `pago` (
   `fechaPago` date NOT NULL,
   `monto` decimal(11,0) NOT NULL,
   `idformapago` int(11),
+  `idtarjeta` int(11),
   PRIMARY KEY (`idPago`)
 );
 
@@ -261,6 +262,13 @@ CREATE TABLE `viaje_promocion` (
   `idViaje` int(11) NOT NULL,
   `idPromocion` int(11)NOT NULL,
   PRIMARY KEY (`idViajePromocion`)
+);
+
+CREATE TABLE `tarjeta` (
+	`idtarjeta` int(11)  NOT NULL AUTO_INCREMENT,
+	`nrotarjeta`  char(16),
+	`vencimiento`  char(6),
+    PRIMARY KEY(`idtarjeta`)
 );
 
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);

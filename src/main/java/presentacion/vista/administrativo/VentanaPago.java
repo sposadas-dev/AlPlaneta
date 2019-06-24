@@ -36,6 +36,7 @@ public class VentanaPago extends JFrame {
 	private JLabel lblMontoaPagar;
 	private JButton btnPago;
 	private JButton btnAtras;
+	private JButton btnIngresarTarjeta;
 	private JLabel lblDatoPorcentajeDescuento;
 	private JLabel lblDatoMontoOriginal;
 	private Component lblPorcentajeDeDescuento;
@@ -143,9 +144,12 @@ public class VentanaPago extends JFrame {
 		lblPago.setBounds(265, 0, 210, 53);
 		panel.add(lblPago);
 		
-		JButton btnIngresarTarjeta = new JButton("Ingresar tarjeta");
+
+		btnIngresarTarjeta = new JButton("Ingresar tarjeta");
 		btnIngresarTarjeta.setBounds(490, 115, 167, 23);
+		btnIngresarTarjeta.setVisible(false);
 		contentPane.add(btnIngresarTarjeta);
+
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(67, 159, 467, 16);
@@ -200,6 +204,10 @@ public class VentanaPago extends JFrame {
 		
 	public JButton getBtnAtras() {
 		return btnAtras;
+	}
+
+	public JButton getBtnIngresarTarjeta() {
+		return btnIngresarTarjeta;
 	}
 
 
