@@ -209,7 +209,9 @@ public class ControladorCOOR {
 	
 	private void visualizarReporteEmpleados(ActionEvent l) {
 		Reporte reporte = new Reporte();
-		reporte.reporteEmpleados(administrativo.obtenerAdministrativosByLocal(coordinadorLogueado.getLocal().getIdLocal()));
+		Coordinador coordinador = new Coordinador(new DAOSQLFactory());
+		
+		reporte.reporteEmpleados(administrativo.obtenerAdministrativosByLocal(coordinadorLogueado.getLocal().getIdLocal()),coordinador.obtenerCoordinadores());
 		reporte.mostrar();
 	}
 	
@@ -224,8 +226,7 @@ public class ControladorCOOR {
 		this.ventanaGenerarReporte.getLblDesde().setVisible(true);
 		this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(true);
 		this.ventanaGenerarReporte.getLblHasta().setVisible(true);
-		this.ventanaGenerarReporte.getDateHastaChooser().setVisible(true);
-		
+		this.ventanaGenerarReporte.getDateHastaChooser().setVisible(true);		
 	}
 	
 	private void generarReporteVentas(ActionEvent gv){

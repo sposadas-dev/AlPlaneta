@@ -18,7 +18,6 @@ import modelo.Cliente;
 import modelo.Login;
 import modelo.MedioContacto;
 import persistencia.dao.mysql.DAOSQLFactory;
-import presentacion.vista.administrativo.PanelCliente;
 import presentacion.vista.administrativo.VentanaEditarCliente;
 import presentacion.vista.administrativo.VentanaRegistrarCliente;
 import presentacion.vista.administrativo.VistaAdministrativo;

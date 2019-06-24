@@ -25,6 +25,8 @@ import persistencia.dao.interfaz.ProvinciaDAO;
 import persistencia.dao.interfaz.PuntoDAO;
 import persistencia.dao.interfaz.RegimenPuntoDAO;
 import persistencia.dao.interfaz.RolDAO;
+import persistencia.dao.interfaz.SueldoDAO;
+import persistencia.dao.interfaz.Sueldos_EmpleadosDAO;
 import persistencia.dao.interfaz.TransporteDAO;
 import persistencia.dao.interfaz.ViajeDAO;
 import persistencia.dao.interfaz.Viaje_PromocionDAO;
@@ -161,4 +163,13 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 		return new ContadorDAOSQL();
 	}
 
+	@Override
+	public SueldoDAO createSueldoDAO() {
+		return new SueldoDAOSQL();
+	}
+
+	@Override
+	public Sueldos_EmpleadosDAO createSueldoEmpleadoDAO() {
+		return new SueldosEmpleadosDAOSQL();
+	}
 }

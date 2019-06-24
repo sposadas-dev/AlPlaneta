@@ -263,6 +263,21 @@ CREATE TABLE `viaje_promocion` (
   PRIMARY KEY (`idViajePromocion`)
 );
 
+CREATE TABLE `sueldo` (
+    `idSueldo` int(11) NOT NULL AUTO_INCREMENT,
+    `montoSueldo` int(11) NOT NULL,
+    `mes` date NOT NULL, 
+    `idRol` int(11),
+    PRIMARY KEY(`idSueldo`)
+);
+
+CREATE TABLE `sueldos_empleados` (
+    `idSueldoEmpleado` int(11) NOT NULL AUTO_INCREMENT,
+    `idEmpleado` int(11) NOT NULL,
+    `idSueldo` int(11) NOT NULL,
+    PRIMARY KEY(`idSueldoEmpleado`)
+);
+
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLogin`)  references login(`idLogin`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLocal`)  references local(`idLocal`);
@@ -307,6 +322,13 @@ ALTER TABLE `evento` ADD FOREIGN KEY (`idEstadoEvento`) references estadoevento(
 
 ALTER TABLE `viaje_promocion` ADD FOREIGN KEY (`idViaje`)  references viaje(`idViaje`);
 ALTER TABLE `viaje_promocion` ADD FOREIGN KEY (`idPromocion`)  references promocion(`idPromocion`);
+
+ALTER TABLE `sueldo` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);
+
+ALTER TABLE `sueldos_empleados` ADD FOREIGN KEY (`idSueldo`) references sueldo(`idSueldo`);
+ALTER TABLE `sueldos_empleados` ADD FOREIGN KEY (`idEmpleado`) references administrador(`idAdministrador`);
+ALTER TABLE `sueldos_empleados` ADD FOREIGN KEY (`idEmpleado`) references administrativo(`idAdministrativo`);
+ALTER TABLE `sueldos_empleados` ADD FOREIGN KEY (`idEmpleado`) references coordinador(`idCoordinador`);
 
 INSERT INTO local VALUES (1,'AlPlaneta First Local','Beltran 887'),(2,'AlPlaneta Ultimate Local','Calle Falsa 123'), (3,'AlPlaneta Last Local', 'Last 001');
 INSERT INTO rol VALUES (1,'administrador'),(2,'administrativo'),(3,'coordinador'),(4,'contador'),(5,'cliente');

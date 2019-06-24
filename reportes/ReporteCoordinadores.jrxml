@@ -33,8 +33,11 @@
 	<field name="nombre" class="java.lang.String">
 		<fieldDescription><![CDATA[nombre]]></fieldDescription>
 	</field>
-	<field name="nombreCoordinador" class="java.lang.String">
-		<fieldDescription><![CDATA[nombre]]></fieldDescription>
+	<field name="dni" class="java.lang.String">
+		<fieldDescription><![CDATA[dni]]></fieldDescription>
+	</field>
+	<field name="local" class="dto.LocalDTO">
+		<fieldDescription><![CDATA[local]]></fieldDescription>
 	</field>
 	<field name="mail" class="java.lang.String">
 		<fieldDescription><![CDATA[mail]]></fieldDescription>
@@ -42,16 +45,10 @@
 	<field name="apellido" class="java.lang.String">
 		<fieldDescription><![CDATA[apellido]]></fieldDescription>
 	</field>
-	<field name="dni" class="java.lang.String">
-		<fieldDescription><![CDATA[dni]]></fieldDescription>
-	</field>
-	<field name="local" class="dto.LocalDTO">
-		<fieldDescription><![CDATA[local]]></fieldDescription>
-	</field>
-	<group name="GroupAdministrativos">
+	<group name="GroupCoordinadores">
 		<groupExpression><![CDATA[$F{nombre}]]></groupExpression>
 		<groupHeader>
-			<band height="45">
+			<band height="37">
 				<frame>
 					<reportElement mode="Opaque" x="0" y="0" width="555" height="37" backcolor="#CFCFCF" uuid="92de61ad-73c1-4fe2-bdb2-24c5ab21012d"/>
 					<box>
@@ -89,91 +86,52 @@
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="6"/>
+			<band height="9"/>
 		</groupFooter>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="45" splitType="Stretch">
-			<frame>
-				<reportElement x="0" y="0" width="630" height="40" uuid="fbf866cd-64dc-4043-b98c-ed8d9f31d19c"/>
-				<staticText>
-					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="2" width="380" height="38" backcolor="#FFFFFF" uuid="df09700e-f0a8-43aa-a9d6-1430d1a7476d"/>
-					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
-						<pen lineStyle="Dotted"/>
-					</box>
-					<textElement verticalAlignment="Justified" rotation="None">
-						<font fontName="SansSerif" size="30"/>
-					</textElement>
-					<text><![CDATA[Reporte de empleados]]></text>
-				</staticText>
-				<textField>
-					<reportElement x="489" y="2" width="56" height="20" uuid="0706116d-f632-4605-96d8-35fe765b5d67"/>
-					<textFieldExpression><![CDATA[$P{Fecha}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="390" y="2" width="102" height="20" uuid="4c9394fa-e0b1-4d17-9e4d-cc7deafc6164"/>
-					<text><![CDATA[Reporte generado el:]]></text>
-				</staticText>
-			</frame>
-		</band>
-	</title>
-	<pageHeader>
-		<band height="50" splitType="Stretch">
-			<frame>
-				<reportElement x="0" y="4" width="630" height="24" uuid="d078763f-d7ce-421d-8cc3-c9d81fe255f9"/>
-				<staticText>
-					<reportElement x="0" y="2" width="330" height="22" forecolor="#000000" uuid="8bd693bf-e003-4042-a1f8-881763b9ba1e"/>
-					<textElement>
-						<font isBold="true" isItalic="true"/>
-					</textElement>
-					<text><![CDATA[Reporte de empleados]]></text>
-				</staticText>
-			</frame>
-		</band>
-	</pageHeader>
 	<columnHeader>
-		<band height="86" splitType="Stretch">
+		<band height="85" splitType="Stretch">
 			<frame>
 				<reportElement mode="Transparent" x="-30" y="-12" width="605" height="54" forecolor="#000000" uuid="23209a62-cc9d-4b81-8e93-aa9cc3a92b36"/>
 				<frame>
 					<reportElement mode="Opaque" x="30" y="14" width="555" height="39" backcolor="#3374F5" uuid="c8917450-819c-4b7c-a6fd-d89b0dd43437"/>
 					<staticText>
-						<reportElement mode="Transparent" x="10" y="10" width="144" height="24" forecolor="#FFFFFF" uuid="9fd60eb9-9e93-4d91-b585-0b7d07e4533f"/>
+						<reportElement x="0" y="10" width="144" height="24" forecolor="#FFFFFF" uuid="9fd60eb9-9e93-4d91-b585-0b7d07e4533f"/>
 						<textElement textAlignment="Center">
 							<font size="12" isBold="true"/>
 						</textElement>
-						<text><![CDATA[Personal administrativo]]></text>
+						<text><![CDATA[Coordinador]]></text>
 					</staticText>
 				</frame>
 			</frame>
 			<frame>
-				<reportElement mode="Opaque" x="0" y="40" width="555" height="42" backcolor="#FAAD39" uuid="c2026cba-c67b-4636-bfdc-7be36f258321"/>
+				<reportElement mode="Opaque" x="0" y="40" width="555" height="39" backcolor="#FAAD39" uuid="a0dd8f6e-0d7e-4a52-b3e3-7567a14902b0"/>
 				<staticText>
-					<reportElement x="10" y="10" width="170" height="29" forecolor="#000000" uuid="7ead6bcf-0c99-4419-aec7-0556b7bcabad"/>
+					<reportElement x="10" y="10" width="170" height="29" forecolor="#000000" uuid="7859dad6-d574-45f3-ade5-6c32365b6bed"/>
 					<textElement textAlignment="Center">
 						<font size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Nombre y apellido]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="180" y="10" width="100" height="29" forecolor="#000000" uuid="918f4ff5-9337-4b23-80ac-fe99e79a1ed2"/>
+					<reportElement x="180" y="10" width="100" height="29" forecolor="#000000" uuid="85551dbc-9517-43bf-b45f-561ead680d7a"/>
 					<textElement textAlignment="Center">
 						<font size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[DNI]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="290" y="10" width="164" height="29" forecolor="#000000" uuid="0b93b8a7-61a0-4fca-b0c8-724ee93e5eb5"/>
+					<reportElement x="290" y="10" width="165" height="29" forecolor="#000000" uuid="1d03a808-29ac-4bfd-a063-4fd2c84e9bfd"/>
 					<textElement textAlignment="Center">
 						<font size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Email]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="455" y="10" width="94" height="29" forecolor="#000000" uuid="43bb5210-500f-46fa-9061-e8383421f4f3"/>
+					<reportElement x="455" y="10" width="95" height="29" forecolor="#000000" uuid="913e3f78-0d9f-4a70-9a68-a7efe6e4a22f"/>
 					<textElement textAlignment="Center">
 						<font size="12" isBold="true"/>
 					</textElement>
@@ -187,21 +145,4 @@
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="42" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="33" splitType="Stretch">
-			<textField>
-				<reportElement x="355" y="0" width="100" height="30" uuid="5ce007da-8e81-48b7-91fd-8e603c20d7ef"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement x="455" y="0" width="100" height="30" uuid="52b869cb-a151-48f6-ad3c-3147a8d111e8"/>
-				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-		</band>
-	</pageFooter>
 </jasperReport>
