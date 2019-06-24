@@ -7,11 +7,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
@@ -1159,24 +1162,32 @@ public class ControladorAdministrativo implements ActionListener {
 	
 	public void controlarAutomatizacionDelEnvioDeVoucher(){
 
-		Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-//		calendar.add(Calendar.DATE, -2); //el -2 indica que se le restaran 2 dias
-		
-		for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
-			
-			String fechaLimite = format.format(calendar.getTime());
-			String fechaDelViaje = mapper.parseToStringJavaUtil(p.getViaje().getFechaSalida());
-			
-			System.out.println("limite: "+fechaLimite);
-			System.out.println("viaje : "+fechaDelViaje);
-			if(fechaLimite.equals(fechaDelViaje)){
-				System.out.println("obtenemos pasaje "+p.getIdPasaje());
-				generarVoucherMail(p, p.getCliente());
-			}
+		TimerTask timerTask = new TimerTask() {
+		    public void run() {
+		    	Calendar salida = Calendar.getInstance(); //obtiene la fecha de hoy
+				Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy
+				SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+				
+				for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
+					salida.setTime(p.getViaje().getFechaSalida());
+					salida.add(calendar.DATE, -2);
+					
+					String salidaViaje = format.format(salida.getTime());
+					String fechaActual = format.format(calendar.getTime());
+					System.out.println("Fecha Salida viaje: "+salidaViaje+" "+salidaViaje.length());
+					System.out.println("Fecha Actual      : "+fechaActual+" "+fechaActual.length());
+					
+					if(salidaViaje.equals(fechaActual) && p.isNotificacion()==false){
+						System.out.println("obtenemos pasaje "+p.getIdPasaje());
+						generarVoucherMail(p, p.getCliente());
+						p.setNotificacion(true);
+						modeloPasaje.editarPasaje(p);
+					}
+				}
+			}};
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(timerTask, 0, 60000);//1000=1 segundo
 	}
-		
-}
 
 	
 }
