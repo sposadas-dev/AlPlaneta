@@ -1056,28 +1056,11 @@ public class ControladorPasaje implements ActionListener{
 	private EstadoPasajeDTO calcularEstadoPasaje() {
 		EstadoPasaje estado = new EstadoPasaje(new DAOSQLFactory());
 		EstadoPasajeDTO ret;
-//			if(totalaPagar.compareTo(pagoDTO.getMonto())==0){ 
-//				ret = estado.getFormaPagoByName("Vendido");
-//			}
-//			else {
-//				if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
-//					ret = estado.getFormaPagoByName("Pendiente");
-//				}
-//				else{
-//					ret = estado.getFormaPagoByName("Reservado");		
-//				}
-//			}
-//			return ret;
 		if(this.valorFinal.compareTo(pagoDTO.getMonto())==0){ 
 			ret = estado.getFormaPagoByName("Vendido");
 		}
 		else {
-			if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
-				ret = estado.getFormaPagoByName("Pendiente");
-			}
-			else{
 				ret = estado.getFormaPagoByName("Reservado");		
-			}
 		}
 		return ret;
 	}

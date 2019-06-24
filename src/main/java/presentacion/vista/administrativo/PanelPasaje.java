@@ -19,7 +19,7 @@ public class PanelPasaje extends JPanel {
 	private String[] nombreColumnasReservas = {"DNI del Cliente","Nombre", "Apellido", "Código del pasaje", "Origen" , "Destino", "Fecha de salida", "Fecha de llegada", "Hora de salida", "Valor", "Transporte","Estado"};
 	private JTable tablaReservas;
 	private JCheckBox cancelCheckBox;
-	private JCheckBox pendCheckBox;
+	private JCheckBox venciCheckBox;
 	private JCheckBox reserCheckBox;
 	private JCheckBox vendCheckBox;
 
@@ -55,9 +55,9 @@ public class PanelPasaje extends JPanel {
 		cancelCheckBox.setBounds(415, 99, 114, 21);
 		add(cancelCheckBox);
 
-		pendCheckBox = new JCheckBox("Pendientes");
-		pendCheckBox.setBounds(544, 99, 114, 21);
-		add(pendCheckBox);
+		venciCheckBox = new JCheckBox("Vencidos");
+		venciCheckBox.setBounds(544, 99, 114, 21);
+		add(venciCheckBox);
 		
 		reserCheckBox = new JCheckBox("Reservados");
 		reserCheckBox.setBounds(683, 99, 114, 21);
@@ -73,8 +73,8 @@ public class PanelPasaje extends JPanel {
 		return cancelCheckBox;
 	}
 	
-	public JCheckBox getPendCheckBox() {
-		return pendCheckBox;
+	public JCheckBox getVenciCheckBox() {
+		return venciCheckBox;
 	}
 	
 	public JCheckBox getReserCheckBox() {

@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
@@ -368,7 +370,7 @@ public class ControladorAdministrativo implements ActionListener {
 //		this.vista.getPanelPasaje().getBtnVisualizarPasaje().addActionListener(vp->verDatosPasaje(vp));
 		
 		this.vista.getPanelPasaje().getCancelCheckBox().addActionListener(ccb->cargarCancelados(ccb));
-		this.vista.getPanelPasaje().getPendCheckBox().addActionListener(pcb->cargarPendientes(pcb));
+		this.vista.getPanelPasaje().getVenciCheckBox().addActionListener(pcb->cargarVencidos(pcb));
 		this.vista.getPanelPasaje().getReserCheckBox().addActionListener(rcb->cargarReservados(rcb));
 		this.vista.getPanelPasaje().getVendCheckBox().addActionListener(vcb->cargarVendidos(vcb));
 		
@@ -479,7 +481,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.llenarTablaPasajes();
 	}
 	
-	public void cargarPendientes(ActionEvent pcb) {
+	public void cargarVencidos(ActionEvent pcb) {
 		this.llenarTablaPasajes();
 	}
 	
@@ -1011,91 +1013,91 @@ public class ControladorAdministrativo implements ActionListener {
 		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
 		
 		boolean cancel = this.vista.getPanelPasaje().getCancelCheckBox().isSelected();
-		boolean pend = this.vista.getPanelPasaje().getPendCheckBox().isSelected();
+		boolean venci = this.vista.getPanelPasaje().getVenciCheckBox().isSelected();
 		boolean reser = this.vista.getPanelPasaje().getReserCheckBox().isSelected();
 		boolean vend = this.vista.getPanelPasaje().getVendCheckBox().isSelected();
 
-		if (cancel == false && pend == false && reser == false && vend == false) {
+		if (cancel == false && venci == false && reser == false && vend == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				pasajes.add(pasaje);
 			}
-		} else if (cancel == true && pend == true && reser == true && vend == true ) {
+		} else if (cancel == true && venci == true && reser == true && vend == true ) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				pasajes.add(pasaje);
 			}
-		} else if (cancel == true && pend == true && reser == true && vend == false ) {
+		} else if (cancel == true && venci == true && reser == true && vend == false ) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if(!pasaje.getEstadoDelPasaje().getNombre().equals("Vendido")) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (cancel == true && pend == true && reser == false && vend == false) {
+		} else if (cancel == true && venci == true && reser == false && vend == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Vendido") || pasaje.getEstadoDelPasaje().getNombre().equals("Reservado"))) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (cancel == true && pend == false && reser == false && vend == false) {
+		} else if (cancel == true && venci == false && reser == false && vend == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Vendido") || 
 						pasaje.getEstadoDelPasaje().getNombre().equals("Reservado") || 
-							pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente") )) {
+							pasaje.getEstadoDelPasaje().getNombre().equals("Vencido") )) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (vend == true && reser == true && pend == true && cancel == false) {
+		} else if (vend == true && reser == true && venci == true && cancel == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado")) ) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (vend == true && reser == true && pend == false && cancel == false) {
+		} else if (vend == true && reser == true && venci == false && cancel == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
-				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente"))) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || pasaje.getEstadoDelPasaje().getNombre().equals("Vencido"))) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (vend == true && reser == false && pend == false && cancel == false) {
+		} else if (vend == true && reser == false && venci == false && cancel == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || 
-						pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente") || 
+						pasaje.getEstadoDelPasaje().getNombre().equals("Vencido") || 
 							pasaje.getEstadoDelPasaje().getNombre().equals("Reservado") )) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (reser == true && pend == true && vend == true && cancel == false) {
+		} else if (reser == true && venci == true && vend == true && cancel == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado")) ) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (reser == true && pend == true && vend == false && cancel == false) {
+		} else if (reser == true && venci == true && vend == false && cancel == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || pasaje.getEstadoDelPasaje().getNombre().equals("Vendido"))) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (reser == true && pend == false && vend == false && cancel == false) {
+		} else if (reser == true && venci == false && vend == false && cancel == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || 
 						pasaje.getEstadoDelPasaje().getNombre().equals("Vendido") || 
-							pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente") )) {
+							pasaje.getEstadoDelPasaje().getNombre().equals("Vencido") )) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (pend == true && vend == true && reser == true && cancel == false) {
+		} else if (venci == true && vend == true && reser == true && cancel == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado")) ) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (pend == true && vend == true && reser == false && cancel == false) {
+		} else if (venci == true && vend == true && reser == false && cancel == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || pasaje.getEstadoDelPasaje().getNombre().equals("Reservado"))) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (pend == true && vend == false && reser == false && cancel == false) {
+		} else if (venci == true && vend == false && reser == false && cancel == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Cancelado") || 
 						pasaje.getEstadoDelPasaje().getNombre().equals("Reservado") || 
@@ -1103,21 +1105,21 @@ public class ControladorAdministrativo implements ActionListener {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (cancel == true && reser == false && pend == true && vend == true) {
+		} else if (cancel == true && reser == false && venci == true && vend == true) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
 				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Reservado")) ) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (cancel == true && pend == false && reser == true && vend == false) {
+		} else if (cancel == true && venci == false && reser == true && vend == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
-				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente") || pasaje.getEstadoDelPasaje().getNombre().equals("Vendido"))) {
+				if(!(pasaje.getEstadoDelPasaje().getNombre().equals("Vencido") || pasaje.getEstadoDelPasaje().getNombre().equals("Vendido"))) {
 					pasajes.add(pasaje);
 				}
 			}
-		} else if (cancel == true && reser == true && vend == true && pend == false) {
+		} else if (cancel == true && reser == true && vend == true && venci == false) {
 			for(PasajeDTO pasaje : this.pasajes_aux) {
-				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Pendiente")) ) {
+				if( !(pasaje.getEstadoDelPasaje().getNombre().equals("Vencido")) ) {
 					pasajes.add(pasaje);
 				}
 			}
@@ -1198,9 +1200,39 @@ public class ControladorAdministrativo implements ActionListener {
 				System.out.println("obtenemos pasaje "+p.getIdPasaje());
 				generarVoucherMail(p, p.getCliente());
 			}
-	}
+		}
 		
-}
+	}
+	
+	//Cada medio dia se verifica que la fecha de vencimiento de la reserva y el monto pagado x la persona, sea mayor al 30 porciento. Sino, pasa a vencido.
+	public void controlDeVencimientoDeReserva() {
+			TimerTask timerTask = new TimerTask() {
+			    public void run() {
+			    	Calendar vencimiento = Calendar.getInstance(); 
+					Calendar calendar = Calendar.getInstance(); 
+					SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+					double porcentaje = 0.30;
+					for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
+						double porcentajePagado = porcentaje * p.getValorViaje().doubleValue();
+						if(p.getMontoAPagar().doubleValue() < porcentajePagado) {
+
+							vencimiento.setTime(p.getFechaVencimiento());
+							vencimiento.add(calendar.DATE, -20);
+							
+							String fechaVencimiento = format.format(vencimiento.getTime());
+							String fechaActual = format.format(calendar.getTime());
+
+							if(fechaVencimiento.equals(fechaActual)){
+								p.getEstadoDelPasaje().setIdEstadoPasaje(3);
+								p.setEstadoDelPasaje(p.getEstadoDelPasaje());
+								modeloPasaje.editarPasaje(p);
+							}
+						}
+					}
+				}};
+			Timer timer = new Timer();
+			timer.scheduleAtFixedRate(timerTask, 0, 43200000);//1000=1 segundo
+	}
 
 	
 }
