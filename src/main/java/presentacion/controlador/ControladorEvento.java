@@ -290,8 +290,7 @@ public class ControladorEvento {
 						}
 					}
 				}
-			}
-		};
+			}};
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(timerTask, 0, 1000);//1000=1 segundo
 	}

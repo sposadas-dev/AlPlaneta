@@ -914,7 +914,7 @@ public class ControladorPasaje implements ActionListener{
 		String numeroComprobante = Validador.getNumeroComprobante(6);
 		
 		pasajeDTO = new PasajeDTO(0,fechaEmision,numeroComprobante,viajeDTO,administrativoLogueado,cliente,calcularFechaReserva(viajeDTO.getFechaSalida()),valorViaje,montoAPagar,estadoPasaje,
-				pasajeros_en_reserva,"",null,null);
+				pasajeros_en_reserva,"",null,null,false);
 		
 		modeloPasaje.agregarPasaje(pasajeDTO);
 		
