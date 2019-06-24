@@ -467,11 +467,11 @@ public class ControladorAdministrador {
 	}
 
 	private void visualizarLocales(ActionEvent vl) {
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
-		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
 		this.llenarTablaLocales();
 	}
 	

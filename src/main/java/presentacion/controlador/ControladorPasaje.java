@@ -550,7 +550,6 @@ public class ControladorPasaje implements ActionListener{
 		this.viajes_en_tabla = viajesActivos();
 			
 		for (int i = 0; i < this.viajes_en_tabla.size(); i++){
-			if(!(viajes_en_tabla.get(i).getCapacidad() == 0)){				
 					Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
 									this.viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
 									mapper.parseToString(this.viajes_en_tabla.get(i).getFechaSalida()),
@@ -562,7 +561,6 @@ public class ControladorPasaje implements ActionListener{
 									"$ "+this.viajes_en_tabla.get(i).getPrecio()					
 					};
 				this.ventanaTablaViajes.getModelViajes().addRow(fila);
-			}		
 		}
 	}
 	
