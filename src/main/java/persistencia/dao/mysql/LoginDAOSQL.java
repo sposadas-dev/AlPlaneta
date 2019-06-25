@@ -24,7 +24,7 @@ public class LoginDAOSQL implements LoginDAO{
 	@Override
 	public boolean insert(LoginDTO datos) {
 		
-		String encriptada= DigestUtils.sha1Hex(datos.getContrasena());
+		String encriptada= DigestUtils.shaHex(datos.getContrasena());
 		
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
@@ -74,7 +74,7 @@ public class LoginDAOSQL implements LoginDAO{
 		//TODO: ver si borrrAR
 		System.out.println(datosNuevos.getUsuario()+" "+datosNuevos.getContrasena()+" "+datosNuevos.getRol()+" "+datosNuevos.getEstado()+" "+datosNuevos.getIdDatosLogin());
 		
-		String encriptada= DigestUtils.sha1Hex(datosNuevos.getContrasena());
+		String encriptada= DigestUtils.shaHex(datosNuevos.getContrasena());
 		
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
@@ -155,7 +155,7 @@ public class LoginDAOSQL implements LoginDAO{
 	@Override
 	public LoginDTO getByDatos(String usr, String pass) {
 		ArrayList<LoginDTO> datos = (ArrayList<LoginDTO>) this.readAll();
-		pass = DigestUtils.sha1Hex(pass);
+		pass = DigestUtils.shaHex(pass);
 
 		for(LoginDTO d:datos){
 			System.out.println("Usuario: "+d.getUsuario());

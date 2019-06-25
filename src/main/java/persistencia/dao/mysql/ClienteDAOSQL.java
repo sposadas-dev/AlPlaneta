@@ -265,22 +265,22 @@ public class ClienteDAOSQL implements ClienteDAO {
 	
 	
 	public static void main(String[] args) {
-		String texto="contrasena";
-		String texto2="contrasena";
-        byte[] encript1= DigestUtils.sha256(texto);
-        byte[] encript2= DigestUtils.sha256(texto2);
-        
-        String pass1 = new String(encript1);
-        String pass2 = new String(encript2);
-        
-        System.out.println("Contrasena1: " +pass1);
-        System.out.println("Contrasena2: " +pass2);
-        
-        if(pass1.equals(pass2))
-        	System.out.println("Son iguales");
-        
-        System.out.println(pass1.getBytes());
-        
+//		String texto="contrasena";
+//		String texto2="contrasena";
+//        byte[] encript1= DigestUtils.sha256(texto);
+//        byte[] encript2= DigestUtils.sha256(texto2);
+//        
+//        String pass1 = new String(encript1);
+//        String pass2 = new String(encript2);
+//        
+//        System.out.println("Contrasena1: " +pass1);
+//        System.out.println("Contrasena2: " +pass2);
+//        
+//        if(pass1.equals(pass2))
+//        	System.out.println("Son iguales");
+//        
+//        System.out.println(pass1.getBytes());
+//        
 //		ClienteDAOSQL dao = new ClienteDAOSQL();
 //		
 //		ClienteDTO adm = dao.getByMail("nicos@gmail.com");
