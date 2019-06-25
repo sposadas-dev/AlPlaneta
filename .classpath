@@ -31,6 +31,5 @@
 	<classpathentry kind="lib" path="recursos/jcalendar-1.4.jar"/>
 	<classpathentry kind="lib" path="autocomplete-2.5.8.jar"/>
 	<classpathentry kind="lib" path="JTattoo-1.6.11.jar"/>
-	<classpathentry kind="lib" path="commons-codec-1.12.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
