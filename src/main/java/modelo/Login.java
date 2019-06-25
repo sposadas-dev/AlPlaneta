@@ -25,6 +25,9 @@ public class Login {
 	public void editarLogin(LoginDTO login){
 		this.login.update(login);
 	}
+	public void editarLoginSinContrasena(LoginDTO login){
+		this.login.updateLoginSinContrasena(login);
+	}
 	
 	public void editarEstado(String estado, int idLogin) {
 		this.login.updateEstado(estado, idLogin);
@@ -36,6 +39,11 @@ public class Login {
 	
 	public LoginDTO getLoginByDatos(String usr, String pass){
 		return this.login.getByDatos(usr, pass);
+	}
+
+	public boolean updateLoginSinContrasena(LoginDTO login2) {
+		return this.login.updateLoginSinContrasena(login2);
+		
 	} 
 	
 }

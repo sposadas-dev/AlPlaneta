@@ -1169,11 +1169,13 @@ public class ControladorAdministrativo implements ActionListener {
 				SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 				
 				for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
+					
 					salida.setTime(p.getViaje().getFechaSalida());
 					salida.add(calendar.DATE, -2);
 					
 					String salidaViaje = format.format(salida.getTime());
 					String fechaActual = format.format(calendar.getTime());
+					
 					System.out.println("Fecha Salida viaje: "+salidaViaje+" "+salidaViaje.length());
 					System.out.println("Fecha Actual      : "+fechaActual+" "+fechaActual.length());
 					

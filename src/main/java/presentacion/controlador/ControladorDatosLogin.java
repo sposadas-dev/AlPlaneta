@@ -77,12 +77,17 @@ public class ControladorDatosLogin {
 
 	private void recuperarContrasena(ActionEvent r) {
 		obtenerDatosDeRecuperacion();
+		
 		if (cambioDeContrasena()) {
 			System.out.println("Se cambio la contraseña");
-			enviarContrasenaViaMail();
+			enviarContrasenaViaMail(contrasenaProvisoria);
 			JOptionPane.showMessageDialog(null, "Se le ha enviado la nueva contraseña al mail", "Mensaje",
 					JOptionPane.INFORMATION_MESSAGE);
+		}else{
+			JOptionPane.showMessageDialog(null, "El mail no corresponde a ningun usuario", "Mensaje",
+					JOptionPane.ERROR_MESSAGE);
 		}
+		
 	}
 
 	private void obtenerDatosDeRecuperacion() {
@@ -122,7 +127,7 @@ public class ControladorDatosLogin {
 			return false;
 	}
 
-	private void enviarContrasenaViaMail() {
+	private void enviarContrasenaViaMail(String contrasena) {
 		this.envioDeCorreo.enviarNuevaContrasena(mailDeRecuperacion, contrasenaProvisoria,"Recuperación de contraseña");
 		this.ventanaClaveOlvidada.setVisible(false);
 	}

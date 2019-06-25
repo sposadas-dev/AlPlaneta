@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import dto.LoginDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.LoginDAO;
@@ -15,18 +17,22 @@ public class LoginDAOSQL implements LoginDAO{
 	private static final String readall = "SELECT * FROM login";
 	private static final String delete = "DELETE FROM login WHERE idLogin = ?";
 	private static final String update = "UPDATE login SET usuario = ?, contrasena = ?, idRol = ?, estado=? WHERE idLogin = ?";
+	private static final String updateSinPass = "UPDATE login SET usuario = ?, idRol = ?, estado=? WHERE idLogin = ?";
 	private static final String updateStatus = "UPDATE login SET estado = ? WHERE idLogin = ?";
 	private static final String browse = "SELECT * FROM login WHERE idLogin = ?";
 
 	@Override
 	public boolean insert(LoginDTO datos) {
+		
+		String encriptada= DigestUtils.sha1Hex(datos.getContrasena());
+		
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(insert);
 			statement.setInt(1, datos.getIdDatosLogin());
 			statement.setString(2, datos.getUsuario());
-			statement.setString(3, datos.getContrasena());
+			statement.setString(3,encriptada);
 			statement.setInt(4, datos.getRol().getIdRol());
 			statement.setString(5, datos.getEstado());
 			if(statement.executeUpdate() > 0) 
@@ -65,17 +71,42 @@ public class LoginDAOSQL implements LoginDAO{
 	}
 	@Override
 	public boolean update(LoginDTO datosNuevos) {
+		//TODO: ver si borrrAR
 		System.out.println(datosNuevos.getUsuario()+" "+datosNuevos.getContrasena()+" "+datosNuevos.getRol()+" "+datosNuevos.getEstado()+" "+datosNuevos.getIdDatosLogin());
+		
+		String encriptada= DigestUtils.sha1Hex(datosNuevos.getContrasena());
 		
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(update);
 			statement.setString(1, datosNuevos.getUsuario());
-			statement.setString(2, datosNuevos.getContrasena());
+			statement.setString(2, encriptada);
 			statement.setInt(3, datosNuevos.getRol().getIdRol());
 			statement.setString(4, datosNuevos.getEstado());
 			statement.setInt(5, datosNuevos.getIdDatosLogin());
+
+			if(statement.executeUpdate() > 0)
+				return true;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean updateLoginSinContrasena(LoginDTO datosNuevos) {
+		System.out.println(datosNuevos.getUsuario()+" "+datosNuevos.getContrasena()+" "+datosNuevos.getRol()+" "+datosNuevos.getEstado()+" "+datosNuevos.getIdDatosLogin());
+		
+		PreparedStatement statement;
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(updateSinPass);
+			statement.setString(1, datosNuevos.getUsuario());
+			statement.setInt(2,datosNuevos.getRol().getIdRol());
+			statement.setString(3, datosNuevos.getEstado());
+			statement.setInt(4, datosNuevos.getIdDatosLogin());
 
 			if(statement.executeUpdate() > 0)
 				return true;
@@ -124,9 +155,16 @@ public class LoginDAOSQL implements LoginDAO{
 	@Override
 	public LoginDTO getByDatos(String usr, String pass) {
 		ArrayList<LoginDTO> datos = (ArrayList<LoginDTO>) this.readAll();
-		for(LoginDTO d:datos)
+		pass = DigestUtils.sha1Hex(pass);
+
+		for(LoginDTO d:datos){
+			System.out.println("Usuario: "+d.getUsuario());
+			System.out.println("Contrasena base: "+d.getContrasena());
+			System.out.println("Contrasena ingresada: "+pass);
+		
 			if(d.getUsuario().equals(usr)&&d.getContrasena().equals(pass))
 				return d;
+		}
 		return null;
 	}
 

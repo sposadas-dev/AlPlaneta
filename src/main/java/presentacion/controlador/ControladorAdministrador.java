@@ -278,6 +278,10 @@ public class ControladorAdministrador {
 	}
 
 	private void visualizarCondicion(ActionEvent ev) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
 		llenarTablaCondiciones();
 	}
 	
@@ -540,6 +544,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
+		this.vistaAdministrador.getPanelCondiciones().mostrarPanelCondiciones(false);
 		this.llenarTablaLocales();
 	}
 	
@@ -623,7 +628,6 @@ public class ControladorAdministrador {
 			JOptionPane.showMessageDialog(null, "Ya existe un usuario con ese dni en nuestra base de datos", "Mensaje", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		
 			
 		//TODO: VER
 		if(ventanaAgregarEmpleado.getComboBoxRoles().getSelectedItem().equals("administrador")){
@@ -752,10 +756,10 @@ public class ControladorAdministrador {
 					idRol = 1;
 					
 					String usuarioLogin = this.ventanaEditarCuenta.getTxtUsuario().getText();
-					String contrasenaLogin = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
+					String contrasenaLogin = "";
 					RolDTO rol = new RolDTO(idRol, rolNombre);
 					LoginDTO login = new LoginDTO(idLogin, usuarioLogin, contrasenaLogin, rol, estado);
-					this.login.editarLogin(login);
+					this.login.updateLoginSinContrasena(login);
 
 					administradorEdit = new AdministradorDTO();
 					administradorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
@@ -771,10 +775,10 @@ public class ControladorAdministrador {
 					idRol = 2;
 					
 					String usuarioLogin2 = this.ventanaEditarCuenta.getTxtUsuario().getText();
-					String contrasenaLogin2 = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
+					String contrasenaLogin2 = "";
 					RolDTO rol2 = new RolDTO(idRol, rolNombre);
 					LoginDTO login2 = new LoginDTO(idLogin, usuarioLogin2, contrasenaLogin2, rol2, estado);
-					this.login.editarLogin(login2);
+					this.login.updateLoginSinContrasena(login2);
 					
 					administrativoEdit = new AdministrativoDTO();
 					administrativoEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
@@ -790,10 +794,10 @@ public class ControladorAdministrador {
 					idRol = 3;
 					
 					String usuarioLogin3 = this.ventanaEditarCuenta.getTxtUsuario().getText();
-					String contrasenaLogin3 = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
+					String contrasenaLogin3 = "";
 					RolDTO rol3 = new RolDTO(idRol, rolNombre);
 					LoginDTO login3 = new LoginDTO(idLogin, usuarioLogin3, contrasenaLogin3, rol3, estado);
-					this.login.editarLogin(login3);
+					this.login.updateLoginSinContrasena(login3);
 					
 					coordinadorEdit = new CoordinadorDTO();
 					coordinadorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
@@ -809,10 +813,10 @@ public class ControladorAdministrador {
 					idRol = 4;
 					
 					String usuarioLogin4 = this.ventanaEditarCuenta.getTxtUsuario().getText();
-					String contrasenaLogin4 = new String(this.ventanaEditarCuenta.getTxtContrasena().getPassword());
+					String contrasenaLogin4 = "";
 					RolDTO rol4 = new RolDTO(idRol, rolNombre);
 					LoginDTO login4 = new LoginDTO(idLogin, usuarioLogin4, contrasenaLogin4, rol4, estado);
-					this.login.editarLogin(login4);
+					this.login.updateLoginSinContrasena(login4);
 					
 					contadorEdit = new ContadorDTO();
 					contadorEdit.setNombre(this.ventanaEditarCuenta.getTxtNombre().getText());
@@ -856,7 +860,6 @@ public class ControladorAdministrador {
 			ventanaEditarCuenta.getTxtMail().setText(contadorEdit.getMail());
 		}
 		ventanaEditarCuenta.getTxtUsuario().setText(this.logins_en_tabla.get(this.filaSeleccionada).getUsuario());
-		ventanaEditarCuenta.getTxtContrasena().setText(this.logins_en_tabla.get(this.filaSeleccionada).getContrasena());
 	}
 	
 	public void obtenerEmpleado(int seleccionado) {
@@ -951,6 +954,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
+		this.vistaAdministrador.getPanelCondiciones().mostrarPanelCondiciones(false);
 		this.llenarTablaTransportes();
 	}
 	
@@ -1066,6 +1070,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
+		this.vistaAdministrador.getPanelCondiciones().mostrarPanelCondiciones(false);
 		this.llenarTablaFormaPago();
 	}
 	/*Agrega el panel de Forma pago en la vistaPrinciapal del Administrador*/

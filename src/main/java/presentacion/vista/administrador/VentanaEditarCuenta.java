@@ -33,7 +33,6 @@ public class VentanaEditarCuenta extends JFrame{
 	private JButton btnRegistrar;
 	private JButton btnCancelar;
 	private static VentanaEditarCuenta INSTANCE;
-	private JPasswordField txtContrasena;
 	private JLabel lblDni;
 	private JTextField txtDni;
 	
@@ -64,12 +63,8 @@ public class VentanaEditarCuenta extends JFrame{
 		contentPane.add(lblNombre);
 		
 		JLabel lblUsuario = new JLabel("Usuario:");
-		lblUsuario.setBounds(92, 198, 74, 14);
+		lblUsuario.setBounds(92, 216, 74, 14);
 		contentPane.add(lblUsuario);
-		
-		JLabel lblContrasenia = new JLabel("Contraseña:");
-		lblContrasenia.setBounds(92, 222, 87, 14);
-		contentPane.add(lblContrasenia);
 		
 		JLabel lblRol = new JLabel("Rol:");
 		lblRol.setBounds(92, 290, 74, 14);
@@ -90,13 +85,9 @@ public class VentanaEditarCuenta extends JFrame{
 		txtApellido.setColumns(10);
 		
 		txtUsuario = new JTextField();
-		txtUsuario.setBounds(189, 196, 122, 20);
+		txtUsuario.setBounds(189, 213, 122, 20);
 		contentPane.add(txtUsuario);
 		txtUsuario.setColumns(10);
-
-		txtContrasena = new JPasswordField();
-		txtContrasena.setBounds(189, 220, 122, 19);
-		contentPane.add(txtContrasena);
 		
 		btnRegistrar = new JButton("Registrar");
 		btnRegistrar.setForeground(Color.WHITE);
@@ -172,10 +163,6 @@ public class VentanaEditarCuenta extends JFrame{
 		return txtUsuario;
 	}
 
-	public JPasswordField getTxtContrasena() {
-		return txtContrasena;
-	}
-
 	public JComboBox<RolDTO> getComboBoxRoles() {
 		return comboBoxRoles;
 	}
@@ -190,6 +177,5 @@ public class VentanaEditarCuenta extends JFrame{
 		this.txtDni.setText("");
 		this.txtMail.setText("");
 		this.txtApellido.setText("");
-		this.txtContrasena.setText("");
 	}
 }
