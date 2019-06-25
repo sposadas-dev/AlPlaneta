@@ -2,76 +2,66 @@ package presentacion.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.RowFilter;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-
-import modelo.Administrador;
-import modelo.Administrativo;
-import modelo.Coordinador;
+import modelo.Local;
 import modelo.Login;
+import modelo.Pasaje;
 import modelo.Rol;
-import dto.AdministradorDTO;
-import dto.AdministrativoDTO;
-import dto.ClienteDTO;
 import dto.ContadorDTO;
-import dto.CoordinadorDTO;
+import dto.LocalDTO;
 import dto.LoginDTO;
+import dto.PasajeDTO;
 import dto.RolDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
+import presentacion.reportes.Reporte;
 import presentacion.vista.contador.VentanaAgregarSueldo;
 import presentacion.vista.contador.VentanaCambiarContrasena;
-import presentacion.vista.contador.VentanaVisualizarEmpleados;
+import presentacion.vista.contador.VentanaGenerarReporte;
 import presentacion.vista.contador.VistaContador;
 
 public class ControladorContador implements ActionListener {
 
 	private VistaContador vistaContador;
-	private VentanaVisualizarEmpleados ventanaVisualizarEmpleados;
 	private VentanaAgregarSueldo ventanaAgregarSueldo;
+	private VentanaGenerarReporte ventanaGenerarReporte;
 	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	private ContadorDTO contadorLogueado;
 	private Login login;
-	
-	private List<AdministradorDTO> administradores_en_tabla;
-	private List<AdministrativoDTO> administrativos_en_tabla;
-	private List<CoordinadorDTO> coordinadores_en_tabla;
-	
+	private Pasaje pasaje;
+	private Local local;
 	private ControladorSueldo controladorSueldo;
-	private String aceptada = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	private DefaultTableModel tableModel;
-	private StringBuilder cad = new StringBuilder();
-
 
 	public ControladorContador(VistaContador vistaContador,ContadorDTO contadorLogueado) {
 	
 		this.vistaContador = vistaContador;		
 		this.contadorLogueado = contadorLogueado;
-		this.ventanaVisualizarEmpleados = VentanaVisualizarEmpleados.getInstance();
+		this.ventanaAgregarSueldo = VentanaAgregarSueldo.getInstance();
+		this.ventanaGenerarReporte = VentanaGenerarReporte.getInstance();
 		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
 		this.ventanaAgregarSueldo = VentanaAgregarSueldo.getInstance();
 		
 		this.vistaContador.getItemCambiarContrasenia().addActionListener(dp->mostrarVentanaCambiarContrasenia(dp));
 		this.vistaContador.getItemVisualizarSueldos().addActionListener(vs->mostrarPanelSueldos(vs));
-		this.vistaContador.getItemSueldos().addActionListener(ve->mostrarVentanaVisualizarEmpleados(ve));
+		this.vistaContador.getItemSueldos().addActionListener(ve->mostrarVentanaAgregarSueldo(ve));
 		
-//		this.ventanaVisualizarEmpleados.getBtnAgregarSueldo().addActionListener(ms->mostrarVentanaAgregarSueldo(ms));
-		
+		this.vistaContador.getItemVisualizarServicios().addActionListener(ps->mostrarPanelServicios(ps));
+		this.vistaContador.getItemAgregarServicio().addActionListener(as->mostrarVentanaAgregarServicio(as));
+		this.vistaContador.getItemIngresosReportes().addActionListener(ir->mostrarVentanaGenerarReportes(ir));
+	
+		this.ventanaGenerarReporte.getComboBoxFiltro().addActionListener(gr->activarFiltros(gr));	
+		this.ventanaGenerarReporte.getComboBoxOpciones().addActionListener(co->activarFiltrosOpciones(co));
+		this.ventanaGenerarReporte.getComboBoxLocales().addActionListener(l->activarComboBoxLocales(l));
+		this.ventanaGenerarReporte.getBtnGenerarReporte().addActionListener(gr->generarReporte(gr));
+				
 		this.ventanaCambiarContrasenia.getBtnAceptar().addActionListener(c->cambiarContrasenia(c));
 		this.ventanaCambiarContrasenia.getBtnCancelar().addActionListener(c->salirVentanaCambiarContrasenia(c));
 		this.login = new Login(new DAOSQLFactory());
-	
+		this.pasaje = new Pasaje(new DAOSQLFactory());
+		this.local = new Local(new DAOSQLFactory());
 		this.contadorLogueado = contadorLogueado;
-		this.controladorSueldo = new ControladorSueldo(ventanaVisualizarEmpleados);
-		
-
+		this.controladorSueldo = new ControladorSueldo(ventanaAgregarSueldo);
 	}
 
 	public void inicializar(){
@@ -119,21 +109,23 @@ public class ControladorContador implements ActionListener {
 	private void mostrarPanelSueldos(ActionEvent ve) {
 		controladorSueldo.llenarTablaEmpleados();
 		this.vistaContador.getPanelSueldos().setVisible(true);
-		
+		this.vistaContador.getPanelServicios().setVisible(false);
 	}	
 		
-	private void mostrarVentanaVisualizarEmpleados(ActionEvent ve) {
-		this.ventanaVisualizarEmpleados.mostrarVentana(true);
+	private void mostrarPanelServicios(ActionEvent ps) {
+		this.vistaContador.getPanelServicios().setVisible(true);
+		this.vistaContador.getPanelSueldos().setVisible(false);
+	}
+	
+	private void mostrarVentanaAgregarServicio(ActionEvent as) {
+	
+	}
+
+	private void mostrarVentanaAgregarSueldo(ActionEvent ve) {
+		this.ventanaAgregarSueldo.mostrarVentana(true);
 		cargarComboBoxRoles();
 	}	
 		
-	private void mostrarVentanaAgregarSueldo(ActionEvent ms) {
-
-//		}else{
-//			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
-//		}	
-	}
-
 	
 	private void cargarComboBoxRoles(){
 		Rol rol = new Rol(new DAOSQLFactory());
@@ -144,57 +136,174 @@ public class ControladorContador implements ActionListener {
 			String rango = rolesDTO.get(i).getNombre();
 			roles [i+1] = rango;
 		}
-		this.ventanaVisualizarEmpleados.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
+		this.ventanaAgregarSueldo.getComboBoxRoles().setModel(new DefaultComboBoxModel(roles));
 	}
+	
+	
+	private void mostrarVentanaGenerarReportes(ActionEvent ir) {
+		this.ventanaGenerarReporte.mostrarVentana(true);
+		this.vistaContador.getPanelServicios().setVisible(false);
+		this.vistaContador.getPanelSueldos().setVisible(false);
+	}
+	
+	private void activarFiltros(ActionEvent gr) {
+		if(ventanaGenerarReporte.getComboBoxFiltro().getSelectedIndex()!=0){
+			this.ventanaGenerarReporte.getComboBoxOpciones().setVisible(true);
+			this.ventanaGenerarReporte.getLblSeleccioneOpcion().setVisible(true);
+//			this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(true);
+//			this.ventanaGenerarReporte.getDateHastaChooser().setVisible(true);
+//			this.ventanaGenerarReporte.getLblDesde().setVisible(true);
+//			this.ventanaGenerarReporte.getLblHasta().setVisible(true);
+		}else{
+			this.ventanaGenerarReporte.getComboBoxOpciones().setVisible(false);
+			this.ventanaGenerarReporte.getLblSeleccioneOpcion().setVisible(false);
 
-//	public void llenarTablaEmpleados(){
-//		this.ventanaVisualizarEmpleados.getModelEmpleados().setRowCount(0); //Para vaciar la tabla
-//		this.ventanaVisualizarEmpleados.getModelEmpleados().setColumnCount(0);
-//		this.ventanaVisualizarEmpleados.getModelEmpleados().setColumnIdentifiers(this.ventanaVisualizarEmpleados.getNombreColumnas());
-//		
-//		Administrador administrador = new Administrador(new DAOSQLFactory());
-//		Administrativo administrativo = new Administrativo(new DAOSQLFactory());
-//		Coordinador coordinador = new Coordinador(new DAOSQLFactory());
-//
-//		administradores_en_tabla = administrador.obtenerAdministradores();
-//		administrativos_en_tabla = administrativo.obtenerAdministrativos();
-//		coordinadores_en_tabla = coordinador.obtenerCoordinadores();
-//		
-//		for (int i = 0; i < this.administradores_en_tabla.size(); i++) {
-//			Object[] fila = {
-//					this.administradores_en_tabla.get(i).getNombre(),
-//					this.administradores_en_tabla.get(i).getApellido(),
-//					this.administradores_en_tabla.get(i).getDni(),
-//					this.administradores_en_tabla.get(i).getDatosLogin().getRol().getNombre(),
-//					this.administradores_en_tabla.get(i).getLocal().getNombreLocal()
-//			};
-//		 
-//			this.ventanaVisualizarEmpleados.getModelEmpleados().addRow(fila);
-//		}
-//		for (int i = 0; i < this.administrativos_en_tabla .size(); i++) {
-//			Object[] fila = {
-//					this.administrativos_en_tabla .get(i).getNombre(),
-//					this.administrativos_en_tabla .get(i).getApellido(),
-//					this.administrativos_en_tabla .get(i).getDni(),
-//					this.administrativos_en_tabla .get(i).getDatosLogin().getRol().getNombre(),
-//					this.administrativos_en_tabla .get(i).getLocal().getNombreLocal()
-//			};
-//		 
-//			this.ventanaVisualizarEmpleados.getModelEmpleados().addRow(fila);
-//		}	
-//		
-//		for (int i = 0; i < this.coordinadores_en_tabla.size(); i++) {
-//			Object[] fila = {
-//					this.coordinadores_en_tabla.get(i).getNombre(),
-//					this.coordinadores_en_tabla.get(i).getApellido(),
-//					this.coordinadores_en_tabla.get(i).getDni(),
-//					this.coordinadores_en_tabla.get(i).getDatosLogin().getRol().getNombre(),
-//					this.coordinadores_en_tabla.get(i).getLocal().getNombreLocal()
-//			};
-//		 
-//			this.ventanaVisualizarEmpleados.getModelEmpleados().addRow(fila);
-//		}	
-//	}
+//			this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(false);
+//			this.ventanaGenerarReporte.getDateHastaChooser().setVisible(false);
+//			this.ventanaGenerarReporte.getLblDesde().setVisible(false);
+//			this.ventanaGenerarReporte.getLblHasta().setVisible(false);
+		}
+	}
+	
+	private void activarFiltrosOpciones(ActionEvent co) {
+		if(ventanaGenerarReporte.getComboBoxOpciones().getSelectedIndex()!=0){
+			if(ventanaGenerarReporte.getComboBoxOpciones().getSelectedItem().equals("Local")){
+				cargarComboBoxLocales();
+				this.ventanaGenerarReporte.getComboBoxLocales().setVisible(true);
+				this.ventanaGenerarReporte.getLblLocal().setVisible(true);
+			}else{
+				this.ventanaGenerarReporte.getComboBoxLocales().setVisible(false);
+				this.ventanaGenerarReporte.getLblLocal().setVisible(false);
+			}
+			if (ventanaGenerarReporte.getComboBoxOpciones().getSelectedItem().equals("General de la empresa")){
+				this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(true);
+				this.ventanaGenerarReporte.getDateHastaChooser().setVisible(true);
+				this.ventanaGenerarReporte.getLblDesde().setVisible(true);
+				this.ventanaGenerarReporte.getLblHasta().setVisible(true);
+			}else{
+				this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(false);
+				this.ventanaGenerarReporte.getDateHastaChooser().setVisible(false);
+				this.ventanaGenerarReporte.getLblDesde().setVisible(false);
+				this.ventanaGenerarReporte.getLblHasta().setVisible(false);
+			}
+		}else{
+			this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(false);
+			this.ventanaGenerarReporte.getDateHastaChooser().setVisible(false);
+			this.ventanaGenerarReporte.getLblDesde().setVisible(false);
+			this.ventanaGenerarReporte.getLblHasta().setVisible(false);
+			this.ventanaGenerarReporte.getComboBoxLocales().setVisible(false);
+			this.ventanaGenerarReporte.getLblLocal().setVisible(false);
+		}
+	}
+	
+	private void activarComboBoxLocales(ActionEvent l) {
+		if(ventanaGenerarReporte.getComboBoxLocales().getSelectedIndex()!=0){
+			this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(true);
+			this.ventanaGenerarReporte.getDateHastaChooser().setVisible(true);
+			this.ventanaGenerarReporte.getLblDesde().setVisible(true);
+			this.ventanaGenerarReporte.getLblHasta().setVisible(true);
+		}else{
+			this.ventanaGenerarReporte.getDateDesdeChooser().setVisible(false);
+			this.ventanaGenerarReporte.getDateHastaChooser().setVisible(false);
+			this.ventanaGenerarReporte.getLblDesde().setVisible(false);
+			this.ventanaGenerarReporte.getLblHasta().setVisible(false);
+		}
+	}
+	
+	
+	
+	private void generarReporte(ActionEvent gr) {
+		if(!this.ventanaGenerarReporte.getComboBoxFiltro().getSelectedItem().equals("Seleccione")){
+			String tipoReporte = this.ventanaGenerarReporte.getComboBoxFiltro().getSelectedItem().toString();
+			String opcion = this.ventanaGenerarReporte.getComboBoxOpciones().getSelectedItem().toString();
+			java.util.Date dateDesde = ventanaGenerarReporte.getDateDesdeChooser().getDate();
+			java.sql.Date fechaDesde = new java.sql.Date(dateDesde.getTime());
+			
+			java.util.Date dateHasta = ventanaGenerarReporte.getDateHastaChooser().getDate();
+			java.sql.Date fechaHasta = new java.sql.Date(dateHasta.getTime());
+			
+
+			Reporte reporte = new Reporte();
+			if(this.ventanaGenerarReporte.getDateDesdeChooser().getDate().before(this.ventanaGenerarReporte.getDateHastaChooser().getDate())){
+				if(tipoReporte.equals("Cliente") && opcion.equals("General de la empresa")){
+					List<PasajeDTO> pasajes = pasaje.obtenerPasajesEntreFechas(fechaDesde, fechaHasta);
+					if(pasajes.size()!=0){
+						reporte.reporteIngresosClientes(pasajes);
+						reporte.mostrar();
+						this.ventanaGenerarReporte.limpiarCampos();
+					}else{
+						JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+					}
+				}else if(tipoReporte.equals("Cliente") && !this.ventanaGenerarReporte.getComboBoxLocales().getSelectedItem().equals("Seleccione")){
+					LocalDTO localSeleccionado = local.obtenerLocal(ventanaGenerarReporte.getComboBoxLocales().getSelectedItem().toString());
+					List<PasajeDTO> pasajesClienteByLocal = pasaje.obtenerPasajesEntreFechasByLocal(fechaDesde, fechaHasta, localSeleccionado.getIdLocal());
+					if(pasajesClienteByLocal.size()!=0){
+						reporte.reporteIngresosClientes(pasajesClienteByLocal);
+						reporte.mostrar();
+						this.ventanaGenerarReporte.limpiarCampos();
+					}else{
+						JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+					}
+					
+				}else if(tipoReporte.equals("Vendedor") && opcion.equals("General de la empresa")){
+					List<PasajeDTO> pasajesVendedor = pasaje.obtenerPasajesEntreFechas(fechaDesde, fechaHasta);
+					if(pasajesVendedor.size()!=0){
+						reporte.reporteIngresosVendedor(pasajesVendedor);
+						reporte.mostrar();
+				}else{
+					JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+				}
+			}else if(tipoReporte.equals("Vendedor") && !this.ventanaGenerarReporte.getComboBoxLocales().getSelectedItem().equals("Seleccione")){
+				LocalDTO localSeleccionado = local.obtenerLocal(ventanaGenerarReporte.getComboBoxLocales().getSelectedItem().toString());
+				List<PasajeDTO> pasajesVendedorByLocal = pasaje.obtenerPasajesEntreFechasByLocal(fechaDesde, fechaHasta, localSeleccionado.getIdLocal());
+				if(pasajesVendedorByLocal .size()!=0){
+					reporte.reporteIngresosClientes(pasajesVendedorByLocal );
+					reporte.mostrar();
+					this.ventanaGenerarReporte.limpiarCampos();
+				}else{
+					JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+				}
+			}else if(tipoReporte.equals("Destino") && opcion.equals("General de la empresa")){
+				List<PasajeDTO> pasajesPorDestino = pasaje.obtenerPasajesEntreFechas(fechaDesde, fechaHasta);
+				if(pasajesPorDestino.size()!=0){
+					reporte.reporteIngresoDestino(pasajesPorDestino);
+					reporte.mostrar();
+			}else{
+				JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+			}
+		}else if(tipoReporte.equals("Destino") && !this.ventanaGenerarReporte.getComboBoxLocales().getSelectedItem().equals("Seleccione")){
+			LocalDTO localSeleccionado = local.obtenerLocal(ventanaGenerarReporte.getComboBoxLocales().getSelectedItem().toString());
+			List<PasajeDTO> pasajesPorDestinoByLocal = pasaje.obtenerPasajesEntreFechasByLocal(fechaDesde, fechaHasta, localSeleccionado.getIdLocal());
+			if(pasajesPorDestinoByLocal.size()!=0){
+				reporte.reporteIngresoDestino(pasajesPorDestinoByLocal );
+				reporte.mostrar();
+				this.ventanaGenerarReporte.limpiarCampos();
+			}else{
+				JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
+			}
+		}
+			}
+		}else{
+			JOptionPane.showMessageDialog(null, "Error en el ingreso de fechas", "Error", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	
+
+
+
+	private void cargarComboBoxLocales() {
+		ventanaGenerarReporte.getComboBoxLocales().removeAllItems();
+		Local local = new Local(new DAOSQLFactory());
+		List<LocalDTO> localesDTO = local.readAll();
+		String[] locales = new String[localesDTO.size()+1];
+		locales[0] = "Seleccione";
+		for(int i = 0; i < localesDTO.size(); i++) {
+			String rango = localesDTO.get(i).getNombreLocal();
+			locales[i+1] = rango;
+		}
+		this.ventanaGenerarReporte.getComboBoxLocales().setModel(new DefaultComboBoxModel(locales));
+	}
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

@@ -22,14 +22,13 @@ import modelo.Sueldo;
 import modelo.Sueldos_Empleados;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.vista.contador.VentanaAgregarSueldo;
-import presentacion.vista.contador.VentanaVisualizarEmpleados;
+import presentacion.vista.contador.VentanaAgregarSueldo;
 import presentacion.vista.contador.VistaContador;
 
 public class ControladorSueldo {
 
 	private VistaContador vistaContador;
 	private VentanaAgregarSueldo ventanaAgregarSueldo;
-	private VentanaVisualizarEmpleados ventanaVisualizarEmpleados;
 	private Sueldo sueldo;
 	private Sueldos_Empleados sueldos_empleados;
 
@@ -41,15 +40,15 @@ public class ControladorSueldo {
 	private List<AdministrativoDTO> administrativos_en_tabla;
 	private List<CoordinadorDTO> coordinadores_en_tabla;
 	
-	public ControladorSueldo(VentanaVisualizarEmpleados ventanaVisualizarEmpleados){
+	public ControladorSueldo(VentanaAgregarSueldo ventanaVisualizarEmpleados){
 		this.vistaContador = VistaContador.getInstance();
-		this.ventanaVisualizarEmpleados = ventanaVisualizarEmpleados;
+		this.ventanaAgregarSueldo = ventanaVisualizarEmpleados;
 		this.ventanaAgregarSueldo = VentanaAgregarSueldo.getInstance();
 		
 		this.sueldo = new Sueldo(new DAOSQLFactory());
 		this.sueldos_empleados = new Sueldos_Empleados(new DAOSQLFactory());
 		
-		this.ventanaVisualizarEmpleados.getBtnConfirmar().addActionListener(gs->agregarSueldo(gs));
+		this.ventanaAgregarSueldo.getBtnConfirmar().addActionListener(gs->agregarSueldo(gs));
 		this.administrador = new Administrador(new DAOSQLFactory());
 		this.administrativo = new Administrativo(new DAOSQLFactory());
 		this.coordinador = new Coordinador(new DAOSQLFactory());
@@ -65,11 +64,11 @@ public class ControladorSueldo {
 //		int mes = ventanaVisualizarEmpleados.getMesChooser().getMonth();
 		Rol rol = new Rol(new DAOSQLFactory());
 		
-		if(!ventanaVisualizarEmpleados.getComboBoxRoles().getSelectedItem().equals("Seleccione un rol")){
-			RolDTO rolDTO = rol.getRolByName(ventanaVisualizarEmpleados.getComboBoxRoles().getSelectedItem().toString());
+		if(!ventanaAgregarSueldo.getComboBoxRoles().getSelectedItem().equals("Seleccione un rol")){
+			RolDTO rolDTO = rol.getRolByName(ventanaAgregarSueldo.getComboBoxRoles().getSelectedItem().toString());
 			Calendar c = Calendar.getInstance();
 			sueldoDTO.setMes(new Date(c.getTime().getTime()));
-			sueldoDTO.setMontoSueldo(new BigDecimal(ventanaVisualizarEmpleados.getTxtSueldo().getText()));
+			sueldoDTO.setMontoSueldo(new BigDecimal(ventanaAgregarSueldo.getTxtSueldo().getText()));
 			sueldoDTO.setRol(rolDTO);
 			
 			sueldo.agregarSueldo(sueldoDTO);
@@ -106,7 +105,7 @@ public class ControladorSueldo {
 					}
 				}
 			}
-			ventanaVisualizarEmpleados.mostrarVentana(false);
+			ventanaAgregarSueldo.mostrarVentana(false);
 		}else{
 			JOptionPane.showMessageDialog(null,"Debe seleccionar un rol","Mensaje", JOptionPane.ERROR_MESSAGE);
 		}

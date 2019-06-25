@@ -1,6 +1,9 @@
 eclipse.preferences.version=1
 encoding//reportes/ReporteCoordinadores.jrxml=UTF-8
 encoding//reportes/ReporteEmpleados.jrxml=UTF-8
+encoding//reportes/ReporteIngresosCliente.jrxml=UTF-8
+encoding//reportes/ReporteIngresosPorDestino.jrxml=UTF-8
+encoding//reportes/ReporteIngresosVendedor.jrxml=UTF-8
 encoding//src/main/java=UTF-8
 encoding//src/main/resources=UTF-8
 encoding/<project>=UTF-8

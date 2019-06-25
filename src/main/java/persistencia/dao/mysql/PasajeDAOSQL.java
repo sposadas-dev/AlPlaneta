@@ -1,5 +1,6 @@
 package persistencia.dao.mysql;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,9 +29,10 @@ public class PasajeDAOSQL implements PasajeDAO {
 	private static final String ultimoRegistro = "SELECT * FROM pasaje ORDER BY idPasaje desc limit 1";
 	
 	private static final String estadoPasaje = "SELECT * FROM pasaje p, administrativo a,local l  WHERE a.idLocal=l.idLocal AND p.idAdministrativo=a.idAdministrativo AND l.idLocal=? AND idEstadoPasaje=? AND fechaEmision BETWEEN ? and ?";
-
 	private static final String registrosEntreFechas = "SELECT * FROM pasaje p, administrativo a,local l  WHERE a.idLocal=l.idLocal AND p.idAdministrativo=a.idAdministrativo AND l.idLocal=? AND fechaEmision BETWEEN ? AND ?";
+	private static final String pasajesEntreFechas = "SELECT * FROM pasaje WHERE fechaEmision BETWEEN ? AND ?";
 	
+//	private static final String pasajesByLocal = "SELECT * FROM pasaje WHERE idLocal=? and fechaEmision BETWEEN ? AND ?";
 	@Override
 	public boolean insert(PasajeDTO pasaje) {
 
@@ -314,21 +316,92 @@ public class PasajeDAOSQL implements PasajeDAO {
 		return pasajes;
 	}
 	
-	public static java.sql.Date convertUtilToSql(java.util.Date uDate) {
-        java.sql.Date sDate = new java.sql.Date(uDate.getTime());
-        return sDate;
-    }
+	@Override
+	public List<PasajeDTO> listarPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta) {
+		PreparedStatement statement;
+		ResultSet resultSet; // Guarda el resultado de la query
+		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
+		ClienteDAOSQL clienteDAOSQL = new ClienteDAOSQL();
+		ViajeDAOSQL viajeDAOSQL = new ViajeDAOSQL();
+		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
+		EstadoPasajeDAOSQL estadoPasajeDAOSQL = new EstadoPasajeDAOSQL();
+		Pasaje_PasajerosDAOSQL pasajeros = new Pasaje_PasajerosDAOSQL();
+
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(pasajesEntreFechas);
+			statement.setDate(1, desde);
+			statement.setDate(2, hasta);
+			
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				pasajes.add(
+						new PasajeDTO(
+						resultSet.getInt("idPasaje"),
+						resultSet.getDate("fechaEmision"),
+						resultSet.getString("numeroComprobante"),
+						viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
+						administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
+						clienteDAOSQL.getClienteById(resultSet.getInt("idCliente")),
+						resultSet.getDate("fechaVencimiento"),
+						resultSet.getBigDecimal("valorViaje"),
+						resultSet.getBigDecimal("montoAPagar"),
+						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
+						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
+						resultSet.getString("motivoCancelacion"),
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
+						));							
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pasajes;
+	}	
 	
-//	public static void main(String [] args){
-////		Pasaje p = new Pasaje(new DAOSQLFactory());
-////		EstadoPasaje e = new EstadoPasaje (new DAOSQLFactory());
-////	    Calendar fecha = Calendar.getInstance();
-////		java.sql.Date fechaEmision = convertUtilToSql(fecha.getTime());
-////		List<PasajeDTO> pasajes= p.obtenerPasajesConEstado(e.getFormaPagoByName("Reservado"), fechaEmision, fechaEmision);
-////
-////		for(PasajeDTO pa: pasajes){
-////			System.out.println(pa.getIdPasaje());
-////		}
-//	}
-	
+	@Override
+	public List<PasajeDTO> listarPasajesEntreFechasByLocal(java.sql.Date desde, java.sql.Date hasta, int idLocal) {
+		PreparedStatement statement;
+		ResultSet resultSet; // Guarda el resultado de la query
+		ArrayList<PasajeDTO> pasajes = new ArrayList<PasajeDTO>();
+		ClienteDAOSQL clienteDAOSQL = new ClienteDAOSQL();
+		ViajeDAOSQL viajeDAOSQL = new ViajeDAOSQL();
+		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
+		EstadoPasajeDAOSQL estadoPasajeDAOSQL = new EstadoPasajeDAOSQL();
+		Pasaje_PasajerosDAOSQL pasajeros = new Pasaje_PasajerosDAOSQL();
+
+		Conexion conexion = Conexion.getConexion();
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(registrosEntreFechas);
+			statement.setInt(1, idLocal);
+			statement.setDate(2, desde);
+			statement.setDate(3, hasta);
+			
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				pasajes.add(
+						new PasajeDTO(
+						resultSet.getInt("idPasaje"),
+						resultSet.getDate("fechaEmision"),
+						resultSet.getString("numeroComprobante"),
+						viajeDAOSQL.getViajeById(resultSet.getInt("idViaje")),
+						administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
+						clienteDAOSQL.getClienteById(resultSet.getInt("idCliente")),
+						resultSet.getDate("fechaVencimiento"),
+						resultSet.getBigDecimal("valorViaje"),
+						resultSet.getBigDecimal("montoAPagar"),
+						estadoPasajeDAOSQL.getEstadoPasajeById(resultSet.getInt("idEstadoPasaje")),
+						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
+						resultSet.getString("motivoCancelacion"),
+						resultSet.getDate("fechaCancelacion"),
+						resultSet.getBigDecimal("montoAReembolsar")
+						));							
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pasajes;
+	}	
 }

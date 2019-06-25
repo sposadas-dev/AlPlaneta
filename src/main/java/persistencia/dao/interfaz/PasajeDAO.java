@@ -24,5 +24,9 @@ public interface PasajeDAO {
 			Date hasta, int idLocal);
 
 	public List<PasajeDTO> listarPasajesEntreFechas(Date desde, Date hasta, int idLocal);
+
+	public List<PasajeDTO> listarPasajesEntreFechas(Date desde, Date hasta);
+
+	public List<PasajeDTO> listarPasajesEntreFechasByLocal(Date desde, Date hasta,int idLocal);
 }
 

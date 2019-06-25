@@ -41,11 +41,20 @@ public class VistaContador extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private PanelSueldos panelSueldos;
+	private PanelServicios panelServicios;
 	private JMenu menuUsuarioLogueado;
 	private JMenuItem itemCambiarContrasenia;
 	
 	private JMenuItem itemVisualizarSueldos;
-	private JMenuItem itemAgregarSueldo; 
+	private JMenuItem itemAgregarSueldo;
+	private JMenuItem itemEditarSueldo;
+	
+	private JMenuItem itemVisualizarServicios;
+	private JMenuItem itemAgregarServicio;
+	private JMenuItem itemEditarServicio;
+	private JMenuItem itemEliminarServicio;
+	
+	private JMenuItem itemIngresosReportes;
 	private static VistaContador vistaContador;
 	
 	public static VistaContador getInstance(){
@@ -80,6 +89,13 @@ public class VistaContador extends JFrame {
 		getContentPane().add(panelSueldos);
 		panelSueldos.setVisible(false);
 		
+		panelServicios = new PanelServicios();
+		panelServicios.getTablaServicios().setSize(1114, 900);
+		panelServicios.setSize(1352, 700);
+		panelServicios.setLocation(0, 0);
+		getContentPane().add(panelServicios);
+		panelServicios.setVisible(false);
+		
 		JMenu menuSueldos = new JMenu("Sueldos");
 		menuSueldos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuBarContador.add(menuSueldos);
@@ -92,25 +108,37 @@ public class VistaContador extends JFrame {
 		itemAgregarSueldo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuSueldos.add(itemAgregarSueldo);
 		
-		JMenuItem itemEditarSueldo = new JMenuItem("Editar sueldo");
+		itemEditarSueldo = new JMenuItem("Editar sueldo");
 		itemEditarSueldo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuSueldos.add(itemEditarSueldo);
 		
-		JMenu menuRegistrosContables = new JMenu("Registros contables");
-		menuRegistrosContables.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuBarContador.add(menuRegistrosContables);
+		JMenu menuServicios = new JMenu("Servicios");
+		menuServicios.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuBarContador.add(menuServicios);
 		
-		JMenuItem itemEgresos = new JMenuItem("Egresos");
-		itemEgresos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuRegistrosContables.add(itemEgresos);
+		itemVisualizarServicios = new JMenuItem("Visualizar servicios");
+		itemVisualizarServicios.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuServicios.add(itemVisualizarServicios);
+		
+		itemAgregarServicio = new JMenuItem("Agregar servicio");
+		itemAgregarServicio.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuServicios.add(itemAgregarServicio);
+		
+		itemEditarServicio = new JMenuItem("Editar servicio");
+		itemEditarServicio.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuServicios.add(itemEditarServicio);
+		
+		itemEliminarServicio = new JMenuItem("Eliminar servicio");
+		itemEliminarServicio.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuServicios.add(itemEliminarServicio);
 		
 		JMenu menuReportes = new JMenu("Reportes");
 		menuReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuBarContador.add(menuReportes);
 		
-		JMenuItem IngresosReportes = new JMenuItem("Ingresos");
-		IngresosReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuReportes.add(IngresosReportes);
+		itemIngresosReportes = new JMenuItem("Ingresos");
+		itemIngresosReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuReportes.add(itemIngresosReportes);
 		
 		JMenuItem itemEgresosReportes = new JMenuItem("Egresos");
 		itemEgresosReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
@@ -127,8 +155,7 @@ public class VistaContador extends JFrame {
 		itemCambiarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuUsuarioLogueado.add(itemCambiarContrasenia);
 		
-		
-		
+
 		JLabel labelMarcaDeAgua = new JLabel("");
 		labelMarcaDeAgua.setIcon(new ImageIcon(VistaContador.class.getResource("/recursos/marcaAgua.png")));
 		labelMarcaDeAgua.setBounds(47, 0, 1313, 674);
@@ -158,6 +185,11 @@ public class VistaContador extends JFrame {
 	public JMenu getMenuUsuarioLogueado() {
 		return menuUsuarioLogueado;
 	}
+	
+
+	public JMenuItem getItemVisualizarServicios() {
+		return itemVisualizarServicios;
+	}
 
 	public JMenuItem getItemCambiarContrasenia() {
 		return itemCambiarContrasenia;
@@ -171,8 +203,32 @@ public class VistaContador extends JFrame {
 		return itemAgregarSueldo;
 	}
 
+	public JMenuItem getItemAgregarSueldo() {
+		return itemAgregarSueldo;
+	}
+
+	public JMenuItem getItemAgregarServicio() {
+		return itemAgregarServicio;
+	}
+
+	public JMenuItem getItemEditarServicio() {
+		return itemEditarServicio;
+	}
+
+	public JMenuItem getItemIngresosReportes() {
+		return itemIngresosReportes;
+	}
+
+	public JMenuItem getItemEliminarServicio() {
+		return itemEliminarServicio;
+	}
+
 	public PanelSueldos getPanelSueldos() {
 		return panelSueldos;
+	}
+
+	public PanelServicios getPanelServicios() {
+		return panelServicios;
 	}
 	
 }

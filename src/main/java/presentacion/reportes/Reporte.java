@@ -174,10 +174,55 @@ public class Reporte {
 			}
 	  }   
 	
+	public void reporteIngresosClientes(List<PasajeDTO> pasajes){
+    	//Hardcodeado
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("Fecha", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));		
+    	try	{
+			this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteIngresosCliente.jasper" );
+			this.reporteLleno = JasperFillManager.fillReport(this.reporte, parametersMap, 
+					new JRBeanCollectionDataSource(pasajes));
+    		log.info("Se cargó correctamente el reporte");
+		}
+		catch( JRException ex ) 
+		{
+			log.error("Ocurrió un error mientras se cargaba el archivo ReporteIngresosCliente.jasper", ex);
+		}
+    }    
+	
+	public void reporteIngresosVendedor(List<PasajeDTO> pasajesVendedor) {
+		//Hardcodeado
+			Map<String, Object> parametersMap = new HashMap<String, Object>();
+			parametersMap.put("Fecha", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));		
+		    try	{
+				this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteIngresosVendedor.jasper" );
+				this.reporteLleno = JasperFillManager.fillReport(this.reporte, parametersMap, 
+						new JRBeanCollectionDataSource(pasajesVendedor));
+		    	log.info("Se cargó correctamente el reporte");
+			}
+			catch( JRException ex ) 
+			{
+				log.error("Ocurrió un error mientras se cargaba el archivo ReporteIngresosCliente.jasper", ex);
+				}
+	}    
+	
+	public void reporteIngresoDestino(List<PasajeDTO> pasajesPorDestino) {
+		//Hardcodeado
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("Fecha", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));		
+	    try	{
+			this.reporte = (JasperReport) JRLoader.loadObjectFromFile( "reportes" + File.separator + "ReporteIngresosPorDestino.jasper" );
+			this.reporteLleno = JasperFillManager.fillReport(this.reporte, parametersMap, 
+					new JRBeanCollectionDataSource(pasajesPorDestino));
+	    	log.info("Se cargó correctamente el reporte");
+		}
+		catch( JRException ex ) 
+		{
+			log.error("Ocurrió un error mientras se cargaba el archivo ReporteIngresosPorDestino.jasper", ex);
+			}
+}    
     public void mostrar(){
 		this.reporteViewer = new JasperViewer(this.reporteLleno,false);
 		this.reporteViewer.setVisible(true);
 	}
-
-
 }
