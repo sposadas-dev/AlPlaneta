@@ -26,6 +26,7 @@ import persistencia.dao.interfaz.ProvinciaDAO;
 import persistencia.dao.interfaz.PuntoDAO;
 import persistencia.dao.interfaz.RegimenPuntoDAO;
 import persistencia.dao.interfaz.RolDAO;
+import persistencia.dao.interfaz.TarjetaDAO;
 import persistencia.dao.interfaz.TransporteDAO;
 import persistencia.dao.interfaz.ViajeDAO;
 import persistencia.dao.interfaz.Viaje_PromocionDAO;
@@ -164,5 +165,11 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	public ContadorDAO createContadorDAO() {
 		return new ContadorDAOSQL();
 	}
+	
+	@Override
+	public TarjetaDAO createTarjetaDAO() {
+		return new TarjetaDAOSQL();
+	}
+	
 
 }
