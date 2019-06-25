@@ -21,11 +21,12 @@ public class PasajeDTO {
 	private Date dateCancelacion;
 	private BigDecimal montoAReembolsar;
 	private SimpleDateFormat formatFecha;
+	private boolean notificacion;
 
 	public PasajeDTO(int idPasaje, Date fechaEmision, String numeroComprobante,ViajeDTO viaje, AdministrativoDTO administrativo,
 			ClienteDTO cliente, Date fechaVencimiento, BigDecimal valorViaje,
 			BigDecimal montoAPagar,EstadoPasajeDTO estadoDelPasaje, List<PasajeroDTO> pasajeros,
-			String motivoCancelacion, Date dateCancelacion,BigDecimal montoAReembolsar) {
+			String motivoCancelacion, Date dateCancelacion,BigDecimal montoAReembolsar, boolean notificacion) {
 		super();
 		this.idPasaje = idPasaje;
 		this.fechaEmision = fechaEmision;
@@ -41,7 +42,8 @@ public class PasajeDTO {
 		this.motivoCancelacion = motivoCancelacion;
 		this.dateCancelacion = dateCancelacion;
 		this.montoAReembolsar = montoAReembolsar;
-		formatFecha = new SimpleDateFormat("dd-MM-yyyy");
+		this.formatFecha = new SimpleDateFormat("dd-MM-yyyy");
+		this.notificacion = notificacion;
 	}
 
 	public BigDecimal getMontoAReembolsar() {
@@ -171,4 +173,13 @@ public class PasajeDTO {
 	public String getFechaCancelacionParseada(){
 		return formatFecha.format(this.dateCancelacion);
 	}
+
+	public boolean isNotificacion() {
+		return notificacion;
+	}
+
+	public void setNotificacion(boolean notificacion) {
+		this.notificacion = notificacion;
+	}
+	
 }

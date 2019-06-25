@@ -20,10 +20,10 @@ import persistencia.dao.interfaz.PasajeDAO;
 
 public class PasajeDAOSQL implements PasajeDAO {
 	
-	private static final String insert = "INSERT INTO pasaje(idPasaje, fechaEmision, numeroComprobante,fechaVencimiento, valorViaje, montoAPagar, idCliente, idViaje, idAdministrativo, idEstadoPasaje,motivoCancelacion, fechaCancelacion,montoAReembolsar) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+	private static final String insert = "INSERT INTO pasaje(idPasaje, fechaEmision, numeroComprobante,fechaVencimiento, valorViaje, montoAPagar, idCliente, idViaje, idAdministrativo, idEstadoPasaje,motivoCancelacion, fechaCancelacion,montoAReembolsar, notificacion) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 	private static final String delete = "DELETE FROM pasaje  WHERE idPasaje = ?";
 	private static final String readall = "SELECT * FROM pasaje";
-	private static final String update = "UPDATE pasaje SET idEstadoPasaje=?, montoAPagar=?, motivoCancelacion=?, fechaCancelacion=?, montoAReembolsar=? WHERE idPasaje = ?;";
+	private static final String update = "UPDATE pasaje SET idEstadoPasaje=?, montoAPagar=?, motivoCancelacion=?, fechaCancelacion=?, montoAReembolsar=?, notificacion=? WHERE idPasaje = ?;";
 	private static final String browse = "SELECT * FROM pasaje WHERE idPasaje=?";
 	private static final String ultimoRegistro = "SELECT * FROM pasaje ORDER BY idPasaje desc limit 1";
 	
@@ -51,6 +51,7 @@ public class PasajeDAOSQL implements PasajeDAO {
 			statement.setString(11, pasaje.getMotivoCancelacion());
 			statement.setDate(12, pasaje.getDateCancelacion());
 			statement.setBigDecimal(13, pasaje.getMontoAReembolsar());
+			statement.setBoolean(14, pasaje.isNotificacion());
 			
 			if (statement.executeUpdate() > 0)
 				return true;
@@ -111,7 +112,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
 						resultSet.getDate("fechaCancelacion"),
-						resultSet.getBigDecimal("montoAReembolsar")
+						resultSet.getBigDecimal("montoAReembolsar"),
+						resultSet.getBoolean("notificacion")
 						));							
 			}
 		} catch (SQLException e) {
@@ -132,7 +134,9 @@ public class PasajeDAOSQL implements PasajeDAO {
 			statement.setString(3, pasaje_editar.getMotivoCancelacion());
 			statement.setDate(4, pasaje_editar.getDateCancelacion());
 			statement.setBigDecimal(5, pasaje_editar.getMontoAReembolsar());
-			statement.setInt(6, pasaje_editar.getIdPasaje());
+			statement.setBoolean(6, pasaje_editar.isNotificacion());
+			statement.setInt(7, pasaje_editar.getIdPasaje());
+			
 
 			chequeoUpdate = statement.executeUpdate();
 			if (chequeoUpdate > 0) // Si se ejecutó devuelvo true
@@ -173,7 +177,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 							pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 							resultSet.getString("motivoCancelacion"),
 							resultSet.getDate("fechaCancelacion"),
-							resultSet.getBigDecimal("montoAReembolsar")
+							resultSet.getBigDecimal("montoAReembolsar"),
+							resultSet.getBoolean("notificacion")
 							);
 										
 				return pasaje;
@@ -213,7 +218,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
 						resultSet.getDate("fechaCancelacion"),
-						resultSet.getBigDecimal("montoAReembolsar")
+						resultSet.getBigDecimal("montoAReembolsar"),
+						resultSet.getBoolean("notificacion")
 						);
 			return pasaje;
 			}
@@ -260,7 +266,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
 						resultSet.getDate("fechaCancelacion"),
-						resultSet.getBigDecimal("montoAReembolsar")
+						resultSet.getBigDecimal("montoAReembolsar"),
+						resultSet.getBoolean("notificacion")
 						));							
 			}
 		} catch (SQLException e) {
@@ -305,7 +312,8 @@ public class PasajeDAOSQL implements PasajeDAO {
 						pasajeros.traerPasajerosDePasaje(resultSet.getInt("idPasaje")),
 						resultSet.getString("motivoCancelacion"),
 						resultSet.getDate("fechaCancelacion"),
-						resultSet.getBigDecimal("montoAReembolsar")
+						resultSet.getBigDecimal("montoAReembolsar"),
+						resultSet.getBoolean("notificacion")
 						));							
 			}
 		} catch (SQLException e) {

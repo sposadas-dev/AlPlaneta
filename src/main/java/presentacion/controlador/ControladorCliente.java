@@ -5,12 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -195,7 +190,7 @@ public class ControladorCliente implements ActionListener{
 		
 		ClienteDTO clienteDTO = cliente.getByLoginId(loginProv.getIdDatosLogin());
 //		enviodeCorreo.enviarNuevaContrasena(clienteDTO.getMail(), contrasenaProvisoria,"Generacion de Usuario");
-		enviodeCorreo.enviarDatosDeCuenta(clienteDTO.getMail(), contrasenaProvisoria,clienteDTO.getNombre(),"Generacion de Usuario");
+		enviodeCorreo.enviarDatosDeCuenta(clienteDTO.getMail(), contrasenaProvisoria,clienteDTO.getLogin().getUsuario(),"Generacion de Usuario");
 		}else{
 			JOptionPane.showMessageDialog(null, "Verifique los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
@@ -239,12 +234,12 @@ public class ControladorCliente implements ActionListener{
 	private LoginDTO obtenerLoginDTO() {
 		LoginDTO loginDTO = new LoginDTO();
 		List<LoginDTO> logins = Modelologin.obtenerLogin();
+		
 		for(LoginDTO l: logins){
-			if(l.getUsuario().equals(this.ventanaRegistrarCliente.getTxtUsuario().getText()) &&
-					l.getContrasena().equals(contrasenaProvisoria)){
-			loginDTO = l;
+			if(l.getUsuario().equals(this.ventanaRegistrarCliente.getTxtUsuario().getText())){
+						loginDTO = l;
+					}
 		}
-	}
 		return loginDTO;
 	}
 	
@@ -327,6 +322,8 @@ public class ControladorCliente implements ActionListener{
 			
 		this.clientes_en_tabla = new ArrayList<ClienteDTO>();
 		this.clientes_aux = cliente.obtenerClientes();
+		
+		System.out.println(clientes_aux.size());
 
 		if(activos == true && inactivos == false) {
 			for (ClienteDTO cliente : this.clientes_aux) {

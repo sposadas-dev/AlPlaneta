@@ -9,6 +9,16 @@ CREATE TABLE `local` (
   PRIMARY KEY (`idLocal`)
 );
 
+CREATE TABLE `condicioncancelacion` (
+  `idCondicion` int(11) NOT NULL AUTO_INCREMENT,
+  `inicio` int(11) NOT NULL,
+  `fin` int(11) NOT NULL,
+  `porcentaje` int(11) NOT NULL,
+  `estado` varchar(45) NOT NULL,
+  PRIMARY KEY (`idCondicion`)
+);
+
+
 CREATE TABLE `rol` (
   `idRol` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(45) NOT NULL,
@@ -116,6 +126,13 @@ CREATE TABLE `formapago` (
   `tipo` varchar(255) NOT NULL,
   PRIMARY KEY (`idformapago`)
 );
+CREATE TABLE `tarjeta` (
+	`idtarjeta` int(11) NOT NULL AUTO_INCREMENT,
+	`nrotarjeta`  char(16),
+	`vencimiento`  char(6),
+    PRIMARY KEY(`idtarjeta`)
+);
+
 
 CREATE TABLE `pago` (
   `idPago` int(11) AUTO_INCREMENT,
@@ -123,8 +140,10 @@ CREATE TABLE `pago` (
   `fechaPago` date NOT NULL,
   `monto` decimal(11,0) NOT NULL,
   `idformapago` int(11),
+  `idtarjeta` int(11),
   PRIMARY KEY (`idPago`)
 );
+
 
 CREATE TABLE `estadospasaje` (
   `idEstadoPasaje` int(11) NOT NULL AUTO_INCREMENT,
@@ -179,6 +198,7 @@ CREATE TABLE `pasaje` (
   `motivoCancelacion` varchar(45),
   `fechaCancelacion` date,
   `montoAReembolsar` decimal(11,0),
+  `notificacion` boolean NOT NULL,
   PRIMARY KEY (`idPasaje`)
 ); 
 
@@ -263,6 +283,8 @@ CREATE TABLE `viaje_promocion` (
   PRIMARY KEY (`idViajePromocion`)
 );
 
+
+
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLogin`)  references login(`idLogin`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLocal`)  references local(`idLocal`);
@@ -278,6 +300,7 @@ ALTER TABLE `cliente` ADD FOREIGN KEY (`idLogin`) references login(`idLogin`);
 
 ALTER TABLE `pago` ADD FOREIGN KEY (`idformapago`) references formapago(`idformapago`);
 ALTER TABLE `pago` ADD FOREIGN KEY (`idAdministrativo`) references administrativo(`idAdministrativo`);
+ALTER TABLE `pago` ADD FOREIGN KEY (`idtarjeta`) references tarjeta(`idtarjeta`);
 
 ALTER TABLE `provincia` ADD FOREIGN KEY (`idPais`)  references pais(`idPais`);
 ALTER TABLE `ciudad` ADD FOREIGN KEY (`idProvincia`) references provincia(`idProvincia`);
@@ -310,7 +333,7 @@ ALTER TABLE `viaje_promocion` ADD FOREIGN KEY (`idPromocion`)  references promoc
 
 INSERT INTO local VALUES (1,'AlPlaneta First Local','Beltran 887'),(2,'AlPlaneta Ultimate Local','Calle Falsa 123'), (3,'AlPlaneta Last Local', 'Last 001');
 INSERT INTO rol VALUES (1,'administrador'),(2,'administrativo'),(3,'coordinador'),(4,'contador'),(5,'cliente');
-INSERT INTO login VALUES (1,'sol','sol123',2,'activo'),(2,'lizz','liz123',1,'activo'),(3,'Mica','mica123',3,'activo'),(4,'Seba','seba123',5,'activo'),(5,'nico','nico123',5,'activo'),(9,'sebaContador','123',4,'activo');
+INSERT INTO login VALUES (1,'sol',sha1('sol123'),2,'activo'),(2,'lizz',sha1('liz123'),1,'activo'),(3,'Mica',sha1('mica123'),3,'activo'),(4,'Seba',sha1('seba123'),5,'activo'),(5,'nico',sha1('nico123'),5,'activo'),(9,'sebaContador',sha1('123'),4,'activo');
 INSERT INTO mediocontacto VALUES (1,'44514236','1532691249','lizzmoreno@gmail.com'),(2,'46649865','1546823599','alplanetaproject@gmail.com'),(3,'44329865','1523234598','solhoyos@hotmail.com'),(4,'44513295','1546853265','avila_nico@yahoo.com'),(5,'44661634','1598564571','juan.p@gmail.com'),(6,'44513269','1562773216','pepito.lopez@hotmail.com'),(7,'44519723','1565379812','legrand_mirta@yahoo.com.ar');
 INSERT INTO administrador (nombre, apellido, dni, idLogin, mail, idLocal) VALUES ('Lizz','Moreno','38924154',2,'moreno.lizk@gmail.com',1);
 INSERT INTO administrativo (nombre, apellido, dni, idLogin, mail, idLocal) VALUES ('Sol', 'Hoyos', '38928844', 1,'hoyos.mariasol@gmail.com',1);
@@ -329,6 +352,7 @@ INSERT INTO horario VALUES (1,'1:00'),(2,'2:00'),(3,'3:00'),(4,'4:00'),(5,'5:00'
 INSERT INTO transporte VALUES (1,'Avion'),(2,'Micro'),(3,'Buquebus');
 INSERT INTO viaje VALUES (1,'2019-05-01','2019-05-02',500,2,1,1818,1818,5,5,'12:00',1,12,500,'activo'),(2,'2019-05-04','2019-05-16',700,2,4,1818,1822,5,5,'3:00',2,14,150,'activo'),(3,'2019-05-16','2019-05-28',1200,2,4,1818,1822,5,5,'7:00',3,24,1000,'activo');
 INSERT INTO estadoevento VALUES (1,'pendiente','el evento aún no se realizó'), (2,'realizado','el evento ya se realizó'),(3,'cancelado','el evento fue cancelado'), (4,'vencido','el evento está vencido');
+INSERT INTO condicioncancelacion VALUES(1,0,6,100,'vendido'),(2,7,20,75,'vendido'),(3,21,34,50,'vendido'),(4,35,750,25,'vendido'),(5,0,9,100,'reservado'),(6,10,20,50,'reservado'),(7,21,34,34,'reservado'),(8,35,750,25,'reservado');
 
 INSERT INTO evento VALUES (1,'2019-05-27','2019-05-30','15:00:00','Consulta sobre reserva de viaje',1,1,2,'',1), (2,'2019-05-28','2019-06-04','18:00:00','Llamar a cliente por reclamo',2,1,1,'',0), (3,'2019-05-28','2019-06-04','19:15:00','Llamar al cliente por viaje a San Juan, Argentina',1,1,1,'',0), (4,'2019-05-29','2019-06-06','15:00:00','Llamar al cliente por reclamo de un viaje',2,1,1,'',0);
 INSERT INTO regimenpunto VALUES (1,1,100,4);

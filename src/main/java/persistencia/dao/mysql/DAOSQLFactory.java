@@ -4,6 +4,7 @@ import persistencia.dao.interfaz.AdministradorDAO;
 import persistencia.dao.interfaz.AdministrativoDAO;
 import persistencia.dao.interfaz.CiudadDAO;
 import persistencia.dao.interfaz.ClienteDAO;
+import persistencia.dao.interfaz.CondicionDeCancelacionDAO;
 import persistencia.dao.interfaz.ContadorDAO;
 import persistencia.dao.interfaz.CoordinadorDAO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
@@ -25,6 +26,7 @@ import persistencia.dao.interfaz.ProvinciaDAO;
 import persistencia.dao.interfaz.PuntoDAO;
 import persistencia.dao.interfaz.RegimenPuntoDAO;
 import persistencia.dao.interfaz.RolDAO;
+import persistencia.dao.interfaz.TarjetaDAO;
 import persistencia.dao.interfaz.TransporteDAO;
 import persistencia.dao.interfaz.ViajeDAO;
 import persistencia.dao.interfaz.Viaje_PromocionDAO;
@@ -47,6 +49,9 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 		return new AdministrativoDAOSQL();
 	}
 	
+	public CondicionDeCancelacionDAO createCondicionDeCancelacionDAO(){
+		return new CondicionDeCancelacionDAOSQL();
+	}
 
 	public CoordinadorDAO createCoordinadorDAO() {
 		return new CoordinadorDAOSQL();
@@ -160,5 +165,11 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	public ContadorDAO createContadorDAO() {
 		return new ContadorDAOSQL();
 	}
+	
+	@Override
+	public TarjetaDAO createTarjetaDAO() {
+		return new TarjetaDAOSQL();
+	}
+	
 
 }

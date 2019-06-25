@@ -21,4 +21,6 @@ public interface LoginDAO {
 
 	public LoginDTO getByDatos(String usr,String pass);
 
+	boolean updateLoginSinContrasena(LoginDTO datosNuevos);
+
 }

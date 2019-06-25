@@ -7,6 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -153,7 +154,6 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaCambiarContrasenia.getBtnCancelar().addActionListener(c->salirVentanaCambiarContrasenia(c));
 		
 		
-//TODO: ARREGLAR EL FILTRO 		
 		this.vista.getPanelCliente().getTxtFiltro().addKeyListener(new KeyAdapter(){            
 			public void keyTyped(KeyEvent e){
 					char letra = e.getKeyChar();
@@ -240,29 +240,56 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		//Precios Viajes
 		
-		this.ventanaTablaViajes.getComboBoxPrecioDesde().addActionListener (new ActionListener () {
-		    public void actionPerformed(ActionEvent e) {
-		    	if(ventanaTablaViajes.getComboBoxPrecioDesde().getSelectedItem() != null) {
-			    	Integer desde = Integer.parseInt(ventanaTablaViajes.getComboBoxPrecioDesde().getSelectedItem().toString());
-			    	if(ventanaTablaViajes.getComboBoxPrecioHasta().getSelectedItem() != null){
-			    		Integer hasta = Integer.parseInt((ventanaTablaViajes.getComboBoxPrecioHasta().getSelectedItem().toString()));
-			    		llenarTablaViajes(viaje.obtenerBetweenPrecio(desde, hasta));
-			    	}
-		    	}
-		    }
+		this.ventanaTablaViajes.getTextPrecioDesde().addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+				char letra = e.getKeyChar();
+				if (!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+			}
+			public void keyReleased(KeyEvent e){
+				char letra = e.getKeyChar();
+				if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+					if(esUnNumero(ventanaTablaViajes.getTextPrecioDesde().getText())) {
+						if(esUnNumero(ventanaTablaViajes.getTextPrecioHasta().getText())) {
+							Integer desde = Integer.parseInt(ventanaTablaViajes.getTextPrecioDesde().getText());
+							Integer hasta = Integer.parseInt(ventanaTablaViajes.getTextPrecioHasta().getText());
+							llenarTablaViajes(viaje.obtenerBetweenPrecio(desde, hasta));	
+						}
+					}
+					if(ventanaTablaViajes.getTextPrecioDesde().getText().length() == 0) {
+						llenarTablaViajes(viaje.obtenerViajes());
+					}
+				}
+			}
 		});
-		
-		this.ventanaTablaViajes.getComboBoxPrecioHasta().addActionListener (new ActionListener () {
-		    public void actionPerformed(ActionEvent e) {
-		    	if(ventanaTablaViajes.getComboBoxPrecioHasta().getSelectedItem() != null) {
-		    		Integer hasta = Integer.parseInt(ventanaTablaViajes.getComboBoxPrecioHasta().getSelectedItem().toString());
-		    		if(ventanaTablaViajes.getComboBoxPrecioDesde().getSelectedItem() != null){
-		    			Integer desde = Integer.parseInt((ventanaTablaViajes.getComboBoxPrecioDesde().getSelectedItem().toString()));
-		    			llenarTablaViajes(viaje.obtenerBetweenPrecio(desde, hasta));
-		    		}
-		    	}
-		    }
+
+		this.ventanaTablaViajes.getTextPrecioHasta().addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+				char letra = e.getKeyChar();
+				if (!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+			}
+			public void keyReleased(KeyEvent e){
+				char letra = e.getKeyChar();
+				if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
+					if(esUnNumero(ventanaTablaViajes.getTextPrecioHasta().getText())) {
+						if(esUnNumero(ventanaTablaViajes.getTextPrecioDesde().getText())) {
+							Integer desde = Integer.parseInt(ventanaTablaViajes.getTextPrecioDesde().getText());
+							Integer hasta = Integer.parseInt(ventanaTablaViajes.getTextPrecioHasta().getText());
+							llenarTablaViajes(viaje.obtenerBetweenPrecio(desde, hasta));	
+						}
+					}
+					if(ventanaTablaViajes.getTextPrecioHasta().getText().length() == 0) {
+						llenarTablaViajes(viaje.obtenerViajes());
+					}
+				}
+			}
 		});
+
 
 		this.vista.getPanelEvento().getComboFiltros().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -459,17 +486,19 @@ public class ControladorAdministrativo implements ActionListener {
 		this.ventanaTablaViajes.getModelViajes().setColumnIdentifiers(this.ventanaTablaViajes.getNombreColumnas());
 		
 		for (int i = 0; i < viajes.size(); i++){
-			Object[] fila = {viajes.get(i).getCiudadOrigen().getNombre(),
-					viajes.get(i).getCiudadDestino().getNombre(),
-					mapper.parseToString(viajes.get(i).getFechaSalida()),
-					mapper.parseToString(viajes.get(i).getFechaLlegada()),
-					viajes.get(i).getHoraSalida(),
-					viajes.get(i).getHorasEstimadas(),
-					viajes.get(i).getCapacidad(),
-					viajes.get(i).getTransporte().getNombre(),
-					"$ "+viajes.get(i).getPrecio()					
-			};
-			this.ventanaTablaViajes.getModelViajes().addRow(fila);
+			if(viajes.get(i).getEstado().equals("activo")){ 
+				Object[] fila = {viajes.get(i).getCiudadOrigen().getNombre(),
+						viajes.get(i).getCiudadDestino().getNombre(),
+						mapper.parseToString(viajes.get(i).getFechaSalida()),
+						mapper.parseToString(viajes.get(i).getFechaLlegada()),
+						viajes.get(i).getHoraSalida(),
+						viajes.get(i).getHorasEstimadas(),
+						viajes.get(i).getCapacidad(),
+						viajes.get(i).getTransporte().getNombre(),
+						"$ "+viajes.get(i).getPrecio()					
+				};
+				this.ventanaTablaViajes.getModelViajes().addRow(fila);
+			}
 		}		
 	}
 
@@ -705,7 +734,7 @@ public class ControladorAdministrativo implements ActionListener {
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
+//TODO: CANCELACION DE PASAJE
 	private void cancelarPasaje(ActionEvent cp) {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(true);
 		int filaSeleccionada = this.vista.getPanelPasaje().getTablaReservas().getSelectedRow();
@@ -1184,25 +1213,33 @@ public class ControladorAdministrativo implements ActionListener {
 	}
 	
 	public void controlarAutomatizacionDelEnvioDeVoucher(){
-
-		Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-// TODO: CAMBIAR LA FECHA..		
-//		calendar.add(Calendar.DATE, -2); //el -2 indica que se le restaran 2 dias
-		
-		for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
-			
-			String fechaLimite = format.format(calendar.getTime());
-			String fechaDelViaje = mapper.parseToStringJavaUtil(p.getViaje().getFechaSalida());
-			
-			System.out.println("limite: "+fechaLimite);
-			System.out.println("viaje : "+fechaDelViaje);
-			if(fechaLimite.equals(fechaDelViaje)){
-				System.out.println("obtenemos pasaje "+p.getIdPasaje());
-				generarVoucherMail(p, p.getCliente());
-			}
-		}
-		
+		TimerTask timerTask = new TimerTask() {
+		    public void run() {
+		    	Calendar salida = Calendar.getInstance(); //obtiene la fecha de hoy
+				Calendar calendar = Calendar.getInstance(); //obtiene la fecha de hoy
+				SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+				
+				for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
+					
+					salida.setTime(p.getViaje().getFechaSalida());
+					salida.add(calendar.DATE, -2);
+					
+					String salidaViaje = format.format(salida.getTime());
+					String fechaActual = format.format(calendar.getTime());
+					
+					System.out.println("Fecha Salida viaje: "+salidaViaje+" "+salidaViaje.length());
+					System.out.println("Fecha Actual      : "+fechaActual+" "+fechaActual.length());
+					
+					if(salidaViaje.equals(fechaActual) && p.isNotificacion()==false){
+						System.out.println("obtenemos pasaje "+p.getIdPasaje());
+						generarVoucherMail(p, p.getCliente());
+						p.setNotificacion(true);
+						modeloPasaje.editarPasaje(p);
+					}
+				}
+			}};
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(timerTask, 0, 60000);//1000=1 segundo
 	}
 	
 	//Cada medio dia se verifica que la fecha de vencimiento de la reserva y el monto pagado x la persona, sea mayor al 30 porciento. Sino, pasa a vencido.
@@ -1235,5 +1272,13 @@ public class ControladorAdministrativo implements ActionListener {
 			timer.scheduleAtFixedRate(timerTask, 0, 43200000);//1000=1 segundo
 	}
 
-	
+	public boolean esUnNumero(String s) {
+		if (s.length()==0)
+			return false;
+		
+		for(int i=0; i<s.length(); i++)
+			if(!Character.isDigit(s.charAt(i)))
+				return false;
+		return true;
+	}
 }

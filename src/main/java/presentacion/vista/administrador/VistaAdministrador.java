@@ -27,6 +27,7 @@ public class VistaAdministrador extends JFrame {
 	private VentanaPanelGeneral panelGeneral;
 	private PanelFormaPago panelFormaPago;
 	private PanelEmpleados panelEmpleados;
+	private PanelCondiciones panelCondiciones;
 	private PanelLocales panelLocales;
 	private PanelViajes panelViajes;
 	
@@ -51,7 +52,7 @@ public class VistaAdministrador extends JFrame {
 	private JMenuItem itemEliminarProvincia;
 	
 	private JMenuItem itemVisualizarLocales;
-	private JMenuItem itemAgregarLocal;
+	private JMenuItem itemAgregarLocales;
 	private JMenuItem itemEditarLocal;
 	private JMenuItem itemEliminarLocal;
 
@@ -64,6 +65,13 @@ public class VistaAdministrador extends JFrame {
 	private Component horizontalGlue;
 	private JMenu menuUsuarioLogueado;
 	private JMenuItem itemCambiarContrasenia;
+	private JMenuItem itemEditarLocales;
+	private JMenuItem itemEliminarLocales;
+	private JMenu menuCancelacion;
+	private JMenuItem itemVizualizarCondicion;
+	private JMenuItem itemAgregarCondicion;
+	private JMenuItem itemEditarCondicion;
+	private JMenuItem itemEliminarCondicion;
 	
 	public static VistaAdministrador getInstance(){
 		if(INSTANCE == null) {
@@ -183,13 +191,19 @@ public class VistaAdministrador extends JFrame {
 		menuTransporte.add(itemEliminarTransporte);
 		
 		
+		panelCondiciones = new PanelCondiciones();
+		panelCondiciones.getTablaCondiciones().setSize(1114, 900);
+		panelCondiciones.setSize(1352, 700);
+		panelCondiciones.setLocation(0, 0);
+		getContentPane().add(panelCondiciones);
+		panelCondiciones.setVisible(false);
+
 		panelTransporte = new PanelTransporte();
 		panelTransporte.getTablaTransportes().setSize(1114, 900);
 		panelTransporte.setSize(1352, 700);
 		panelTransporte.setLocation(0, 0);
 		getContentPane().add(panelTransporte);
 		panelTransporte.setVisible(false);
-
 		
 		panelEmpleados = new PanelEmpleados();
 		panelEmpleados.getTablaEmpleados().setSize(1114, 900);
@@ -253,9 +267,37 @@ public class VistaAdministrador extends JFrame {
 		itemVisualizarLocales.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuLocales.add(itemVisualizarLocales);
 		
-		itemAgregarLocal = new JMenuItem("Agregar local");
-		itemAgregarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuLocales.add(itemAgregarLocal);
+		itemAgregarLocales = new JMenuItem("Agregar local");
+		itemAgregarLocales.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuLocales.add(itemAgregarLocales);
+		
+		itemEditarLocales = new JMenuItem("Visualizar locales");
+		itemEditarLocales.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuLocales.add(itemEditarLocales);
+		
+		itemEliminarLocales = new JMenuItem("Visualizar locales");
+		itemEliminarLocales.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuLocales.add(itemEliminarLocales);
+		
+		menuCancelacion = new JMenu("Condiciones");
+		menuCancelacion.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		menuBar.add(menuCancelacion);
+		
+		itemVizualizarCondicion = new JMenuItem("Visualizar condiciones");
+		itemVizualizarCondicion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuCancelacion.add(itemVizualizarCondicion);
+		
+		itemAgregarCondicion = new JMenuItem("Agregar condicion");
+		itemAgregarCondicion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuCancelacion.add(itemAgregarCondicion);
+		
+		itemEditarCondicion = new JMenuItem("Editar condicion");
+		itemEditarCondicion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuCancelacion.add(itemEditarCondicion);
+		
+		itemEliminarCondicion = new JMenuItem("Eliminar condicion");
+		itemEliminarCondicion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuCancelacion.add(itemEliminarCondicion);
 		
 		horizontalGlue = Box.createHorizontalGlue();
 		menuBar.add(horizontalGlue);
@@ -309,11 +351,11 @@ public class VistaAdministrador extends JFrame {
 	}
 
 	public JMenuItem getItemAgregarLocal() {
-		return itemAgregarLocal;
+		return itemAgregarLocales;
 	}
 
 	public void setItemAgregarLocal(JMenuItem itemAgregarLocal) {
-		this.itemAgregarLocal = itemAgregarLocal;
+		this.itemAgregarLocales = itemAgregarLocal;
 	}
 
 	public JMenuItem getItemEditarLocal() {
@@ -553,6 +595,15 @@ public class VistaAdministrador extends JFrame {
 		this.itemVisualizarViajes = itemVisualizarViajes;
 	}
 
+	public PanelCondiciones getPanelCondiciones() {
+		return panelCondiciones;
+	}
+
+	public void setPanelCondiciones(PanelCondiciones panelCondiciones) {
+		this.panelCondiciones = panelCondiciones;
+	}
+
+
 	public void mostrarVentana(){
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter(){
@@ -570,4 +621,45 @@ public class VistaAdministrador extends JFrame {
 		});
 		setVisible(true);
 	}
+
+	public JMenu getMenuCancelacion() {
+		return menuCancelacion;
+	}
+
+	public void setMenuCancelacion(JMenu menuCancelacion) {
+		this.menuCancelacion = menuCancelacion;
+	}
+
+	public JMenuItem getItemVizualizarCondicion() {
+		return itemVizualizarCondicion;
+	}
+
+	public void setItemVizualizarCondicion(JMenuItem itemVizualizarCondicion) {
+		this.itemVizualizarCondicion = itemVizualizarCondicion;
+	}
+
+	public JMenuItem getItemAgregarCondicion() {
+		return itemAgregarCondicion;
+	}
+
+	public void setItemAgregarCondicion(JMenuItem itemAgregarCondicion) {
+		this.itemAgregarCondicion = itemAgregarCondicion;
+	}
+
+	public JMenuItem getItemEliminarCondicion() {
+		return itemEliminarCondicion;
+	}
+
+	public void setItemEliminarCondicion(JMenuItem itemEliminarCondicion) {
+		this.itemEliminarCondicion = itemEliminarCondicion;
+	}
+
+	public JMenuItem getItemEditarCondicion() {
+		return itemEditarCondicion;
+	}
+
+	public void setItemEditarCondicion(JMenuItem itemEditarCondicion) {
+		this.itemEditarCondicion = itemEditarCondicion;
+	}
+	
 }

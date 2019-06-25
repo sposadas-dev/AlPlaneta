@@ -24,6 +24,7 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
 import dto.CiudadDTO;
@@ -32,6 +33,7 @@ import dto.HorarioReservaDTO;
 import dto.LoginDTO;
 import dto.PagoDTO;
 import dto.PaisDTO;
+import dto.PasajeDTO;
 import dto.PasajeroDTO;
 import dto.ProvinciaDTO;
 import dto.TransporteDTO;
@@ -43,6 +45,7 @@ import modelo.ModeloCiudad;
 import modelo.ModeloPais;
 import modelo.ModeloProvincia;
 import modelo.ModeloViaje;
+import modelo.Pasaje;
 import modelo.Transporte;
 import persistencia.dao.mysql.AdministradorDAOSQL;
 import persistencia.dao.mysql.AdministrativoDAOSQL;
@@ -230,8 +233,11 @@ public class Controlador implements ActionListener {
 		this.ventanaFormaDePagos.getBtnPago().addActionListener(pago -> darAltaDelPago(pago));
 		this.ventanaCliente = VentanaRegistrarCliente.getInstance();
 		this.ventanaCliente.getBtnCancelar().addActionListener(bc -> salirVentanaCliente(bc));
+		
 		this.ventanaCargarViaje.getBtnCrearViaje().addActionListener(aV -> darAltaViaje(aV));
+		//TODO: BOTON CANCELAR
 		this.ventanaEditarViaje.getBtnEditarViaje().addActionListener(ed -> accionEditarViaje(ed));
+		//TODO: BOTON CANCELAR
 		this.ventanaAdministrador.getPanelViajes().getActivos().addActionListener(mv -> mostrarViajesActivos(mv));
 		this.ventanaAdministrador.getPanelViajes().getInactivos().addActionListener(mv -> mostrarViajesInactivos(mv));
 		this.ventanaAdministrador.getPanelViajes().getCheckBoxAll().addActionListener(mv -> mostrarTodosLosViajes(mv));
@@ -328,9 +334,9 @@ public class Controlador implements ActionListener {
 				char letra = e.getKeyChar();
 				if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
 					if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText())) {
-						if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText())) {
+						if(esUnNumero(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText())) {
 							Integer desde = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText());
-							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText());
+							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText());
 							llenarViajesEnPanelViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));	
 						}
 					}
@@ -341,7 +347,7 @@ public class Controlador implements ActionListener {
 			}
 		});
 
-		this.ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().addKeyListener(new KeyAdapter() {
+		this.ventanaAdministrador.getPanelViajes().getTextPrecioHasta().addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char letra = e.getKeyChar();
 				if (!Character.isDigit(letra)) {
@@ -352,14 +358,14 @@ public class Controlador implements ActionListener {
 			public void keyReleased(KeyEvent e){
 				char letra = e.getKeyChar();
 				if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
-					if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText())) {
+					if(esUnNumero(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText())) {
 						if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText())) {
 							Integer desde = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText());
-							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText());
+							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText());
 							llenarViajesEnPanelViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));	
 						}
 					}
-					if(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText().length() == 0) {
+					if(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText().length() == 0) {
 						llenarViajesEnPanelViajes(modeloViaje.obtenerViajes());
 					}
 				}
@@ -404,7 +410,7 @@ public class Controlador implements ActionListener {
 		cad.delete(0, cad.length());
         tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
 		this.ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().setText("");
-		this.ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().setText("");
+		this.ventanaAdministrador.getPanelViajes().getTextPrecioHasta().setText("");
 		this.ventanaAdministrador.getPanelViajes().limpiarFiltrosFechas();
 		llenarViajesEnPanelViajes();
 	}
@@ -468,15 +474,52 @@ public class Controlador implements ActionListener {
 	}
 
 	private void accionEditarViaje(ActionEvent ed) {
-		this.viajeSeleccionado
-				.setHoraSalida(this.ventanaEditarViaje.getComboBoxHorarioSalida().getSelectedItem().toString());
+		int respuesta =-1;
+		this.viajeSeleccionado.setHoraSalida(this.ventanaEditarViaje.getComboBoxHorarioSalida().getSelectedItem().toString());
+		String estadoAntesDeLaModificacion = this.viajeSeleccionado.getEstado();
 		this.viajeSeleccionado.setEstado(this.ventanaEditarViaje.getComboBoxEstados().getSelectedItem().toString());
-		System.out.println(
-				"NUEVOS DATOS : " + this.viajeSeleccionado.getHoraSalida() + " " + this.viajeSeleccionado.getEstado());
+		String estadoDespuesDeLaModificacion = this.viajeSeleccionado.getEstado();
 
-		modeloViaje.editarViaje(viajeSeleccionado);
+		if(!(estadoAntesDeLaModificacion.equals(estadoDespuesDeLaModificacion)) && (viajeSeleccionado.getEstado().equals("inactivo"))){
+			 respuesta = JOptionPane.showConfirmDialog(null, "Esta deshabilitando el viaje. Los pasajes relacionados a este viaje se cancelarán. ¿Desea continuar?", "Confirmar salida", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+			
+			 if(respuesta!=2){
+				JOptionPane.showMessageDialog(null, "Se le ha enviado un correo a los clientes para informar la cancelación de los pasajes", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+				cancelarTodosLosPasajesConElViaje(viajeSeleccionado);
+			 }
+		 }
+		if(respuesta!=2){ // 0 acepta, 2 cancela, -1 no muestra cartel	
+			modeloViaje.editarViaje(viajeSeleccionado);
+		}
 		llenarViajesEnPanelViajes();
 		this.ventanaEditarViaje.setVisible(false);
+	}
+	
+	private void cancelarTodosLosPasajesConElViaje(ViajeDTO viaje){
+		Pasaje modeloPasaje = new Pasaje(new DAOSQLFactory());
+		EnvioDeCorreo envioDeMail = new EnvioDeCorreo();
+		
+		java.util.Date fecha = new java.util.Date(); 
+		Date fechaActual = new java.sql.Date(fecha.getTime());	
+		
+		ArrayList<PasajeDTO> pasajes = (ArrayList<PasajeDTO>) modeloPasaje.obtenerPasajes();
+	
+		for(PasajeDTO p:pasajes){
+			if(p.getViaje().getIdViaje()==viaje.getIdViaje()){
+				
+				p.getEstadoDelPasaje().setIdEstadoPasaje(4);
+				p.setMotivoCancelacion("Cancelacion por Administrador");
+				p.setDateCancelacion(fechaActual);
+				
+				modeloPasaje.editarPasaje(p);
+				String adjunto = "Cancelacion de viaje";
+				String cuerpoMail = "Estimado cliente "+p.getCliente().getNombre()+", se le informa que el viaje con destino a :"+viaje.getCiudadDestino().getNombre()+" del dia :"+viaje.getFechaSalidaParseada()+" fue cancelado por razones propias a la empresa. \n"
+						+ " Acérquese al local más cercano para la devolución total de su dinero. \n "
+						+ "Disculpe las molestias, \n "
+						+ "Al Planeta - Empresa de venta de pasajes.";
+				envioDeMail.enviarNotificacion(p.getCliente().getMail(), cuerpoMail, adjunto);
+			}
+		}
 	}
 
 	private void agregarPais(ActionEvent agP) {
@@ -1461,8 +1504,12 @@ public class Controlador implements ActionListener {
 		int filaSeleccionada = this.ventanaAdministrador.getPanelViajes().getTablaViajes().getSelectedRow();
 		if (filaSeleccionada != -1) {
 			this.viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
-			llenarValoresEnVentanaConViajeEditar();
-		} else {
+			if(this.viajeSeleccionado.getEstado().equals("activo"))
+				llenarValoresEnVentanaConViajeEditar();	
+			else
+				JOptionPane.showMessageDialog(null, "No se puede editar un viaje inactivo", "Mensaje", JOptionPane.ERROR_MESSAGE);		
+		}
+		else {
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
