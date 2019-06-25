@@ -310,13 +310,13 @@ public class VistaAdministrador extends JFrame {
 		itemCambiarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuUsuarioLogueado.add(itemCambiarContrasenia);
 		
-//		itemEditarLocal = new JMenuItem("Editar local");
-//		itemEditarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-//		menuLocales.add(itemEditarLocal);
-//		
-//		itemEliminarLocal = new JMenuItem("Eliminar local");
-//		itemEliminarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-//		menuLocales.add(itemEliminarLocal);
+		itemEditarLocal = new JMenuItem("Editar local");
+		itemEditarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuLocales.add(itemEditarLocal);
+		
+		itemEliminarLocal = new JMenuItem("Eliminar local");
+		itemEliminarLocal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuLocales.add(itemEliminarLocal);
 		
 		panelLocales = new PanelLocales();
 		panelLocales.getTablaLocales().setSize(1114, 900);

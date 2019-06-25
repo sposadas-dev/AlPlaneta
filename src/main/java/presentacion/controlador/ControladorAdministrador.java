@@ -46,6 +46,7 @@ import presentacion.vista.administrador.VentanaAgregarLocal;
 import presentacion.vista.administrador.VentanaCambiarContrasena;
 import presentacion.vista.administrador.VentanaEditarCondicionCancelacion;
 import presentacion.vista.administrador.VentanaEditarCuenta;
+import presentacion.vista.administrador.VentanaEditarLocal;
 import presentacion.vista.administrador.VentanaEditarViaje;
 import presentacion.vista.administrador.VistaAdministrador;
 
@@ -62,6 +63,7 @@ public class ControladorAdministrador {
 	private List<CondicionDeCancelacionDTO> condiciones_en_tabla;
 	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	private int filaSeleccionada;
+	private int filaLocalSeleccionada;
 	private PanelEmpleados panel;
 	private EnvioDeCorreo enviodeCorreo;
 	
@@ -98,6 +100,7 @@ public class ControladorAdministrador {
 	private ControladorPais controladorPais;
 	private ControladorCiudad controladorCiudad;
 	private ControladorProvincia controladorProvincia;
+	private VentanaEditarLocal ventanaEditarLocal;
 	
 	public ControladorAdministrador(VistaAdministrador vistaAdministrador,AdministradorDTO administradorLogueado){
 		this.vistaAdministrador = vistaAdministrador;
@@ -107,6 +110,7 @@ public class ControladorAdministrador {
 		this.ventanaAgregarLocal = VentanaAgregarLocal.getInstance();
 		this.ventanaEditarViaje = VentanaEditarViaje.getInstance();
 		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
+		this.ventanaEditarLocal = VentanaEditarLocal.getInstance();
 		this.enviodeCorreo = new EnvioDeCorreo();
 		this.condicionEditar = new CondicionDeCancelacionDTO();
 		
@@ -123,9 +127,13 @@ public class ControladorAdministrador {
 
 		this.vistaAdministrador.getItemVisualizarLocales().addActionListener(vl->visualizarLocales(vl));
 		this.vistaAdministrador.getItemAgregarLocal().addActionListener(al->agregarPanelLocales(al));
-//		this.vistaAdministrador.getItemEditarLocal().addActionListener(el->editarLocal(el));
-//		this.vistaAdministrador.getItemEliminarLocal().addActionListener(dl->eliminarLocal(dl));
+		this.vistaAdministrador.getItemEditarLocal().addActionListener(el->mostrarEditarLocal(el));
+		this.vistaAdministrador.getItemEliminarLocal().addActionListener(dl->eliminarLocal(dl));
 
+		this.ventanaEditarLocal.getBtnEditar().addActionListener(elo->editarLocal(elo));
+		this.ventanaEditarLocal.getBtnCancelar().addActionListener(canEL->cancelarEditarLocal(canEL));
+		this.ventanaAgregarLocal.getBtnCancelar().addActionListener(canAL->cancelarAgregarLocal(canAL));
+		
 //		this.vistaAdministrador.getPanelTransporte().getBtnRecargarTabla().addActionListener(r->recargarTabla(r));
 		
 		this.vistaAdministrador.getItemAgregarFormaPago().addActionListener(afp->agregarPanelFormaPago(afp));
@@ -159,6 +167,53 @@ public class ControladorAdministrador {
 						Toolkit.getDefaultToolkit().beep();
 						e.consume();
 					}
+					if(ventanaAgregarEmpleado.getTxtNombre().getText().length() == 45) {
+						e.consume();
+					}
+			}
+		});
+
+		this.ventanaAgregarEmpleado.getTxtApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaAgregarEmpleado.getTxtApellido().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaAgregarEmpleado.getTxtDni().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaAgregarEmpleado.getTxtDni().getText().length() == 8) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaAgregarEmpleado.getTxtUsuario().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(ventanaAgregarEmpleado.getTxtUsuario().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaAgregarEmpleado.getTextMail().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(ventanaAgregarEmpleado.getTextMail().getText().length() == 45) {
+					e.consume();
+				}
 			}
 		});
 //		this.ventanaAgregarEmpleado.getBtnCancelar().addActionListener(c->cancelarAgregarCuentaEmpleado(c));
@@ -166,6 +221,63 @@ public class ControladorAdministrador {
 		
 		this.ventanaEditarCuenta.getBtnRegistrar().addActionListener(ec->editarCuenta(ec));
 		this.ventanaEditarCuenta.getBtnCancelar().addActionListener(can->cancelarEditarCuenta(can));
+		
+		this.ventanaEditarCuenta.getTxtNombre().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+					char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
+						e.consume();
+					}
+					if(ventanaEditarCuenta.getTxtNombre().getText().length() == 45) {
+						e.consume();
+					}
+			}
+		});
+
+		this.ventanaEditarCuenta.getTxtApellido().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCuenta.getTxtApellido().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaEditarCuenta.getTxtDni().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaEditarCuenta.getTxtDni().getText().length() == 8) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaEditarCuenta.getTxtUsuario().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(ventanaEditarCuenta.getTxtUsuario().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaEditarCuenta.getTxtMail().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(ventanaEditarCuenta.getTxtMail().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
 		
 		this.vistaAdministrador.getItemBackup().addActionListener(b -> crearBackup(b));
 		this.vistaAdministrador.getItemRestore().addActionListener(r -> cargarRestore(r));
@@ -284,6 +396,17 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
 		llenarTablaCondiciones();
 	}
+
+	private void cancelarEditarLocal(ActionEvent canEL) {
+		this.ventanaAgregarLocal.cerrarVentana();
+		this.ventanaAgregarLocal.limpiarCampos();
+		this.filaLocalSeleccionada = -1;
+	}
+
+	private void cancelarAgregarLocal(ActionEvent canAL) {
+		this.ventanaAgregarLocal.cerrarVentana();
+		this.ventanaAgregarLocal.limpiarCampos();
+	}
 	
 	private void mostrarEditarCondicion(ActionEvent ev) {
 		this.condiciones_en_tabla = this.modeloCondicionCancelacion.obtenerCondiciones();
@@ -401,6 +524,12 @@ public class ControladorAdministrador {
 	}
 
 	private void mostrarPanelDeViajes(ActionEvent v) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
+		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(true);
+		
 		this.controlador.mostrarPanelDeViajes();
 	}
 
@@ -540,7 +669,9 @@ public class ControladorAdministrador {
 	}
 
 	private void visualizarLocales(ActionEvent vl) {
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(false);
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
@@ -551,7 +682,6 @@ public class ControladorAdministrador {
 	private void mostrarVentanaEditarCuenta(ActionEvent mve) {
 		int filaSeleccionada = this.vistaAdministrador.getPanelEmpleados().getTablaEmpleados().getSelectedRow();
 		if (filaSeleccionada != -1){
-			ventanaEditarCuenta.setVisible(true);
 			cargarcomboBoxRoles();
 			mostrarCuenta(filaSeleccionada);
 		}else{
@@ -770,6 +900,7 @@ public class ControladorAdministrador {
 					administradorEdit.setLocal(localRespaldo);
 					this.administrador.agregarAdministrador(administradorEdit);
 					
+					this.administradorEdit = null;
 					break;
 				case "administrativo":
 					idRol = 2;
@@ -789,6 +920,7 @@ public class ControladorAdministrador {
 					administrativoEdit.setLocal(localRespaldo);
 					this.administrativo.agregarAdministrativo(administrativoEdit);
 					
+					this.administrativoEdit = null;
 					break;
 				case "coordinador":
 					idRol = 3;
@@ -808,6 +940,7 @@ public class ControladorAdministrador {
 					coordinadorEdit.setLocal(localRespaldo);
 					this.coordinador.agregarCoordinador(coordinadorEdit);
 					
+					this.coordinadorEdit = null;
 					break;
 				case "contador":
 					idRol = 4;
@@ -827,6 +960,7 @@ public class ControladorAdministrador {
 					contadorEdit.setLocal(localRespaldo);
 					this.contador.agregarContador(contadorEdit);
 					
+					this.contadorEdit = null;
 					break;
 			}
 			llenarTablaEmpleados();
@@ -834,8 +968,8 @@ public class ControladorAdministrador {
 	}
 	
 	private void mostrarCuenta(int filaSeleccionada){
-		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarCuenta.mostrarVentana(true);
+		this.filaSeleccionada = filaSeleccionada;
 		obtenerEmpleado(this.filaSeleccionada);
 		
 		if( administradorEdit != null ) {
@@ -843,21 +977,29 @@ public class ControladorAdministrador {
 			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
 			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(administradorEdit.getMail());
+			ventanaEditarCuenta.getComboBoxRoles().setSelectedIndex(0);
+			
 		} else if ( administrativoEdit != null ) {
 			ventanaEditarCuenta.getTxtNombre().setText(administrativoEdit.getNombre());
-			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
-			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
+			ventanaEditarCuenta.getTxtApellido().setText(administrativoEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(administrativoEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(administrativoEdit.getMail());
+			ventanaEditarCuenta.getComboBoxRoles().setSelectedIndex(1);
+			
 		} else if ( coordinadorEdit != null ) {
 			ventanaEditarCuenta.getTxtNombre().setText(coordinadorEdit.getNombre());
-			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
-			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
+			ventanaEditarCuenta.getTxtApellido().setText(coordinadorEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(coordinadorEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(coordinadorEdit.getMail());
+			ventanaEditarCuenta.getComboBoxRoles().setSelectedIndex(2);
+			
 		} else if ( contadorEdit != null) {
 			ventanaEditarCuenta.getTxtNombre().setText(contadorEdit.getNombre());
-			ventanaEditarCuenta.getTxtApellido().setText(administradorEdit.getApellido());
-			ventanaEditarCuenta.getTxtDni().setText(administradorEdit.getDni());
+			ventanaEditarCuenta.getTxtApellido().setText(contadorEdit.getApellido());
+			ventanaEditarCuenta.getTxtDni().setText(contadorEdit.getDni());
 			ventanaEditarCuenta.getTxtMail().setText(contadorEdit.getMail());
+			ventanaEditarCuenta.getComboBoxRoles().setSelectedIndex(3);
+			
 		}
 		ventanaEditarCuenta.getTxtUsuario().setText(this.logins_en_tabla.get(this.filaSeleccionada).getUsuario());
 	}
@@ -865,12 +1007,24 @@ public class ControladorAdministrador {
 	public void obtenerEmpleado(int seleccionado) {
 		if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("administrador")) {
 			this.administradorEdit = administrador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+			this.administrativoEdit = null;
+			this.coordinadorEdit = null;
+			this.contadorEdit = null;
 		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("administrativo")) {
 			this.administrativoEdit = administrativo.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+			this.administradorEdit = null;
+			this.coordinadorEdit = null;
+			this.contadorEdit = null;
 		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("coordinador")) {
 			this.coordinadorEdit = coordinador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+			this.administradorEdit = null;
+			this.administrativoEdit = null;
+			this.contadorEdit = null;
 		} else if(this.logins_en_tabla.get(seleccionado).getRol().getNombre().equals("contador")) {
 			this.contadorEdit = contador.getByLoginId(this.logins_en_tabla.get(seleccionado).getIdDatosLogin());
+			this.administradorEdit = null;
+			this.administrativoEdit = null;
+			this.coordinadorEdit = null;
 		}
 	}
 	
@@ -1069,6 +1223,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(true);
 		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
 		this.vistaAdministrador.getPanelCondiciones().mostrarPanelCondiciones(false);
 		this.llenarTablaFormaPago();
@@ -1137,6 +1292,41 @@ public class ControladorAdministrador {
 		this.ventanaAgregarLocal.cerrarVentana();
 	}
 	
+	private void mostrarEditarLocal(ActionEvent el) {
+		this.ventanaEditarLocal.mostrarVentana();
+		this.setFilaLocalSeleccionada(this.vistaAdministrador.getPanelLocales().getTablaLocales().getSelectedRow());
+		if (filaLocalSeleccionada != -1){
+			this.ventanaEditarLocal.getTxtNombreLocal().setText(this.locales_en_tabla.get(filaLocalSeleccionada).getNombreLocal());
+			this.ventanaEditarLocal.getTxtDireccionLocal().setText(this.locales_en_tabla.get(filaLocalSeleccionada).getDireccionLocal());
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void editarLocal(ActionEvent elo) {
+		LocalDTO editLocal = new LocalDTO(this.locales_en_tabla.get(this.filaLocalSeleccionada).getIdLocal(), this.ventanaEditarLocal.getTxtNombreLocal().getText(), this.ventanaEditarLocal.getTxtDireccionLocal().getText());
+		local.update(editLocal);
+		this.ventanaEditarLocal.cerrarVentana();
+		this.ventanaEditarLocal.limpiarCampos();
+		this.filaLocalSeleccionada = -1;
+		this.llenarTablaLocales();
+		
+	}
+	
+	private void eliminarLocal(ActionEvent dl) {
+		this.setFilaLocalSeleccionada(this.vistaAdministrador.getPanelLocales().getTablaLocales().getSelectedRow());
+		if (filaLocalSeleccionada != -1){
+			if(local.delete(this.locales_en_tabla.get(filaLocalSeleccionada).getIdLocal())) {
+				this.filaLocalSeleccionada = -1;
+				this.llenarTablaLocales();
+			} else {
+				JOptionPane.showMessageDialog(null, "No se ha podido eliminar el local seleccionado", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			}
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	private boolean mailExistente(String mail){
 		Administrador modeloAdministrador = new Administrador(new DAOSQLFactory());
 		for(AdministradorDTO administrador: modeloAdministrador.obtenerAdministradores())
@@ -1193,5 +1383,13 @@ public class ControladorAdministrador {
 				return true;
 		
 		return false;
+	}
+
+	public int getFilaLocalSeleccionada() {
+		return filaLocalSeleccionada;
+	}
+
+	public void setFilaLocalSeleccionada(int filaLocalSeleccionada) {
+		this.filaLocalSeleccionada = filaLocalSeleccionada;
 	}
 }

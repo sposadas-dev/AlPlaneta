@@ -117,7 +117,6 @@ public class VentanaRegistroRegimenPuntos  extends JFrame {
 		dtrpnelClienteSumar.setText("-El Cliente sumará una cantidad de puntos (Cant.Puntos) por unidad gastada.\r\n-La Unidad de medida es pesos argentinos (ARS).\r\n-Los puntos tendran un vencimiento, este sera en cantidad de meses (Vencimiento).");
 		dtrpnelClienteSumar.setBounds(213, 64, 194, 110);
 		dtrpnelClienteSumar.setEditable(false);
-		
 		contentPane.add(dtrpnelClienteSumar);
 	}
 

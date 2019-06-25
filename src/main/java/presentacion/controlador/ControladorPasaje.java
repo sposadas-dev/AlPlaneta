@@ -263,6 +263,10 @@ public class ControladorPasaje implements ActionListener{
 						Toolkit.getDefaultToolkit().beep();
 						e.consume();
 					}
+					if(ventanaPasajero.getTxtNombre().getText().length() == 45) {
+						e.consume();
+					}
+					
 			}
 		});
 		this.ventanaPasajero.getTxtApellido().addKeyListener(new KeyAdapter(){            
@@ -270,6 +274,9 @@ public class ControladorPasaje implements ActionListener{
 				char letra = e.getKeyChar();
 				if(Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaPasajero.getTxtApellido().getText().length() == 45) {
 					e.consume();
 				}
 			}});
@@ -280,6 +287,9 @@ public class ControladorPasaje implements ActionListener{
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaPasajero.getTxtDni().getText().length() == 8) {
+					e.consume();
+				}
 			}
 		});
 		this.ventanaPasajero.getTxtTelefono().addKeyListener(new KeyAdapter(){            
@@ -287,6 +297,18 @@ public class ControladorPasaje implements ActionListener{
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaPasajero.getTxtTelefono().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+		
+		this.ventanaPasajero.getTxtEmail().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(ventanaPasajero.getTxtEmail().getText().length() == 45) {
 					e.consume();
 				}
 			}
@@ -521,18 +543,18 @@ public class ControladorPasaje implements ActionListener{
 		this.viajes_en_tabla = viajesActivos();
 			
 		for (int i = 0; i < this.viajes_en_tabla.size(); i++){
-			Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
-							this.viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
-							mapper.parseToString(this.viajes_en_tabla.get(i).getFechaSalida()),
-							mapper.parseToString(this.viajes_en_tabla.get(i).getFechaLlegada()),
-							this.viajes_en_tabla.get(i).getHoraSalida(),
-							this.viajes_en_tabla.get(i).getHorasEstimadas(),
-							this.viajes_en_tabla.get(i).getCapacidad(),
-							this.viajes_en_tabla.get(i).getTransporte().getNombre(),
-							"$ "+this.viajes_en_tabla.get(i).getPrecio()					
-			};
-		this.ventanaTablaViajes.getModelViajes().addRow(fila);
-		}		
+					Object[] fila = {this.viajes_en_tabla.get(i).getCiudadOrigen().getNombre(),
+									this.viajes_en_tabla.get(i).getCiudadDestino().getNombre(),
+									mapper.parseToString(this.viajes_en_tabla.get(i).getFechaSalida()),
+									mapper.parseToString(this.viajes_en_tabla.get(i).getFechaLlegada()),
+									this.viajes_en_tabla.get(i).getHoraSalida(),
+									this.viajes_en_tabla.get(i).getHorasEstimadas(),
+									this.viajes_en_tabla.get(i).getCapacidad(),
+									this.viajes_en_tabla.get(i).getTransporte().getNombre(),
+									"$ "+this.viajes_en_tabla.get(i).getPrecio()					
+					};
+				this.ventanaTablaViajes.getModelViajes().addRow(fila);
+		}
 	}
 	
 	private ArrayList<ViajeDTO> viajesActivos() {
@@ -1044,28 +1066,11 @@ public class ControladorPasaje implements ActionListener{
 	private EstadoPasajeDTO calcularEstadoPasaje() {
 		EstadoPasaje estado = new EstadoPasaje(new DAOSQLFactory());
 		EstadoPasajeDTO ret;
-//			if(totalaPagar.compareTo(pagoDTO.getMonto())==0){ 
-//				ret = estado.getFormaPagoByName("Vendido");
-//			}
-//			else {
-//				if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
-//					ret = estado.getFormaPagoByName("Pendiente");
-//				}
-//				else{
-//					ret = estado.getFormaPagoByName("Reservado");		
-//				}
-//			}
-//			return ret;
 		if(this.valorFinal.compareTo(pagoDTO.getMonto())==0){ 
 			ret = estado.getFormaPagoByName("Vendido");
 		}
 		else {
-			if(pagoDTO.getMonto().equals(new BigDecimal(0))) {
-				ret = estado.getFormaPagoByName("Pendiente");
-			}
-			else{
 				ret = estado.getFormaPagoByName("Reservado");		
-			}
 		}
 		return ret;
 	}

@@ -380,6 +380,9 @@ public class Controlador implements ActionListener {
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaCargarViaje.getTextCapacidad().getText().length() == 11) {
+					e.consume();
+				}
 			}
 		});
 
@@ -388,6 +391,9 @@ public class Controlador implements ActionListener {
 				char letra = e.getKeyChar();
 				if (!Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaCargarViaje.getTextHorasEstimadas().getText().length() == 11) {
 					e.consume();
 				}
 			}

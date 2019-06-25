@@ -14,7 +14,7 @@ public class PanelFormaPago  extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JButton btnRecargarTabla;
 	private DefaultTableModel modelFormaPago;
-	private String[] nombreColumnasformaPago = {"Forma de Pago"};
+	private String[] nombreColumnasformaPago = {"Diferentes Formas de Pago"};
 	private JTable tablaFormaPago;
 	private JButton btnConfirmar;
 	private JLabel lblFormaPago;

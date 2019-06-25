@@ -177,5 +177,6 @@ public class VentanaAgregarEmpleado extends JFrame {
 		this.txtApellido.setText("");
 		this.txtDni.setText("");
 		this.txtUsuario.setText("");
+		this.textMail.setText("");
 	}
 }

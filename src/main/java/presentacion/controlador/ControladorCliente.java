@@ -68,6 +68,9 @@ public class ControladorCliente implements ActionListener{
 						Toolkit.getDefaultToolkit().beep();
 						e.consume();
 					}
+					if(ventanaRegistrarCliente.getTxtNombre().getText().length() == 45) {
+						e.consume();
+					}
 			}
 		});
 	
@@ -76,6 +79,9 @@ public class ControladorCliente implements ActionListener{
 				char letra = e.getKeyChar();
 				if(Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaRegistrarCliente.getTxtApellido().getText().length() == 45) {
 					e.consume();
 				}
 			}
@@ -87,6 +93,9 @@ public class ControladorCliente implements ActionListener{
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaRegistrarCliente.getTxtDni().getText().length() == 8) {
+					e.consume();
+				}
 			}
 		});
 		this.ventanaRegistrarCliente.getTxtTelefonoFijo().addKeyListener(new KeyAdapter(){            
@@ -96,6 +105,9 @@ public class ControladorCliente implements ActionListener{
 					Toolkit.getDefaultToolkit().beep();
 					e.consume();
 				}
+				if(ventanaRegistrarCliente.getTxtTelefonoFijo().getText().length() == 45) {
+					e.consume();
+				}
 			}
 		});
 		this.ventanaRegistrarCliente.getTxtTelefonoCelular().addKeyListener(new KeyAdapter(){            
@@ -103,6 +115,27 @@ public class ControladorCliente implements ActionListener{
 				char letra = e.getKeyChar();
 				if(!Character.isDigit(letra)) {
 					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}
+				if(ventanaRegistrarCliente.getTxtTelefonoCelular().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaRegistrarCliente.getTxtEmail().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(ventanaRegistrarCliente.getTxtEmail().getText().length() == 45) {
+					e.consume();
+				}
+			}
+		});
+
+		this.ventanaRegistrarCliente.getTxtUsuario().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+				if(ventanaRegistrarCliente.getTxtUsuario().getText().length() == 45) {
 					e.consume();
 				}
 			}
@@ -323,27 +356,6 @@ public class ControladorCliente implements ActionListener{
 			this.vistaAdministrativo.getPanelCliente().getModelClientes().addRow(fila);
 		}		
 	}
-	
-	
-//	private void llenarTablaClientes(){
-//		panelCliente.getModelClientes().setRowCount(0); //Para vaciar la tabla
-//		panelCliente.getModelClientes().setColumnCount(0);
-//		panelCliente.getModelClientes().setColumnIdentifiers(this.panelCliente.getNombreColumnasClientes());
-//			
-//		this.clientes_en_tabla = cliente.obtenerClientes();
-//			
-//		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
-//			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
-//							this.clientes_en_tabla.get(i).getApellido(),
-//							this.clientes_en_tabla.get(i).getDni(),
-//							this.clientes_en_tabla.get(i).getFechaNacimiento(),
-//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoFijo(),
-//							this.clientes_en_tabla.get(i).getMedioContacto().getTelefonoCelular(),
-//							this.clientes_en_tabla.get(i).getMedioContacto().getEmail()	
-//			};
-//			this.panelCliente.getModelClientes().addRow(fila);
-//		}		
-//	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
