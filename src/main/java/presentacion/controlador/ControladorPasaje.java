@@ -125,6 +125,7 @@ public class ControladorPasaje implements ActionListener{
 	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
 	private ControladorTarjeta controladorTarjeta;
+	private VentanaTarjeta ventanaTarjeta;
 	
 	public ControladorPasaje(VentanaVisualizarClientes ventanaVisualizarClientes, Cliente cliente, AdministrativoDTO administrativoLogueado){
 		this.ventanaVisualizarClientes = ventanaVisualizarClientes;
@@ -136,7 +137,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaConfirmacionPasaje = VentanaConfirmacionPasaje.getInstance();
 		this.ventanaComprobante = VentanaComprobante.getInstance();
 		this.ventanaTablaPagos = VentanaTablaPagos.getInstance();
-//		this.ventanaTarjeta = VentanaTarjeta.getInstance();
+		this.ventanaTarjeta = VentanaTarjeta.getInstance();
 		this.ventanaCancelacionPasaje = VentanaCancelacionPasaje.getInstance();
 		this.vistaAdministrativo = VistaAdministrativo.getInstance();
 		this.ventanaPagoPuntos = VentanaPagoPuntos.getInstance();
@@ -745,14 +746,16 @@ public class ControladorPasaje implements ActionListener{
 			pagoDTO.setAdministrativo(administrativoLogueado);
 			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
 			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
-//			pagoDTO.setIdtarjeta(controladorTarjeta.datosTarjeta().getIdTarjeta()); //AGREGA IDTARJETAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 			
-//			if(formaPago.getIdFormaPago()==2){
+			
+			if(formaPago.getIdFormaPago()==2){
+				pagoDTO.setIdtarjeta(controladorTarjeta.datosTarjeta()); //AGREGA IDTARJETAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 //				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
-//			}
-			if(pagoDTO.getIdFormaPago().getIdFormaPago() ==2 )
-				controladorTarjeta.datosTarjeta().getIdTarjeta();
-				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
+				System.out.println("El ID de la tarjeta es:" + pagoDTO.getIdtarjeta().getIdTarjeta());
+			}
+//			if(pagoDTO.getIdFormaPago().getIdFormaPago() ==2 )
+//				controladorTarjeta.datosTarjeta().getIdTarjeta();
+//				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
 				
 			if (noEditarPago){
 				this.ventanaPago.setVisible(false);
