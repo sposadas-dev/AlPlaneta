@@ -475,10 +475,10 @@ public class Controlador implements ActionListener {
 		String estadoDespuesDeLaModificacion = this.viajeSeleccionado.getEstado();
 
 		if(!(estadoAntesDeLaModificacion.equals(estadoDespuesDeLaModificacion)) && (viajeSeleccionado.getEstado().equals("inactivo"))){
-			 respuesta = JOptionPane.showConfirmDialog(null, "Esta deshabilitando el viaje, por que que los pasajes con ese viaje se cancelaran. ¿Desea continuar?", "Confirmar salida", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+			 respuesta = JOptionPane.showConfirmDialog(null, "Esta deshabilitando el viaje. Los pasajes relacionados a este viaje se cancelarán. ¿Desea continuar?", "Confirmar salida", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 			
 			 if(respuesta!=2){
-				JOptionPane.showMessageDialog(null, "Se le ha enviado un correo a los clientes, para informar la cancelación de los pasajes", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Se le ha enviado un correo a los clientes para informar la cancelación de los pasajes", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
 				cancelarTodosLosPasajesConElViaje(viajeSeleccionado);
 			 }
 		 }
@@ -1498,7 +1498,10 @@ public class Controlador implements ActionListener {
 		int filaSeleccionada = this.ventanaAdministrador.getPanelViajes().getTablaViajes().getSelectedRow();
 		if (filaSeleccionada != -1) {
 			this.viajeSeleccionado = viajes_en_tabla.get(filaSeleccionada);
-			llenarValoresEnVentanaConViajeEditar();
+			if(this.viajeSeleccionado.getEstado().equals("activo"))
+				llenarValoresEnVentanaConViajeEditar();	
+			else
+				JOptionPane.showMessageDialog(null, "No se puede editar un viaje inactivo", "Mensaje", JOptionPane.ERROR_MESSAGE);		
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
