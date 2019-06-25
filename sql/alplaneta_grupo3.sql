@@ -126,6 +126,13 @@ CREATE TABLE `formapago` (
   `tipo` varchar(255) NOT NULL,
   PRIMARY KEY (`idformapago`)
 );
+CREATE TABLE `tarjeta` (
+	`idtarjeta` int(11) NOT NULL AUTO_INCREMENT,
+	`nrotarjeta`  char(16),
+	`vencimiento`  char(6),
+    PRIMARY KEY(`idtarjeta`)
+);
+
 
 CREATE TABLE `pago` (
   `idPago` int(11) AUTO_INCREMENT,
@@ -133,8 +140,10 @@ CREATE TABLE `pago` (
   `fechaPago` date NOT NULL,
   `monto` decimal(11,0) NOT NULL,
   `idformapago` int(11),
+  `idtarjeta` int(11),
   PRIMARY KEY (`idPago`)
 );
+
 
 CREATE TABLE `estadospasaje` (
   `idEstadoPasaje` int(11) NOT NULL AUTO_INCREMENT,
@@ -189,7 +198,7 @@ CREATE TABLE `pasaje` (
   `motivoCancelacion` varchar(45),
   `fechaCancelacion` date,
   `montoAReembolsar` decimal(11,0),
-  `notificacion` bool(11) NOT NULL,
+  `notificacion` boolean NOT NULL,
   PRIMARY KEY (`idPasaje`)
 ); 
 
@@ -274,6 +283,8 @@ CREATE TABLE `viaje_promocion` (
   PRIMARY KEY (`idViajePromocion`)
 );
 
+
+
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLogin`)  references login(`idLogin`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLocal`)  references local(`idLocal`);
@@ -289,6 +300,7 @@ ALTER TABLE `cliente` ADD FOREIGN KEY (`idLogin`) references login(`idLogin`);
 
 ALTER TABLE `pago` ADD FOREIGN KEY (`idformapago`) references formapago(`idformapago`);
 ALTER TABLE `pago` ADD FOREIGN KEY (`idAdministrativo`) references administrativo(`idAdministrativo`);
+ALTER TABLE `pago` ADD FOREIGN KEY (`idtarjeta`) references tarjeta(`idtarjeta`);
 
 ALTER TABLE `provincia` ADD FOREIGN KEY (`idPais`)  references pais(`idPais`);
 ALTER TABLE `ciudad` ADD FOREIGN KEY (`idProvincia`) references provincia(`idProvincia`);
@@ -321,7 +333,7 @@ ALTER TABLE `viaje_promocion` ADD FOREIGN KEY (`idPromocion`)  references promoc
 
 INSERT INTO local VALUES (1,'AlPlaneta First Local','Beltran 887'),(2,'AlPlaneta Ultimate Local','Calle Falsa 123'), (3,'AlPlaneta Last Local', 'Last 001');
 INSERT INTO rol VALUES (1,'administrador'),(2,'administrativo'),(3,'coordinador'),(4,'contador'),(5,'cliente');
-INSERT INTO login VALUES (1,'sol','sol123',2,'activo'),(2,'lizz','liz123',1,'activo'),(3,'Mica','mica123',3,'activo'),(4,'Seba','seba123',5,'activo'),(5,'nico','nico123',5,'activo'),(9,'sebaContador','123',4,'activo');
+INSERT INTO login VALUES (1,'sol',sha1('sol123'),2,'activo'),(2,'lizz',sha1('liz123'),1,'activo'),(3,'Mica',sha1('mica123'),3,'activo'),(4,'Seba',sha1('seba123'),5,'activo'),(5,'nico',sha1('nico123'),5,'activo'),(9,'sebaContador',sha1('123'),4,'activo');
 INSERT INTO mediocontacto VALUES (1,'44514236','1532691249','lizzmoreno@gmail.com'),(2,'46649865','1546823599','alplanetaproject@gmail.com'),(3,'44329865','1523234598','solhoyos@hotmail.com'),(4,'44513295','1546853265','avila_nico@yahoo.com'),(5,'44661634','1598564571','juan.p@gmail.com'),(6,'44513269','1562773216','pepito.lopez@hotmail.com'),(7,'44519723','1565379812','legrand_mirta@yahoo.com.ar');
 INSERT INTO administrador (nombre, apellido, dni, idLogin, mail, idLocal) VALUES ('Lizz','Moreno','38924154',2,'moreno.lizk@gmail.com',1);
 INSERT INTO administrativo (nombre, apellido, dni, idLogin, mail, idLocal) VALUES ('Sol', 'Hoyos', '38928844', 1,'hoyos.mariasol@gmail.com',1);
