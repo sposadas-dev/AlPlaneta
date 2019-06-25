@@ -514,6 +514,7 @@ public class ControladorAdministrativo implements ActionListener {
 		controladorEvento.controlarNotificacionesInicioSesion();
 		controladorEvento.controlarNotificacionesContinuo();
 		controlarAutomatizacionDelEnvioDeVoucher();
+		controlDeVencimientoDeReserva();
 	}
 	
 	private void agregarPanelClientes(ActionEvent ac) {
@@ -1214,10 +1215,10 @@ public class ControladorAdministrativo implements ActionListener {
 					double porcentaje = 0.30;
 					for(PasajeDTO p : modeloPasaje.obtenerPasajes()) {
 						double porcentajePagado = porcentaje * p.getValorViaje().doubleValue();
-						if(p.getMontoAPagar().doubleValue() < porcentajePagado) {
+						
+						if((p.getValorViaje().doubleValue() - p.getMontoAPagar().doubleValue()) < porcentajePagado) {
 
 							vencimiento.setTime(p.getFechaVencimiento());
-							vencimiento.add(calendar.DATE, -20);
 							
 							String fechaVencimiento = format.format(vencimiento.getTime());
 							String fechaActual = format.format(calendar.getTime());
