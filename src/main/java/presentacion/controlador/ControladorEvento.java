@@ -283,10 +283,8 @@ public class ControladorEvento {
 					if(horaParticular.equals(horaActual) && minutosParticular.equals(minutosActual) && segundosActual.equals(segundosParticular)) {	
 						if(añoParticular.equals(añoActual) && mesParticular.equals(mesActual) && diaActual.equals(diaParticular)) {	
 							eventoAsociado = e;
-							notificacion.mostrarBtnVerNotificacion();
-				    		notificacion.setLblMensajeEventoNuevo("Tienes un evento nuevo!");
-							notificacion.mostrarVentana(true);							
-							esperarYcerrarVentana();
+							if(e.getAdministrativo().getIdAdministrativo()==administrativoLogueado.getIdAdministrativo())
+								mostrarNotificacionEventoNuevo();
 						}
 					}
 				}
@@ -298,8 +296,11 @@ public class ControladorEvento {
 	public void mostrarEvento(ActionEvent e) {
 		vistaNotificacion.getLblDatoDescripcion().setText(eventoAsociado.getDescripcion());
 		vistaNotificacion.getLblDatoEstado().setText(eventoAsociado.getEstadoEvento().getNombre());
+		vistaNotificacion.getLblDatoNombreCliente().setText(eventoAsociado.getCliente().getNombre());
 		vistaNotificacion.getLblDatoApellido().setText(eventoAsociado.getCliente().getApellido());
 		vistaNotificacion.getLblDatoCelular().setText(eventoAsociado.getCliente().getMedioContacto().getTelefonoCelular());
+		vistaNotificacion.getLblDatoTelefono().setText(eventoAsociado.getCliente().getMedioContacto().getTelefonoFijo());
+		vistaNotificacion.getLblDatoMail().setText(eventoAsociado.getCliente().getMedioContacto().getEmail());
 		vistaNotificacion.getLblDatoDni().setText(eventoAsociado.getCliente().getDni());
 		
 		vistaNotificacion.mostrarVentana(true);
@@ -311,15 +312,15 @@ public class ControladorEvento {
 	
 	public void controlarNotificacionesInicioSesion() {		
 		boolean vistos = false;
-		for(EventoDTO e : evento.obtenerEvento()) { //hay eventos sin ver			
-			if(e.getVisto()==0)
-				if(esEventoPasado(e)) //hay un evento que pasó, no visto
-					vistos = vistos || true;
+		for(EventoDTO e : evento.obtenerEvento()) { //hay eventos sin ver	
+			if(e.getAdministrativo().getIdAdministrativo()==administrativoLogueado.getIdAdministrativo()) {
+				if(e.getVisto()==0)	
+					if(esEventoPasado(e)) //hay un evento que pasó, no visto
+						vistos = vistos || true;
+			}
 		}
 		if(vistos) {
-			notificacion.setLblMensajeEventoNuevo("Tienes evento(s) sin ver!");
-			notificacion.mostrarVentana(true);		
-			esperarYcerrarVentana();
+			mostrarNotificacionEventoNoVisto();
 		}
 			
 	}
@@ -443,7 +444,8 @@ public class ControladorEvento {
 			clienteSeleccionado = clientes_en_tabla.get(filaSeleccionada);
 			this.ventanaEvento.mostrarVentana();
 			this.ventanaEvento.getTxtDni().setText(clienteSeleccionado.getDni());
-		}else{
+		}
+		else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -479,6 +481,19 @@ public class ControladorEvento {
 	
 	public void setEventoSeleccionado(EventoDTO evento) {
 		this.eventoSeleccionado=evento;
+	}
+	
+	private void mostrarNotificacionEventoNuevo() {
+		notificacion.mostrarBtnVerNotificacion();
+		notificacion.setLblMensajeEventoNuevo("Tienes un evento nuevo!");
+		notificacion.mostrarVentana(true);							
+		esperarYcerrarVentana();
+	}
+	
+	private void mostrarNotificacionEventoNoVisto() {
+		notificacion.setLblMensajeEventoNuevo("Tienes evento(s) sin ver!");
+		notificacion.mostrarVentana(true);		
+		esperarYcerrarVentana();
 	}
 	
 	/*public void editarEvento(int filaSeleccionada){

@@ -3,17 +3,19 @@ package presentacion.vista.administrativo;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
 
 public class VistaNotificacionDeEvento extends JFrame {
 
 	private JPanel contentPane;
-	private JLabel lblDatoDescripcion;
+	private JEditorPane lblDatoDescripcion;
 	private JLabel lblDatoEstado;
 	private JLabel lblDatoNombreCliente;
 	private JLabel lblDatoDni;
@@ -34,7 +36,7 @@ public class VistaNotificacionDeEvento extends JFrame {
 	}
 	public VistaNotificacionDeEvento() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 520, 275);
+		setBounds(100, 100, 520, 339);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		
@@ -57,80 +59,84 @@ public class VistaNotificacionDeEvento extends JFrame {
 		contentPane.add(panel);
 		
 		JLabel lblDescripcion = new JLabel("Descripcion:");
-		lblDescripcion.setBounds(23, 59, 123, 14);
+		lblDescripcion.setBounds(16, 66, 123, 20);
 		contentPane.add(lblDescripcion);
 		
 		JLabel lblDatosCliente = new JLabel("Datos cliente");
 		lblDatosCliente.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblDatosCliente.setBounds(23, 125, 123, 14);
+		lblDatosCliente.setBounds(16, 183, 123, 20);
 		contentPane.add(lblDatosCliente);
 		
 		JLabel lblEstado = new JLabel("Estado:");
-		lblEstado.setBounds(23, 86, 123, 14);
+		lblEstado.setBounds(16, 144, 123, 20);
 		contentPane.add(lblEstado);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(23, 153, 123, 14);
+		lblNombre.setBounds(16, 211, 123, 20);
 		contentPane.add(lblNombre);
 		
 		JLabel lblApellido = new JLabel("Apellido:");
-		lblApellido.setBounds(239, 153, 123, 14);
+		lblApellido.setBounds(232, 211, 123, 20);
 		contentPane.add(lblApellido);
 		
 		JLabel lblDni = new JLabel("DNI:");
-		lblDni.setBounds(23, 180, 123, 14);
+		lblDni.setBounds(16, 238, 123, 20);
 		contentPane.add(lblDni);
 		
 		JLabel lblTelefono = new JLabel("Telefono:");
-		lblTelefono.setBounds(23, 207, 123, 14);
+		lblTelefono.setBounds(16, 265, 123, 20);
 		contentPane.add(lblTelefono);
 		
 		JLabel lblCelular = new JLabel("Celular:");
-		lblCelular.setBounds(239, 206, 123, 14);
+		lblCelular.setBounds(232, 264, 123, 20);
 		contentPane.add(lblCelular);
 		
 		JLabel lblMail = new JLabel("Mail:");
-		lblMail.setBounds(239, 179, 123, 14);
+		lblMail.setBounds(232, 237, 123, 20);
 		contentPane.add(lblMail);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(23, 110, 479, 2);
+		separator.setBounds(15, 173, 479, 2);
 		contentPane.add(separator);
 		
-		lblDatoDescripcion = new JLabel("");
-		lblDatoDescripcion.setBounds(100, 58, 402, 14);
-		contentPane.add(lblDatoDescripcion);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(100, 67, 395, 69);
+		contentPane.add(scrollPane);
+		
+		lblDatoDescripcion = new JEditorPane();
+		lblDatoDescripcion.setEditable(false);
+		scrollPane.setViewportView(lblDatoDescripcion);
 		
 		lblDatoEstado = new JLabel("");
-		lblDatoEstado.setBounds(74, 86, 123, 14);
+		lblDatoEstado.setBounds(67, 144, 123, 20);
 		contentPane.add(lblDatoEstado);
 		
 		lblDatoNombreCliente = new JLabel("");
-		lblDatoNombreCliente.setBounds(74, 152, 164, 14);
+		lblDatoNombreCliente.setBounds(67, 210, 164, 20);
 		contentPane.add(lblDatoNombreCliente);
 		
 		lblDatoDni = new JLabel("");
-		lblDatoDni.setBounds(56, 180, 123, 14);
+		lblDatoDni.setBounds(45, 238, 123, 20);
 		contentPane.add(lblDatoDni);
 		
 		lblDatoTelefono = new JLabel("");
-		lblDatoTelefono.setBounds(84, 206, 123, 14);
+		lblDatoTelefono.setBounds(77, 264, 123, 20);
 		contentPane.add(lblDatoTelefono);
 		
 		lblDatoApellido = new JLabel("");
-		lblDatoApellido.setBounds(296, 152, 206, 14);
+		lblDatoApellido.setBounds(289, 210, 206, 20);
 		contentPane.add(lblDatoApellido);
 		
 		lblDatoMail = new JLabel("");
-		lblDatoMail.setBounds(274, 180, 228, 14);
+		lblDatoMail.setBounds(265, 238, 228, 20);
 		contentPane.add(lblDatoMail);
 		
 		lblDatoCelular = new JLabel("");
-		lblDatoCelular.setBounds(296, 206, 193, 14);
+		lblDatoCelular.setBounds(281, 264, 193, 20);
 		contentPane.add(lblDatoCelular);
 	}
 	
-	public JLabel getLblDatoDescripcion() {
+	public JEditorPane getLblDatoDescripcion() {
 		return lblDatoDescripcion;
 	}
 	public JLabel getLblDatoEstado() {

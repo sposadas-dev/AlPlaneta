@@ -334,9 +334,9 @@ public class Controlador implements ActionListener {
 				char letra = e.getKeyChar();
 				if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
 					if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText())) {
-						if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText())) {
+						if(esUnNumero(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText())) {
 							Integer desde = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText());
-							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText());
+							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText());
 							llenarViajesEnPanelViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));	
 						}
 					}
@@ -347,7 +347,7 @@ public class Controlador implements ActionListener {
 			}
 		});
 
-		this.ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().addKeyListener(new KeyAdapter() {
+		this.ventanaAdministrador.getPanelViajes().getTextPrecioHasta().addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char letra = e.getKeyChar();
 				if (!Character.isDigit(letra)) {
@@ -358,14 +358,14 @@ public class Controlador implements ActionListener {
 			public void keyReleased(KeyEvent e){
 				char letra = e.getKeyChar();
 				if (aceptada.indexOf(letra) != -1 || letra == KeyEvent.VK_BACK_SPACE) {
-					if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText())) {
+					if(esUnNumero(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText())) {
 						if(esUnNumero(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText())) {
 							Integer desde = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().getText());
-							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText());
+							Integer hasta = Integer.parseInt(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText());
 							llenarViajesEnPanelViajes(modeloViaje.obtenerBetweenPrecio(desde, hasta));	
 						}
 					}
-					if(ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().getText().length() == 0) {
+					if(ventanaAdministrador.getPanelViajes().getTextPrecioHasta().getText().length() == 0) {
 						llenarViajesEnPanelViajes(modeloViaje.obtenerViajes());
 					}
 				}
@@ -404,7 +404,7 @@ public class Controlador implements ActionListener {
 		cad.delete(0, cad.length());
         tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
 		this.ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().setText("");
-		this.ventanaAdministrador.getPanelViajes().getTxtPrecioHasta().setText("");
+		this.ventanaAdministrador.getPanelViajes().getTextPrecioHasta().setText("");
 		this.ventanaAdministrador.getPanelViajes().limpiarFiltrosFechas();
 		llenarViajesEnPanelViajes();
 	}

@@ -216,11 +216,11 @@ public class PanelViajes extends JPanel {
 		return txtPrecioDesde;
 	}
 
-	public void setTxtPrecioDesde(JTextField txtPrecioDesde) {
+	public void setTextPrecioDesde(JTextField txtPrecioDesde) {
 		this.txtPrecioDesde = txtPrecioDesde;
 	}
 
-	public JTextField getTxtPrecioHasta() {
+	public JTextField getTextPrecioHasta() {
 		return txtPrecioHasta;
 	}
 

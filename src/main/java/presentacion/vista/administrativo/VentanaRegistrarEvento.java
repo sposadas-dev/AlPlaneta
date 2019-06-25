@@ -226,5 +226,6 @@ public class VentanaRegistrarEvento extends JFrame {
 		this.comboEstado.setSelectedIndex(0);
 		this.dateFechaEvento.setDate(null);
 		this.txtDescripcion.setText(null);
+		this.txtDni.setText("");
 	}
 }
