@@ -80,7 +80,6 @@ public class ControladorPasaje implements ActionListener{
 	private VentanaConfirmacionPasaje ventanaConfirmacionPasaje;
 	private VentanaComprobante ventanaComprobante;
 	private VentanaTablaPagos ventanaTablaPagos;
-	private VentanaTarjeta ventanaTarjeta;
 	private VentanaCancelacionPasaje ventanaCancelacionPasaje;
 	private VentanaPagoPuntos ventanaPagoPuntos;
 	private ModeloCondicionDeCancelacion modeloCondicionDeCancelacion;
@@ -125,6 +124,8 @@ public class ControladorPasaje implements ActionListener{
 	private ModeloRegimenPunto modeloRegimenPunto;
 	private String aceptada="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	
+	private ControladorTarjeta controladorTarjeta;
+	
 	public ControladorPasaje(VentanaVisualizarClientes ventanaVisualizarClientes, Cliente cliente, AdministrativoDTO administrativoLogueado){
 		this.ventanaVisualizarClientes = ventanaVisualizarClientes;
 		this.ventanaTablaViajes = VentanaTablaViajes.getInstance();
@@ -135,7 +136,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaConfirmacionPasaje = VentanaConfirmacionPasaje.getInstance();
 		this.ventanaComprobante = VentanaComprobante.getInstance();
 		this.ventanaTablaPagos = VentanaTablaPagos.getInstance();
-		this.ventanaTarjeta = VentanaTarjeta.getInstance();
+//		this.ventanaTarjeta = VentanaTarjeta.getInstance();
 		this.ventanaCancelacionPasaje = VentanaCancelacionPasaje.getInstance();
 		this.vistaAdministrativo = VistaAdministrativo.getInstance();
 		this.ventanaPagoPuntos = VentanaPagoPuntos.getInstance();
@@ -315,10 +316,18 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPago.getComboBoxFormaPago().addActionListener(fp->verFormaDePago(fp));
 		this.ventanaPagoPuntos.getBtnPago().addActionListener(p->pagarConPuntos(p));
 		this.ventanaPagoPuntos.getBtnAtras().addActionListener(a->volverVentanaPago(a));
+		this.ventanaPago.getBtnIngresarTarjeta().addActionListener(it->ingresarTarjeta(it));
 		
 		this.noEditarPago = true;
 		this.modeloPunto = new ModeloPunto(new DAOSQLFactory());
+		
+		this.controladorTarjeta = new ControladorTarjeta();
 	
+	}
+	
+	private void ingresarTarjeta(ActionEvent it) {
+		
+		controladorTarjeta.mostrarVentanaTarjeta();
 	}
 	
 
@@ -341,6 +350,10 @@ public class ControladorPasaje implements ActionListener{
 			this.ventanaPagoPuntos.getLblPuntosDelCliente().setText(String.valueOf(clienteSeleccionado.getTotalPuntos()));
 			this.ventanaPagoPuntos.getLblCostoDelPasajeEnPuntos().setText(String.valueOf(calcularValorDeViajeEnPuntos(viajeSeleccionado.getPrecio())));
 		}
+		else if(formaDePago.equals("Tarjeta")) {
+		this.ventanaPago.getBtnIngresarTarjeta().setVisible(true);
+	}
+		
 	}
 
 	private Integer calcularValorDeViajeEnPuntos(BigDecimal precio) {
@@ -726,12 +739,21 @@ public class ControladorPasaje implements ActionListener{
 			FormaPagoDTO formaPago = f.getFormaPagoByName(ventanaPago.getComboBoxFormaPago().getSelectedItem().toString());
 			Calendar currenttime = Calendar.getInstance();
 			
+			
 			pagoDTO = new PagoDTO();	
 			pagoDTO.setIdFormaPago(formaPago);
 			pagoDTO.setAdministrativo(administrativoLogueado);
 			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
 			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
-	
+//			pagoDTO.setIdtarjeta(controladorTarjeta.datosTarjeta().getIdTarjeta()); //AGREGA IDTARJETAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+			
+//			if(formaPago.getIdFormaPago()==2){
+//				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
+//			}
+			if(pagoDTO.getIdFormaPago().getIdFormaPago() ==2 )
+				controladorTarjeta.datosTarjeta().getIdTarjeta();
+				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
+				
 			if (noEditarPago){
 				this.ventanaPago.setVisible(false);
 				mostrarVentanaConfirmacionPasaje();
@@ -769,12 +791,14 @@ public class ControladorPasaje implements ActionListener{
 		FormaPago f = new FormaPago(new DAOSQLFactory());
 		FormaPagoDTO formaPago = f.getFormaPagoByName("Puntos");
 		Calendar currenttime = Calendar.getInstance();
+		
 			
 		pagoDTO = new PagoDTO();	
 		pagoDTO.setIdFormaPago(formaPago);
 		pagoDTO.setAdministrativo(administrativoLogueado);
 		pagoDTO.setMonto(viajeSeleccionado.getPrecio());	
 		pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
+		
 			
 		if (noEditarPago){
 			this.ventanaPagoPuntos.setVisible(false);

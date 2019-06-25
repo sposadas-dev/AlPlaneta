@@ -13,7 +13,7 @@ import persistencia.dao.interfaz.PagoDAO;
 
 public class PagoDAOSQL implements PagoDAO {
 
-	private static final String insert = "INSERT INTO pago (idPago, idAdministrativo, fechaPago, monto, idformapago) VALUES (?,?,?,?,?)";
+	private static final String insert = "INSERT INTO pago (idPago, idAdministrativo, fechaPago, monto, idformapago, idtarjeta) VALUES (?,?,?,?,?,?)";
 	private static final String readall = "SELECT * FROM pago";
 	private static final String delete = "DELETE FROM pago WHERE idPago=?";
 	private static final String update = "UPDATE pago SET fechaPago=?, monto=? WHERE idPago=?;";
@@ -33,12 +33,16 @@ public class PagoDAOSQL implements PagoDAO {
 			statement.setDate(3, pagoInsert.getFechaPago());
 			statement.setBigDecimal(4, pagoInsert.getMonto());
 			statement.setInt(5,pagoInsert.getIdFormaPago().getIdFormaPago());
-		
+			if(pagoInsert.getIdFormaPago().getIdFormaPago() == 2)
+			{
+				statement.setInt(6, pagoInsert.getIdtarjeta().getIdTarjeta());
+				}else {statement.setInt(6, 0);}
+				
 			if (statement.executeUpdate() > 0) 
 				return true;
 			
-		} catch(SQLException e) {
-			e.printStackTrace();
+			} catch(SQLException e) {
+				e.printStackTrace();
 		}
 		return false;
 	}
@@ -51,6 +55,7 @@ public class PagoDAOSQL implements PagoDAO {
 		ArrayList<PagoDTO> pagos = new ArrayList<PagoDTO>();
 		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
 		FormaPagoDAOSQL formapagoDAOSQL = new FormaPagoDAOSQL();
+		TarjetaDAOSQL tarjetaDAOSQL = new TarjetaDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
@@ -60,7 +65,8 @@ public class PagoDAOSQL implements PagoDAO {
 									  administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
 								      resultSet.getDate("fechaPago"),
 									  resultSet.getBigDecimal("monto"),
-									  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago"))
+									  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago")),									
+									  tarjetaDAOSQL.getTarjetaById(resultSet.getInt("idtarjeta"))
 									  ));
 			}
 		} catch (SQLException e) {
@@ -98,6 +104,7 @@ public class PagoDAOSQL implements PagoDAO {
 		PagoDTO pago;
 		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
 		FormaPagoDAOSQL formapagoDAOSQL = new FormaPagoDAOSQL();
+		TarjetaDAOSQL tarjetaDAOSQL = new TarjetaDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(browse);
 			
@@ -108,7 +115,8 @@ public class PagoDAOSQL implements PagoDAO {
 						  administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
 					      resultSet.getDate("fechaPago"),
 						  resultSet.getBigDecimal("monto"),
-						  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago"))
+						  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago")),
+						  tarjetaDAOSQL.getTarjetaById(resultSet.getInt("idtarjeta"))
 						);
 				return pago;
 			}
@@ -127,6 +135,7 @@ public class PagoDAOSQL implements PagoDAO {
 		PagoDTO pago;
 		AdministrativoDAOSQL administrativoDAOSQL = new AdministrativoDAOSQL();
 		FormaPagoDAOSQL formapagoDAOSQL = new FormaPagoDAOSQL();
+		TarjetaDAOSQL tarjetaDAOSQL = new TarjetaDAOSQL();
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(ultimoRegistro);
 			resultSet = statement.executeQuery();
@@ -136,7 +145,8 @@ public class PagoDAOSQL implements PagoDAO {
 						  administrativoDAOSQL.getById(resultSet.getInt("idAdministrativo")),
 					      resultSet.getDate("fechaPago"),
 						  resultSet.getBigDecimal("monto"),
-						  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago"))
+						  formapagoDAOSQL.getFormaPagoById(resultSet.getInt("idformapago")),
+						  tarjetaDAOSQL.getTarjetaById(resultSet.getInt("idtarjeta"))
 						  );
 				return pago;
 			}

@@ -57,4 +57,6 @@ public interface DAOAbstractFactory {
 	public LocalDAO createLocalDAO();
 
 	public CondicionDeCancelacionDAO createCondicionDeCancelacionDAO();
+	
+	public TarjetaDAO createTarjetaDAO();
 }
