@@ -16,7 +16,7 @@ public class PanelServicios extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel modelServicios;
-	private String[] nombreColumnasServicios = {"Nombre del servicio","Mes","Local"};
+	private String[] nombreColumnasServicios = {"Nombre del servicio","Monto","Mes","Local"};
 	private JTable tablaServicios;
 
 	public PanelServicios() {

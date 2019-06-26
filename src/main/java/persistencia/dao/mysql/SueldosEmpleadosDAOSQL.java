@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.RolDTO;
+import dto.ServicioDTO;
 import dto.SueldoDTO;
 import dto.Sueldos_EmpleadosDTO;
 import dto.ViajeDTO;
@@ -18,7 +19,7 @@ public class SueldosEmpleadosDAOSQL implements Sueldos_EmpleadosDAO {
 	private static final String insert = "INSERT INTO sueldos_empleados (idSueldoEmpleado, idEmpleado, idSueldo) VALUES(?,?,?)";
 	private static final String readall = "SELECT * FROM sueldos_empleados WHERE idEmpleado=?";
 	private static final String browseSueldoById = "SELECT * FROM sueldo, sueldos_empleados WHERE sueldos_empleados.idEmpleado =? AND sueldo.idRol=? AND sueldo.idSueldo = sueldos_empleados.idSueldo";
-
+	private static final String browse = "SELECT * FROM sueldos_empleados WHERE idSueldoEmpleado=?";
 	@Override
 	public boolean insert(Sueldos_EmpleadosDTO sueldo) {
 		PreparedStatement statement;
@@ -38,9 +39,9 @@ public class SueldosEmpleadosDAOSQL implements Sueldos_EmpleadosDAO {
 	}
 
 	@Override
-	public SueldoDTO getSueldoByEmpleado(int idEmpleado, int idRol) {
+	public List<SueldoDTO> getSueldoByEmpleado(int idEmpleado, int idRol) {
 		PreparedStatement statement;
-		SueldoDTO sueldo;
+		ArrayList<SueldoDTO> sueldos = new ArrayList<SueldoDTO>();
 		ResultSet resultSet; //Guarda el resultado de la query
 		RolDAOSQL rolDAOSQL = new RolDAOSQL();
 		Conexion conexion = Conexion.getConexion();
@@ -50,17 +51,44 @@ public class SueldosEmpleadosDAOSQL implements Sueldos_EmpleadosDAO {
 			statement.setInt(2,idRol);
 			resultSet = statement.executeQuery();
 			
-			if (resultSet.next()){
-				sueldo = new SueldoDTO(resultSet.getInt("idSueldo"),
+			while(resultSet.next()){
+				sueldos.add(new SueldoDTO(resultSet.getInt("idSueldo"),
 						  (resultSet.getBigDecimal("montoSueldo")),
 					      resultSet.getDate("mes"),
 					      rolDAOSQL.getById(resultSet.getInt("idRol"))
-						  );
-				return sueldo;
+						  ));
 			}	
 		}catch (SQLException e){
 			e.printStackTrace();
 		}
-		return null;
+		return sueldos;
 	}
+	
+	@Override
+	public Sueldos_EmpleadosDTO getSueldoEmpleadoById(int idSueldoEmpleado ){
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		LocalDAOSQL localDAOSQL = new LocalDAOSQL();
+		Sueldos_EmpleadosDTO sueldos_empleados;
+		
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browse);
+			statement.setInt(1, idSueldoEmpleado);
+			resultSet = statement.executeQuery();
+				
+				if(resultSet.next()){
+					sueldos_empleados = new Sueldos_EmpleadosDTO(
+							resultSet.getInt("idSueldoEmpleado"),
+							resultSet.getInt("idEmpleado"),
+							resultSet.getInt("idSueldo"));
+										
+				return sueldos_empleados;
+				}
+				
+			}catch (SQLException e){
+				 e.printStackTrace();
+			}
+			return null;
+		}
 }

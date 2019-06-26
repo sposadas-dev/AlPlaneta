@@ -53,6 +53,7 @@ public class VistaContador extends JFrame {
 	private JMenuItem itemAgregarServicio;
 	private JMenuItem itemEditarServicio;
 	private JMenuItem itemEliminarServicio;
+	private JMenuItem itemEgresosReportes;
 	
 	private JMenuItem itemIngresosReportes;
 	private static VistaContador vistaContador;
@@ -140,7 +141,7 @@ public class VistaContador extends JFrame {
 		itemIngresosReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuReportes.add(itemIngresosReportes);
 		
-		JMenuItem itemEgresosReportes = new JMenuItem("Egresos");
+		itemEgresosReportes = new JMenuItem("Egresos");
 		itemEgresosReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuReportes.add(itemEgresosReportes);
 		
@@ -230,5 +231,8 @@ public class VistaContador extends JFrame {
 	public PanelServicios getPanelServicios() {
 		return panelServicios;
 	}
-	
+
+	public JMenuItem getItemEgresosReportes() {
+		return itemEgresosReportes;
+	}
 }

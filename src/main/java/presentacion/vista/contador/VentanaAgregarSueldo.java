@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Properties;
 
 import com.toedter.calendar.JMonthChooser;
+import com.toedter.calendar.JYearChooser;
 
 public class VentanaAgregarSueldo extends JFrame {
 
@@ -29,8 +30,9 @@ public class VentanaAgregarSueldo extends JFrame {
 	private static VentanaAgregarSueldo ventanaVisualizarEmpleados;
 	private JComboBox<RolDTO> comboBoxRoles;
 	private String[] nombreColumnas = {"Nombre", "Apellido","DNI", "Rol","Local"};
-	private JMonthChooser mesChooser;
 	private JTextField txtSueldo;
+	private JMonthChooser mesChooser;
+	private JYearChooser anioChooser;
 	private JButton btnConfirmar;
 
 	public static VentanaAgregarSueldo getInstance(){
@@ -92,13 +94,19 @@ public class VentanaAgregarSueldo extends JFrame {
 		txtSueldo.setBounds(212, 205, 194, 20);
 		contentPane.add(txtSueldo);
 		
-		mesChooser = new JMonthChooser();
-		mesChooser.setBounds(212, 141, 111, 27);
-		contentPane.add(mesChooser);
-		
 		btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(188, 282, 178, 48);
 		contentPane.add(btnConfirmar);
+		
+		mesChooser = new JMonthChooser();
+		mesChooser.setBounds(212, 141, 113, 27);
+		contentPane.add(mesChooser);
+		
+		anioChooser = new JYearChooser();
+		anioChooser.setMaximum(2015);
+		anioChooser.setEndYear(2019);
+		anioChooser.setBounds(328, 141, 71, 27);
+		contentPane.add(anioChooser);
 	}
 
 	public JComboBox<RolDTO> getComboBoxRoles() {
@@ -120,25 +128,13 @@ public class VentanaAgregarSueldo extends JFrame {
 	public JButton getBtnConfirmar() {
 		return btnConfirmar;
 	}
+
+	public JYearChooser getAnioChooser() {
+		return anioChooser;
+	}
 	
-	private class DateLabelFormatter extends AbstractFormatter {
-
-		private static final long serialVersionUID = 7596593350901299254L;
-		private String datePattern = "dd/MM/yyyy";
-		private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
-
-		@Override
-		public Object stringToValue(String text) throws ParseException {
-			return dateFormatter.parseObject(text);
-		}
-
-		@Override
-		public String valueToString(Object value) {
-			if (value != null) {
-				Calendar cal = (Calendar) value;
-				return dateFormatter.format(cal.getTime());
-			}
-			return "";
-		}
+	public void limpiarCampos(){
+		this.txtSueldo.setText("");
+		this.comboBoxRoles.setSelectedIndex(0);
 	}
 }

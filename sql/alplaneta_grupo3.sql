@@ -278,6 +278,23 @@ CREATE TABLE `sueldos_empleados` (
     PRIMARY KEY(`idSueldoEmpleado`)
 );
 
+CREATE TABLE `servicio` (
+	`idServicio` INT(11) NOT NULL AUTO_INCREMENT,
+	`nombreServicio` VARCHAR(45) NOT NULL,
+	`monto` INT(11) NOT NULL,
+	`mes` DATE NOT NULL,
+	`idLocal` INT(11)NOT NULL,
+	PRIMARY KEY (`idServicio`)
+);
+
+CREATE TABLE `egreso` (
+	`idEgreso` INT(11) NOT NULL AUTO_INCREMENT,
+	`idSueldoEmpleado` INT(11),
+	`idServicio` INT(11),
+	 idPasaje` INT(11),
+	PRIMARY KEY (`idEgreso`)
+);
+
 ALTER TABLE `login` ADD FOREIGN KEY (`idRol`) references rol(`idRol`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLogin`)  references login(`idLogin`);
 ALTER TABLE `administrador` ADD FOREIGN KEY (`idLocal`)  references local(`idLocal`);
@@ -329,6 +346,12 @@ ALTER TABLE `sueldos_empleados` ADD FOREIGN KEY (`idSueldo`) references sueldo(`
 ALTER TABLE `sueldos_empleados` ADD FOREIGN KEY (`idEmpleado`) references administrador(`idAdministrador`);
 ALTER TABLE `sueldos_empleados` ADD FOREIGN KEY (`idEmpleado`) references administrativo(`idAdministrativo`);
 ALTER TABLE `sueldos_empleados` ADD FOREIGN KEY (`idEmpleado`) references coordinador(`idCoordinador`);
+
+ALTER TABLE `servicio` ADD FOREIGN KEY (`idLocal`) references local(`idLocal`);
+
+ALTER TABLE `egreso` ADD FOREIGN KEY (`idSueldoEmpleado`) references sueldos_empleados(`idSueldoEmpleado`);
+ALTER TABLE `egreso` ADD FOREIGN KEY (`idPasaje`) references pasaje(`idPasaje`);
+ALTER TABLE `egreso` ADD FOREIGN KEY (`idServicio`) references servicio(`idServicio`);
 
 INSERT INTO local VALUES (1,'AlPlaneta First Local','Beltran 887'),(2,'AlPlaneta Ultimate Local','Calle Falsa 123'), (3,'AlPlaneta Last Local', 'Last 001');
 INSERT INTO rol VALUES (1,'administrador'),(2,'administrativo'),(3,'coordinador'),(4,'contador'),(5,'cliente');

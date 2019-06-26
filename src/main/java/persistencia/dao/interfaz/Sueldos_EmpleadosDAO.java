@@ -9,5 +9,7 @@ public interface Sueldos_EmpleadosDAO {
 
 	public boolean insert(Sueldos_EmpleadosDTO sueldo);
 
-	public SueldoDTO getSueldoByEmpleado(int idEmpleado, int idRol);
+	public List<SueldoDTO> getSueldoByEmpleado(int idEmpleado, int idRol);
+
+	public Sueldos_EmpleadosDTO getSueldoEmpleadoById(int idSueldoEmpleado);
 }

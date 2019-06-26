@@ -59,4 +59,8 @@ public interface DAOAbstractFactory {
 	public SueldoDAO createSueldoDAO();
 
 	public Sueldos_EmpleadosDAO createSueldoEmpleadoDAO();
+
+	public ServicioDAO createServicioDAO();
+
+	public EgresoDAO createEgresoDAO();
 }

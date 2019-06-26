@@ -3,21 +3,28 @@ package presentacion.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+
+import modelo.Egreso;
 import modelo.Local;
 import modelo.Login;
 import modelo.Pasaje;
 import modelo.Rol;
+import modelo.Sueldos_Empleados;
 import dto.ContadorDTO;
+import dto.EgresosDTO;
 import dto.LocalDTO;
 import dto.LoginDTO;
 import dto.PasajeDTO;
 import dto.RolDTO;
 import persistencia.dao.mysql.DAOSQLFactory;
 import presentacion.reportes.Reporte;
+import presentacion.vista.contador.VentanaAgregarServicio;
 import presentacion.vista.contador.VentanaAgregarSueldo;
 import presentacion.vista.contador.VentanaCambiarContrasena;
+import presentacion.vista.contador.VentanaEditarServicio;
 import presentacion.vista.contador.VentanaGenerarReporte;
 import presentacion.vista.contador.VistaContador;
 
@@ -25,19 +32,25 @@ public class ControladorContador implements ActionListener {
 
 	private VistaContador vistaContador;
 	private VentanaAgregarSueldo ventanaAgregarSueldo;
+	private VentanaAgregarServicio ventanaAgregarServicio;
+	private VentanaEditarServicio ventanaEditarServicio;
 	private VentanaGenerarReporte ventanaGenerarReporte;
 	private VentanaCambiarContrasena ventanaCambiarContrasenia;
 	private ContadorDTO contadorLogueado;
 	private Login login;
 	private Pasaje pasaje;
 	private Local local;
+	private Egreso egreso;
 	private ControladorSueldo controladorSueldo;
+	private ControladorServicio controladorServicio;
 
 	public ControladorContador(VistaContador vistaContador,ContadorDTO contadorLogueado) {
 	
 		this.vistaContador = vistaContador;		
 		this.contadorLogueado = contadorLogueado;
 		this.ventanaAgregarSueldo = VentanaAgregarSueldo.getInstance();
+		this.ventanaAgregarServicio = VentanaAgregarServicio.getInstance();
+		this.ventanaEditarServicio = VentanaEditarServicio.getInstance();
 		this.ventanaGenerarReporte = VentanaGenerarReporte.getInstance();
 		this.ventanaCambiarContrasenia = VentanaCambiarContrasena.getInstance();
 		this.ventanaAgregarSueldo = VentanaAgregarSueldo.getInstance();
@@ -48,8 +61,10 @@ public class ControladorContador implements ActionListener {
 		
 		this.vistaContador.getItemVisualizarServicios().addActionListener(ps->mostrarPanelServicios(ps));
 		this.vistaContador.getItemAgregarServicio().addActionListener(as->mostrarVentanaAgregarServicio(as));
+		this.vistaContador.getItemEditarServicio().addActionListener(as->mostrarVentanaEditarServicio(as));
 		this.vistaContador.getItemIngresosReportes().addActionListener(ir->mostrarVentanaGenerarReportes(ir));
 	
+		this.vistaContador.getItemEgresosReportes().addActionListener(er->egresosReportes(er));
 		this.ventanaGenerarReporte.getComboBoxFiltro().addActionListener(gr->activarFiltros(gr));	
 		this.ventanaGenerarReporte.getComboBoxOpciones().addActionListener(co->activarFiltrosOpciones(co));
 		this.ventanaGenerarReporte.getComboBoxLocales().addActionListener(l->activarComboBoxLocales(l));
@@ -57,11 +72,19 @@ public class ControladorContador implements ActionListener {
 				
 		this.ventanaCambiarContrasenia.getBtnAceptar().addActionListener(c->cambiarContrasenia(c));
 		this.ventanaCambiarContrasenia.getBtnCancelar().addActionListener(c->salirVentanaCambiarContrasenia(c));
+		
 		this.login = new Login(new DAOSQLFactory());
 		this.pasaje = new Pasaje(new DAOSQLFactory());
 		this.local = new Local(new DAOSQLFactory());
+		this.egreso = new Egreso(new DAOSQLFactory());
 		this.contadorLogueado = contadorLogueado;
 		this.controladorSueldo = new ControladorSueldo(ventanaAgregarSueldo);
+		this.controladorServicio = new ControladorServicio(ventanaAgregarServicio,ventanaEditarServicio);
+	}
+
+	private void egresosReportes(ActionEvent er) {
+		List<EgresosDTO> egresos = egreso.obtenerEgresos();
+		
 	}
 
 	public void inicializar(){
@@ -113,26 +136,43 @@ public class ControladorContador implements ActionListener {
 	}	
 		
 	private void mostrarPanelServicios(ActionEvent ps) {
+		controladorServicio.llenarTablaServicios();
 		this.vistaContador.getPanelServicios().setVisible(true);
 		this.vistaContador.getPanelSueldos().setVisible(false);
 	}
 	
 	private void mostrarVentanaAgregarServicio(ActionEvent as) {
-	
+		cargarComboBoxLocales();
+		this.vistaContador.getPanelServicios().setVisible(true);
+		this.vistaContador.getPanelSueldos().setVisible(false);
+		this.ventanaAgregarServicio.mostrarVentana(true);
 	}
 
+	private void mostrarVentanaEditarServicio(ActionEvent as) {
+		this.vistaContador.getPanelServicios().setVisible(true);
+		int filaSeleccionada = this.vistaContador.getPanelServicios().getTablaServicios().getSelectedRow();
+		if (filaSeleccionada != -1){
+			cargarComboBoxLocales();
+			controladorServicio.editarServicio(filaSeleccionada);
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+		controladorServicio.llenarTablaServicios();
+		
+	}
 	private void mostrarVentanaAgregarSueldo(ActionEvent ve) {
-		this.ventanaAgregarSueldo.mostrarVentana(true);
 		cargarComboBoxRoles();
+		this.vistaContador.getPanelSueldos().setVisible(true);
+		this.ventanaAgregarSueldo.mostrarVentana(true);
 	}	
 		
 	
 	private void cargarComboBoxRoles(){
 		Rol rol = new Rol(new DAOSQLFactory());
 		List<RolDTO> rolesDTO = rol.obtenerRoles();
-		String[] roles = new String[rolesDTO.size()]; //TODO: Puse -1 porque no se deberia cargar el rol "cliente" //VER
+		String[] roles = new String[rolesDTO.size()-1]; //TODO: Puse -1 porque no se deberia cargar el rol "cliente" //VER
 		roles[0]="Seleccione un rol";
-		for(int i=0; i<rolesDTO.size()-1;i++){
+		for(int i=0; i<rolesDTO.size()-2;i++){
 			String rango = rolesDTO.get(i).getNombre();
 			roles [i+1] = rango;
 		}
@@ -293,6 +333,8 @@ public class ControladorContador implements ActionListener {
 
 	private void cargarComboBoxLocales() {
 		ventanaGenerarReporte.getComboBoxLocales().removeAllItems();
+		ventanaAgregarServicio.getComboBoxLocales().removeAllItems();
+		ventanaEditarServicio.getComboBoxLocales().removeAllItems();
 		Local local = new Local(new DAOSQLFactory());
 		List<LocalDTO> localesDTO = local.readAll();
 		String[] locales = new String[localesDTO.size()+1];
@@ -302,6 +344,8 @@ public class ControladorContador implements ActionListener {
 			locales[i+1] = rango;
 		}
 		this.ventanaGenerarReporte.getComboBoxLocales().setModel(new DefaultComboBoxModel(locales));
+		this.ventanaAgregarServicio.getComboBoxLocales().setModel(new DefaultComboBoxModel(locales));
+		this.ventanaEditarServicio.getComboBoxLocales().setModel(new DefaultComboBoxModel(locales));
 	}
 	
 	

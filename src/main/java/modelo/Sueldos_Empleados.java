@@ -19,7 +19,7 @@ public class Sueldos_Empleados {
 		this.sueldos_empleados.insert(nuevoSueldoEmpleado);
 	}
 	
-	public SueldoDTO obtenerSueldoEmpleado(int idEmpleado,int idRol){
+	public List<SueldoDTO> obtenerSueldoEmpleado(int idEmpleado,int idRol){
 		return this.sueldos_empleados.getSueldoByEmpleado(idEmpleado,idRol);
 	}
 }

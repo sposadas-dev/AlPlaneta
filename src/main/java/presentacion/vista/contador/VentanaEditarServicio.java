@@ -30,28 +30,28 @@ import com.toedter.calendar.JYearChooser;
 import dto.LocalDTO;
 import dto.RolDTO;
 
-public class VentanaAgregarServicio extends JFrame {
+public class VentanaEditarServicio extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtServicio;
 	private JMonthChooser mesChooser;
 	private JYearChooser anioChooser;
-	private static VentanaAgregarServicio ventanaAgregarServicio;
+	private static VentanaEditarServicio ventanaEditarServicio;
 	private JTextField txtMonto;
 	private JButton btnConfirmar;
 	private JComboBox<LocalDTO> comboBoxLocales;
 	
 	
-	public static VentanaAgregarServicio getInstance(){
-		if(ventanaAgregarServicio == null){	
-			ventanaAgregarServicio = new VentanaAgregarServicio();
-			return ventanaAgregarServicio;
+	public static VentanaEditarServicio getInstance(){
+		if(ventanaEditarServicio == null){	
+			ventanaEditarServicio = new VentanaEditarServicio();
+			return ventanaEditarServicio;
 		}else{
-			return ventanaAgregarServicio;
+			return ventanaEditarServicio;
 		}
 	}
 	
-	public VentanaAgregarServicio() {
+	public VentanaEditarServicio() {
 		setTitle("Comprobantes");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
@@ -69,7 +69,7 @@ public class VentanaAgregarServicio extends JFrame {
 		panel.setBounds(0, 0, 516, 53);
 		contentPane.add(panel);
 		
-		JLabel lblSueldos = new JLabel("Agregar servicio");
+		JLabel lblSueldos = new JLabel("Editar servicio");
 		lblSueldos.setForeground(Color.WHITE);
 		lblSueldos.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblSueldos.setBounds(154, 0, 210, 53);
