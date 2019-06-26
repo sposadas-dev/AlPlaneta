@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -389,6 +390,7 @@ public class ControladorPasaje implements ActionListener{
 
 	private void pagarPasaje(ActionEvent p) {
 		this.ventanaPago.mostrarVentana(true);
+		this.noEditarPago = false;
 	}
 
 	private void aplicarFiltro(ActionEvent af) {
@@ -745,7 +747,15 @@ public class ControladorPasaje implements ActionListener{
 	}
 	
 	private void darAltaDelPago(ActionEvent cp)  {
-// Validar que se haya seleccionado una forma de pago 
+// Validar que se haya seleccionado una forma de pago
+		BigDecimal montoPasaje = calcularMontoDePasaje();
+		BigDecimal montoUsuario = new BigDecimal(this.ventanaPago.getTextImporteTotal().getText());
+		if(montoUsuario.compareTo(montoPasaje)>0){
+			JOptionPane.showMessageDialog(null, "Error: Esta pagando mas de lo debido", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			return;
+			}
+				
+		
 		if(this.ventanaPago.getComboBoxFormaPago().getSelectedIndex()!=0) {
 			FormaPago f = new FormaPago(new DAOSQLFactory());
 			this.ventanaPago.getRadioReservaSinPagar().setVisible(true);
@@ -753,22 +763,16 @@ public class ControladorPasaje implements ActionListener{
 			FormaPagoDTO formaPago = f.getFormaPagoByName(ventanaPago.getComboBoxFormaPago().getSelectedItem().toString());
 			Calendar currenttime = Calendar.getInstance();
 			
-			
 			pagoDTO = new PagoDTO();	
 			pagoDTO.setIdFormaPago(formaPago);
 			pagoDTO.setAdministrativo(administrativoLogueado);
 			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
 			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
 			
-			
 			if(formaPago.getIdFormaPago()==2){
-//				pagoDTO.setIdtarjeta(controladorTarjeta.datosTarjeta()); //AGREGA IDTARJETAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
 				System.out.println("El ID de la tarjeta es:" + pagoDTO.getIdtarjeta().getIdTarjeta());
 			}
-//			if(pagoDTO.getIdFormaPago().getIdFormaPago() ==2 )
-//				controladorTarjeta.datosTarjeta().getIdTarjeta();
-//				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
 				
 			if (noEditarPago){
 				this.ventanaPago.setVisible(false);
@@ -1012,7 +1016,6 @@ public class ControladorPasaje implements ActionListener{
     }
 	
 	private BigDecimal calcularMontoDePasaje() {
-
 		//BigDecimal valorFinal;
 		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
 		totalaPagar = Valor1;
@@ -1111,6 +1114,7 @@ public class ControladorPasaje implements ActionListener{
 	}
 	
 	public void editarPasaje(int filaSeleccionada){
+		
 		pasajeAEditar = this.pasajes_en_tabla.get(filaSeleccionada);
 		this.clienteSeleccionado = pasajeAEditar.getCliente();
 		
