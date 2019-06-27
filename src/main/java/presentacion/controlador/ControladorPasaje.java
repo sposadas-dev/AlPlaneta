@@ -377,7 +377,10 @@ public class ControladorPasaje implements ActionListener{
 		}
 		else if(formaDePago.equals("Tarjeta")) {
 		this.ventanaPago.getBtnIngresarTarjeta().setVisible(true);
-	}
+		}
+		else{
+			this.ventanaPago.getBtnIngresarTarjeta().setVisible(false);
+		}
 		
 	}
 
@@ -727,6 +730,7 @@ public class ControladorPasaje implements ActionListener{
 		if(capacidad >= pasajeros_en_reserva.size()) {
 			this.ventanaCargaPasajero.setVisible(false);
 			cargarComboBoxFormaDePago();
+			
 			this.ventanaPago.getLblMontoaPagar().setText("$ "+calcularMontoDePasaje().toString());
 			this.ventanaPago.setVisible(true);
 		}
@@ -1289,10 +1293,18 @@ public class ControladorPasaje implements ActionListener{
 	 if (confirm == 0){
 		 System.out.println("Cancelamos el viaje");
 		 pasajeACancelar = pasajes_en_tabla.get(filaSeleccionada);
+		 
+		 actualizarCapacidad(pasajes_en_tabla.get(filaSeleccionada));
 //		 int diff = calcularDiferenciasDeDiasAlCancelarPasaje(pasajeACancelar);
 //		 calcularRetencionDeDineroPorCancelacionDelPasaje(pasajeACancelar,diff);
 		 this.ventanaCancelacionPasaje.mostrarVentana(true);
 	 }
+	}
+	
+	private void actualizarCapacidad(PasajeDTO pasaje){
+		int cantidadCapacidadRenovar = pasaje.getPasajeros().size();
+		pasaje.getViaje().setCapacidad(pasaje.getViaje().getCapacidad()+cantidadCapacidadRenovar);
+		modeloViaje.editarViaje(pasaje.getViaje());
 	}
 	
 	private int calcularDiferenciasDeDiasAlCancelarPasaje(PasajeDTO pasajeACancelar){
