@@ -762,7 +762,7 @@ public class ControladorPasaje implements ActionListener{
 			
 			
 			if(formaPago.getIdFormaPago()==2){
-//				pagoDTO.setIdtarjeta(controladorTarjeta.datosTarjeta()); //AGREGA IDTARJETAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				pagoDTO.setIdtarjeta(controladorTarjeta.datosTarjeta()); //AGREGA IDTARJETAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
 				System.out.println("El ID de la tarjeta es:" + pagoDTO.getIdtarjeta().getIdTarjeta());
 			}
