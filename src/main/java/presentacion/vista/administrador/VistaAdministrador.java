@@ -72,6 +72,7 @@ public class VistaAdministrador extends JFrame {
 	private JMenuItem itemAgregarCondicion;
 	private JMenuItem itemEditarCondicion;
 	private JMenuItem itemEliminarCondicion;
+	private JMenuItem itemVisualizarCuentas;
 	
 	public static VistaAdministrador getInstance(){
 		if(INSTANCE == null) {
@@ -121,7 +122,11 @@ public class VistaAdministrador extends JFrame {
 		menuCuentas.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		menuBar.add(menuCuentas);
 		
-		itemAgregarCuenta = new JMenuItem("Agregar cuenta");
+		itemVisualizarCuentas = new JMenuItem("Visualizar Cuentas");
+		itemVisualizarCuentas.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuCuentas.add(itemVisualizarCuentas);
+		
+		itemAgregarCuenta = new JMenuItem("Agregar Cuenta");
 		itemAgregarCuenta.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuCuentas.add(itemAgregarCuenta);
 
@@ -358,6 +363,15 @@ public class VistaAdministrador extends JFrame {
 		this.itemAgregarLocales = itemAgregarLocal;
 	}
 
+
+	public JMenuItem getItemVisualizarCuentas() {
+		return itemVisualizarCuentas;
+	}
+
+	public void setItemVisualizarCuentas(JMenuItem itemVisualizarCuentas) {
+		this.itemVisualizarCuentas = itemVisualizarCuentas;
+	}
+	
 	public JMenuItem getItemEditarLocal() {
 		return itemEditarLocal;
 	}

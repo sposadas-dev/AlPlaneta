@@ -157,6 +157,8 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getItemCambiarContrasenia().addActionListener(dp->mostrarVentanaCambiarContrasenia(dp));
 		this.ventanaCambiarContrasenia.getBtnAceptar().addActionListener(c->cambiarContrasenia(c));
 		this.ventanaCambiarContrasenia.getBtnCancelar().addActionListener(c->salirVentanaCambiarContrasenia(c));
+		
+		this.vistaAdministrador.getItemVisualizarCuentas().addActionListener(a->mostrarCuentas(a));
 
 		//		BTN.LISTENER		
 		this.ventanaAgregarEmpleado.getBtnRegistrar().addActionListener(ae->agregarCuentaEmpleado(ae));
@@ -1383,6 +1385,16 @@ public class ControladorAdministrador {
 				return true;
 		
 		return false;
+	}
+	
+	public void mostrarCuentas(ActionEvent e){
+		this.vistaAdministrador.getPanelEmpleados().setVisible(true);
+		this.vistaAdministrador.getPanelCondiciones().setVisible(false);
+		this.vistaAdministrador.getPanelFormaPago().setVisible(false);
+		this.vistaAdministrador.getPanelLocales().setVisible(false);
+		this.vistaAdministrador.getPanelTransporte().setVisible(false);
+		this.vistaAdministrador.getPanelViajes().setVisible(false);
+		
 	}
 
 	public int getFilaLocalSeleccionada() {
