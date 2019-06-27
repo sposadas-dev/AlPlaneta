@@ -1216,10 +1216,7 @@ public class ControladorAdministrativo implements ActionListener {
 					
 					String salidaViaje = format.format(salida.getTime());
 					String fechaActual = format.format(calendar.getTime());
-					
-					System.out.println("Fecha Salida viaje: "+salidaViaje+" "+salidaViaje.length());
-					System.out.println("Fecha Actual      : "+fechaActual+" "+fechaActual.length());
-					
+				
 					if(salidaViaje.equals(fechaActual) && p.isNotificacion()==false){
 						System.out.println("obtenemos pasaje "+p.getIdPasaje());
 						generarVoucherMail(p, p.getCliente());
@@ -1229,7 +1226,7 @@ public class ControladorAdministrativo implements ActionListener {
 				}
 			}};
 		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(timerTask, 0, 60000);//1000=1 segundo
+		timer.scheduleAtFixedRate(timerTask, 0, 30000);//1000 = 1 segundo
 	}
 	
 	//Cada medio dia se verifica que la fecha de vencimiento de la reserva y el monto pagado x la persona, sea mayor al 30 porciento. Sino, pasa a vencido.
