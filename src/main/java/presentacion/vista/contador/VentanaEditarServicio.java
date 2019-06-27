@@ -42,6 +42,8 @@ public class VentanaEditarServicio extends JFrame {
 	private JComboBox<LocalDTO> comboBoxLocales;
 	
 	
+	
+
 	public static VentanaEditarServicio getInstance(){
 		if(ventanaEditarServicio == null){	
 			ventanaEditarServicio = new VentanaEditarServicio();
@@ -147,6 +149,10 @@ public class VentanaEditarServicio extends JFrame {
 
 	public JComboBox<LocalDTO> getComboBoxLocales() {
 		return comboBoxLocales;
+	}
+	
+	public void setMesChooser(JMonthChooser mesChooser) {
+		this.mesChooser = mesChooser;
 	}
 
 	public void mostrarVentana(boolean visibilidad) {

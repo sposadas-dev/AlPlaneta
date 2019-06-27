@@ -268,8 +268,6 @@ public class ControladorCliente implements ActionListener{
 			this.llenarTablaClientes();
 			this.ventanaRegistrarCliente.limpiarCampos();
 			this.ventanaRegistrarCliente.cerrarVentana();
-		}else{
-			JOptionPane.showMessageDialog(null, "Verifique los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

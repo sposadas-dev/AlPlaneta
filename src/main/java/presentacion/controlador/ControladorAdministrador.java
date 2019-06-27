@@ -544,9 +544,9 @@ public class ControladorAdministrador {
 			f.showSaveDialog(null);
 			
 
-//			String bat = "C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\mysqldump -uroot -proot alplaneta_grupo3 > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
-			String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysqldump -uroot -ppass alplaneta_grupo3 > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
-			System.out.println(bat);
+//			String bat = "C:"+File.separator+"Program Files"+File.separator +"MySQL"+File.separator +"SQL Server 5.7"+File.separator+"bin"+File.separator +"mysqldump -uroot -proot alplaneta_grupo3 > " + f.getSelectedFile().toString() +File.separator +"alplaneta.sql";
+			String bat = "C:\\Program Files\\MySQL\\SQL Server 5.7\\bin\\mysqldump -uroot -proot alplaneta_grupo3 > " + f.getSelectedFile().toString() +"\\alplaneta.sql";			
+//			String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysqldump -uroot -ppass alplaneta_grupo3 > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
 			final File file = new File("backup.bat");
 			file.createNewFile();
 			PrintWriter writer = new PrintWriter(file, "UTF-8");
@@ -570,8 +570,9 @@ public class ControladorAdministrador {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysql -uroot -ppass alplaneta_grupo3 < " + f.getSelectedFile().toString();
-
+//				String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysql -uroot -ppass alplaneta_grupo3 < " + f.getSelectedFile().toString();
+//				String bat = "C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\mysql -uroot -proot alplaneta_grupo3 < " + f.getSelectedFile().toString();
+				String bat ="C:\\Program Files\\MySQL\\SQL Server 5.7\\bin\\mysql -uroot -proot alplaneta_grupo3 < " + f.getSelectedFile().toString();
 				try {
 					final File file = new File("backup.bat");
 					file.createNewFile();

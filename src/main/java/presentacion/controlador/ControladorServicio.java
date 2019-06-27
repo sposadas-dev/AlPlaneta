@@ -49,13 +49,12 @@ public class ControladorServicio {
 
 	private void agregarServicio(ActionEvent as) {
 		ServicioDTO servicioDTO = new ServicioDTO();
-		int mes = ventanaAgregarServicio.getMesChooser().getMonth();
+		int mes = ventanaAgregarServicio.getMesChooser().getMonth()+1;
 		int anio = ventanaAgregarServicio.getAnioChooser().getYear();
 
 		Calendar fecha = Calendar.getInstance();
-		fecha.set(anio, mes, 31); // Specify day of month
+		fecha.set(anio, mes, 1); // Specify day of month
 		java.sql.Date fechaServicio = convertUtilToSql(fecha.getTime()); 
-		
 		servicioDTO.setNombreServicio(this.ventanaAgregarServicio.getTxtServicio().getText());
 		servicioDTO.setMonto(new BigDecimal(this.ventanaAgregarServicio.getTxtMonto().getText()));
 		servicioDTO.setMes(fechaServicio);
@@ -84,6 +83,9 @@ public class ControladorServicio {
 		llenarTablaServicios();
 		this.filaSeleccionada = filaSeleccionada;
 		this.ventanaEditarServicio.mostrarVentana(true);
+//		int mes = ventanaEditarServicio.getMesChooser().getMonth()+1;
+		ventanaEditarServicio.getMesChooser().setMonth(this.servicios_en_tabla.get(this.filaSeleccionada).getMes().getMonth());
+//		ventanaEditarServicio.getAnioChooser().setYear(anio);
 		ventanaEditarServicio.getTxtServicio().setText(this.servicios_en_tabla.get(this.filaSeleccionada).getNombreServicio());
 		ventanaEditarServicio.getTxtMonto().setText(this.servicios_en_tabla.get(this.filaSeleccionada).getMonto().toString());
 		ventanaEditarServicio.getComboBoxLocales().setSelectedItem(this.servicios_en_tabla.get(this.filaSeleccionada).getLocal().getNombreLocal());
@@ -92,10 +94,19 @@ public class ControladorServicio {
 	
 	public void editarServicio(ActionEvent es){
 		if(!ventanaEditarServicio.getTxtServicio().getText().isEmpty() || !ventanaEditarServicio.getTxtMonto().getText().isEmpty()){
-			llenarTablaServicios();
+//			llenarTablaServicios();
+			int mes = ventanaEditarServicio.getMesChooser().getMonth();
+			int anio = ventanaEditarServicio.getAnioChooser().getYear();
+			Calendar fecha = Calendar.getInstance();
+			fecha.set(anio, mes, 1); // Specify day of month
+			java.sql.Date fechaServicio = convertUtilToSql(fecha.getTime()); 
+			
+			
 			ServicioDTO servicioDTO = new ServicioDTO();
+			servicioDTO.setIdServicio(this.servicios_en_tabla.get(filaSeleccionada).getIdServicio());
 			servicioDTO.setNombreServicio(this.ventanaEditarServicio.getTxtServicio().getText());
 			servicioDTO.setMonto(new BigDecimal(this.ventanaEditarServicio.getTxtMonto().getText()));
+			servicioDTO.setMes(fechaServicio);
 			servicioDTO.setLocal(obtenerLocalDTO((String)ventanaEditarServicio.getComboBoxLocales().getSelectedItem()));
 			this.servicio.editarServicio(servicioDTO);
 			llenarTablaServicios();
@@ -120,6 +131,17 @@ public class ControladorServicio {
 					this.servicios_en_tabla.get(i).getLocal().getNombreLocal(),
 			};	 
 			this.vistaContador.getPanelServicios().getModelServicios().addRow(fila);
+		}
+	}
+
+	public void eliminarServicio(int filaSeleccionada) {
+		int confirm = JOptionPane.showOptionDialog(
+	            null,"¿Estás seguro que quieres eliminar el servicio?", 
+			             "Cancelar pasaje", JOptionPane.YES_NO_OPTION,
+			             JOptionPane.ERROR_MESSAGE, null, null, null);
+		if (confirm == 0){
+			this.servicio.eliminarServicio(servicios_en_tabla.get(filaSeleccionada));
+			this.llenarTablaServicios();
 		}
 	}
 }
