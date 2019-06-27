@@ -383,7 +383,9 @@ public class ControladorPasaje implements ActionListener{
 
 	private Integer calcularValorDeViajeEnPuntos(BigDecimal precio) {
 		RegimenPuntoDTO regimen = this.modeloRegimenPunto.obtenerUltimoRegistro();
-		int integerPrecio = precio.intValue();
+		
+	
+		int integerPrecio = precio.multiply(new BigDecimal(	pasajeros_en_reserva.size())).intValue();
 		int valorDelRegimen = regimen.getARS();
 		this.valorDelViajeEnPuntos = integerPrecio/valorDelRegimen;
 		return valorDelViajeEnPuntos;
@@ -844,31 +846,32 @@ public class ControladorPasaje implements ActionListener{
 		pagoDTO = new PagoDTO();	
 		pagoDTO.setIdFormaPago(formaPago);
 		pagoDTO.setAdministrativo(administrativoLogueado);
-		pagoDTO.setMonto(viajeSeleccionado.getPrecio());	
+		pagoDTO.setMonto(viajeSeleccionado.getPrecio().multiply(new BigDecimal(pasajeros_en_reserva.size())));	
 		pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
 		
 			
 		if (noEditarPago){
 			this.ventanaPagoPuntos.setVisible(false);
 			mostrarVentanaConfirmacionPasaje();
-		}else{ 
-			modeloPago.agregarPago(pagoDTO);
-			pagos_pasajeDTO = new Pagos_PasajeDTO();
-			PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
-			pagos_pasajeDTO.setPago(pagoPasaje);
-			pagos_pasajeDTO.setPasaje(pasajeAEditar);
-			modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
-				
-			pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
-			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
-						
-			modeloPasaje.editarPasaje(pasajeAEditar);
-			this.ventanaPago.limpiarCampos();
-			this.ventanaPago.mostrarVentana(false);
-			this.ventanaVisualizarPasaje.mostrarVentana(false);
-			reportePago();
-			this.llenarTablaPasajes();
 		}
+//		else{ 
+//			modeloPago.agregarPago(pagoDTO);
+//			pagos_pasajeDTO = new Pagos_PasajeDTO();
+//			PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
+//			pagos_pasajeDTO.setPago(pagoPasaje);
+//			pagos_pasajeDTO.setPasaje(pasajeAEditar);
+//			modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
+//				
+//			pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
+//			pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
+//						
+//			modeloPasaje.editarPasaje(pasajeAEditar);
+//			this.ventanaPago.limpiarCampos();
+//			this.ventanaPago.mostrarVentana(false);
+//			this.ventanaVisualizarPasaje.mostrarVentana(false);
+//			reportePago();
+//			this.llenarTablaPasajes();
+//		}
 	}
 	
 	private void restarPuntosViejosDelCliente() {
