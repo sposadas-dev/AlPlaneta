@@ -8,6 +8,7 @@ import persistencia.dao.interfaz.CondicionDeCancelacionDAO;
 import persistencia.dao.interfaz.ContadorDAO;
 import persistencia.dao.interfaz.CoordinadorDAO;
 import persistencia.dao.interfaz.DAOAbstractFactory;
+import persistencia.dao.interfaz.EgresoDAO;
 import persistencia.dao.interfaz.EstadoEventoDAO;
 import persistencia.dao.interfaz.EstadoPasajeDAO;
 import persistencia.dao.interfaz.EventoDAO;
@@ -27,6 +28,9 @@ import persistencia.dao.interfaz.PuntoDAO;
 import persistencia.dao.interfaz.RegimenPuntoDAO;
 import persistencia.dao.interfaz.RolDAO;
 import persistencia.dao.interfaz.TarjetaDAO;
+import persistencia.dao.interfaz.ServicioDAO;
+import persistencia.dao.interfaz.SueldoDAO;
+import persistencia.dao.interfaz.Sueldos_EmpleadosDAO;
 import persistencia.dao.interfaz.TransporteDAO;
 import persistencia.dao.interfaz.ViajeDAO;
 import persistencia.dao.interfaz.Viaje_PromocionDAO;
@@ -172,4 +176,23 @@ public class DAOSQLFactory implements DAOAbstractFactory {
 	}
 	
 
+	@Override
+	public SueldoDAO createSueldoDAO() {
+		return new SueldoDAOSQL();
+	}
+
+	@Override
+	public Sueldos_EmpleadosDAO createSueldoEmpleadoDAO() {
+		return new SueldosEmpleadosDAOSQL();
+	}
+
+	@Override
+	public ServicioDAO createServicioDAO() {
+		return new ServicioDAOSQL();
+	}
+	
+	@Override
+	public EgresoDAO createEgresoDAO() {
+		return new EgresoDAOSQL();
+	}
 }

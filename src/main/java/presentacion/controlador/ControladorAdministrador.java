@@ -543,10 +543,10 @@ public class ControladorAdministrador {
 			f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			f.showSaveDialog(null);
 			
-			
-			
-			String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysqldump -uroot -ppass alplaneta > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
 
+//			String bat = "C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\mysqldump -uroot -proot alplaneta_grupo3 > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
+			String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysqldump -uroot -ppass alplaneta_grupo3 > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
+			System.out.println(bat);
 			final File file = new File("backup.bat");
 			file.createNewFile();
 			PrintWriter writer = new PrintWriter(file, "UTF-8");
@@ -558,7 +558,7 @@ public class ControladorAdministrador {
 			file.delete();
 
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "No se creó el backup. " + ex.getMessage());
+			JOptionPane.showMessageDialog(null, "No se creó el backup." + ex.getMessage());
 		}
 	}
 	
@@ -570,7 +570,7 @@ public class ControladorAdministrador {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysql -uroot -ppass alplaneta < " + f.getSelectedFile().toString();
+				String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysql -uroot -ppass alplaneta_grupo3 < " + f.getSelectedFile().toString();
 
 				try {
 					final File file = new File("backup.bat");

@@ -48,4 +48,12 @@ import persistencia.dao.interfaz.PasajeDAO;
 	public List<PasajeDTO> obtenerPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta,int idLocal) {
 		return this.pasaje.listarPasajesEntreFechas(desde, hasta,idLocal);
 	}
+	
+	public List<PasajeDTO> obtenerPasajesEntreFechas(java.sql.Date desde, java.sql.Date hasta) {
+		return this.pasaje.listarPasajesEntreFechas(desde, hasta);
+	}
+	
+	public List<PasajeDTO> obtenerPasajesEntreFechasByLocal(java.sql.Date desde, java.sql.Date hasta, int idLocal) {
+		return this.pasaje.listarPasajesEntreFechasByLocal(desde, hasta, idLocal);
+	}
 }

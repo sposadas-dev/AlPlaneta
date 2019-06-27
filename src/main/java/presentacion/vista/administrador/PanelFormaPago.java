@@ -12,12 +12,10 @@ import javax.swing.table.DefaultTableModel;
 
 public class PanelFormaPago  extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private JButton btnRecargarTabla;
+
 	private DefaultTableModel modelFormaPago;
 	private String[] nombreColumnasformaPago = {"Diferentes Formas de Pago"};
 	private JTable tablaFormaPago;
-	private JButton btnConfirmar;
-	private JLabel lblFormaPago;
 
 	@SuppressWarnings("serial")
 	public PanelFormaPago() {
@@ -35,39 +33,24 @@ public class PanelFormaPago  extends JPanel {
 		add(formaPago);
 		tablaFormaPago = new JTable(modelFormaPago);
 		formaPago.setViewportView(tablaFormaPago);
-		
-//		btnRecargarTabla = new JButton("Recargar");
-//		btnRecargarTabla.setBounds(422, 608, 165, 54);
-//		add(btnRecargarTabla);
-		
-		btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.setBounds(640, 608, 136, 54);
-		add(btnConfirmar);
-		
+
 		JPanel panelFomaPago = new JPanel();
 		panelFomaPago.setBackground(new Color(96, 163, 188));
 		panelFomaPago.setBounds(32, 32, 1302, 64);
 		add(panelFomaPago);
 		panelFomaPago.setLayout(null);
 		
-		lblFormaPago = new JLabel("Formas de pago");
+		JLabel lblFormaPago = new JLabel("Formas de pago");
 		lblFormaPago.setBounds(453, 0, 301, 65);
 		lblFormaPago.setForeground(Color.WHITE);
 		lblFormaPago.setFont(new Font("Tahoma", Font.BOLD, 36));
 		panelFomaPago.add(lblFormaPago);
-	
-		btnConfirmar.setVisible(false);
-//		btnRecargarTabla.setVisible(false);
 	}
 
 	public void mostrarPanelFormaPago(boolean visibilidad){
 		this.setVisible(visibilidad);
 	}
 	
-//	public JButton getBtnRecargarTabla() {
-//		return btnRecargarTabla;
-//	}
-
 	public DefaultTableModel getModelFormaPago() {
 		return modelFormaPago;
 	}
@@ -91,9 +74,4 @@ public class PanelFormaPago  extends JPanel {
 	public void setTablaFormaPago(JTable tablaFormaPago) {
 		this.tablaFormaPago = tablaFormaPago;
 	}
-	
-	public JButton getBtnConfirmar() {
-		return btnConfirmar;
-	}
-
 }
