@@ -1,7 +1,10 @@
 package presentacion.controlador;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JOptionPane;
 
@@ -23,12 +26,24 @@ public class ControladorTarjeta implements ActionListener {
 		this.ventanaTarjeta.getBtnCargarDatos().addActionListener(cd -> CargarDatosTarjeta(cd));
 		
 		tarjeta = new Tarjeta(new DAOSQLFactory());
+		
+		this.ventanaTarjeta.getTxtNumeroTarjeta().addKeyListener(new KeyAdapter(){ 
+			 
+			public void keyTyped(KeyEvent e){
+				
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}if(ventanaTarjeta.getTxtNumeroTarjeta().getText().length()  == 16)  {
+					e.consume();
+				}
+			}
+			
+		});
 	}
 
-//	public void cargarTarjeta(){ 
-//		this.tarjeta.agregarTarjeta(datosTarjeta()); 
-//		}
-//	
+
 	public void mostrarVentanaTarjeta() {
 		this.ventanaTarjeta.mostrarVentana(true);
 		
