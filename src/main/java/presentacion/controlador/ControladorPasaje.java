@@ -391,6 +391,8 @@ public class ControladorPasaje implements ActionListener{
 	private void pagarPasaje(ActionEvent p) {
 		this.ventanaPago.mostrarVentana(true);
 		this.noEditarPago = false;
+		if(!noEditarPago)
+			cargarComboBoxFormaDePagoEdicion();
 	}
 
 	private void aplicarFiltro(ActionEvent af) {
@@ -745,16 +747,35 @@ public class ControladorPasaje implements ActionListener{
 		}
 		this.ventanaPago.getComboBoxFormaPago().setModel(new DefaultComboBoxModel(formasPagos));
 	}
+	private void cargarComboBoxFormaDePagoEdicion(){
+		//ventanaPago.getComboBoxFormaPago().removeAllItems();
+		FormaPago formaPago = new FormaPago(new DAOSQLFactory());
+		List<FormaPagoDTO> formaPagosDTO = formaPago.obtenerFormaPago();
+		List<FormaPagoDTO> formasPagosDTO = new ArrayList<FormaPagoDTO>();
+		
+		for(FormaPagoDTO f:formaPagosDTO){
+			if(f.getIdFormaPago()!=3)
+				formasPagosDTO.add(f);
+		}
+		
+		String[] formasPagos = new String[formasPagosDTO.size()+1]; 
+		formasPagos[0]="Seleccione forma de pago";
+		for(int i=0; i < formasPagosDTO.size();i++){
+			if(formasPagosDTO.get(i).getIdFormaPago()!=3){
+				String rango = formasPagosDTO.get(i).getTipo();
+				formasPagos [i+1] = rango;
+			}
+		}
+		this.ventanaPago.getComboBoxFormaPago().setModel(new DefaultComboBoxModel(formasPagos));
+	}
 	
 	private void darAltaDelPago(ActionEvent cp)  {
-// Validar que se haya seleccionado una forma de pago
-		BigDecimal montoPasaje = calcularMontoDePasaje();
 		BigDecimal montoUsuario = new BigDecimal(this.ventanaPago.getTextImporteTotal().getText());
-		if(montoUsuario.compareTo(montoPasaje)>0){
-			JOptionPane.showMessageDialog(null, "Error: Esta pagando mas de lo debido", "Mensaje", JOptionPane.ERROR_MESSAGE);
-			return;
-			}
-				
+		System.out.println("Pago Directo:" +noEditarPago );
+	if((noEditarPago && montoUsuario.compareTo(calcularMontoDePasaje())>0) || 
+		(!noEditarPago && montoUsuario.compareTo(pasajeAEditar.getMontoAPagar())>0)){
+		JOptionPane.showMessageDialog(null, "Error: Esta pagando mas de lo debido", "Mensaje", JOptionPane.ERROR_MESSAGE);
+	}else{
 		
 		if(this.ventanaPago.getComboBoxFormaPago().getSelectedIndex()!=0) {
 			FormaPago f = new FormaPago(new DAOSQLFactory());
@@ -796,12 +817,18 @@ public class ControladorPasaje implements ActionListener{
 			this.ventanaPago.mostrarVentana(false);
 			this.ventanaVisualizarPasaje.mostrarVentana(false);
 			reportePago();
+			this.noEditarPago = true;
 			this.llenarTablaPasajes();
 			}
 		}
 		else {
 			JOptionPane.showMessageDialog(ventanaPasajero, "Seleccione forma de pago", "Filtro", 0);
 		}	
+	}	
+//		if(!noEditarPago && montoUsuario.compareTo(pasajeAEditar.getMontoAPagar())>0){
+//			JOptionPane.showMessageDialog(null, "Error: Esta pagando mas de lo debido", "Mensaje", JOptionPane.ERROR_MESSAGE);
+//			return;
+//		}
 	}
 	
 	private void darAltaDelPagoConPuntos()  {
@@ -925,6 +952,9 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaConfirmacionPasaje.getTxtPagado().setText("$ "+pagoDTO.getMonto());
 		this.ventanaConfirmacionPasaje.getTxtTotal().setText("$ "+calcularMontoDePasaje());
 		llenarTablaDePasajerosConfirmarPasaje();
+		
+		//
+//		this.noEditarPago = true;
 	}
 		
 	private void mostrarVentanaComprobante(){
@@ -1112,14 +1142,16 @@ public class ControladorPasaje implements ActionListener{
 	private void mostrarComprobantePago(ActionEvent cp){
 		reportePago();
 	}
-	
+	//TODO: SETEAR EL VIAJE SELECCIONADO PARA LA COMPARACION DEL MONTO A PAGAR
+	//SET: CLIENTE SELECCIONADO
+	//SET PASAJE SELECCIONADO
 	public void editarPasaje(int filaSeleccionada){
-		
-		pasajeAEditar = this.pasajes_en_tabla.get(filaSeleccionada);
+		this.pasajeAEditar = this.pasajes_en_tabla.get(filaSeleccionada);
+		this.pasajeDTO =this.pasajes_en_tabla.get(filaSeleccionada);
 		this.clienteSeleccionado = pasajeAEditar.getCliente();
-		
+		this.viajeSeleccionado = pasajeAEditar.getViaje();
+		System.out.println("PasajeAEditar montorestante"+ pasajeAEditar.getMontoAPagar());
 		verDatosDelPasaje(filaSeleccionada);
-		
 	}
 	
 	private void verDatosDelPasaje(int filaSeleccionada) {
