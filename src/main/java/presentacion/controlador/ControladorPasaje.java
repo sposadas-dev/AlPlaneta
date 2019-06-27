@@ -126,6 +126,8 @@ public class ControladorPasaje implements ActionListener{
 	
 	private ControladorTarjeta controladorTarjeta;
 	private VentanaTarjeta ventanaTarjeta;
+	private PromocionDTO promocionSeleccionada;
+	private int cantPasajerosEnPromo;
 	
 	public ControladorPasaje(VentanaVisualizarClientes ventanaVisualizarClientes, Cliente cliente, AdministrativoDTO administrativoLogueado){
 		this.ventanaVisualizarClientes = ventanaVisualizarClientes;
@@ -919,7 +921,7 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaConfirmacionPasaje.getTxtDestino().setText(" "+ viajeSeleccionado.getPaisDestino().getNombre()+ ", "+viajeSeleccionado.getProvinciaDestino().getNombre()+", "+viajeSeleccionado.getCiudadDestino().getNombre());
 		this.ventanaConfirmacionPasaje.getTxtFormaPago().setText(""+pagoDTO.getIdFormaPago().getTipo());
 		this.ventanaConfirmacionPasaje.getTxtPagado().setText("$ "+pagoDTO.getMonto());
-		this.ventanaConfirmacionPasaje.getTxtTotal().setText("$ "+calcularMontoDePasaje());
+		this.ventanaConfirmacionPasaje.getTxtTotal().setText("$ "+this.totalaPagar);
 		llenarTablaDePasajerosConfirmarPasaje();
 	}
 		
@@ -936,13 +938,20 @@ public class ControladorPasaje implements ActionListener{
 	
 	private void darAltaDeUnPasaje(ActionEvent dp) {
 		viajeDTO = viajeSeleccionado;
-		BigDecimal valorViaje = calcularMontoDePasaje();
+		BigDecimal valorViaje = this.valorFinal;
 		ClienteDTO cliente = clienteSeleccionado;
 		EstadoPasajeDTO estadoPasaje = calcularEstadoPasaje();
 		System.out.println(estadoPasaje.getNombre()+" ACA");
 		List<PasajeroDTO> pasajeros = pasajeros_en_reserva;
 		
 		viajeDTO.setCapacidad(viajeSeleccionado.getCapacidad()-pasajeros.size()); //Restamos la capacidad del viaje segun la cantidad de pasajeros
+		
+		//DESCONTAR STOCK EN PROMO
+		promocionSeleccionada.setStock(promocionSeleccionada.getStock()-cantPasajerosEnPromo);
+		modeloPromocion.editarPromocion(promocionSeleccionada);
+		System.out.println("PROMO SELECCIONADA: "+promocionSeleccionada.getIdPromocion()+", NUEVO STOCK DE LA PROMO: "+promocionSeleccionada.getStock()+", CANT PASAJEROS QUE USARON LA PROMO: "+cantPasajerosEnPromo);
+						
+				
 		modeloViaje.editarViaje(viajeDTO);
 		modeloPago.agregarPago(pagoDTO);
 		
@@ -1012,34 +1021,67 @@ public class ControladorPasaje implements ActionListener{
     }
 	
 	private BigDecimal calcularMontoDePasaje() {
-
-		//BigDecimal valorFinal;
-		BigDecimal Valor1 = this.viajeSeleccionado.getPrecio();
-		totalaPagar = Valor1;
-		this.valorFinal = totalaPagar.multiply(new BigDecimal(pasajeros_en_reserva.size()));
-		this.precioOriginal = this.valorFinal;
+		this.precioOriginal = this.viajeSeleccionado.getPrecio().multiply(new BigDecimal(pasajeros_en_reserva.size()));
+		this.valorFinal = calcularValorPasajesNuevo(viajeSeleccionado,pasajeros_en_reserva.size());
+		this.totalaPagar = valorFinal;
+		return valorFinal;
+	}
 		
-		//si hay promo
+	private BigDecimal calcularValorPasajesNuevo(ViajeDTO viaje, int cantPasajeros){
+		BigDecimal ret = viaje.getPrecio().multiply(new BigDecimal(cantPasajeros));
+		BigDecimal valorUnitario = viaje.getPrecio();
+		
 		for(Viaje_PromocionDTO vp : viaje_promocion.obtenerViajePromocion()) {
-			if(vp.getIdViaje() == viajeSeleccionado.getIdViaje()) {
+			if(vp.getIdViaje() == viaje.getIdViaje()) {
 				for(PromocionDTO p : modeloPromocion.obtenerPromocion()) {
 					if(p.getIdPromocion() == vp.getIdPromocion()) {
-						if(promocionActiva(p)) {
-							this.ventanaPago.mostrarDatosPromocion();
-							this.ventanaPago.setLblDatoMontoOriginal("$ "+this.precioOriginal.toString());
-							this.porcentajeDescuento = p.getPorcentaje();
-							this.ventanaPago.setLblDatoPorcentajeDescuento("-"+this.porcentajeDescuento+""+" %");
-							this.valorFinal = calcularMontoDePasajeConDescuento(this.valorFinal, p.getPorcentaje());
-//							hayPromo = true;
+						if(promocionActiva(p) != -1) {
+							if(p.getStock() >= cantPasajeros){
+								//calcular valor de los pasajes - todos con promo
+								BigDecimal valorUnitarioConDescuento = valorUnitario.multiply(new BigDecimal(100-p.getPorcentaje())).divide(new BigDecimal(100));
+								this.ventanaPago.mostrarDatosPromocion();
+								this.ventanaPago.setLblDatoMontoOriginal("$ "+valorUnitario.multiply(new BigDecimal(cantPasajeros)).toString());
+								this.ventanaPago.setLblDatoPorcentajeDescuento("-"+p.getPorcentaje()+""+" %");
+								ret = valorUnitarioConDescuento.multiply(new BigDecimal(cantPasajeros));
+								promocionSeleccionada = p;	
+								cantPasajerosEnPromo = cantPasajeros;
+							}
+							else{
+								if(p.getStock() == 0){
+									//calcular valor de los pasajes - sin promo
+									JOptionPane.showMessageDialog(null,"Promoción sin stock", "Mensaje", JOptionPane.ERROR_MESSAGE);
+									BigDecimal valorPasajesSinPromo =  viaje.getPrecio().multiply(new BigDecimal(cantPasajeros));
+									ret = valorPasajesSinPromo;
+								}
+								if(p.getStock() > 0){
+									JOptionPane.showMessageDialog(null,"Atención! Stock de la promoción: "+p.getStock(), "Mensaje", JOptionPane.ERROR_MESSAGE);
+									//calcular valor de los pasajes utilizando promo:
+									BigDecimal valorUnitarioConDescuento = valorUnitario.multiply(new BigDecimal(100-p.getPorcentaje())).divide(new BigDecimal(100));
+									this.ventanaPago.mostrarDatosPromocion();
+									this.ventanaPago.setLblDatoMontoOriginal("$ "+valorUnitario.multiply(new BigDecimal(cantPasajeros)).toString());
+									if(p.getStock()==1)
+										this.ventanaPago.setLblDatoPorcentajeDescuento("-"+p.getPorcentaje()+""+" %"+"  (x 1 pasajero)");
+									else
+										this.ventanaPago.setLblDatoPorcentajeDescuento("-"+p.getPorcentaje()+""+" %"+"  (x "+p.getStock()+" pasajeros)");							
+									BigDecimal valorPasajesConPromo = valorUnitarioConDescuento.multiply(new BigDecimal(p.getStock()));
+									//calcular valor de los pasajes que se quedaron sin promo:
+									int pasajesSinPromo = cantPasajeros - p.getStock();
+									BigDecimal valorPasajesSinPromo =  viaje.getPrecio().multiply(new BigDecimal(pasajesSinPromo));
+									//suma de valores anteriores:
+									ret = valorPasajesConPromo.add(valorPasajesSinPromo);	
+									promocionSeleccionada = p;	
+									cantPasajerosEnPromo = pasajesSinPromo;
+								}
+							}
 						}
 					}
 				}
 			}
 		}	
-		return this.valorFinal;
+		return ret;
 	}
 	
-	public boolean promocionActiva(PromocionDTO p) {
+	public int promocionActiva(PromocionDTO p) {
 		boolean activa = false;
 		boolean noVencida = false;
 		for(PromocionDTO x : modeloPromocion.obtenerPromocion()) {
@@ -1052,10 +1094,9 @@ public class ControladorPasaje implements ActionListener{
 			}
 		}
 		if(activa && noVencida)
-			return true;
+			return p.getStock();
 		else
-			return false;
-		
+			return -1;
 	}
 
 	private BigDecimal calcularMontoDePasajeConDescuento(BigDecimal valor, int porcentaje) {
