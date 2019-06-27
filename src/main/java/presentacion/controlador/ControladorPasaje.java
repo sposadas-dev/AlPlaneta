@@ -391,6 +391,9 @@ public class ControladorPasaje implements ActionListener{
 
 	private void pagarPasaje(ActionEvent p) {
 		this.ventanaPago.mostrarVentana(true);
+		this.noEditarPago = false;
+		if(!noEditarPago)
+			cargarComboBoxFormaDePagoEdicion();
 	}
 
 	private void aplicarFiltro(ActionEvent af) {
@@ -746,60 +749,87 @@ public class ControladorPasaje implements ActionListener{
 		this.ventanaPago.getComboBoxFormaPago().setModel(new DefaultComboBoxModel(formasPagos));
 	}
 	
-	private void darAltaDelPago(ActionEvent cp)  {
-// Validar que se haya seleccionado una forma de pago 
-		if(this.ventanaPago.getComboBoxFormaPago().getSelectedIndex()!=0) {
-			FormaPago f = new FormaPago(new DAOSQLFactory());
-			this.ventanaPago.getRadioReservaSinPagar().setVisible(true);
-			
-			FormaPagoDTO formaPago = f.getFormaPagoByName(ventanaPago.getComboBoxFormaPago().getSelectedItem().toString());
-			Calendar currenttime = Calendar.getInstance();
-			
-			
-			pagoDTO = new PagoDTO();	
-			pagoDTO.setIdFormaPago(formaPago);
-			pagoDTO.setAdministrativo(administrativoLogueado);
-			pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
-			pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
-			
-			
-			if(formaPago.getIdFormaPago()==2){
-				pagoDTO.setIdtarjeta(controladorTarjeta.datosTarjeta()); //AGREGA IDTARJETAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
-				System.out.println("El ID de la tarjeta es:" + pagoDTO.getIdtarjeta().getIdTarjeta());
-			}
-//			if(pagoDTO.getIdFormaPago().getIdFormaPago() ==2 )
-//				controladorTarjeta.datosTarjeta().getIdTarjeta();
-//				pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
-				
-			if (noEditarPago){
-				this.ventanaPago.setVisible(false);
-				mostrarVentanaConfirmacionPasaje();
-			}else{ 
-				modeloPago.agregarPago(pagoDTO);
-				pagos_pasajeDTO = new Pagos_PasajeDTO();
-				PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
-				pagos_pasajeDTO.setPago(pagoPasaje);
-				pagos_pasajeDTO.setPasaje(pasajeAEditar);
-				modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
-				pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
-				pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
-				modeloPasaje.editarPasaje(pasajeAEditar);
-			
-			if(pagoDTO.getIdFormaPago().getIdFormaPago()!= 3){
-				verificarSumaDePuntosDeCliente(pasajeAEditar);
-				}
-			
-			this.ventanaPago.limpiarCampos();
-			this.ventanaPago.mostrarVentana(false);
-			this.ventanaVisualizarPasaje.mostrarVentana(false);
-			reportePago();
-			this.llenarTablaPasajes();
+	private void cargarComboBoxFormaDePagoEdicion(){
+		//ventanaPago.getComboBoxFormaPago().removeAllItems();
+		FormaPago formaPago = new FormaPago(new DAOSQLFactory());
+		List<FormaPagoDTO> formaPagosDTO = formaPago.obtenerFormaPago();
+		List<FormaPagoDTO> formasPagosDTO = new ArrayList<FormaPagoDTO>();
+		
+		for(FormaPagoDTO f:formaPagosDTO){
+			if(f.getIdFormaPago()!=3)
+				formasPagosDTO.add(f);
+		}
+		
+		String[] formasPagos = new String[formasPagosDTO.size()+1]; 
+		formasPagos[0]="Seleccione forma de pago";
+		for(int i=0; i < formasPagosDTO.size();i++){
+			if(formasPagosDTO.get(i).getIdFormaPago()!=3){
+				String rango = formasPagosDTO.get(i).getTipo();
+				formasPagos [i+1] = rango;
 			}
 		}
-		else {
-			JOptionPane.showMessageDialog(ventanaPasajero, "Seleccione forma de pago", "Filtro", 0);
-		}	
+		this.ventanaPago.getComboBoxFormaPago().setModel(new DefaultComboBoxModel(formasPagos));
+	}
+	
+	private void darAltaDelPago(ActionEvent cp)  {
+		BigDecimal montoUsuario = new BigDecimal(this.ventanaPago.getTextImporteTotal().getText());
+		System.out.println("Pago Directo:" +noEditarPago );
+		
+		if((noEditarPago && montoUsuario.compareTo(calcularMontoDePasaje())>0) || 
+				(!noEditarPago && montoUsuario.compareTo(pasajeAEditar.getMontoAPagar())>0)){
+				JOptionPane.showMessageDialog(null, "Error: El monto igresado es mayor al monto a pagar", "Mensaje", JOptionPane.ERROR_MESSAGE);
+			}else{
+				if(this.ventanaPago.getComboBoxFormaPago().getSelectedIndex()!=0) {
+					FormaPago f = new FormaPago(new DAOSQLFactory());
+					this.ventanaPago.getRadioReservaSinPagar().setVisible(true);
+					
+					FormaPagoDTO formaPago = f.getFormaPagoByName(ventanaPago.getComboBoxFormaPago().getSelectedItem().toString());
+					Calendar currenttime = Calendar.getInstance();
+					
+					pagoDTO = new PagoDTO();	
+					pagoDTO.setIdFormaPago(formaPago);
+					pagoDTO.setAdministrativo(administrativoLogueado);
+					pagoDTO.setMonto(new BigDecimal(this.ventanaPago.getTextImporteTotal().getText()));	
+					pagoDTO.setFechaPago(new Date((currenttime.getTime()).getTime()));
+					
+					
+					if(formaPago.getIdFormaPago()==2){
+						pagoDTO.setIdtarjeta(controladorTarjeta.datosTarjeta()); //AGREGA IDTARJETAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+						pagoDTO.setIdtarjeta(controladorTarjeta.getUltimoRegistro());
+						System.out.println("El ID de la tarjeta es:" + pagoDTO.getIdtarjeta().getIdTarjeta());
+					}
+	
+					if (noEditarPago){
+						this.ventanaPago.setVisible(false);
+						mostrarVentanaConfirmacionPasaje();
+					}
+					else{ 
+						modeloPago.agregarPago(pagoDTO);
+						pagos_pasajeDTO = new Pagos_PasajeDTO();
+						PagoDTO pagoPasaje = modeloPago.getUltimoRegistroPago();
+						pagos_pasajeDTO.setPago(pagoPasaje);
+						pagos_pasajeDTO.setPasaje(pasajeAEditar);
+						modeloPagos_pasaje.agregarPagoPasaje(pagos_pasajeDTO);
+						pasajeAEditar.setMontoAPagar(pasajeAEditar.getMontoAPagar().subtract(pagoDTO.getMonto()));
+						pasajeAEditar.setEstadoDelPasaje(estadoPasaje(pasajeAEditar.getMontoAPagar()));
+						modeloPasaje.editarPasaje(pasajeAEditar);
+						noEditarPago = true;
+					
+						if(pagoDTO.getIdFormaPago().getIdFormaPago()!= 3){
+							verificarSumaDePuntosDeCliente(pasajeAEditar);
+							}
+					
+						this.ventanaPago.limpiarCampos();
+						this.ventanaPago.mostrarVentana(false);
+						this.ventanaVisualizarPasaje.mostrarVentana(false);
+						reportePago();
+						this.llenarTablaPasajes();
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(ventanaPasajero, "Seleccione forma de pago", "Filtro", 0);
+				}	
+			}
 	}
 	
 	private void darAltaDelPagoConPuntos()  {
@@ -947,10 +977,12 @@ public class ControladorPasaje implements ActionListener{
 		viajeDTO.setCapacidad(viajeSeleccionado.getCapacidad()-pasajeros.size()); //Restamos la capacidad del viaje segun la cantidad de pasajeros
 		
 		//DESCONTAR STOCK EN PROMO
-		promocionSeleccionada.setStock(promocionSeleccionada.getStock()-cantPasajerosEnPromo);
-		modeloPromocion.editarPromocion(promocionSeleccionada);
-		System.out.println("PROMO SELECCIONADA: "+promocionSeleccionada.getIdPromocion()+", NUEVO STOCK DE LA PROMO: "+promocionSeleccionada.getStock()+", CANT PASAJEROS QUE USARON LA PROMO: "+cantPasajerosEnPromo);
-						
+		//IF EL VIAJE TIENE PROMO:
+		if(tienePromo(viajeDTO)){
+			promocionSeleccionada.setStock(promocionSeleccionada.getStock()-cantPasajerosEnPromo);
+			modeloPromocion.editarPromocion(promocionSeleccionada);
+			System.out.println("PROMO SELECCIONADA: "+promocionSeleccionada.getIdPromocion()+", NUEVO STOCK DE LA PROMO: "+promocionSeleccionada.getStock()+", CANT PASAJEROS QUE USARON LA PROMO: "+cantPasajerosEnPromo);
+		}
 				
 		modeloViaje.editarViaje(viajeDTO);
 		modeloPago.agregarPago(pagoDTO);
@@ -1003,8 +1035,15 @@ public class ControladorPasaje implements ActionListener{
 
 	private void verificarSumaDePuntosDeCliente(PasajeDTO pasaje) {
 		if(pasaje.getEstadoDelPasaje().getNombre().equals("Vendido")){
-		System.out.println("El pasaje esta vendido, se le suman los puntos a"+pasaje.getCliente().getNombre());
-			calcularPuntos(pasaje.getCliente(),totalaPagar);		
+		System.out.println("El pasaje esta vendido, se le suman los puntos a: "+pasaje.getCliente().getNombre());
+		if(!noEditarPago){
+			System.out.println("Se edita el pago. El valor del pasaje es: "+pasaje.getValorViaje());
+			calcularPuntos(pasaje.getCliente(),pasaje.getValorViaje());
+			}
+		else{
+			System.out.println("Se paga el total. El valor del pasaje es: " + totalaPagar);
+			calcularPuntos(pasaje.getCliente(),totalaPagar);
+		}
 		}
 	}
 
@@ -1498,6 +1537,14 @@ public class ControladorPasaje implements ActionListener{
 					return true;}
 						
 			}
+		}
+		return false;
+	}
+	
+	public boolean tienePromo(ViajeDTO viaje){
+		for(Viaje_PromocionDTO x : viaje_promocion.obtenerViajePromocion()){
+			if(x.getIdViaje() == viaje.getIdViaje())
+				return true;
 		}
 		return false;
 	}
