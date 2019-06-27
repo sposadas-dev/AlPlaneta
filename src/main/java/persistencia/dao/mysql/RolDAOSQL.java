@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dto.EstadoPasajeDTO;
 import dto.RolDTO;
 import persistencia.conexion.Conexion;
 import persistencia.dao.interfaz.RolDAO;
@@ -17,6 +18,7 @@ public class RolDAOSQL implements RolDAO{
 	private static final String update = "UPDATE rol SET descripcion = ? WHERE idRol = ?";
 	
 	private static final String browse = "SELECT * FROM rol WHERE idRol = ?";
+	private static final String browseByNombre = "SELECT * FROM rol WHERE descripcion=?";
 
 	@Override
 	public boolean insert(RolDTO rol) {
@@ -140,6 +142,28 @@ public class RolDAOSQL implements RolDAO{
 //			}
 //			return ret;
 //	}
+	@Override
+	public RolDTO getRolByNombre(String descripcion) {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		Conexion conexion = Conexion.getConexion();
+		RolDTO roldto;
+		try{
+			statement = conexion.getSQLConexion().prepareStatement(browseByNombre);
+			statement.setString(1, descripcion);
+			resultSet = statement.executeQuery();
+			
+			if(resultSet.next()){
+				roldto = new RolDTO(resultSet.getInt("idRol"),
+				resultSet.getString("descripcion"));
+				return roldto;
+			}
+			
+		}catch (SQLException e){
+			 e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public static void main(String[] args) {
 		RolDAOSQL dao = new RolDAOSQL();

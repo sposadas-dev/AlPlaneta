@@ -2,6 +2,7 @@ package dto;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 public class PagoDTO {
 	private int idPago;
@@ -74,4 +75,8 @@ public class PagoDTO {
 		this.monto = monto;
 	}
 
+	public String getFechaParseada(){
+		SimpleDateFormat formatFecha = new SimpleDateFormat("dd-MM-yyyy");
+		return formatFecha.format(this.fechaPago);
+	}
 }

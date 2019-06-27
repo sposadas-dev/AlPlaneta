@@ -15,4 +15,6 @@ public interface RolDAO {
 	public boolean update(RolDTO rol);
 	
 	public RolDTO getById(int id);
+
+	public RolDTO getRolByNombre(String nombre);
 }

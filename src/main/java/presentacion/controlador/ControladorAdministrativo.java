@@ -551,7 +551,7 @@ public class ControladorAdministrativo implements ActionListener {
 		this.vista.getPanelPasaje().mostrarPanelPasaje(false);
 		this.vista.getPanelEvento().mostrarPanelEvento(false);
 		this.vista.getPanelPromocion().mostrarPanelPromocion(false);
-		this.llenarTablaClientes();
+		controladorCliente.llenarTablaClientes();
 	}
 	// ------------------------------------------- Desactivar Cliente ------------------------
 
@@ -588,9 +588,7 @@ public class ControladorAdministrativo implements ActionListener {
 		
 		ClienteDTO clienteEditable = new ClienteDTO(idCliente, nombreCliente, apellidoCliente, dniCliente, fechaNacimientoCliente, medioContactoCliente, loginCliente);
 		controladorCliente.editarCliente(clienteEditable);
-		this.llenarTablaClientes();
-		}else{
-			JOptionPane.showMessageDialog(null, "Verifique los campos", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		controladorCliente.llenarTablaClientes();
 		}
 	}
 	
@@ -599,6 +597,7 @@ public class ControladorAdministrativo implements ActionListener {
 		int clienteAEditar = this.vista.getPanelCliente().getTablaClientes().getSelectedRow();
 		if (clienteAEditar != -1){
 			mostrarCliente(clienteAEditar);
+			
 		}else{
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
@@ -868,10 +867,6 @@ public class ControladorAdministrativo implements ActionListener {
 		}
 		return resultado;
 	}
-	
-	public void llenarTabla() {
-		this.llenarTablaClientes();
-	}
 		
 	private void llenarTablaClientes(){
 		boolean activos = this.vista.getPanelCliente().getActivos().isSelected();
@@ -903,6 +898,7 @@ public class ControladorAdministrativo implements ActionListener {
 		}
 		
 		for (int i = 0; i < this.clientes_en_tabla.size(); i++){
+			System.out.println("Tabla"+ this.clientes_en_tabla.get(i).getNombre());
 			Object[] fila = {this.clientes_en_tabla.get(i).getNombre(),
 							 this.clientes_en_tabla.get(i).getApellido(),
 							 this.clientes_en_tabla.get(i).getDni(),
@@ -1154,11 +1150,9 @@ public class ControladorAdministrativo implements ActionListener {
 				}
 			}
 		}
-		
 		return pasajes;
 	}
 
-	
 	protected String obtenerFecha(String string) {
 		String [] aux = string.split(" ");
 		String ret="";	
@@ -1200,10 +1194,6 @@ public class ControladorAdministrativo implements ActionListener {
 		return ret;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		
-    }
 	private void generarVoucherMail(PasajeDTO pasaje,ClienteDTO cliente){		
 		GeneratePDF pdf = new GeneratePDF();
 		pdf.createPDF(pasaje, cliente);//(pasaje,cliente); // se crea el pdf en resource	
@@ -1280,5 +1270,11 @@ public class ControladorAdministrativo implements ActionListener {
 			if(!Character.isDigit(s.charAt(i)))
 				return false;
 		return true;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

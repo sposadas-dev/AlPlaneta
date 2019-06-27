@@ -40,6 +40,16 @@ public class Mapper {
 		return utilDate;
 	}
 	
+	
+	public String parseToStringMes (java.sql.Date date){
+		String fechaelegida = date.toString();
+		String mes= fechaelegida.substring(5, 7) ;
+		String ano= fechaelegida.substring(0, 4);
+		fechaelegida =  mes + "-" + ano;
+		return fechaelegida;
+	}
+	
+	
 	public static void main(String[] args) {
 //		mapper map = new mapper();
 //		java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());

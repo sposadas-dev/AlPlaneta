@@ -19,12 +19,16 @@ public class Rol {
 	public void agregarRol(RolDTO nuevoRol){
 		this.rol.insert(nuevoRol);
 	}
-//	
-//	public void borrarRol(TransporteDTO rol_a_eliminar) {
-//		this.rol.delete(rol_a_eliminar);
-//	}
 	
 	public List<RolDTO> obtenerRoles(){
 		return this.rol.readAll();	
+	}
+
+	public RolDTO getRolByName(String nombre) {
+		return this.rol.getRolByNombre(nombre);
+	}
+	
+	public RolDTO getRolById(int idRol) {
+		return this.rol.getById(idRol);
 	}
 }
