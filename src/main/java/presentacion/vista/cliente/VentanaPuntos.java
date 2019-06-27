@@ -17,7 +17,6 @@ public class VentanaPuntos extends JFrame {
 	private JTable tablaPuntos;
 	private DefaultTableModel modelPuntos;
 	private  String[] columnasPuntos = {"Puntos","Fecha de Vencimiento",};
-	private JButton btnAceptar;
 	private static VentanaPuntos ventanaPuntos;
 	private JTextField txtFiltro;
 	private JLabel puntosAcumulados;
@@ -52,7 +51,7 @@ public class VentanaPuntos extends JFrame {
 		panel.add(lblPuntos);
 		
 		JScrollPane spPuntos = new JScrollPane();
-		spPuntos.setBounds(10, 109, 1220, 252);
+		spPuntos.setBounds(10, 109, 1220, 317);
 		getContentPane().add(spPuntos);
 		
 		modelPuntos = new DefaultTableModel(null,columnasPuntos){
@@ -63,13 +62,6 @@ public class VentanaPuntos extends JFrame {
 			};
 		tablaPuntos = new JTable(modelPuntos);
 		spPuntos.setViewportView(tablaPuntos);
-		
-		btnAceptar = new JButton("Aceptar");
-		btnAceptar.setForeground(Color.WHITE);
-		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAceptar.setBackground(new Color(30, 144, 255));
-		btnAceptar.setBounds(347, 372, 131, 42);
-		getContentPane().add(btnAceptar);
 		
 		txtFiltro = new JTextField();
 		txtFiltro.setBounds(457, 79, 154, 19);
@@ -107,10 +99,6 @@ public class VentanaPuntos extends JFrame {
 
 	public String[] getColumnasPuntos() {
 		return columnasPuntos;
-	}
-	
-	public JButton getBtnAceptar() {
-		return btnAceptar;
 	}
 	
 	public JLabel getPuntosAcumulados() {
