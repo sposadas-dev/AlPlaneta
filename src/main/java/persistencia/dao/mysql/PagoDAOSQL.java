@@ -3,6 +3,7 @@ package persistencia.dao.mysql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,12 @@ public class PagoDAOSQL implements PagoDAO {
 			statement.setDate(3, pagoInsert.getFechaPago());
 			statement.setBigDecimal(4, pagoInsert.getMonto());
 			statement.setInt(5,pagoInsert.getIdFormaPago().getIdFormaPago());
-			if(pagoInsert.getIdFormaPago().getIdFormaPago() == 2)
-			{
+			if(pagoInsert.getIdFormaPago().getIdFormaPago() == 2) {
 				statement.setInt(6, pagoInsert.getIdtarjeta().getIdTarjeta());
-				}else {statement.setInt(6, 0);}
-				
+			} else {
+				statement.setNull(6, Types.NULL);
+			}
+			
 			if (statement.executeUpdate() > 0) 
 				return true;
 			
