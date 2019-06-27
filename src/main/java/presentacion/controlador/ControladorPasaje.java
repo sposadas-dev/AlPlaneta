@@ -772,6 +772,7 @@ public class ControladorPasaje implements ActionListener{
 	private void darAltaDelPago(ActionEvent cp)  {
 		BigDecimal montoUsuario = new BigDecimal(this.ventanaPago.getTextImporteTotal().getText());
 		System.out.println("Pago Directo:" +noEditarPago );
+		
 	if((noEditarPago && montoUsuario.compareTo(calcularMontoDePasaje())>0) || 
 		(!noEditarPago && montoUsuario.compareTo(pasajeAEditar.getMontoAPagar())>0)){
 		JOptionPane.showMessageDialog(null, "Error: Esta pagando mas de lo debido", "Mensaje", JOptionPane.ERROR_MESSAGE);
