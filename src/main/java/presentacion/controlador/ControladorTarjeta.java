@@ -1,7 +1,12 @@
 package presentacion.controlador;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JOptionPane;
 
 import dto.TarjetaDTO;
 import modelo.Tarjeta;
@@ -21,20 +26,61 @@ public class ControladorTarjeta implements ActionListener {
 		this.ventanaTarjeta.getBtnCargarDatos().addActionListener(cd -> CargarDatosTarjeta(cd));
 		
 		tarjeta = new Tarjeta(new DAOSQLFactory());
+		
+		this.ventanaTarjeta.getTxtNumeroTarjeta().addKeyListener(new KeyAdapter(){ 
+			 
+			public void keyTyped(KeyEvent e){
+				
+				char letra = e.getKeyChar();
+				if(!Character.isDigit(letra)) {
+					Toolkit.getDefaultToolkit().beep();
+					e.consume();
+				}if(ventanaTarjeta.getTxtNumeroTarjeta().getText().length()  == 16)  {
+					e.consume();
+				}
+			}
+			
+		});
 	}
 
-//	public void cargarTarjeta(){ 
-//		this.tarjeta.agregarTarjeta(datosTarjeta()); 
-//		}
-//	
+
 	public void mostrarVentanaTarjeta() {
 		this.ventanaTarjeta.mostrarVentana(true);
 		
 	}
 	
 	private void CargarDatosTarjeta(ActionEvent cd) {
-		this.tarjeta.agregarTarjeta(datosTarjeta()); 
-		this.ventanaTarjeta.mostrarVentana(false);
+		String numeroTarjeta = this.ventanaTarjeta.getTxtNumeroTarjeta().getText();
+		int mesTarjeta = this.ventanaTarjeta.getMesChooser().getMonth()+1;
+		int anioTarjeta = this.ventanaTarjeta.getAnioChooser().getYear();
+		
+		java.sql.Date fechaHoy = new java.sql.Date(new java.util.Date().getTime());	
+		String[] fechaArrayy = fechaHoy.toString().split("-");
+		int mesHoy = Integer.parseInt(fechaArrayy[1]);
+		int anioHoy = Integer.parseInt(fechaArrayy[0]);
+
+		if(anioTarjeta > anioHoy){
+			if(numeroTarjetaValido(numeroTarjeta)){
+				this.tarjeta.agregarTarjeta(datosTarjeta()); 
+				this.ventanaTarjeta.mostrarVentana(false);
+			}
+			else{ JOptionPane.showMessageDialog(null, "Error! El número de tarjeta no es válido", "Mensaje", JOptionPane.ERROR_MESSAGE);}
+		}
+		
+		if(anioTarjeta == anioHoy){
+			if(mesTarjeta >= mesHoy){
+				if(numeroTarjetaValido(numeroTarjeta)){
+					this.tarjeta.agregarTarjeta(datosTarjeta()); 
+					this.ventanaTarjeta.mostrarVentana(false);
+				}
+				else{ JOptionPane.showMessageDialog(null, "Error! El número de tarjeta no es válido", "Mensaje", JOptionPane.ERROR_MESSAGE);}
+			}
+			else{ JOptionPane.showMessageDialog(null, "Error! La tarjeta ingresada está vencida", "Mensaje", JOptionPane.ERROR_MESSAGE);}
+		}
+		
+		if(anioTarjeta < anioHoy)
+			JOptionPane.showMessageDialog(null, "Error! La tarjeta ingresada está vencida", "Mensaje", JOptionPane.ERROR_MESSAGE);
+				
 	}
 	
 	public TarjetaDTO getUltimoRegistro() {
@@ -43,12 +89,18 @@ public class ControladorTarjeta implements ActionListener {
 
 	public TarjetaDTO datosTarjeta() {
 		TarjetaDTO tarjetadto = new TarjetaDTO();
-		int mes= this.ventanaTarjeta.getMesChooser().getMonth()+1;
-		int anio = this.ventanaTarjeta.getAnioChooser().getYear();
+		int mesTarjeta = this.ventanaTarjeta.getMesChooser().getMonth()+1;
+		int anioTarjeta = this.ventanaTarjeta.getAnioChooser().getYear();
+		
 		tarjetadto.setNroTarjeta(this.ventanaTarjeta.getTxtNumeroTarjeta().getText());
-		System.out.println(Integer.toString(mes)+"/"+Integer.toString(anio));
-		tarjetadto.setVencimiento(Integer.toString(mes)+"/"+Integer.toString(anio));
+		System.out.println(Integer.toString(mesTarjeta)+"/"+Integer.toString(anioTarjeta));
+		tarjetadto.setVencimiento(Integer.toString(mesTarjeta)+"/"+Integer.toString(anioTarjeta));	
+		
 		return tarjetadto;
+	}
+
+	private boolean numeroTarjetaValido(String numero){
+		return numero.length()==16;
 	}
 
 

@@ -79,20 +79,24 @@ public class VentanaPago extends JFrame {
 		contentPane.add(lblSelecioneUnaForma);
 		
 		lblMontoAPagar = new JLabel("Monto a pagar:");
+		lblMontoAPagar.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblMontoAPagar.setBounds(152, 201, 157, 14);
 		contentPane.add(lblMontoAPagar);
 		
 		lblImporte = new JLabel("Importe:");
+		lblImporte.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblImporte.setBounds(152, 255, 157, 14);
 		contentPane.add(lblImporte);
 		
 		textImporteTotal = new JTextField();
+		textImporteTotal.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		textImporteTotal.setBounds(367, 252, 167, 20);
 		contentPane.add(textImporteTotal);
 		textImporteTotal.setEditable(false);
 		textImporteTotal.setColumns(10);
 		
 		lblMontoaPagar = new JLabel("-");
+		lblMontoaPagar.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblMontoaPagar.setBounds(367, 201, 167, 14);
 		contentPane.add(lblMontoaPagar);
 		
@@ -154,21 +158,25 @@ public class VentanaPago extends JFrame {
 		contentPane.add(separator);
 		
 		lblMontoOriginal = new JLabel("Monto original:");
+		lblMontoOriginal.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblMontoOriginal.setBounds(152, 188, 157, 14);
 		contentPane.add(lblMontoOriginal);
 		lblMontoOriginal.setVisible(false);
 		
 		lblDatoMontoOriginal = new JLabel("-");
+		lblDatoMontoOriginal.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblDatoMontoOriginal.setBounds(367, 188, 167, 14);
 		contentPane.add(lblDatoMontoOriginal);
 		lblDatoMontoOriginal.setVisible(false);
 		
 		lblPorcentajeDeDescuento = new JLabel("Porcentaje de descuento:");
+		lblPorcentajeDeDescuento.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblPorcentajeDeDescuento.setBounds(152, 215, 157, 14);
 		contentPane.add(lblPorcentajeDeDescuento);
 		lblPorcentajeDeDescuento.setVisible(false);
 		
 		lblDatoPorcentajeDescuento = new JLabel("-");
+		lblDatoPorcentajeDescuento.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblDatoPorcentajeDescuento.setBounds(367, 212, 167, 14);
 		contentPane.add(lblDatoPorcentajeDescuento);
 		lblDatoPorcentajeDescuento.setVisible(false);
