@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import modelo.Egreso;
 import modelo.Local;
 import modelo.Login;
@@ -93,13 +95,14 @@ public class ControladorContador implements ActionListener {
 		String passwordActual = new String(this.ventanaCambiarContrasenia.getPassActual().getPassword());
 		String passwordConfirmacion1 = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
 		String passwordConfirmacion2 = new String(this.ventanaCambiarContrasenia.getConfirmacionContrasena().getPassword());
-		
+		String encriptada = DigestUtils.shaHex(passwordActual);
+
 		System.out.println(passwordConfirmacion1+" "+passwordConfirmacion2);
 		
 		if(!passwordConfirmacion1.equals(passwordConfirmacion2)){
 			JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden ", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-		else if(!passwordActual.equals(contadorLogueado.getDatosLogin().getContrasena())){
+		else if(!encriptada.equals(contadorLogueado.getDatosLogin().getContrasena())){
 			JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}else{
 			LoginDTO loginDTO = new LoginDTO();

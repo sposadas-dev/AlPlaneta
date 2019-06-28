@@ -14,6 +14,8 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import dto.AdministrativoDTO;
 import dto.CoordinadorDTO;
 import dto.EventoDTO;
@@ -203,13 +205,14 @@ public class ControladorCOOR {
 		String passwordActual = new String(this.ventanaCambiarContrasenia.getPassActual().getPassword());
 		String passwordConfirmacion1 = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
 		String passwordConfirmacion2 = new String(this.ventanaCambiarContrasenia.getConfirmacionContrasena().getPassword());
-		
+		String encriptada = DigestUtils.shaHex(passwordActual);
+
 		System.out.println(passwordConfirmacion1+" "+passwordConfirmacion2);
 		
 		if(!passwordConfirmacion1.equals(passwordConfirmacion2)){
 			JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden ", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-		else if(!passwordActual.equals(coordinadorLogueado.getDatosLogin().getContrasena())){
+		else if(!encriptada.equals(coordinadorLogueado.getDatosLogin().getContrasena())){
 			JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}else{
 			LoginDTO loginDTO = new LoginDTO();

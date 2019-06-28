@@ -14,6 +14,8 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import dto.ClienteDTO;
 import dto.LoginDTO;
 import dto.Pagos_PasajeDTO;
@@ -35,7 +37,6 @@ import recursos.Mapper;
 
 public class ControladorUsuario implements ActionListener {
 
-	private static final String BUTTON_NAME_VER = "Ver";
 	private VistaCliente vistaCliente;
 	private ClienteDTO cliente;
 	private Pasaje pasaje;
@@ -150,8 +151,7 @@ public class ControladorUsuario implements ActionListener {
 					
 				Object[] fila = {
 						this.puntos_en_tabla.get(i).getPuntos(),
-						this.puntos_en_tabla.get(i).getVencimiento().toString(),
-						BUTTON_NAME_VER 
+						this.puntos_en_tabla.get(i).getVencimiento().toString()
 						};
 				this.ventanaPuntos.getModelPuntos().addRow(fila);
 			}
@@ -219,13 +219,14 @@ public class ControladorUsuario implements ActionListener {
 		
 		String passwordConfirmacion1 = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
 		String passwordConfirmacion2 = new String(this.ventanaCambiarContrasenia.getConfirmacionContrasena().getPassword());
-		
+		String encriptada = DigestUtils.shaHex(passwordActual);
+
 		System.out.println(passwordConfirmacion1+" "+passwordConfirmacion2);
 		
 		if(!passwordConfirmacion1.equals(passwordConfirmacion2)){
 			JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden ", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-		else if(!passwordActual.equals(cliente.getLogin().getContrasena())){
+		else if(!encriptada.equals(cliente.getLogin().getContrasena())){
 			JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}else{
 			LoginDTO loginDTO = new LoginDTO();
@@ -271,43 +272,13 @@ public class ControladorUsuario implements ActionListener {
 					this.pasajes_en_tabla.get(i).getViaje().getHoraSalida(),
 					this.pasajes_en_tabla.get(i).getViaje().getTransporte().getNombre(),
 					"$" +this.pasajes_en_tabla.get(i).getValorViaje().subtract(this.pasajes_en_tabla.get(i).getMontoAPagar()),
-					"$" +this.pasajes_en_tabla.get(i).getMontoAPagar(),
-					BUTTON_NAME_VER
+					"$" +this.pasajes_en_tabla.get(i).getMontoAPagar()
 			};
 			this.ventanaReservas.getModelReservas().addRow(fila);
 			}
-		}
-			new ButtonColumn(this.ventanaReservas.getTablaReservas(), verPagos(), 9);
-			this.ventanaReservas.getTablaReservas().getColumnModel().getColumn(9).setMinWidth(50);
-			this.ventanaReservas.getTablaReservas().getColumnModel().getColumn(9).setMaxWidth(50);
-					
+		}		
 	}
-	
-	public Action verPagos() {
-		Action verPago = new AbstractAction() {
-		private static final long serialVersionUID = 1L;
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			System.out.println("mica");
-			JTable table = (JTable) e.getSource();
 
-			
-			PasajeDTO sc = obtenerScSeleccionada((int) table.getModel().getValueAt(table.getSelectedRow(), 0));
-			System.out.println((int) table.getModel().getValueAt(table.getSelectedRow(),0));
-			if (sc != null)
-//				new ControladorPasaje(vp, sc);
-				llenarTablaPagos(sc.getIdPasaje());
-			
-		}
-			private PasajeDTO obtenerScSeleccionada(int id) {
-				for (PasajeDTO s : pasajes_en_tabla)
-					if (s.getIdPasaje() == id)
-						return s;
-				return null;
-			}
-		};
-		return verPago;
-	}
 
 	private void llenarTablaPagos(int idPasaje){
 		this.ventanaTablaPagos.getModelPagos().setRowCount(0);
