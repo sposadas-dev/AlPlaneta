@@ -555,7 +555,7 @@ public class ControladorAdministrador {
 			f.showSaveDialog(null);
 			
 
-			String bat = "C:\\Program Files\\MySQL\\SQL Server 5.7\\bin\\mysqldump -uroot -proot alplaneta_grupo3 > " + f.getSelectedFile().toString() +"\\alplaneta.sql";			
+			String bat = "C:\\Program Files\\MySQL\\SQL Server 5.7\\bin\\mysqldump -hlocalhost -uroot -proot alplaneta_grupo3 > " + f.getSelectedFile().toString() +"\\alplaneta.sql";			
 //			String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysqldump -uroot -ppass alplaneta_grupo3 > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
 			final File file = new File("backup.bat");
 			file.createNewFile();
@@ -587,7 +587,7 @@ public class ControladorAdministrador {
 			@Override
 			public void run() {
 //				String bat = "C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\mysql -uroot -proot alplaneta_grupo3 < " + f.getSelectedFile().toString();
-				String bat = "C:\\Program Files\\MySQL\\SQL Server 5.7\\bin\\mysql -uroot -proot alplaneta_grupo3 < " + f.getSelectedFile().toString();
+				String bat = "C:\\Program Files\\MySQL\\SQL Server 5.7\\bin\\mysql -hlocalhost -uroot -proot alplaneta_grupo3 < " + f.getSelectedFile().toString();
 				try {
 					final File file = new File("backup.bat");
 					file.createNewFile();
@@ -1057,10 +1057,8 @@ public class ControladorAdministrador {
 	
 	private void mostrarVentanaViaje(ActionEvent ac) { //METODO AGREGADO!!
 		this.controlador.llenarCiudadesEnCargaViajes();
-		this.vistaAdministrador.getPanelViajes().setVisible(true);
-		this.controlador.llenarViajesEnPanelViajes();
-		//TODO MODIFICAR ESTO	
 		this.controlador.mostrarVentanaCargarViaje();
+
 	}
 	
 	private LoginDTO obtenerLoginDTO() {

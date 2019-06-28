@@ -49,7 +49,7 @@ public class ControladorServicio {
 
 	private void agregarServicio(ActionEvent as) {
 		ServicioDTO servicioDTO = new ServicioDTO();
-		int mes = ventanaAgregarServicio.getMesChooser().getMonth()+1;
+		int mes = ventanaAgregarServicio.getMesChooser().getMonth();
 		int anio = ventanaAgregarServicio.getAnioChooser().getYear();
 
 		Calendar fecha = Calendar.getInstance();

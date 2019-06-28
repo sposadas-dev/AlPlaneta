@@ -65,10 +65,8 @@ public class VistaAdministrador extends JFrame {
 	private Component horizontalGlue;
 	private JMenu menuUsuarioLogueado;
 	private JMenuItem itemCambiarContrasenia;
-	private JMenuItem itemEditarLocales;
-	private JMenuItem itemEliminarLocales;
 	private JMenu menuCancelacion;
-	private JMenuItem itemVizualizarCondicion;
+	private JMenuItem itemVisualizarCondicion;
 	private JMenuItem itemAgregarCondicion;
 	private JMenuItem itemEditarCondicion;
 	private JMenuItem itemEliminarCondicion;
@@ -107,7 +105,7 @@ public class VistaAdministrador extends JFrame {
 		setJMenuBar(menuBar);
 		
 		JMenu mnConfiguraciones = new JMenu("Configuraciones");
-		mnConfiguraciones.setFont(new Font("Segoe UI", Font.BOLD, 16));
+		mnConfiguraciones.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuBar.add(mnConfiguraciones);
 		
 		itemBackup = new JMenuItem("Backup");
@@ -119,7 +117,7 @@ public class VistaAdministrador extends JFrame {
 		mnConfiguraciones.add(itemRestore);
 		
 		JMenu menuCuentas = new JMenu("Cuentas");
-		menuCuentas.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		menuCuentas.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuCuentas);
 		
 		itemVisualizarCuentas = new JMenuItem("Visualizar Cuentas");
@@ -143,7 +141,7 @@ public class VistaAdministrador extends JFrame {
 		menuCuentas.add(itemEliminarCuenta);
 		
 		JMenu menuViajes = new JMenu("Viajes");
-		menuViajes.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		menuViajes.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuViajes);
 		
 		itemVisualizarViajes = new JMenuItem("Visualizar viajes");
@@ -159,24 +157,24 @@ public class VistaAdministrador extends JFrame {
 		menuViajes.add(itemEditarViaje);
 		
 		JMenu mnDestinos = new JMenu("Destinos");
-		mnDestinos.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		mnDestinos.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(mnDestinos);
 		
-		itemPais = new JMenuItem("Menu de Pais");
+		itemPais = new JMenuItem("Menú de países");
 		itemPais.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mnDestinos.add(itemPais);
 		
-		itemProvincia = new JMenuItem("Menu de Provincia");
+		itemProvincia = new JMenuItem("Menú de provincias");
 		itemProvincia.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mnDestinos.add(itemProvincia);
 		
-		itemCiudad = new JMenuItem("Menu de Ciudad");
+		itemCiudad = new JMenuItem("Menú de ciudades");
 		itemCiudad.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mnDestinos.add(itemCiudad);
 		
 		
 		JMenu menuTransporte = new JMenu("Transportes");
-		menuTransporte.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		menuTransporte.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuTransporte);
 		
 		itemVisualizarTransportes = new JMenuItem("Visualizar transportes");
@@ -228,7 +226,7 @@ public class VistaAdministrador extends JFrame {
 	//--------------------FormaPago-----------------------------------//	
 		
 		JMenu menuFormaPago = new JMenu("Formas de pago");
-		menuFormaPago.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		menuFormaPago.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuFormaPago);
 		
 		itemVisualizarFormaPago = new JMenuItem("Visualizar formas de pago");
@@ -259,7 +257,7 @@ public class VistaAdministrador extends JFrame {
 		//Locales
 		
 		JMenu menuLocales = new JMenu("Locales");
-		menuLocales.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		menuLocales.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuLocales);
 		
 		itemVisualizarLocales = new JMenuItem("Visualizar locales");
@@ -270,31 +268,23 @@ public class VistaAdministrador extends JFrame {
 		itemAgregarLocales.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuLocales.add(itemAgregarLocales);
 		
-		itemEditarLocales = new JMenuItem("Visualizar locales");
-		itemEditarLocales.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuLocales.add(itemEditarLocales);
-		
-		itemEliminarLocales = new JMenuItem("Visualizar locales");
-		itemEliminarLocales.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuLocales.add(itemEliminarLocales);
-		
 		menuCancelacion = new JMenu("Condiciones");
-		menuCancelacion.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		menuCancelacion.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		menuBar.add(menuCancelacion);
 		
-		itemVizualizarCondicion = new JMenuItem("Visualizar condiciones");
-		itemVizualizarCondicion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuCancelacion.add(itemVizualizarCondicion);
+		itemVisualizarCondicion = new JMenuItem("Visualizar condiciones");
+		itemVisualizarCondicion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		menuCancelacion.add(itemVisualizarCondicion);
 		
-		itemAgregarCondicion = new JMenuItem("Agregar condicion");
+		itemAgregarCondicion = new JMenuItem("Agregar condición");
 		itemAgregarCondicion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuCancelacion.add(itemAgregarCondicion);
 		
-		itemEditarCondicion = new JMenuItem("Editar condicion");
+		itemEditarCondicion = new JMenuItem("Editar condición");
 		itemEditarCondicion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuCancelacion.add(itemEditarCondicion);
 		
-		itemEliminarCondicion = new JMenuItem("Eliminar condicion");
+		itemEliminarCondicion = new JMenuItem("Eliminar condición");
 		itemEliminarCondicion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuCancelacion.add(itemEliminarCondicion);
 		
@@ -318,7 +308,8 @@ public class VistaAdministrador extends JFrame {
 		menuLocales.add(itemEliminarLocal);
 		
 		panelLocales = new PanelLocales();
-		panelLocales.getTablaLocales().setSize(1114, 900);
+		panelLocales.getTablaLocales().setLocation(11, 122);
+		panelLocales.getTablaLocales().setSize(1319, 0);
 		panelLocales.setSize(1352, 700);
 		panelLocales.setLocation(0, 0);
 		getContentPane().add(panelLocales);
@@ -645,11 +636,11 @@ public class VistaAdministrador extends JFrame {
 	}
 
 	public JMenuItem getItemVizualizarCondicion() {
-		return itemVizualizarCondicion;
+		return itemVisualizarCondicion;
 	}
 
 	public void setItemVizualizarCondicion(JMenuItem itemVizualizarCondicion) {
-		this.itemVizualizarCondicion = itemVizualizarCondicion;
+		this.itemVisualizarCondicion = itemVizualizarCondicion;
 	}
 
 	public JMenuItem getItemAgregarCondicion() {

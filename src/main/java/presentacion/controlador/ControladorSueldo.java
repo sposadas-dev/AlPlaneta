@@ -64,10 +64,10 @@ public class ControladorSueldo {
 		Rol rol = new Rol(new DAOSQLFactory());
 	
 		if(!ventanaAgregarSueldo.getComboBoxRoles().getSelectedItem().equals("Seleccione un rol")){
-			int mes = ventanaAgregarSueldo.getMesChooser().getMonth()+1;
+			int mes = ventanaAgregarSueldo.getMesChooser().getMonth();
 			int anio = ventanaAgregarSueldo.getAnioChooser().getYear();
 			Calendar fecha = Calendar.getInstance();
-			fecha.set(anio, mes, 31); // Specify day of month
+			fecha.set(anio, mes, 1); // Specify day of month
 			java.sql.Date fechaSueldo = convertUtilToSql(fecha.getTime()); 
 			RolDTO rolDTO = rol.getRolByName(ventanaAgregarSueldo.getComboBoxRoles().getSelectedItem().toString());
 			sueldoDTO.setMes(fechaSueldo);
@@ -83,6 +83,7 @@ public class ControladorSueldo {
 						sueldo_empleadoDTO.setIdEmpleado(adm.getIdAdministrador());
 					sueldos_empleados.agregarSueldoEmpleado(sueldo_empleadoDTO);
 					this.ventanaAgregarSueldo.limpiarCampos();
+					this.llenarTablaEmpleados();
 //					egresoDTO.setSueldos_empleados(sueldo_empleadoDTO);
 //					egreso.agregarEgreso(egresoDTO);
 					}
@@ -97,8 +98,7 @@ public class ControladorSueldo {
 						sueldo_empleadoDTO.setIdEmpleado(a.getIdAdministrativo());
 					sueldos_empleados.agregarSueldoEmpleado(sueldo_empleadoDTO);
 					this.ventanaAgregarSueldo.limpiarCampos();
-//					egresoDTO.setSueldos_empleados(sueldo_empleadoDTO);
-//					egreso.agregarEgreso(egresoDTO);
+					this.llenarTablaEmpleados();
 					}
 				}
 			}
@@ -111,6 +111,7 @@ public class ControladorSueldo {
 						sueldo_empleadoDTO.setIdEmpleado(coord.getIdCoordinador());
 						sueldos_empleados.agregarSueldoEmpleado(sueldo_empleadoDTO);
 						this.ventanaAgregarSueldo.limpiarCampos();
+						this.llenarTablaEmpleados();
 //						egresoDTO.setSueldos_empleados(sueldo_empleadoDTO);
 //						egreso.agregarEgreso(egresoDTO);
 						

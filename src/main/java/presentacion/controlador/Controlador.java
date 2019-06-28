@@ -407,8 +407,8 @@ public class Controlador implements ActionListener {
 
 	private void limpiarCampos(ActionEvent lc) {
 		this.ventanaAdministrador.getPanelViajes().getTxtFiltro().setText("");
-		cad.delete(0, cad.length());
-        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
+//		cad.delete(0, cad.length());
+//        tr.setRowFilter(RowFilter.regexFilter(cad.toString()));
 		this.ventanaAdministrador.getPanelViajes().getTxtPrecioDesde().setText("");
 		this.ventanaAdministrador.getPanelViajes().getTextPrecioHasta().setText("");
 		this.ventanaAdministrador.getPanelViajes().limpiarFiltrosFechas();
@@ -1209,8 +1209,7 @@ public class Controlador implements ActionListener {
 					viajes_en_tabla.get(i).getHoraSalida(), viajes_en_tabla.get(i).getHorasEstimadas(),
 					viajes_en_tabla.get(i).getCapacidad(), viajes_en_tabla.get(i).getTransporte().getNombre(),
 					"$ " + viajes_en_tabla.get(i).getPrecio(), viajes_en_tabla.get(i).getEstado() };
-			this.ventanaAdministrador.getPanelViajes().getModelViajes().addRow(fila);
-//			this.panelViajes.getModelViajes().addRow(fila);
+			this.panelViajes.getModelViajes().addRow(fila);
 		}
 
 		// this.panelViajes.getBtnConfirmar().setVisible(false);

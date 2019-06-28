@@ -124,7 +124,7 @@ public class ControladorLogin {
 		if(cambioDeContrasena()){
 			System.out.println("Se cambio la contrasena");
 			enviarContrasenaViaMail();
-			JOptionPane.showMessageDialog(null, "Se le ha enviado la nueva contrasena al mail", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Se le ha enviado la nueva contraseña al mail", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
 			this.ventanaLogin.setVisible(false);
 		}
 	}
@@ -177,7 +177,7 @@ public class ControladorLogin {
 	}
 	
 	private void enviarContrasenaViaMail() {
-		this.envioDeCorreo.enviarNuevaContrasena(mailDeRecuperacion, contrasenaProvisoria,"Recuperacion de Contrasena");
+		this.envioDeCorreo.enviarNuevaContrasena(mailDeRecuperacion, contrasenaProvisoria,"Recuperación de contraseña");
 		this.ventanaClaveOlvidada.setVisible(false);
 	}
 	

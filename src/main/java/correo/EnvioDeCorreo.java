@@ -116,7 +116,7 @@ public class EnvioDeCorreo {
 	 
 	   // Creo la parte del mensaje
 	   MimeBodyPart mimeBodyPart = new MimeBodyPart();
-	   mimeBodyPart.setText("Su usuario es: "+usuario+", y cu contraseña es: "+nuevaContrasena);
+	   mimeBodyPart.setText("Su usuario es: "+usuario+", y su contraseña es: "+nuevaContrasena);
 	 
 	   // Crear el multipart para agregar la parte del mensaje anterior
 	   Multipart multipart = new MimeMultipart();
@@ -166,7 +166,7 @@ public class EnvioDeCorreo {
          BodyPart adjunto = new MimeBodyPart();
          adjunto.setDataHandler(
              new DataHandler(new FileDataSource(pathAdjunto)));
-         adjunto.setFileName(pathAdjunto);
+         adjunto.setFileName("AlPlaneta.pdf");
 
          // Una MultiParte para agrupar texto e imagen.
          MimeMultipart multiParte = new MimeMultipart();

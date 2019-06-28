@@ -42,17 +42,17 @@ public class VentanaEditarLocal extends JFrame {
 			
 			JPanel panel = new JPanel();
 			panel.setLayout(null);
-			panel.setBackground(new Color(96, 163, 188));
+			panel.setBackground(new Color(32, 178, 170));
 			panel.setBounds(0, 0, 417, 53);
 			contentPane.add(panel);
 			
-			JLabel lblAgregarTransporte = new JLabel("Editar Local");
+			JLabel lblAgregarTransporte = new JLabel("Editar local");
 			lblAgregarTransporte.setForeground(Color.WHITE);
 			lblAgregarTransporte.setFont(new Font("Tahoma", Font.BOLD, 24));
-			lblAgregarTransporte.setBounds(27, 0, 253, 53);
+			lblAgregarTransporte.setBounds(138, 0, 253, 53);
 			panel.add(lblAgregarTransporte);
 			
-			JLabel lblNewLabel = new JLabel("Nombre del Local:");
+			JLabel lblNewLabel = new JLabel("Nombre del local:");
 			lblNewLabel.setBounds(67, 82, 147, 14);
 			contentPane.add(lblNewLabel);
 			
@@ -75,7 +75,7 @@ public class VentanaEditarLocal extends JFrame {
 			btnEditar.setBounds(67, 205, 131, 42);
 			contentPane.add(btnEditar);
 			
-			lblDireccionLocal = new JLabel("Direccion Local:");
+			lblDireccionLocal = new JLabel("Dirección del local:");
 			lblDireccionLocal.setBounds(67, 126, 147, 13);
 			contentPane.add(lblDireccionLocal);
 			
