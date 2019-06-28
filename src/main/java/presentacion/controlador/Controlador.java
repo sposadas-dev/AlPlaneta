@@ -1209,7 +1209,8 @@ public class Controlador implements ActionListener {
 					viajes_en_tabla.get(i).getHoraSalida(), viajes_en_tabla.get(i).getHorasEstimadas(),
 					viajes_en_tabla.get(i).getCapacidad(), viajes_en_tabla.get(i).getTransporte().getNombre(),
 					"$ " + viajes_en_tabla.get(i).getPrecio(), viajes_en_tabla.get(i).getEstado() };
-			this.panelViajes.getModelViajes().addRow(fila);
+			this.ventanaAdministrador.getPanelViajes().getModelViajes().addRow(fila);
+//			this.panelViajes.getModelViajes().addRow(fila);
 		}
 
 		// this.panelViajes.getBtnConfirmar().setVisible(false);

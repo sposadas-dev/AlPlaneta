@@ -14,6 +14,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import correo.EnvioDeCorreo;
 import dto.AdministradorDTO;
 import dto.AdministrativoDTO;
@@ -396,6 +398,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(true);
+		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(false);
 		llenarTablaCondiciones();
 	}
 
@@ -531,7 +534,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
 		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(true);
-		
+		this.vistaAdministrador.getPanelCondiciones().mostrarPanelCondiciones(false);
 		this.controlador.mostrarPanelDeViajes();
 	}
 
@@ -540,15 +543,20 @@ public class ControladorAdministrador {
 	}
 
 	private void crearBackup(ActionEvent b) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
+		this.vistaAdministrador.getPanelCondiciones().mostrarPanelCondiciones(false);
+		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(false);
 		try {
 			JFileChooser f = new JFileChooser();
 			f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			f.showSaveDialog(null);
 			
 
-//			String bat = "C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\mysqldump -uroot -proot alplaneta_grupo3 > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
-			String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysqldump -uroot -ppass alplaneta_grupo3 > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
-			System.out.println(bat);
+			String bat = "C:\\Program Files\\MySQL\\SQL Server 5.7\\bin\\mysqldump -uroot -proot alplaneta_grupo3 > " + f.getSelectedFile().toString() +"\\alplaneta.sql";			
+//			String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysqldump -uroot -ppass alplaneta_grupo3 > " + f.getSelectedFile().toString() + "\\alplaneta.sql";
 			final File file = new File("backup.bat");
 			file.createNewFile();
 			PrintWriter writer = new PrintWriter(file, "UTF-8");
@@ -565,6 +573,12 @@ public class ControladorAdministrador {
 	}
 	
 	private void cargarRestore(ActionEvent r) {
+		this.vistaAdministrador.getPanelTransporte().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelFormaPago().mostrarPanelFormaPago(false);
+		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
+		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
+		this.vistaAdministrador.getPanelCondiciones().mostrarPanelCondiciones(false);
+		
 		JFileChooser f = new JFileChooser();
 		f.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		f.showOpenDialog(null);
@@ -572,8 +586,8 @@ public class ControladorAdministrador {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				String bat = "C:\\mysql-5.7.19-winx64\\bin\\mysql -uroot -ppass alplaneta_grupo3 < " + f.getSelectedFile().toString();
-
+//				String bat = "C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\mysql -uroot -proot alplaneta_grupo3 < " + f.getSelectedFile().toString();
+				String bat = "C:\\Program Files\\MySQL\\SQL Server 5.7\\bin\\mysql -uroot -proot alplaneta_grupo3 < " + f.getSelectedFile().toString();
 				try {
 					final File file = new File("backup.bat");
 					file.createNewFile();
@@ -607,13 +621,14 @@ public class ControladorAdministrador {
 		String passwordActual = new String(this.ventanaCambiarContrasenia.getPassActual().getPassword());
 		String passwordConfirmacion1 = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
 		String passwordConfirmacion2 = new String(this.ventanaCambiarContrasenia.getConfirmacionContrasena().getPassword());
-		
+		String encriptada = DigestUtils.shaHex(passwordActual);
+
 		System.out.println(passwordConfirmacion1+" "+passwordConfirmacion2);
 		
 		if(!passwordConfirmacion1.equals(passwordConfirmacion2)){
 			JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden ", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-		else if(!passwordActual.equals(administradorLogueado.getDatosLogin().getContrasena())){
+		else if(!encriptada.equals(administradorLogueado.getDatosLogin().getContrasena())){
 			JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}else{
 			LoginDTO loginDTO = new LoginDTO();
@@ -1041,8 +1056,10 @@ public class ControladorAdministrador {
 	}
 	
 	private void mostrarVentanaViaje(ActionEvent ac) { //METODO AGREGADO!!
-//TODO MODIFICAR ESTO	
 		this.controlador.llenarCiudadesEnCargaViajes();
+		this.vistaAdministrador.getPanelViajes().setVisible(true);
+		this.controlador.llenarViajesEnPanelViajes();
+		//TODO MODIFICAR ESTO	
 		this.controlador.mostrarVentanaCargarViaje();
 	}
 	
@@ -1111,6 +1128,7 @@ public class ControladorAdministrador {
 		this.vistaAdministrador.getPanelEmpleados().mostrarPanelTransporte(false);
 		this.vistaAdministrador.getPanelLocales().mostrarPanelLocales(false);
 		this.vistaAdministrador.getPanelCondiciones().mostrarPanelCondiciones(false);
+		this.vistaAdministrador.getPanelViajes().mostrarPanelViajes(false);
 		this.llenarTablaTransportes();
 	}
 	

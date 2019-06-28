@@ -170,7 +170,13 @@ public class VentanaGenerarReporte extends JFrame {
 	}
 
 	public void limpiarCampos(){
-		this.comboBoxFiltro.setToolTipText("Seleccione");
+		this.comboBoxFiltro.setSelectedIndex(0);
+		this.comboBoxLocales.setSelectedIndex(0);
+		this.comboBoxOpciones.setSelectedIndex(0);
+		this.lblHasta.setVisible(false);
+		this.lblDesde.setVisible(false);
+		this.comboBoxLocales.setVisible(false);
+		this.comboBoxOpciones.setVisible(false);
 		this.dateDesdeChooser.setDate(null);
 		this.dateHastaChooser.setDate(null);
 	}

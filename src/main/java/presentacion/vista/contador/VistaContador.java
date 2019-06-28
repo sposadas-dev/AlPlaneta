@@ -53,7 +53,7 @@ public class VistaContador extends JFrame {
 	private JMenuItem itemAgregarServicio;
 	private JMenuItem itemEditarServicio;
 	private JMenuItem itemEliminarServicio;
-	private JMenuItem itemEgresosReportes;
+//	private JMenuItem itemEgresosReportes;
 	
 	private JMenuItem itemIngresosReportes;
 	private static VistaContador vistaContador;
@@ -141,9 +141,9 @@ public class VistaContador extends JFrame {
 		itemIngresosReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuReportes.add(itemIngresosReportes);
 		
-		itemEgresosReportes = new JMenuItem("Egresos");
-		itemEgresosReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuReportes.add(itemEgresosReportes);
+//		itemEgresosReportes = new JMenuItem("Egresos");
+//		itemEgresosReportes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+//		menuReportes.add(itemEgresosReportes);
 		
 		Component horizontalGlue = Box.createHorizontalGlue();
 		menuBarContador.add(horizontalGlue);
@@ -232,7 +232,7 @@ public class VistaContador extends JFrame {
 		return panelServicios;
 	}
 
-	public JMenuItem getItemEgresosReportes() {
-		return itemEgresosReportes;
-	}
+//	public JMenuItem getItemEgresosReportes() {
+//		return itemEgresosReportes;
+//	}
 }

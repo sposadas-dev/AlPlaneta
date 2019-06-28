@@ -21,6 +21,8 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import correo.EnvioDeCorreo;
 import dto.AdministrativoDTO;
 import dto.ClienteDTO;
@@ -449,11 +451,12 @@ public class ControladorAdministrativo implements ActionListener {
 		String passwordConfirmacion2 = new String(this.ventanaCambiarContrasenia.getConfirmacionContrasena().getPassword());
 		
 		System.out.println(passwordConfirmacion1+" "+passwordConfirmacion2);
-		
+		String encriptada = DigestUtils.shaHex(passwordActual);
+
 		if(!passwordConfirmacion1.equals(passwordConfirmacion2)){
 			JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden ", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-		else if(!passwordActual.equals(administrativoLogueado.getDatosLogin().getContrasena())){
+		else if(!encriptada.equals(administrativoLogueado.getDatosLogin().getContrasena())){
 			JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}else{
 			LoginDTO loginDTO = new LoginDTO();

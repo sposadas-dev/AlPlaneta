@@ -69,7 +69,7 @@ public class VentanaVisualizarPasaje extends JFrame {
 		JLabel lblVisualizarPasaje = new JLabel("Visualizar pasaje");
 		lblVisualizarPasaje.setForeground(Color.WHITE);
 		lblVisualizarPasaje.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblVisualizarPasaje.setBounds(191, 0, 214, 53);
+		lblVisualizarPasaje.setBounds(230, 0, 214, 53);
 		panel.add(lblVisualizarPasaje);
 		
 		JLabel lblCliente = new JLabel("Cliente:");

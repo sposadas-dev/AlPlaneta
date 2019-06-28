@@ -256,12 +256,6 @@ public class VistaAdministrador extends JFrame {
 		getContentPane().add(panelFormaPago);
 		panelFormaPago.setVisible(false);
 		
-		JLabel labelMarcaDeAgua = new JLabel("");
-		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
-		labelMarcaDeAgua.setBounds(47, 0, 1313, 674);
-		getContentPane().add(labelMarcaDeAgua);
-		this.setVisible(false);
-		
 		//Locales
 		
 		JMenu menuLocales = new JMenu("Locales");
@@ -329,6 +323,12 @@ public class VistaAdministrador extends JFrame {
 		panelLocales.setLocation(0, 0);
 		getContentPane().add(panelLocales);
 		panelLocales.setVisible(false);
+		
+		JLabel labelMarcaDeAgua = new JLabel("");
+		labelMarcaDeAgua.setIcon(new ImageIcon(VistaAdministrativo.class.getResource("/recursos/marcaAgua.png")));
+		labelMarcaDeAgua.setBounds(47, 0, 1313, 674);
+		getContentPane().add(labelMarcaDeAgua);
+		this.setVisible(false);
 	}
 	
 	public JMenu getMenuUsuarioLogueado() {

@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import modelo.Egreso;
 import modelo.Local;
 import modelo.Login;
@@ -62,9 +64,11 @@ public class ControladorContador implements ActionListener {
 		this.vistaContador.getItemVisualizarServicios().addActionListener(ps->mostrarPanelServicios(ps));
 		this.vistaContador.getItemAgregarServicio().addActionListener(as->mostrarVentanaAgregarServicio(as));
 		this.vistaContador.getItemEditarServicio().addActionListener(as->mostrarVentanaEditarServicio(as));
+		this.vistaContador.getItemEliminarServicio().addActionListener(es->eliminarServicio(es));
+
 		this.vistaContador.getItemIngresosReportes().addActionListener(ir->mostrarVentanaGenerarReportes(ir));
 	
-		this.vistaContador.getItemEgresosReportes().addActionListener(er->egresosReportes(er));
+//		this.vistaContador.getItemEgresosReportes().addActionListener(er->egresosReportes(er));
 		this.ventanaGenerarReporte.getComboBoxFiltro().addActionListener(gr->activarFiltros(gr));	
 		this.ventanaGenerarReporte.getComboBoxOpciones().addActionListener(co->activarFiltrosOpciones(co));
 		this.ventanaGenerarReporte.getComboBoxLocales().addActionListener(l->activarComboBoxLocales(l));
@@ -82,11 +86,6 @@ public class ControladorContador implements ActionListener {
 		this.controladorServicio = new ControladorServicio(ventanaAgregarServicio,ventanaEditarServicio);
 	}
 
-	private void egresosReportes(ActionEvent er) {
-		List<EgresosDTO> egresos = egreso.obtenerEgresos();
-		
-	}
-
 	public void inicializar(){
 		this.vistaContador.mostrarVentana();
 		this.vistaContador.getMenuUsuarioLogueado().setText(contadorLogueado.getNombre()+" "+contadorLogueado.getApellido());
@@ -96,13 +95,14 @@ public class ControladorContador implements ActionListener {
 		String passwordActual = new String(this.ventanaCambiarContrasenia.getPassActual().getPassword());
 		String passwordConfirmacion1 = new String(this.ventanaCambiarContrasenia.getPassNueva().getPassword());
 		String passwordConfirmacion2 = new String(this.ventanaCambiarContrasenia.getConfirmacionContrasena().getPassword());
-		
+		String encriptada = DigestUtils.shaHex(passwordActual);
+
 		System.out.println(passwordConfirmacion1+" "+passwordConfirmacion2);
 		
 		if(!passwordConfirmacion1.equals(passwordConfirmacion2)){
 			JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden ", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
-		else if(!passwordActual.equals(contadorLogueado.getDatosLogin().getContrasena())){
+		else if(!encriptada.equals(contadorLogueado.getDatosLogin().getContrasena())){
 			JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}else{
 			LoginDTO loginDTO = new LoginDTO();
@@ -150,6 +150,7 @@ public class ControladorContador implements ActionListener {
 
 	private void mostrarVentanaEditarServicio(ActionEvent as) {
 		this.vistaContador.getPanelServicios().setVisible(true);
+//		controladorServicio.llenarTablaServicios();
 		int filaSeleccionada = this.vistaContador.getPanelServicios().getTablaServicios().getSelectedRow();
 		if (filaSeleccionada != -1){
 			cargarComboBoxLocales();
@@ -158,8 +159,20 @@ public class ControladorContador implements ActionListener {
 			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
 		}
 		controladorServicio.llenarTablaServicios();
-		
 	}
+	
+	private void eliminarServicio(ActionEvent es) {
+		this.vistaContador.getPanelServicios().setVisible(true);
+		int filaSeleccionada = this.vistaContador.getPanelServicios().getTablaServicios().getSelectedRow();
+		if (filaSeleccionada != -1){
+			controladorServicio.eliminarServicio(filaSeleccionada);
+		}else{
+			JOptionPane.showMessageDialog(null, "No ha seleccionado una fila", "Mensaje", JOptionPane.ERROR_MESSAGE);
+		}
+		controladorServicio.llenarTablaServicios();
+	}
+
+	
 	private void mostrarVentanaAgregarSueldo(ActionEvent ve) {
 		cargarComboBoxRoles();
 		this.vistaContador.getPanelSueldos().setVisible(true);
@@ -182,6 +195,7 @@ public class ControladorContador implements ActionListener {
 	
 	private void mostrarVentanaGenerarReportes(ActionEvent ir) {
 		this.ventanaGenerarReporte.mostrarVentana(true);
+		this.ventanaGenerarReporte.limpiarCampos();
 		this.vistaContador.getPanelServicios().setVisible(false);
 		this.vistaContador.getPanelSueldos().setVisible(false);
 	}
@@ -271,6 +285,7 @@ public class ControladorContador implements ActionListener {
 						reporte.reporteIngresosClientes(pasajes);
 						reporte.mostrar();
 						this.ventanaGenerarReporte.limpiarCampos();
+						this.ventanaGenerarReporte.mostrarVentana(false);
 					}else{
 						JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
 					}
@@ -281,6 +296,8 @@ public class ControladorContador implements ActionListener {
 						reporte.reporteIngresosClientes(pasajesClienteByLocal);
 						reporte.mostrar();
 						this.ventanaGenerarReporte.limpiarCampos();
+						this.ventanaGenerarReporte.mostrarVentana(false);
+
 					}else{
 						JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
 					}
@@ -290,6 +307,8 @@ public class ControladorContador implements ActionListener {
 					if(pasajesVendedor.size()!=0){
 						reporte.reporteIngresosVendedor(pasajesVendedor);
 						reporte.mostrar();
+						this.ventanaGenerarReporte.limpiarCampos();
+						this.ventanaGenerarReporte.mostrarVentana(false);
 				}else{
 					JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
 				}
@@ -297,9 +316,10 @@ public class ControladorContador implements ActionListener {
 				LocalDTO localSeleccionado = local.obtenerLocal(ventanaGenerarReporte.getComboBoxLocales().getSelectedItem().toString());
 				List<PasajeDTO> pasajesVendedorByLocal = pasaje.obtenerPasajesEntreFechasByLocal(fechaDesde, fechaHasta, localSeleccionado.getIdLocal());
 				if(pasajesVendedorByLocal .size()!=0){
-					reporte.reporteIngresosClientes(pasajesVendedorByLocal );
+					reporte.reporteIngresosVendedor(pasajesVendedorByLocal );
 					reporte.mostrar();
 					this.ventanaGenerarReporte.limpiarCampos();
+					this.ventanaGenerarReporte.mostrarVentana(false);
 				}else{
 					JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
 				}
@@ -308,6 +328,8 @@ public class ControladorContador implements ActionListener {
 				if(pasajesPorDestino.size()!=0){
 					reporte.reporteIngresoDestino(pasajesPorDestino);
 					reporte.mostrar();
+					this.ventanaGenerarReporte.limpiarCampos();
+					this.ventanaGenerarReporte.mostrarVentana(false);
 			}else{
 				JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
 			}
@@ -318,6 +340,7 @@ public class ControladorContador implements ActionListener {
 				reporte.reporteIngresoDestino(pasajesPorDestinoByLocal );
 				reporte.mostrar();
 				this.ventanaGenerarReporte.limpiarCampos();
+				this.ventanaGenerarReporte.mostrarVentana(false);
 			}else{
 				JOptionPane.showMessageDialog(null, "No existen registros de pasajes en ese rango de fechas", "Atención", JOptionPane.WARNING_MESSAGE);	
 			}

@@ -64,8 +64,7 @@ public class ControladorSueldo {
 		Rol rol = new Rol(new DAOSQLFactory());
 	
 		if(!ventanaAgregarSueldo.getComboBoxRoles().getSelectedItem().equals("Seleccione un rol")){
-//			EgresosDTO egresoDTO = new EgresosDTO();
-			int mes = ventanaAgregarSueldo.getMesChooser().getMonth();
+			int mes = ventanaAgregarSueldo.getMesChooser().getMonth()+1;
 			int anio = ventanaAgregarSueldo.getAnioChooser().getYear();
 			Calendar fecha = Calendar.getInstance();
 			fecha.set(anio, mes, 31); // Specify day of month

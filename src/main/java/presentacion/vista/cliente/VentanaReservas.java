@@ -25,7 +25,7 @@ public class VentanaReservas extends JFrame {
 
 	private JTable tablaReservas;
 	private DefaultTableModel modelReservas;
-	private  String[] columnasReservas = {"Origen","Destino","Fecha de vencimiento","Fecha de salida", "Fecha de llegada","Hora de salida","Transporte","Monto pagado","Importe a pagar","Pagos"};
+	private  String[] columnasReservas = {"Origen","Destino","Fecha de vencimiento","Fecha de salida", "Fecha de llegada","Hora de salida","Transporte","Monto pagado","Importe a pagar"};
 	private JButton btnAceptar;
 	private static VentanaReservas ventanaReservas;
 	private JTextField txtFiltro;
