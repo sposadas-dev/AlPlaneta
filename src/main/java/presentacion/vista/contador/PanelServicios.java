@@ -35,7 +35,7 @@ public class PanelServicios extends JPanel {
 		spSueldos.setViewportView(tablaServicios);
 		
 		JPanel panelServicios = new JPanel();
-		panelServicios.setBackground(new Color(46, 139, 87));
+		panelServicios.setBackground(new Color(0, 0, 255));
 		panelServicios.setBounds(10, 11, 1342, 69);
 		add(panelServicios);
 		panelServicios.setLayout(null);

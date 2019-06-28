@@ -145,13 +145,13 @@ public class ControladorUsuario implements ActionListener {
 			this.ventanaPuntos.getModelPuntos().setColumnCount(0);
 			this.ventanaPuntos.getModelPuntos().setColumnIdentifiers(this.ventanaPuntos.getColumnasPuntos());
 			this.puntos_en_tabla = modeloPuntos.getPuntosByClienteID(cliente);
-			
+			Mapper mapper = new Mapper();
 			for (int i = 0; i < this.puntos_en_tabla .size(); i++){
 					puntosAcumulados += this.puntos_en_tabla.get(i).getPuntos();
 					
 				Object[] fila = {
 						this.puntos_en_tabla.get(i).getPuntos(),
-						this.puntos_en_tabla.get(i).getVencimiento().toString()
+						mapper.parseToString(this.puntos_en_tabla.get(i).getVencimiento())
 						};
 				this.ventanaPuntos.getModelPuntos().addRow(fila);
 			}

@@ -1,15 +1,14 @@
+=\=\=\=\=\=\=
+<<<<<<<=HEAD
+>>>>>>>=20696a613ed520a0086966c576cf40c796a523d2
 eclipse.preferences.version=1
-<<<<<<< HEAD
 encoding//reportes/ReporteCancelacionVenta.jrxml=UTF-8
-=======
-encoding//reportes/ReporteCoordinadores.jrxml=UTF-8
 encoding//reportes/ReporteEmpleados.jrxml=UTF-8
 encoding//reportes/ReporteIngresosCliente.jrxml=UTF-8
 encoding//reportes/ReporteIngresosPorDestino.jrxml=UTF-8
 encoding//reportes/ReporteIngresosVendedor.jrxml=UTF-8
 encoding//reportes/ReportePago.jrxml=UTF-8
 encoding//reportes/ReporteReserva.jrxml=UTF-8
->>>>>>> 20696a613ed520a0086966c576cf40c796a523d2
 encoding//src/main/java=UTF-8
 encoding//src/main/resources=UTF-8
 encoding/<project>=UTF-8

@@ -1,7 +1,10 @@
 package presentacion.controlador;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -84,6 +87,68 @@ public class ControladorContador implements ActionListener {
 		this.contadorLogueado = contadorLogueado;
 		this.controladorSueldo = new ControladorSueldo(ventanaAgregarSueldo);
 		this.controladorServicio = new ControladorServicio(ventanaAgregarServicio,ventanaEditarServicio);
+	
+		/* Filtros Registrar Cliente */
+		this.ventanaAgregarServicio.getTxtServicio().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
+						e.consume();
+					}
+					if(ventanaAgregarServicio.getTxtServicio().getText().length()== 45){
+						e.consume();
+					}
+			}
+		});
+	
+		
+		this.ventanaAgregarServicio.getTxtServicio().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
+						e.consume();
+					}
+					if(ventanaAgregarServicio.getTxtServicio().getText().length()== 45){
+						e.consume();
+					}
+			}
+		});
+		
+		this.ventanaAgregarServicio.getTxtMonto().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+					if(!Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
+						e.consume();
+					}
+			}
+		});
+	
+		this.ventanaEditarServicio.getTxtServicio().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+					if(Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
+						e.consume();
+					}
+					if(ventanaAgregarServicio.getTxtServicio().getText().length()== 45){
+						e.consume();
+					}
+			}
+		});
+		
+		this.ventanaEditarServicio.getTxtMonto().addKeyListener(new KeyAdapter(){            
+			public void keyTyped(KeyEvent e){
+				char letra = e.getKeyChar();
+					if(!Character.isDigit(letra)) {
+						Toolkit.getDefaultToolkit().beep();
+						e.consume();
+					}
+			}
+		});
+	
 	}
 
 	public void inicializar(){
@@ -194,10 +259,11 @@ public class ControladorContador implements ActionListener {
 	
 	
 	private void mostrarVentanaGenerarReportes(ActionEvent ir) {
-		this.ventanaGenerarReporte.mostrarVentana(true);
-		this.ventanaGenerarReporte.limpiarCampos();
 		this.vistaContador.getPanelServicios().setVisible(false);
 		this.vistaContador.getPanelSueldos().setVisible(false);
+		this.ventanaGenerarReporte.mostrarVentana(true);
+//		this.ventanaGenerarReporte.limpiarCampos();
+		
 	}
 	
 	private void activarFiltros(ActionEvent gr) {

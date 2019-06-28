@@ -47,7 +47,6 @@ public class VistaContador extends JFrame {
 	
 	private JMenuItem itemVisualizarSueldos;
 	private JMenuItem itemAgregarSueldo;
-	private JMenuItem itemEditarSueldo;
 	
 	private JMenuItem itemVisualizarServicios;
 	private JMenuItem itemAgregarServicio;
@@ -108,10 +107,6 @@ public class VistaContador extends JFrame {
 		itemAgregarSueldo = new JMenuItem("Agregar sueldo");
 		itemAgregarSueldo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuSueldos.add(itemAgregarSueldo);
-		
-		itemEditarSueldo = new JMenuItem("Editar sueldo");
-		itemEditarSueldo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		menuSueldos.add(itemEditarSueldo);
 		
 		JMenu menuServicios = new JMenu("Servicios");
 		menuServicios.setFont(new Font("Segoe UI", Font.PLAIN, 16));

@@ -59,7 +59,7 @@ public class PanelViajes extends JPanel {
 		
 		JPanel panelTransporte = new JPanel();
 		panelTransporte.setBackground(new Color(87, 95, 207));
-		panelTransporte.setBounds(20, 11, 1302, 64);
+		panelTransporte.setBounds(20, 11, 1314, 64);
 		add(panelTransporte);
 		panelTransporte.setLayout(null);
 		

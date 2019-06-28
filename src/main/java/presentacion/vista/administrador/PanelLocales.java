@@ -31,20 +31,20 @@ public class PanelLocales extends JPanel {
 		
 
 		JScrollPane spLocales = new JScrollPane();
-		spLocales.setBounds(10, 96, 1196, 483);
+		spLocales.setBounds(24, 96, 1319, 483);
 		add(spLocales);
 		
 		tablaLocales = new JTable(modelLocales);
 		spLocales.setViewportView(tablaLocales);
 
 		JPanel panelLocales = new JPanel();
-		panelLocales.setBackground(new Color(96, 163, 188));
-		panelLocales.setBounds(0, 0, 1206, 64);
+		panelLocales.setBackground(new Color(32, 178, 170));
+		panelLocales.setBounds(22, 0, 1324, 64);
 		add(panelLocales);
 		panelLocales.setLayout(null);
 		
 		lblLocales = new JLabel("Locales AlPlaneta");
-		lblLocales.setBounds(410, 0, 397, 65);
+		lblLocales.setBounds(519, 1, 357, 65);
 		lblLocales.setForeground(Color.WHITE);
 		lblLocales.setFont(new Font("Tahoma", Font.BOLD, 36));
 		panelLocales.add(lblLocales);

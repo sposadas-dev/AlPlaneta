@@ -78,7 +78,7 @@ public class VistaCoordinador extends JFrame {
 		menuRegimenPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuBar.add(menuRegimenPuntos);
 		
-		itemVisualizarRegimenPuntos = new JMenuItem("Visualizar RegimenPuntos");
+		itemVisualizarRegimenPuntos = new JMenuItem("Visualizar régimen de puntos");
 		itemVisualizarRegimenPuntos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuRegimenPuntos.add(itemVisualizarRegimenPuntos);
 		
@@ -114,11 +114,11 @@ public class VistaCoordinador extends JFrame {
 		menuEventos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuBar.add(menuEventos);
 		
-		itemVisualizarEventos = new JMenuItem("Visualizar Eventos");
+		itemVisualizarEventos = new JMenuItem("Visualizar eventos");
 		itemVisualizarEventos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuEventos.add(itemVisualizarEventos);
 		
-		itemReasignarEvento = new JMenuItem("Reasignar Evento");
+		itemReasignarEvento = new JMenuItem("Reasignar evento");
 		itemReasignarEvento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuEventos.add(itemReasignarEvento);
 		
