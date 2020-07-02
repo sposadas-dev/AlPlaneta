@@ -88,8 +88,8 @@
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
 		    <!--<version>5.1.6</version>-->
-		    <!-- USAR LA VERSIÓN 5.1.44 SI USÁS MYSQL8 --> 
-		    <version>5.1.44</version>
+		    <!-- USAR LA VERSIÓN 8.0.16 SI USÁS MYSQL8 --> 
+		    <version>8.0.16</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.fifesoft/autocomplete -->
